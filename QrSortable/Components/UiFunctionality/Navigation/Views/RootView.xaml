@@ -5,7 +5,6 @@
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     xmlns:local="clr-namespace:QrSortable.Resources"
     x:Class="QrSortable.Components.UiFunctionality.Navigation.Views.RootView">    
-    <ScrollView>
     <Grid>
         <Grid.RowDefinitions>
             <!-- Placeholder for serch and others -->
@@ -77,13 +76,13 @@
             Color="{StaticResource Yellow}"
             HorizontalOptions="Fill"
             VerticalOptions="Center"/> 
-        
-        <!-- Carousel View  -->   
+
+        <!-- Carousel View  -->
         <CarouselView  
-           Grid.Row = "2" 
-           IndicatorView="indicatorView"
-           BackgroundColor="Transparent">
-           <CarouselView.ItemsSource>
+            Grid.Row = "2" 
+            IndicatorView="indicatorView"
+            BackgroundColor="Transparent">
+            <CarouselView.ItemsSource>
               <x:Array Type="{x:Type x:String}">
                 <x:String>Storage room</x:String>
                 <x:String>Bed room</x:String>
@@ -92,10 +91,17 @@
             </CarouselView.ItemsSource>
             <CarouselView.ItemTemplate>
               <DataTemplate>
-               <!-- Boxes view  -->
-              <StackLayout>
-                 <!-- Category -->
-                  <Grid>
+               <!-- boxes view  -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                    <!-- category button -->
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <!-- qr scan button -->
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions> 
+                  
+                  <!-- Category -->
+                  <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="8*" />
@@ -128,68 +134,76 @@
                         </Button.ImageSource>
                     </Button>
                   </Grid>
-                  <!-- google Add Banner -->
-<!--                   <admob:BannerAd 
+                 
+                  <!-- CollectionView   -->
+                  <CollectionView 
                     Grid.Row="1"
-                    IsVisible="{Binding GoogleAddVisible}"
-                    AdUnitId="ca-app-pub-3940256099942544/6300978111" /> -->
-                 <!-- List view  -->
-                <ListView
                     SelectionMode="Single"
-                    HasUnevenRows="{OnPlatform Android='True', iOS='True', WinUI='False'}" 
-                    CachingStrategy="RecycleElement"
-                    HorizontalOptions="Fill" 
-                    VerticalOptions="Fill"
-                    SeparatorVisibility="None">
-                   <ListView.ItemTemplate>
-                   <DataTemplate>
-                   <ViewCell>
-                    <Grid 
-                        Padding="15,5,15,10"
-                        HorizontalOptions="Fill" 
-                        VerticalOptions="Fill">
-                        <Border 
-                            HorizontalOptions="Fill"
-                            VerticalOptions="Fill"
-                            Background="{StaticResource Magenta}"
-                            StrokeShape="RoundRectangle 10"
-                            HeightRequest="200">
-                            <Border.Shadow>
-                                <Shadow 
-                                    Brush="{StaticResource Black}" 
-                                    Opacity="1" 
-                                    Offset="0,0" 
-                                    Radius="8"/>
-                            </Border.Shadow>
-                            <StackLayout>
-                                <Label
-                                    Text="{Binding .}" 
-                                    FontSize="Large" 
-                                    FontAttributes="Bold"
-                                    FontFamily="ItimRegular"
-                                    TextColor="{StaticResource Yellow}"
-                                    BackgroundColor="Transparent"
-                                    HorizontalTextAlignment="Center">
+                    VerticalOptions="Fill">
+                    <CollectionView.ItemTemplate>
+                      <DataTemplate>
+                        <Grid Padding="10">
+                           <!-- Transparent item click -->
+                           <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                              <VisualState Name="Normal">
+                                <VisualState.Setters>
+                                  <Setter Property="BackgroundColor" Value="Transparent" />
+                                </VisualState.Setters>
+                              </VisualState>
+                              <VisualState Name="Selected">
+                                <VisualState.Setters>
+                                  <Setter Property="BackgroundColor" Value="Transparent" />
+                                </VisualState.Setters>
+                              </VisualState>
+                            </VisualStateGroup>
+                           </VisualStateManager.VisualStateGroups>
+
+                            <!-- Box view -->
+                            <Border 
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                Background="{StaticResource Magenta}"
+                                StrokeShape="RoundRectangle 10"
+                                HeightRequest="150">
+                                <Border.Shadow>
+                                    <Shadow 
+                                        Brush="{StaticResource Black}" 
+                                        Opacity="1" 
+                                        Offset="0,0" 
+                                        Radius="8"/>
+                                </Border.Shadow>
+
+                                <StackLayout>
+                                    <Label
+                                        Text="{Binding .}" 
+                                        FontSize="Large" 
+                                        FontAttributes="Bold"
+                                        FontFamily="ItimRegular"
+                                        TextColor="{StaticResource Yellow}"
+                                        BackgroundColor="Transparent"
+                                        HorizontalTextAlignment="Center">
                                     </Label>
-                                   
+                                        
                                 </StackLayout>
-                        </Border>
-                    </Grid>
-                    </ViewCell>
-                    </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.ItemsSource>
+                            </Border>
+                        </Grid>
+                      </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.ItemsSource>
                       <x:Array Type="{x:Type x:String}">
                         <x:String>Item 1</x:String>
                         <x:String>Item 2</x:String>
                         <x:String>Item 3</x:String>
+                        <x:String>Item 4</x:String>
+                        <x:String>Item 5</x:String>
                       </x:Array>
-                    </ListView.ItemsSource>
-                </ListView>
-             </StackLayout>
-        </DataTemplate>
-        </CarouselView.ItemTemplate>
-        </CarouselView>
+                    </CollectionView.ItemsSource>
+                  </CollectionView>
+                </Grid>
+              </DataTemplate>
+            </CarouselView.ItemTemplate>
+          </CarouselView>
 
         <!-- Indicator  -->
         <IndicatorView
@@ -264,7 +278,6 @@
             </Grid>   
         </StackLayout>
     </Grid>
-    </ScrollView>
 </views:BaseView>
 
 
