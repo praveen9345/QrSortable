@@ -120,6 +120,11 @@ namespace QrSortable.Resources
         /// </summary>
         public const string Search = "\uF69a";
 
+        /// <summary>
+        ///     The name of the swipe icon.
+        /// </summary>
+        public const string Swipe = "\uF18e";
+
        
     }
 }

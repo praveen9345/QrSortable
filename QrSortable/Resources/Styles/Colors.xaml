@@ -13,6 +13,8 @@
     <Color x:Key="SecondaryDarkText">#9880e5</Color>
     <Color x:Key="Tertiary">#2B0B98</Color>
     <Color x:Key="StatusBarColor">#525252</Color>
+    <Color x:Key="IndicatorSelectedColor">#404040</Color>
+    <Color x:Key="CarouselColor">#535151</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Yellow">#FDB623</Color>

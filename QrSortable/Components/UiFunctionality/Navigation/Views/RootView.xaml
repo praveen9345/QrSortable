@@ -69,7 +69,7 @@
                     </Button>
             </Grid>
         </Border>
- 
+
         <!-- separator  -->
         <BoxView 
             Grid.Row="1"
@@ -78,6 +78,129 @@
             HorizontalOptions="Fill"
             VerticalOptions="Center"/> 
         
+        <!-- Carousel View  -->   
+        <CarouselView  
+           Grid.Row = "2" 
+           IndicatorView="indicatorView"
+           BackgroundColor="Transparent">
+           <CarouselView.ItemsSource>
+              <x:Array Type="{x:Type x:String}">
+                <x:String>Storage room</x:String>
+                <x:String>Bed room</x:String>
+                <x:String>Living room</x:String>
+              </x:Array>
+            </CarouselView.ItemsSource>
+            <CarouselView.ItemTemplate>
+              <DataTemplate>
+               <!-- Boxes view  -->
+              <StackLayout>
+                 <!-- Category -->
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="8*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <!-- Category view  -->
+                    <Label
+                      Grid.Column="1"
+                      Text="{Binding .}" 
+                      FontSize="Large" 
+                      FontAttributes="Bold"
+                      FontFamily="ItimRegular"
+                      TextColor="{StaticResource Yellow}"
+                      BackgroundColor="Transparent"
+                      HorizontalTextAlignment="Center">
+                    </Label>
+                     
+                    <!-- Swipe view  -->
+                    <Button
+                      Grid.Column="2"
+                      Padding="0"
+                      WidthRequest="30"
+                      BackgroundColor="Transparent"
+                      CornerRadius="50">
+                        <Button.ImageSource >
+                          <FontImageSource 
+                            FontFamily="FluentIcons" 
+                            Color="{StaticResource Yellow}"
+                            Glyph="{x:Static local:IconNames.Swipe}"/>
+                        </Button.ImageSource>
+                    </Button>
+                  </Grid>
+                  <!-- google Add Banner -->
+<!--                   <admob:BannerAd 
+                    Grid.Row="1"
+                    IsVisible="{Binding GoogleAddVisible}"
+                    AdUnitId="ca-app-pub-3940256099942544/6300978111" /> -->
+                 <!-- List view  -->
+                <ListView
+                    SelectionMode="Single"
+                    HasUnevenRows="{OnPlatform Android='True', iOS='True', WinUI='False'}" 
+                    CachingStrategy="RecycleElement"
+                    HorizontalOptions="Fill" 
+                    VerticalOptions="Fill"
+                    SeparatorVisibility="None">
+                   <ListView.ItemTemplate>
+                   <DataTemplate>
+                   <ViewCell>
+                    <Grid 
+                        Padding="15,5,15,10"
+                        HorizontalOptions="Fill" 
+                        VerticalOptions="Fill">
+                        <Border 
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill"
+                            Background="{StaticResource Magenta}"
+                            StrokeShape="RoundRectangle 10"
+                            HeightRequest="200">
+                            <Border.Shadow>
+                                <Shadow 
+                                    Brush="{StaticResource Black}" 
+                                    Opacity="1" 
+                                    Offset="0,0" 
+                                    Radius="8"/>
+                            </Border.Shadow>
+                            <StackLayout>
+                                <Label
+                                    Text="{Binding .}" 
+                                    FontSize="Large" 
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    TextColor="{StaticResource Yellow}"
+                                    BackgroundColor="Transparent"
+                                    HorizontalTextAlignment="Center">
+                                    </Label>
+                                   
+                                </StackLayout>
+                        </Border>
+                    </Grid>
+                    </ViewCell>
+                    </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemsSource>
+                      <x:Array Type="{x:Type x:String}">
+                        <x:String>Item 1</x:String>
+                        <x:String>Item 2</x:String>
+                        <x:String>Item 3</x:String>
+                      </x:Array>
+                    </ListView.ItemsSource>
+                </ListView>
+             </StackLayout>
+        </DataTemplate>
+        </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <!-- Indicator  -->
+        <IndicatorView
+            Grid.Row = "2" 
+            x:Name="indicatorView" 
+            Margin="10" 
+            IndicatorSize="12"
+            VerticalOptions="End"
+            HorizontalOptions ="Center"
+            IndicatorColor="{StaticResource IndicatorSelectedColor}"
+            SelectedIndicatorColor="{StaticResource Yellow}"/>
 
         <!--Bottom Butoon layout -->
         <StackLayout 
