@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<views:BaseView 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    xmlns:local="clr-namespace:QrSortable.Resources"
+    x:Class="QrSortable.Components.UiFunctionality.Navigation.Views.RootView">    
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Placeholder for serch and others -->
+            <RowDefinition Height="Auto"></RowDefinition>
+            <!-- Divider -->
+            <RowDefinition Height="Auto"></RowDefinition>
+            <!-- Carouseview  -->
+            <RowDefinition Height="*"></RowDefinition>
+            <!-- Botton main button -->
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+
+
+
+        <!--Bottom Butoon layout -->
+        <StackLayout 
+            Grid.Row = "3" 
+            BackgroundColor ="{StaticResource DarkGrey}">
+            <!-- Separator  -->
+            <BoxView 
+                HeightRequest="2"
+                BackgroundColor="{StaticResource Yellow}"
+                HorizontalOptions="Fill"
+                VerticalOptions="Center">
+            </BoxView>
+                
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <!-- menu button -->
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <!-- qr scan button -->
+                    <ColumnDefinition Width=".4*"></ColumnDefinition>
+                    <!-- history button -->
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions> 
+                
+                <!--  Menu button -->
+                <Button
+                    Grid.Column="0"   
+                    Text="{Binding [MenuText]}"
+                    Style="{StaticResource BottomButton}"
+                    Command="{Binding MenuCommand}"
+                    CornerRadius="0">
+                    <Button.ImageSource >
+                        <FontImageSource 
+                          FontFamily="FluentIcons"
+                          Glyph="{x:Static local:IconNames.MenuIcon}"/>
+                    </Button.ImageSource>
+                </Button>
+
+                <!-- qr scan button -->
+                <Button
+                    Grid.Column="1"
+                    Style="{StaticResource BottomButton}"
+                    Command="{Binding QrScanCommand}"
+                    ImageSource="qr_scan.webp"     
+                    Padding="-12"   
+                    CornerRadius="100"> 
+                </Button>
+                    
+                <!-- history button  -->
+                <Button
+                    Grid.Column="2" 
+                    Text="{Binding [HistoryText]}"
+                    Style="{StaticResource BottomButton}"
+                    Command="{Binding HistoryCommand}"
+                    CornerRadius="0">
+                    <Button.ImageSource >
+                        <FontImageSource 
+                            FontFamily="FluentIcons"
+                            Glyph="{x:Static local:IconNames.MyStory}"/>
+                    </Button.ImageSource>
+                </Button>
+            </Grid>   
+        </StackLayout>
+    </Grid>
+</views:BaseView>
+
+
+           
