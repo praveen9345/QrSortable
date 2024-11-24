@@ -5,6 +5,15 @@
     using Microsoft.Maui.Controls.Compatibility.Hosting;
     using QrSortable.Components.PlatformUtils;
 
+    #if ANDROID
+      using Android.Graphics.Drawables;
+      using Android.Graphics;
+      using Microsoft.Maui.Controls.Handlers;
+      using Android.Widget;
+    #elif IOS
+      using UIKit;
+    #endif
+
     public static class MauiProgram
 	{
 		public static MauiApp CreateMauiApp()
@@ -22,7 +31,22 @@
                     fonts.AddFont("FluentSystemIcons-Filled.ttf", "FluentIcons");
 				})
 				.RegisterServices()
-                .RegisterViewsAndViewModels();
+                .RegisterViewsAndViewModels()
+                .ConfigureMauiHandlers(handlers =>
+                {
+                #if ANDROID
+                    Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("Entry", (handler, _) =>
+                    {  
+                        handler.PlatformView.Background = null;
+                    });
+                #elif IOS
+                    Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("Entry", (handler, _) =>
+                    {  
+                        handler.PlatformView.BorderStyle = UITextBorderStyle.None;
+                    });
+                #endif
+
+                });
 
 			var app = builder.Build();
             // Needs to be initialized after building the app to link the services to the created singletons.

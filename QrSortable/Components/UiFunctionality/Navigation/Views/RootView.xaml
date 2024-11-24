@@ -5,6 +5,7 @@
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     xmlns:local="clr-namespace:QrSortable.Resources"
     x:Class="QrSortable.Components.UiFunctionality.Navigation.Views.RootView">    
+    <ScrollView>
     <Grid>
         <Grid.RowDefinitions>
             <!-- Placeholder for serch and others -->
@@ -17,8 +18,66 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         
+        <!-- Placeholder for serch and others -->
+        <Border 
+            Grid.Row="0"
+            Margin="10"
+            Padding="2"
+            Background="{StaticResource DarkGrey}"
+            StrokeShape="RoundRectangle 20"
+            HorizontalOptions="Fill"> 
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <!-- menu button -->
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <!-- qr scan button -->
+                    <ColumnDefinition Width="8*"></ColumnDefinition>
+                    <!-- history button -->
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions> 
+                    <!-- serch icon -->
+                    <Image
+                        HeightRequest="30"
+                        Grid.Column="0">
+                            <Image.Source>
+                                <FontImageSource 
+                                    FontFamily="FluentIcons"
+                                    Color="{StaticResource Yellow}"
+                                    Glyph="{x:Static local:IconNames.Search}"/>
+                            </Image.Source>
+                        </Image>
 
-
+                    <!-- Serch Text -->
+                    <Entry 
+                        Grid.Column="1" 
+                        Placeholder="Find ..." 
+                        Style="{StaticResource NormalText}"/>
+                    
+                    <!-- microphone button -->
+                    <Button
+                        Grid.Column="2"
+                        Padding="0"
+                        CornerRadius="100"
+                        HeightRequest="30"
+                        BackgroundColor="Transparent"> 
+                        <Button.ImageSource>
+                            <FontImageSource 
+                                FontFamily="FluentIcons"
+                                Color="{StaticResource Yellow}"
+                                Glyph="{x:Static local:IconNames.Gift}"/>
+                        </Button.ImageSource>
+                    </Button>
+            </Grid>
+        </Border>
+ 
+        <!-- separator  -->
+        <BoxView 
+            Grid.Row="1"
+            HeightRequest="2"
+            Color="{StaticResource Yellow}"
+            HorizontalOptions="Fill"
+            VerticalOptions="Center"/> 
+        
 
         <!--Bottom Butoon layout -->
         <StackLayout 
@@ -82,6 +141,7 @@
             </Grid>   
         </StackLayout>
     </Grid>
+    </ScrollView>
 </views:BaseView>
 
 

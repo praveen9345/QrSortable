@@ -114,5 +114,12 @@ namespace QrSortable.Resources
         ///     The name of the delete icon.
         /// </summary>
         public const string Delete = "\uF34d";
+
+        /// <summary>
+        ///     The name of the search icon.
+        /// </summary>
+        public const string Search = "\uF69a";
+
+       
     }
 }

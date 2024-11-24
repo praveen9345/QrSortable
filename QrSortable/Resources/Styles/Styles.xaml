@@ -7,8 +7,15 @@
     <Style TargetType="Label" x:Key="Headline">
         <Setter Property="TextColor" Value="{DynamicResource White}" />
         <Setter Property="FontSize" Value="32" />
+        <Setter Property="FontFamily" Value="ItimRegular" />
         <Setter Property="HorizontalOptions" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="NormalText">
+        <Setter Property="TextColor" Value="{DynamicResource White}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontFamily" Value="ItimRegular"/>
     </Style>
 
     <Style TargetType="Button" x:Key="BottomButton">
