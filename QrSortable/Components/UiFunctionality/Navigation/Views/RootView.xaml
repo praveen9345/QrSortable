@@ -93,7 +93,7 @@
               <DataTemplate>
                <!-- boxes view  -->
                 <Grid>
-                    <Grid.RowDefinitions>
+                <Grid.RowDefinitions>
                     <!-- category button -->
                     <RowDefinition Height="Auto"></RowDefinition>
                     <!-- qr scan button -->
@@ -163,9 +163,9 @@
                             <Border 
                                 HorizontalOptions="Fill"
                                 VerticalOptions="Fill"
-                                Background="{StaticResource Magenta}"
+                                Background="{StaticResource White}"
                                 StrokeShape="RoundRectangle 10"
-                                HeightRequest="150">
+                                Padding="5">
                                 <Border.Shadow>
                                     <Shadow 
                                         Brush="{StaticResource Black}" 
@@ -173,18 +173,94 @@
                                         Offset="0,0" 
                                         Radius="8"/>
                                 </Border.Shadow>
-
                                 <StackLayout>
-                                    <Label
-                                        Text="{Binding .}" 
-                                        FontSize="Large" 
-                                        FontAttributes="Bold"
-                                        FontFamily="ItimRegular"
-                                        TextColor="{StaticResource Yellow}"
-                                        BackgroundColor="Transparent"
-                                        HorizontalTextAlignment="Center">
-                                    </Label>
-                                        
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <!-- box detail view -->
+                                        <RowDefinition Height="5*"></RowDefinition>
+                                        <!-- box contain view -->
+                                        <RowDefinition Height="5*"></RowDefinition>
+                                    </Grid.RowDefinitions> 
+                                   <!-- box detail view -->
+                                    <Grid 
+                                        Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="7*" />
+                                            <ColumnDefinition Width="3*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Image
+                                            Grid.Column="0"
+                                            Source="box.png"
+                                            Aspect="AspectFit"/>
+                                        <StackLayout
+                                            Grid.Column="1">
+                                            <Label
+                                                Text="{Binding .}" 
+                                                FontSize="Large" 
+                                                FontAttributes="Bold"
+                                                FontFamily="ItimRegular"
+                                                TextColor="{StaticResource Black}"
+                                                BackgroundColor="Transparent"
+                                                HorizontalTextAlignment="Start"
+                                                VerticalTextAlignment="Center"/>
+                                            <StackLayout 
+                                                Orientation ="Horizontal">
+                                                 <Image
+                                                    Source="location.png"
+                                                    Aspect="AspectFit"/>
+                                                <Label
+                                                    Text="Blue color closet" 
+                                                    FontSize="Medium" 
+                                                    FontFamily="ItimRegular"
+                                                     FontAttributes="Bold"
+                                                    TextColor="{StaticResource Black}"
+                                                    BackgroundColor="Transparent"
+                                                    HorizontalTextAlignment="Start"
+                                                    VerticalTextAlignment="Center"/>
+                                            </StackLayout>
+                                            <Label
+                                                Text="16 Dec 2022, 9:30 pm" 
+                                                FontSize="Medium" 
+                                                FontFamily="ItimRegular"
+                                                FontAttributes="Bold"
+                                                TextColor="{StaticResource Black}"
+                                                BackgroundColor="Transparent"
+                                                HorizontalTextAlignment="Start"
+                                                VerticalTextAlignment="Center"/>
+                                        </StackLayout>
+                                    </Grid>
+
+                                    <StackLayout 
+                                        Grid.Row="1"
+                                        Margin="5,0,0,5">
+                                        <!-- separator  -->
+                                        <BoxView 
+                                            HeightRequest="2"
+                                            Color="{StaticResource Black}"
+                                            HorizontalOptions="Fill"
+                                            VerticalOptions="Center"/> 
+
+                                        <Label
+                                            Text="Ski Gear" 
+                                            FontSize="Large" 
+                                            FontAttributes="Bold"
+                                            FontFamily="ItimRegular"
+                                            TextColor="{StaticResource Black}"
+                                            BackgroundColor="Transparent"
+                                            VerticalTextAlignment="Start"
+                                            HorizontalTextAlignment="Start"/>
+                                        <Label
+                                            Text="Paper,powder pants, jacket, gloves, and more.vvvvvvvvvvvvvvvhhhhhhhhhhhhhhhhhhgggggggggggggggggggggggh" 
+                                            FontSize="Medium" 
+                                            FontFamily="ItimRegular"
+                                             FontAttributes="Bold"
+                                            TextColor="{StaticResource Black}"
+                                            BackgroundColor="Transparent"
+                                            VerticalTextAlignment="Start"
+                                            HorizontalTextAlignment="Start"/>
+                                    </StackLayout>      
+                                </Grid>
                                 </StackLayout>
                             </Border>
                         </Grid>
