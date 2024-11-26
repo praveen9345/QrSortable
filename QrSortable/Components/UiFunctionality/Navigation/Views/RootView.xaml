@@ -80,6 +80,7 @@
         <!-- Carousel View  -->
         <CarouselView  
             Grid.Row = "2" 
+            IsVisible="True"
             IndicatorView="indicatorView"
             BackgroundColor="Transparent">
             <CarouselView.ItemsSource>
@@ -284,6 +285,7 @@
         <!-- Indicator  -->
         <IndicatorView
             Grid.Row = "2" 
+            IsVisible="False"
             x:Name="indicatorView" 
             Margin="10" 
             IndicatorSize="12"
@@ -292,6 +294,179 @@
             IndicatorColor="{StaticResource IndicatorSelectedColor}"
             SelectedIndicatorColor="{StaticResource Yellow}"/>
 
+        <!--Search layout -->
+        <Grid
+           Grid.Row="2"
+            IsVisible="False">
+            <!--collection view -->
+            <CollectionView 
+            SelectionMode="None"
+            VerticalOptions="Fill">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10">
+                        <!-- Box view -->
+                        <Border 
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill"
+                            Background="{StaticResource CarouselColor}"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="5">
+                            <Border.Shadow>
+                                <Shadow 
+                                    Brush="{StaticResource Black}" 
+                                    Opacity="1" 
+                                    Offset="0,0" 
+                                    Radius="8"/>
+                            </Border.Shadow>
+
+                            <StackLayout>
+                                    <Label
+                                        Grid.Column="0"
+                                        Text="{Binding .}" 
+                                        FontSize="Large" 
+                                        FontAttributes="Bold"
+                                        FontFamily="ItimRegular"
+                                        TextColor="{StaticResource Yellow}"
+                                        BackgroundColor="Transparent"
+                                        HorizontalTextAlignment="Center">
+                                    </Label>
+
+                                    <Grid>
+                                        <CollectionView 
+                                            SelectionMode="Single"
+                                            VerticalOptions="Fill">     
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Padding="5">
+                                                        <!-- Box view -->
+                                                        <Border 
+                                                            HorizontalOptions="Fill"
+                                                            VerticalOptions="Fill"
+                                                            Background="{StaticResource White}"
+                                                            StrokeShape="RoundRectangle 10"
+                                                            Padding="5">    
+                                                            <StackLayout>
+                                                                <Grid>
+                                                                    <Grid.RowDefinitions>
+                                                                        <!-- box detail view -->
+                                                                        <RowDefinition Height="5*"></RowDefinition>
+                                                                        <!-- box contain view -->
+                                                                        <RowDefinition Height="5*"></RowDefinition>
+                                                                    </Grid.RowDefinitions>
+                                                                    <!-- box detail view -->
+                                                                    <Grid 
+                                                                        Grid.Row="0">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="3*" />
+                                                                            <ColumnDefinition Width="7*" />
+                                                                            <ColumnDefinition Width="3*" />
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Image
+                                                                            Grid.Column="0"
+                                                                            Source="box.png"
+                                                                            Aspect="AspectFit"/>            
+                                                                        <StackLayout
+                                                                            Grid.Column="1">
+                                                                            <Label
+                                                                                Text="{Binding .}" 
+                                                                                FontSize="Large" 
+                                                                                FontAttributes="Bold"
+                                                                                FontFamily="ItimRegular"
+                                                                                TextColor="{StaticResource Black}"
+                                                                                BackgroundColor="Transparent"
+                                                                                HorizontalTextAlignment="Start"
+                                                                                VerticalTextAlignment="Center"/>    
+                                                                            <StackLayout 
+                                                                                Orientation ="Horizontal">
+                                                                                <Image
+                                                                                    Source="location.png"
+                                                                                    Aspect="AspectFit"/>
+                                                                                <Label
+                                                                                    Text="Blue color closet" 
+                                                                                    FontSize="Medium" 
+                                                                                    FontFamily="ItimRegular"
+                                                                                     FontAttributes="Bold"
+                                                                                    TextColor="{StaticResource Black}"
+                                                                                    BackgroundColor="Transparent"
+                                                                                    HorizontalTextAlignment="Start"
+                                                                                    VerticalTextAlignment="Center"/>
+                                                                            </StackLayout>
+                                                                            <Label
+                                                                                Text="16 Dec 2022, 9:30 pm" 
+                                                                                FontSize="Medium" 
+                                                                                FontFamily="ItimRegular"
+                                                                                FontAttributes="Bold"
+                                                                                TextColor="{StaticResource Black}"
+                                                                                BackgroundColor="Transparent"
+                                                                                HorizontalTextAlignment="Start"
+                                                                                VerticalTextAlignment="Center"/>
+                                                                        </StackLayout>
+                                                                    </Grid>
+
+                                                                    <StackLayout 
+                                                                        Grid.Row="1"
+                                                                        Margin="5,0,0,5">
+                                                                        <!-- separator  -->
+                                                                        <BoxView 
+                                                                            HeightRequest="2"
+                                                                            Color="{StaticResource Black}"
+                                                                            HorizontalOptions="Fill"
+                                                                            VerticalOptions="Center"/>
+
+                                                                        <Label
+                                                                            Text="Ski Gear" 
+                                                                            FontSize="Large" 
+                                                                            FontAttributes="Bold"
+                                                                            FontFamily="ItimRegular"
+                                                                            TextColor="{StaticResource Black}"
+                                                                            BackgroundColor="Transparent"
+                                                                            VerticalTextAlignment="Start"
+                                                                            HorizontalTextAlignment="Start"/>
+                                                                        <Label
+                                                                            Text="Paper,powder pants, jacket, gloves, and more.vvvvvvvvvvvvvvvhhhhhhhhhhhhhhhhhhgggggggggggggggggggggggh" 
+                                                                            FontSize="Medium" 
+                                                                            FontFamily="ItimRegular"
+                                                                             FontAttributes="Bold"
+                                                                            TextColor="{StaticResource Black}"
+                                                                            BackgroundColor="Transparent"
+                                                                            VerticalTextAlignment="Start"
+                                                                            HorizontalTextAlignment="Start"/>
+                                                                    </StackLayout>
+                                                                </Grid>
+                                                            </StackLayout>
+                                                        </Border>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                            <CollectionView.ItemsSource>
+                                                <x:Array Type="{x:Type x:String}">
+                                                    <x:String>Item 1</x:String>
+                                                    <x:String>Item 2</x:String>
+                                                    <x:String>Item 3</x:String>
+                                                    <x:String>Item 4</x:String>
+                                                    <x:String>Item 5</x:String>
+                                                </x:Array>
+                                            </CollectionView.ItemsSource>
+                                        </CollectionView>
+                                    </Grid>
+                            </StackLayout>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Storage room</x:String>
+                    <x:String>Bed room</x:String>
+                    <x:String>Living room</x:String>
+                    <x:String>Office room</x:String>
+                    <x:String>Bath room</x:String>
+                </x:Array>
+            </CollectionView.ItemsSource>
+         </CollectionView>
+        </Grid>
+        
         <!--Bottom Butoon layout -->
         <StackLayout 
             Grid.Row = "3" 
