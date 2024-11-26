@@ -1,17 +1,16 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using QrSortable.Components.CoreFeatures.Scanner.Views;
-
-namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
+﻿namespace QrSortable.Components.CoreFeatures.Scanner.ViewModels
 {
+    using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+
     /// <summary>
     ///     The view model of the root view screen.
     /// </summary>
-    public partial class RootViewModel : BaseViewModel
+    public partial class QrBrScannerViewModel : BaseViewModel
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="RootViewModel" />.
+        ///     Initializes a new instance of the <see cref="QrBrScannerViewModel" />.
         /// </summary>
-        public RootViewModel()
+        public QrBrScannerViewModel()
         {
             IsBackNavigationEnabled = true;
         }
@@ -26,10 +25,5 @@ namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
             await base.InitializeAsync();
 
         }
-
-        public AsyncRelayCommand QrScanCommand => new AsyncRelayCommand(async () =>
-        {
-            await NavigationService.Navigate<QrBrScannerView>();
-        });
-    }  
+    }
 }

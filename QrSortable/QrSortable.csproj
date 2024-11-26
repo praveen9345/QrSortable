@@ -68,6 +68,9 @@
  
     <!-- Register the AppResources files -->
 	<ItemGroup>
+       <Compile Update="Components\CoreFeatures\Scanner\Views\QrBrScannerView.xaml.cs">
+         <DependentUpon>QrBrScannerView.xaml</DependentUpon>
+       </Compile>
        <Compile Update="Components\UiFunctionality\Localization\AppResources.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
@@ -82,7 +85,18 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="JWT" Version="10.1.1" />
 		<PackageReference Include="modernhttpclient-updated" Version="3.4.3" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Components\CoreFeatures\Onboarding\" />
+	  <Folder Include="Components\CoreFeatures\Scanner\Models\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Components\CoreFeatures\Scanner\Views\QrBrScannerView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>
