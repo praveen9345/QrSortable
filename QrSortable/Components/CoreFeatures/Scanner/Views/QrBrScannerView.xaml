@@ -63,7 +63,7 @@
             <Image   
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
-                Source="qr_code.svg"
+                Source="qr_code"
                 Opacity="0.3"/>
             
             <!-- Qr-scan buttom -->

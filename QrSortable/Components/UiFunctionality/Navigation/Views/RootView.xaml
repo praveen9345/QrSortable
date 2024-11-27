@@ -192,7 +192,7 @@
                                         </Grid.ColumnDefinitions>
                                         <Image
                                             Grid.Column="0"
-                                            Source="box.png"
+                                            Source="box"
                                             Aspect="AspectFit"/>
                                         <StackLayout
                                             Grid.Column="1">
@@ -208,8 +208,10 @@
                                             <StackLayout 
                                                 Orientation ="Horizontal">
                                                  <Image
-                                                    Source="location.png"
-                                                    Aspect="AspectFit"/>
+                                                     HeightRequest="40"
+                                                     WidthRequest="40"
+                                                     Source="location"
+                                                     Aspect="AspectFit"/>
                                                 <Label
                                                     Text="Blue color closet" 
                                                     FontSize="Medium" 
@@ -364,7 +366,7 @@
                                                                         </Grid.ColumnDefinitions>
                                                                         <Image
                                                                             Grid.Column="0"
-                                                                            Source="box.png"
+                                                                            Source="box"
                                                                             Aspect="AspectFit"/>            
                                                                         <StackLayout
                                                                             Grid.Column="1">
@@ -380,7 +382,9 @@
                                                                             <StackLayout 
                                                                                 Orientation ="Horizontal">
                                                                                 <Image
-                                                                                    Source="location.png"
+                                                                                    HeightRequest="20"
+                                                                                    WidthRequest="20"
+                                                                                    Source="location"
                                                                                     Aspect="AspectFit"/>
                                                                                 <Label
                                                                                     Text="Blue color closet" 
@@ -508,7 +512,7 @@
                     Grid.Column="1"
                     Style="{StaticResource BottomButton}"
                     Command="{Binding QrScanCommand}"
-                    ImageSource="qr_scan.webp"     
+                    ImageSource="qr_scan"     
                     Padding="-12"   
                     CornerRadius="100"> 
                 </Button>

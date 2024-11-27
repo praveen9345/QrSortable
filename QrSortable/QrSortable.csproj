@@ -57,7 +57,7 @@
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
 		<!-- Images -->
-		<MauiImage Include="Resources\Images\*.svg" BaseSize="300,300"/>
+		<MauiImage Include="Resources\Images\*.svg" BaseSize="300,300" />
 		
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -68,10 +68,7 @@
 	
 	<!-- Register the MAUI images -->
 	<ItemGroup>
-		<MauiImage Include = "Resources\Images\background_layout.webp"/>
-		<MauiImage Include = "Resources\Images\qr_scan.webp"/>
-		<MauiImage Include = "Resources\Images\box.png"/>
-		<MauiImage Include = "Resources\Images\location.png"/>
+		<MauiImage Include="Resources\Images\background_layout.webp" />
 	</ItemGroup>
  
     <!-- Register the AppResources files -->
