@@ -1,7 +1,9 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.ViewModels
 {
     using BarcodeScanning;
+    using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
 
     /// <summary>
@@ -9,12 +11,15 @@
     /// </summary>
     public partial class QrBrScannerViewModel : BaseViewModel
     {
+        private bool _isBarcodeDetected = false;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="QrBrScannerViewModel" />.
         /// </summary>
         public QrBrScannerViewModel()
         {
             IsBackNavigationEnabled = true;
+           
         }
 
         /// <summary>
@@ -28,9 +33,42 @@
             await Methods.AskForRequiredPermissionAsync();
         }
 
+        [ObservableProperty]
+        private bool _isCameraEnabled;
+
+        public override void ViewAppearing()
+        {
+            base.ViewAppearing();
+            IsCameraEnabled = true;
+        }
+
+        public override void ViewDisappearing()
+        {
+            base.ViewDisappearing();
+            _isBarcodeDetected = false;
+            IsCameraEnabled = false;
+        }
+
         public AsyncRelayCommand FlashLightCommand => new AsyncRelayCommand(async () =>
         {
             
+        });
+
+
+        public AsyncRelayCommand<IReadOnlySet<BarcodeResult>> DetectionFinishedCommand =>
+        new AsyncRelayCommand<IReadOnlySet<BarcodeResult>>(async (IReadOnlySet<BarcodeResult> result) =>
+        {
+            if (result.Count > 0)
+            {
+                Console.WriteLine("Found the BarcodeResult: " + result.Count + " ; " + $"{result.FirstOrDefault()?.DisplayValue}" + " ; " +
+                                result.FirstOrDefault()?.BarcodeFormat.ToString());
+                if (!_isBarcodeDetected)
+                {
+                    _isBarcodeDetected = true;
+                    await NavigationService.Navigate<BoxDetailView>();
+                }
+                
+            }
         });
 
     }

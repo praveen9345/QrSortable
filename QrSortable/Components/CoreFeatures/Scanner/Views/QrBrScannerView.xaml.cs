@@ -4,7 +4,7 @@
     using ViewModels;
 
     /// <summary>
-    /// The code behind of the RootView view.
+    /// The code behind of the qr code or bar code view.
     /// </summary>
     public partial class QrBrScannerView : BaseView
     {
@@ -19,21 +19,6 @@
             
         }
 
-        private void CameraView_OnDetectionFinished(object sender, BarcodeScanning.OnDetectionFinishedEventArg e)
-        {
-            if (e.BarcodeResults.Count > 0)
-            {
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    Application.Current.Dispatcher.DispatchAsync(async() => 
-                    {
-                        await DisplayAlert("Info:", e.BarcodeResults.Count + " ; " + $"{e.BarcodeResults.FirstOrDefault()?.DisplayValue}" + " ; " +
-                            e.BarcodeResults.FirstOrDefault()?.BarcodeFormat.ToString(), "Ok");
-                    });
-                });
-
-            }
-        }
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);

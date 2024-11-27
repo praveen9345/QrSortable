@@ -73,6 +73,9 @@
  
     <!-- Register the AppResources files -->
 	<ItemGroup>
+       <Compile Update="Components\CoreFeatures\Scanner\Views\BoxDetailView.xaml.cs">
+         <DependentUpon>BoxDetailView.xaml</DependentUpon>
+       </Compile>
        <Compile Update="Components\CoreFeatures\Scanner\Views\QrBrScannerView.xaml.cs">
          <DependentUpon>QrBrScannerView.xaml</DependentUpon>
        </Compile>
@@ -100,6 +103,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Components\CoreFeatures\Scanner\Views\BoxDetailView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Components\CoreFeatures\Scanner\Views\QrBrScannerView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
