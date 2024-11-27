@@ -125,6 +125,21 @@ namespace QrSortable.Resources
         /// </summary>
         public const string Swipe = "\uF18e";
 
-       
+        /// <summary>
+        ///     The name of the flash on icon.
+        /// </summary>
+        public const string QrScan = "\uEa8d";
+
+        /// <summary>
+        ///     The name of the flash on icon.
+        /// </summary>
+        public const string BarCode = "\uE8A1";
+
+        /// <summary>
+        ///     The name of the flash off icon.
+        /// </summary>
+        public const string FlashOff = "\uF417";
+
+
     }
 }

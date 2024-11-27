@@ -1,5 +1,7 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.ViewModels
 {
+    using BarcodeScanning;
+    using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
 
     /// <summary>
@@ -23,7 +25,13 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-
+            await Methods.AskForRequiredPermissionAsync();
         }
+
+        public AsyncRelayCommand FlashLightCommand => new AsyncRelayCommand(async () =>
+        {
+            
+        });
+
     }
 }

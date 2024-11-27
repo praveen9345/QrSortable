@@ -4,15 +4,16 @@
     using CommunityToolkit.Maui;
     using Microsoft.Maui.Controls.Compatibility.Hosting;
     using QrSortable.Components.PlatformUtils;
+    using BarcodeScanning;
 
-    #if ANDROID
-      using Android.Graphics.Drawables;
+#if ANDROID
+    using Android.Graphics.Drawables;
       using Android.Graphics;
       using Microsoft.Maui.Controls.Handlers;
       using Android.Widget;
-    #elif IOS
+#elif IOS
       using UIKit;
-    #endif
+#endif
 
     public static class MauiProgram
 	{
@@ -23,6 +24,7 @@
 				.UseMauiApp<App>()
 				.UseMauiCommunityToolkit()
 				.UseMauiCompatibility()
+                .UseBarcodeScanning()
 				.ConfigureFonts(fonts =>
 				{
 					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

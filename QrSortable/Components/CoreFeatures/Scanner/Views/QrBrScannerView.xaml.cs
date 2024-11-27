@@ -16,6 +16,30 @@
         {
             InitializeComponent();
             BindingContext = viewModel;
+            
+        }
+
+        private void CameraView_OnDetectionFinished(object sender, BarcodeScanning.OnDetectionFinishedEventArg e)
+        {
+            if (e.BarcodeResults.Count > 0)
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Application.Current.Dispatcher.DispatchAsync(async() => 
+                    {
+                        await DisplayAlert("Info:", e.BarcodeResults.Count + " ; " + $"{e.BarcodeResults.FirstOrDefault()?.DisplayValue}" + " ; " +
+                            e.BarcodeResults.FirstOrDefault()?.BarcodeFormat.ToString(), "Ok");
+                    });
+                });
+
+            }
+        }
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height);
+            cameraView.HeightRequest = height;
+            infoText.Margin= new Thickness(left: 0, top: height/4, right: 0, bottom: 0);
+
         }
     }
 }

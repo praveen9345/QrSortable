@@ -4,9 +4,26 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     xmlns:local="clr-namespace:QrSortable.Resources"
-    x:Class=" QrSortable.Components.CoreFeatures.Scanner.Views.QrBrScannerView">
+    xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
+    x:Class="QrSortable.Components.CoreFeatures.Scanner.Views.QrBrScannerView">
     <views:BaseView.Content>
         <Grid>
+
+            <Grid.RowDefinitions>
+                <!-- back -->
+                <RowDefinition Height="Auto"></RowDefinition>
+                <!-- Camera view -->
+                <RowDefinition Height="*"></RowDefinition>
+
+            </Grid.RowDefinitions>
+            <scanner:CameraView
+                Grid.Row="0"
+                x:Name="cameraView"
+                CameraEnabled="True"
+                AimMode="True"
+                ViewfinderMode="True"
+                TapToFocusEnabled="True"
+                OnDetectionFinished="CameraView_OnDetectionFinished"/>
             <!-- Back button -->
             <Button
                 Grid.Row="0"
@@ -22,7 +39,7 @@
                         Brush="Black"
                         Opacity="0.5"
                         Offset="0,0"
-                        Radius="10"/>  
+                        Radius="10"/>
                 </Button.Shadow>
                 <Button.ImageSource >
                     <FontImageSource 
@@ -31,76 +48,94 @@
                         Glyph="{x:Static local:IconNames.Back}"/>
                 </Button.ImageSource>
             </Button>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <!-- Placeholder for serch and others -->
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <!-- Divider -->
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <!-- Carouseview  -->
-                    <RowDefinition Height="*"></RowDefinition>
-                    <!-- Botton main button -->
-                    <RowDefinition Height="Auto"></RowDefinition>
-                </Grid.RowDefinitions>
+            
+            <!-- Information Text -->
+            <Label
+                x:Name="infoText"
+                Text="Align within the frame to scan"
+                FontFamily="ItimRegular"
+                FontSize="Large"
+                FontAttributes="Bold"
+                TextColor="{StaticResource Primary}"
+                HorizontalOptions="Center"/>
 
+            <!-- frame image -->
+            <Image   
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Source="qr_code.svg"
+                Opacity="0.3"/>
+            
+            <!-- Qr-scan buttom -->
+            <Button
+                 Margin="50,0,0,50"
+                 HorizontalOptions="Start"
+                 VerticalOptions="End"
+                 BackgroundColor="{StaticResource DarkGrey}"
+                 CornerRadius="50"
+                 Padding="10">   
+                <Button.Shadow>
+                    <Shadow
+                     Brush="Black"
+                     Opacity="0.5"
+                     Offset="0,0"
+                     Radius="10"/>
+                </Button.Shadow>
+                <Button.ImageSource >
+                    <FontImageSource 
+                     FontFamily="FluentIcons" 
+                     Color="{StaticResource Primary}"
+                     Glyph="{x:Static local:IconNames.QrScan}"/>
+                </Button.ImageSource>
+            </Button>
 
+            <!-- FlashOn/Off buttom -->
+            <Button
+              Margin="0,0,0,50"
+              HorizontalOptions="Center"
+              VerticalOptions="End"
+              CornerRadius="50"
+              Padding="10"
+              BackgroundColor="{StaticResource DarkGrey}"> 
+                <Button.Shadow>
+                    <Shadow
+                      Brush="Black"
+                      Opacity="0.5"
+                      Offset="0,0"
+                      Radius="10"/>
+                </Button.Shadow>
+                <Button.ImageSource >
+                    <FontImageSource 
+                      FontFamily="FluentIcons" 
+                      Color="{StaticResource Primary}"
+                      Glyph="{x:Static local:IconNames.QrScan}"/>
+                </Button.ImageSource>
+            </Button>
 
+            <!-- bar-code buttom -->
+            <Button
+                Margin="0,0,50,50"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                CornerRadius="50"
+                Padding="10"
+                BackgroundColor="{StaticResource DarkGrey}"> 
+                <Button.Shadow>
+                    <Shadow
+                      Brush="Black"
+                      Opacity="0.5"
+                      Offset="0,0"
+                      Radius="10"/>
+                </Button.Shadow>
+                <Button.ImageSource >
+                    <FontImageSource 
+                      FontFamily="FluentIcons" 
+                      Color="{StaticResource Primary}"
+                      Glyph="{x:Static local:IconNames.BarCode}"/>
+                </Button.ImageSource>
+            </Button>
 
-
-
-
-
-                <!--Bottom Butoon layout -->
-                <StackLayout 
-                 Grid.Row = "3" 
-                 BackgroundColor ="{StaticResource DarkGrey}">
-                    <!-- Separator  -->
-                    <BoxView 
-                 HeightRequest="2"
-                 BackgroundColor="{StaticResource Yellow}"
-                 HorizontalOptions="Fill"
-                 VerticalOptions="Center">
-                    </BoxView>
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <!-- menu button -->
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <!-- history button -->
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-
-                        <!--  Menu button -->
-                        <Button
-                         Grid.Column="0"   
-                         Text="Search"
-                         Style="{StaticResource BottomButton}"
-                         Command="{Binding MenuCommand}"
-                         CornerRadius="0">
-                            <Button.ImageSource >
-                                <FontImageSource 
-                                FontFamily="FluentIcons"
-                                Glyph="{x:Static local:IconNames.MenuIcon}"/>
-                            </Button.ImageSource>
-                        </Button>
-
-                        <!-- history button  -->
-                        <Button
-                         Grid.Column="1" 
-                         Text="Barcode"
-                         Style="{StaticResource BottomButton}"
-                         Command="{Binding HistoryCommand}"
-                         CornerRadius="0">
-                            <Button.ImageSource >
-                                <FontImageSource 
-                                 FontFamily="FluentIcons"
-                                 Glyph="{x:Static local:IconNames.MyStory}"/>
-                            </Button.ImageSource>
-                        </Button>
-                    </Grid>
-                </StackLayout>
-            </Grid>
-        </Grid>
+        </Grid> 
     </views:BaseView.Content>
 </views:BaseView>
 
