@@ -8,21 +8,14 @@
     x:Class="QrSortable.Components.CoreFeatures.Scanner.Views.QrBrScannerView">
     <views:BaseView.Content>
         <Grid>
-
-            <Grid.RowDefinitions>
-                <!-- back -->
-                <RowDefinition Height="Auto"></RowDefinition>
-                <!-- Camera view -->
-                <RowDefinition Height="*"></RowDefinition>
-
-            </Grid.RowDefinitions>
+            <!-- Camera view -->
             <scanner:CameraView
                 Grid.Row="0"
-                x:Name="cameraView"
-                CameraEnabled="{Binding IsCameraEnabled}"
+                x:Name="cameraView"  
                 AimMode="True"
                 ViewfinderMode="True"
                 TapToFocusEnabled="True"
+                CameraEnabled="{Binding IsCameraEnabled}"
                 OnDetectionFinishedCommand="{Binding DetectionFinishedCommand}"/>
             <!-- Back button -->
             <Button
@@ -119,7 +112,7 @@
                 VerticalOptions="End"
                 CornerRadius="50"
                 Padding="10"
-                BackgroundColor="{StaticResource DarkGrey}"> 
+                BackgroundColor="{StaticResource DarkGrey}">
                 <Button.Shadow>
                     <Shadow
                       Brush="Black"
@@ -134,7 +127,6 @@
                       Glyph="{x:Static local:IconNames.BarCode}"/>
                 </Button.ImageSource>
             </Button>
-
         </Grid> 
     </views:BaseView.Content>
 </views:BaseView>
