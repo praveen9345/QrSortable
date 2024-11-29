@@ -155,5 +155,10 @@ namespace QrSortable.Resources
         /// </summary>
         public const string AddImage = "\uF493";
 
+        /// <summary>
+        ///     The name of the add image icon.
+        /// </summary>
+        public const string Save = "\uF689";
+
     }
 }

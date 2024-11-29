@@ -12,6 +12,8 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                 <!-- item name -->
                     <RowDefinition Height="Auto"></RowDefinition>
+                <!-- item name -->
+                <RowDefinition Height="Auto"></RowDefinition>
                 <!-- item view -->
                     <RowDefinition Height="*"></RowDefinition>
                 <!-- add item image -->
@@ -68,9 +70,9 @@
                            HorizontalTextAlignment="Center"
                            VerticalTextAlignment="Center"/>
 
-                    <!-- Placeholder for item input field -->
+                    <!-- Placeholder for item name input field -->
                     <Border 
-                           Margin="10"
+                           Margin="10,0,0,0"
                            Background="{StaticResource DarkGrey}"
                            StrokeShape="RoundRectangle 10"
                            HorizontalOptions="FillAndExpand">
@@ -91,8 +93,47 @@
                     </Border>
                 </StackLayout>
 
+                <!-- item remarks -->
+                <StackLayout 
+                    Grid.Row="2"
+                    Margin="10,0,5,0"
+                    Orientation="Horizontal">
+                    <!-- remarks  -->
+                    <Label
+                     Text="Remarks:"               
+                     FontAttributes="Bold"
+                     FontFamily="ItimRegular"
+                     FontSize="18"
+                     TextColor="{StaticResource White}"
+                     BackgroundColor="Transparent"
+                     HorizontalTextAlignment="Center"
+                     VerticalTextAlignment="Center"/>
+
+                    <!-- Placeholder for more info input field -->
+                    <Border 
+                     Margin="10,10,0,10"
+                     Background="{StaticResource DarkGrey}"
+                     StrokeShape="RoundRectangle 10"
+                     HorizontalOptions="FillAndExpand">
+                        <Border.Shadow>
+                        <Shadow
+                            Brush="Black"
+                            Opacity="0.5"
+                            Offset="0,0"
+                            Radius="10"/>
+                    </Border.Shadow>
+                    <!-- input field -->
+                    <Grid >
+                        <Entry
+                            Margin="10,0,0,0"
+                            Placeholder="More info..." 
+                            Style="{StaticResource NormalText}"/>
+                    </Grid>
+                    </Border>
+                </StackLayout>
+
                 <StackLayout
-                         Grid.Row="2"
+                         Grid.Row="3"
                          Background="{StaticResource DarkGrey}">
                     <!-- seprator -->
                     <BoxView 
@@ -145,17 +186,16 @@
                     <BoxView 
                       HeightRequest="2"
                       Color="{StaticResource Yellow}"/>
-            </StackLayout>
+                 </StackLayout>
             
                 <!-- add image button -->
                 <Button
-                  Grid.Row="3"
-                  Margin="0,15,15,15"
+                  Grid.Row="4"
+                  Margin="0,15,80,15"
                   HorizontalOptions="End"
                   VerticalOptions="End"
                   CornerRadius="50"
                   Padding="10"
-                  Command="{Binding AddItemCommand}"
                   BackgroundColor="{StaticResource Primary}">
                     <Button.Shadow>
                         <Shadow
@@ -171,8 +211,30 @@
                           Glyph="{x:Static local:IconNames.AddImage}"/>
                     </Button.ImageSource>
                 </Button>
-
-
+            
+                <!-- save button -->
+            <Button
+                   Grid.Row="4"
+                   Margin="0,15,15,15"
+                   HorizontalOptions="End"
+                   VerticalOptions="End"
+                   CornerRadius="50"
+                   Padding="10"
+                   BackgroundColor="{StaticResource Primary}">
+                <Button.Shadow>
+                    <Shadow
+                           Brush="{StaticResource Primary}"
+                           Opacity="0.5"
+                           Offset="0,0"
+                           Radius="10"/>
+                </Button.Shadow>
+                <Button.ImageSource >
+                    <FontImageSource 
+                           FontFamily="FluentIcons" 
+                           Color="{StaticResource Black}"
+                           Glyph="{x:Static local:IconNames.Save}"/>
+                </Button.ImageSource>
+            </Button>
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>
