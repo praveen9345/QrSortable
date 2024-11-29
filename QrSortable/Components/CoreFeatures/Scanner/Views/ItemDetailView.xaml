@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<views:BaseView 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    xmlns:local="clr-namespace:QrSortable.Resources"
+    x:Class="QrSortable.Components.CoreFeatures.Scanner.Views.ItemDetailView">
+    <views:BaseView.Content>
+        <Grid>
+             <Grid.RowDefinitions>
+                    <!-- back -->
+                    <RowDefinition Height="Auto"></RowDefinition>
+                <!-- item name -->
+                    <RowDefinition Height="Auto"></RowDefinition>
+                <!-- item view -->
+                    <RowDefinition Height="*"></RowDefinition>
+                <!-- add item image -->
+                <RowDefinition Height="Auto"></RowDefinition>
+
+            </Grid.RowDefinitions>
+
+                <!-- Back button -->
+                <Button
+                Grid.Row="0"
+                Margin="15,15,0,0"
+                Command="{Binding BackNavigationCommand}"
+                HorizontalOptions="Start"
+                VerticalOptions="Start"
+                BackgroundColor="{StaticResource DarkGrey}"
+                CornerRadius="5"
+                Padding="2">
+                    <Button.Shadow>
+                        <Shadow
+                        Brush="Black"
+                        Opacity="0.5"
+                        Offset="0,0"
+                        Radius="10"/>
+                    </Button.Shadow>
+                    <Button.ImageSource >
+                        <FontImageSource 
+                        FontFamily="FluentIcons" 
+                        Color="{StaticResource Primary}"
+                        Glyph="{x:Static local:IconNames.Back}"/>
+                    </Button.ImageSource>
+                </Button>
+
+                <Image
+                Grid.Row="0"
+                Source="items_icon"
+                Aspect="AspectFit"
+                HeightRequest="180"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"/>
+            
+               <!-- item name -->
+               <StackLayout 
+                      Grid.Row="1"
+                      Margin="10,0,5,0"
+                      Orientation="Horizontal">
+                    <!-- item name  -->
+                    <Label
+                           Text="Item Name:"               
+                           FontAttributes="Bold"
+                           FontFamily="ItimRegular"
+                           FontSize="18"
+                           TextColor="{StaticResource White}"
+                           BackgroundColor="Transparent"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+
+                    <!-- Placeholder for item input field -->
+                    <Border 
+                           Margin="10"
+                           Background="{StaticResource DarkGrey}"
+                           StrokeShape="RoundRectangle 10"
+                           HorizontalOptions="FillAndExpand">
+                        <Border.Shadow>
+                            <Shadow
+                                  Brush="Black"
+                                  Opacity="0.5"
+                                  Offset="0,0"
+                                  Radius="10"/>
+                        </Border.Shadow>
+                        <!-- input field -->
+                        <Grid >
+                            <Entry
+                                  Margin="10,0,0,0"
+                                  Placeholder="Enter name.." 
+                                  Style="{StaticResource NormalText}"/>
+                        </Grid>
+                    </Border>
+                </StackLayout>
+
+                <StackLayout
+                         Grid.Row="2"
+                         Background="{StaticResource DarkGrey}">
+                    <!-- seprator -->
+                    <BoxView 
+                         HeightRequest="2"
+                         Color="{StaticResource Yellow}"/>
+                    <!-- Carousel View  -->
+                    <CarouselView
+                         VerticalOptions="FillAndExpand"
+                         BackgroundColor="Transparent">
+                        <CarouselView.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Storage room</x:String>
+                                <x:String>Bed room</x:String>
+                                <x:String>Living room</x:String>
+                            </x:Array>
+                        </CarouselView.ItemsSource>
+                        <CarouselView.ItemTemplate>
+                            <DataTemplate>
+                                <!-- boxes view  -->
+                                <Grid>
+                                    <!-- images -->
+                                    <Image
+                                       Margin="2,0,2,0"
+                                       Source="image_icon"
+                                       Aspect="AspectFill"
+                                       HorizontalOptions="FillAndExpand"
+                                       VerticalOptions="FillAndExpand"/>
+
+                                    <!-- Swipe view  -->
+                                    <Button
+                                        Padding="0"
+                                        WidthRequest="30"
+                                        HeightRequest="30"
+                                        CornerRadius="50"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Start"
+                                        BackgroundColor="Transparent">
+                                        <Button.ImageSource >
+                                            <FontImageSource 
+                                                FontFamily="FluentIcons" 
+                                                Color="{StaticResource Yellow}"
+                                                Glyph="{x:Static local:IconNames.Swipe}"/>
+                                        </Button.ImageSource>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </CarouselView.ItemTemplate>
+                     </CarouselView>
+                    <!-- seprator -->
+                    <BoxView 
+                      HeightRequest="2"
+                      Color="{StaticResource Yellow}"/>
+            </StackLayout>
+            
+                <!-- add image button -->
+                <Button
+                  Grid.Row="3"
+                  Margin="0,15,15,15"
+                  HorizontalOptions="End"
+                  VerticalOptions="End"
+                  CornerRadius="50"
+                  Padding="10"
+                  Command="{Binding AddItemCommand}"
+                  BackgroundColor="{StaticResource Primary}">
+                    <Button.Shadow>
+                        <Shadow
+                          Brush="{StaticResource Primary}"
+                          Opacity="0.5"
+                          Offset="0,0"
+                          Radius="10"/>
+                    </Button.Shadow>
+                    <Button.ImageSource >
+                        <FontImageSource 
+                          FontFamily="FluentIcons" 
+                          Color="{StaticResource Black}"
+                          Glyph="{x:Static local:IconNames.AddImage}"/>
+                    </Button.ImageSource>
+                </Button>
+
+
+        </Grid>
+    </views:BaseView.Content>
+</views:BaseView>
+
+
+           

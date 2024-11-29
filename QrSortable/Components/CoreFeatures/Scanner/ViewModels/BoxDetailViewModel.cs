@@ -1,5 +1,7 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.ViewModels
 {
+    using CommunityToolkit.Mvvm.Input;
+    using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
 
     /// <summary>
@@ -37,6 +39,10 @@
 
         }
 
+        public AsyncRelayCommand AddItemCommand => new AsyncRelayCommand(async () =>
+        {
+            await NavigationService.Navigate<ItemDetailView>();
+        });
 
     }
 }

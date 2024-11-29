@@ -255,6 +255,7 @@
                  VerticalOptions="End"
                  CornerRadius="50"
                  Padding="10"
+                 Command="{Binding AddItemCommand}"
                  BackgroundColor="{StaticResource Primary}">
                     <Button.Shadow>
                         <Shadow
