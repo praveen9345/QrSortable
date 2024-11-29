@@ -216,7 +216,7 @@
                                                     Text="Blue color closet" 
                                                     FontSize="Medium" 
                                                     FontFamily="ItimRegular"
-                                                     FontAttributes="Bold"
+                                                    FontAttributes="Bold"
                                                     TextColor="{StaticResource Black}"
                                                     BackgroundColor="Transparent"
                                                     HorizontalTextAlignment="Start"

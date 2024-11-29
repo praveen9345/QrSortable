@@ -133,13 +133,27 @@ namespace QrSortable.Resources
         /// <summary>
         ///     The name of the flash on icon.
         /// </summary>
-        public const string BarCode = "\uE8A1";
+        public const string BarCode = "\uF1e4";
 
         /// <summary>
         ///     The name of the flash off icon.
         /// </summary>
-        public const string FlashOff = "\uF417";
+        public const string FlashOff = "\uF41b";
 
+        /// <summary>
+        ///     The name of the flash on icon.
+        /// </summary>
+        public const string FlashOn = "\uF41a";
+
+        /// <summary>
+        ///     The name of the plus icon.
+        /// </summary>
+        public const string Plus = "\uF10a";
+
+        /// <summary>
+        ///     The name of the add image icon.
+        /// </summary>
+        public const string AddImage = "\uF493";
 
     }
 }

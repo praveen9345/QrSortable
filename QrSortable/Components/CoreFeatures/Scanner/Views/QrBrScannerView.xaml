@@ -101,7 +101,7 @@
                     <FontImageSource 
                       FontFamily="FluentIcons" 
                       Color="{StaticResource Primary}"
-                      Glyph="{x:Static local:IconNames.QrScan}"/>
+                      Glyph="{x:Static local:IconNames.FlashOn}"/>
                 </Button.ImageSource>
             </Button>
 
