@@ -18,7 +18,7 @@
 			
 			InitializeComponent();
 			_appService = appService;
-		}
+        }
 
 		/// <summary>
 		/// Creates and returns a new window with an instance of AppShell as the content.
@@ -27,7 +27,8 @@
 		/// <returns>A new Window object with the AppShell as its content.</returns>
 		protected override Window CreateWindow(IActivationState? activationState)
 		{
-			return new Window(new AppShell());
+            
+            return new Window(new AppShell());
 		}
 
 		/// <summary>
@@ -41,8 +42,8 @@
         protected override async void OnStart()
         {
             base.OnStart();
-			await _appService.OnStartAsync();
+			
+            await _appService.OnStartAsync();
         }
-
     }
 }

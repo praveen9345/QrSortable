@@ -1,6 +1,7 @@
 namespace QrSortable.Components.CoreFeatures.AppStart
 {
-    
+    using FirebaseAdmin;
+    using Google.Apis.Auth.OAuth2;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Navigation;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
@@ -21,6 +22,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         public AppService()
         {
             _navigationService = ServiceHelper.GetService<INavigationService>();
+
         }
 
         /// <summary>
@@ -31,7 +33,8 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// </summary>
         public async Task OnStartAsync()
         {
-            await NavigateToFirstViewModelAsync();
+            await ConfigureAndInitializeFirebaseAsync();
+            await NavigateToFirstViewModelAsync();     
         }
 
         /// <summary>
@@ -43,5 +46,23 @@ namespace QrSortable.Components.CoreFeatures.AppStart
            await _navigationService.Navigate<RootView>();
         }
 
-   }
+        private async Task ConfigureAndInitializeFirebaseAsync()
+        {
+            var localPath = Path.Combine(FileSystem.CacheDirectory, "admin-sdk.json");
+            if (File.Exists(localPath))
+                File.Delete(localPath);
+            using (var jsonStream = await FileSystem.OpenAppPackageFileAsync("admin-sdk.json"))
+            using (var destStream = File.Create(localPath))
+            {
+                await jsonStream.CopyToAsync(destStream);
+            }
+
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile(localPath)
+            });
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", localPath);
+        }
+
+    }
 }

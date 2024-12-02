@@ -27,10 +27,9 @@
         <Setter Property="FontFamily" Value="ItimRegular" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="TextColor" Value="{DynamicResource White}" />
-         <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property= "CornerRadius" Value="20" />
         <Setter Property= "ContentLayout" Value="Top,0" />
-        <Setter Property="HorizontalOptions" Value="Fill" /> 
+        <Setter Property="HorizontalOptions" Value="Fill" />
     </Style>
-
 </ResourceDictionary>

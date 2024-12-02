@@ -7,10 +7,11 @@
     using BarcodeScanning;
 
 #if ANDROID
-    using Android.Graphics.Drawables;
+      using Android.Graphics.Drawables;
       using Android.Graphics;
       using Microsoft.Maui.Controls.Handlers;
       using Android.Widget;
+    
 #elif IOS
       using UIKit;
 #endif
@@ -90,8 +91,11 @@
                 }
             }
 
+            //External Services
+            
             return builder;
         }
+
 
         /// <summary>
         ///     Registers all classes of which the name ends with "ViewModel" 
