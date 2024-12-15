@@ -16,5 +16,11 @@
             InitializeComponent();
             BindingContext = viewModel;
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            Application.Current.Quit();
+            return base.OnBackButtonPressed();
+        }
     }
 }
