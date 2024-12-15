@@ -37,15 +37,15 @@
             //await NavigationService.Navigate<QrBrScannerView>();
 
             //await NavigationService.Navigate<BoxDetailView>();
-            var sample = new SampleModel
-            {
-                Name = "kumar",
-                Description = "Sample Description"
-            };
+            //var sample = new SampleModel
+            //{
+            //    Name = "kumar",
+            //    Description = "Sample Description"
+            //};
 
-            await _backendCommunicationService.InsertSampleModel(sample);
+            //await _backendCommunicationService.InsertSampleModel(sample);
 
-            var userId = await _backendCommunicationService.GetUserUIDByName("Sample");
+            //var userId = await _backendCommunicationService.GetUserUIDByName("Sample");
         });
 
        

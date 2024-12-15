@@ -1,13 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
-		
-		<OutputType>Exe</OutputType>
 		<RootNamespace>QrSortable</RootNamespace>
 		<UseMaui>true</UseMaui>
 	    <MauiVersion>9.0.0</MauiVersion>
+		<OutputType Condition="'$(TargetFramework)' == 'net9.0-ios'">Exe</OutputType>
 		<OutputType Condition="'$(TargetFramework)' == 'net9.0-android'">Exe</OutputType>
 		<OutputType Condition="'$(TargetFramework)' == 'net9.0'">Library</OutputType>
 		<SingleProject>true</SingleProject>

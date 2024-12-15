@@ -202,8 +202,6 @@
             var UserInfos = await GetAllAsync<UserInfos>();
             await DeleteRangeWithOptionalSaveChangesAsync(UserInfos, false);
 
-            var StorySaved = await GetAllAsync<StorySaved>();
-            await DeleteRangeWithOptionalSaveChangesAsync(StorySaved, false);
         }
 
         private void HandleEventForType<T>()
