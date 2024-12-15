@@ -1,6 +1,7 @@
 ﻿namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
 {
     using CommunityToolkit.Mvvm.Input;
+    using Google.Cloud.Firestore;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
@@ -38,11 +39,15 @@
             //await NavigationService.Navigate<BoxDetailView>();
             var sample = new SampleModel
             {
-                Name = "Sample",
+                Name = "kumar",
                 Description = "Sample Description"
             };
 
             await _backendCommunicationService.InsertSampleModel(sample);
+
+            var userId = await _backendCommunicationService.GetUserUIDByName("Sample");
         });
+
+       
     }  
 }

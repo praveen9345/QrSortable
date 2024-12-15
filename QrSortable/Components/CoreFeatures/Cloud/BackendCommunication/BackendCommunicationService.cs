@@ -1,6 +1,5 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
 {
-
     using Google.Cloud.Firestore;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
 
@@ -13,11 +12,5 @@
             Db = FirestoreDb.Create(Configuration.Constants.PROJECT_ID);
         }
 
-        public async Task InsertSampleModel(SampleModel sample)
-        { 
-             await Db.Collection("SampleModels").AddAsync(sample);
-        }
-
-       
     }
 }
