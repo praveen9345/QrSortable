@@ -15,6 +15,7 @@
                 AimMode="True"
                 ViewfinderMode="True"
                 TapToFocusEnabled="True"
+                TorchOn="{Binding IsFlashOn}"
                 CameraEnabled="{Binding IsCameraEnabled}"
                 OnDetectionFinishedCommand="{Binding DetectionFinishedCommand}"/>
             <!-- Back button -->
@@ -84,12 +85,13 @@
 
             <!-- FlashOn/Off buttom -->
             <Button
-              Margin="0,0,0,50"
-              HorizontalOptions="Center"
-              VerticalOptions="End"
-              CornerRadius="50"
-              Padding="10"
-              BackgroundColor="{StaticResource DarkGrey}"> 
+                Margin="0,0,0,50"
+                HorizontalOptions="Center"
+                VerticalOptions="End"
+                CornerRadius="50"
+                Padding="10"
+                Clicked="OnFlashOnOffButtonClicked"
+                BackgroundColor="{StaticResource DarkGrey}"> 
                 <Button.Shadow>
                     <Shadow
                       Brush="Black"
@@ -101,7 +103,7 @@
                     <FontImageSource 
                       FontFamily="FluentIcons" 
                       Color="{StaticResource Primary}"
-                      Glyph="{x:Static local:IconNames.FlashOn}"/>
+                      Glyph="{Binding CurrentGlyph}"/>
                 </Button.ImageSource>
             </Button>
 
@@ -120,7 +122,7 @@
                       Offset="0,0"
                       Radius="10"/>
                 </Button.Shadow>
-                <Button.ImageSource >
+                <Button.ImageSource>
                     <FontImageSource 
                       FontFamily="FluentIcons" 
                       Color="{StaticResource Primary}"

@@ -34,7 +34,7 @@
 
         public AsyncRelayCommand QrScanCommand => new AsyncRelayCommand(async () =>
         {
-            //await NavigationService.Navigate<QrBrScannerView>();
+            await NavigationService.Navigate<QrBrScannerView>();
 
             //await NavigationService.Navigate<BoxDetailView>();
             //var sample = new SampleModel

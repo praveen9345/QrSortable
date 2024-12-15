@@ -12,6 +12,8 @@
     public partial class QrBrScannerViewModel : BaseViewModel
     {
         private bool _isBarcodeDetected = false;
+        public string FlashOnGlyph => "\uF41a";
+        public string FlashOffGlyph => "\uF41b";
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="QrBrScannerViewModel" />.
@@ -30,11 +32,21 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
+            CurrentGlyph = FlashOffGlyph;
             await Methods.AskForRequiredPermissionAsync();
         }
 
         [ObservableProperty]
         private bool _isCameraEnabled;
+
+        [ObservableProperty]
+        private string _flashLightOnOff;
+
+        [ObservableProperty]
+        public bool isFlashOn;
+
+        [ObservableProperty]
+        public string _currentGlyph;
 
         public override void ViewAppearing()
         {
@@ -48,11 +60,6 @@
             _isBarcodeDetected = false;
             IsCameraEnabled = false;
         }
-
-        public AsyncRelayCommand FlashLightCommand => new AsyncRelayCommand(async () =>
-        {
-            
-        });
 
 
         public AsyncRelayCommand<IReadOnlySet<BarcodeResult>> DetectionFinishedCommand =>
