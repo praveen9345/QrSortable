@@ -67,12 +67,12 @@
         {
             if (result.Count > 0)
             {
-                Console.WriteLine("Found the BarcodeResult: " + result.Count + " ; " + $"{result.FirstOrDefault()?.DisplayValue}" + " ; " +
-                                result.FirstOrDefault()?.BarcodeFormat.ToString());
+                string displayValue = result.FirstOrDefault()?.DisplayValue +"," + result.FirstOrDefault()?.BarcodeFormat.ToString();
+                Console.WriteLine("Found the BarcodeResult: " + result.Count + " ; " + $"{displayValue}");
                 if (!_isBarcodeDetected)
                 {
                     _isBarcodeDetected = true;
-                    await NavigationService.Navigate<BoxDetailView>();
+                    await NavigationService.Navigate<BoxDetailView>(displayValue, false);
                 }
                 
             }

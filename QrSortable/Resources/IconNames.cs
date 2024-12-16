@@ -136,16 +136,6 @@ namespace QrSortable.Resources
         public const string BarCode = "\uF1e4";
 
         /// <summary>
-        ///     The name of the flash off icon.
-        /// </summary>
-        public const string FlashOff = "\uF41b";
-
-        /// <summary>
-        ///     The name of the flash on icon.
-        /// </summary>
-        public const string FlashOn = "\uF41a";
-
-        /// <summary>
         ///     The name of the plus icon.
         /// </summary>
         public const string Plus = "\uF10a";
