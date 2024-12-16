@@ -35,13 +35,24 @@
         public DbSet<UserInfos> UserInformation { get; set; }
 
         /// <summary>
+        ///     Gets or sets the storage entry in the database.
+        /// </summary>
+        public DbSet<StorageEntry> StorageEntries { get; set; }
+
+        /// <summary>
         ///      Method called implicitly when the model is being created. It registers entity property
         ///     conversions.
         /// </summary>
         /// <param name="modelBuilder">The instance used for building the model.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-          
+            base.OnModelCreating(modelBuilder);
+            // Configure 'Item' as an owned type within 'StorageEntry'
+            modelBuilder.Entity<StorageEntry>()
+                        .OwnsMany(se => se.Items, item =>
+                        {
+                            item.WithOwner(); // Each 'Item' is owned by a single 'StorageEntry'
+                        });
         }
     }
 }
