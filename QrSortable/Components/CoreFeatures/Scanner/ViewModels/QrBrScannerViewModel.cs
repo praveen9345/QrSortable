@@ -72,7 +72,7 @@
                 if (!_isBarcodeDetected)
                 {
                     _isBarcodeDetected = true;
-                    await NavigationService.Navigate<BoxDetailView>(displayValue, false);
+                    await NavigationService.Navigate<BoxDetailView>(displayValue);
                 }
                 
             }

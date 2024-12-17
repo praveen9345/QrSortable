@@ -71,7 +71,7 @@
         {
             _storageData.Location = Location;
             _storageData.Category = Category;
-            await NavigationService.Navigate<ItemDetailView>(_storageData, false);
+            await NavigationService.Navigate<ItemDetailView>(_storageData);
         });
 
     }
