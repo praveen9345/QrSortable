@@ -78,9 +78,10 @@
             VerticalOptions="Center"/> 
 
         <!-- Carousel View  -->
-        <CarouselView  
+        <CarouselView 
             Grid.Row = "2" 
             IsVisible="True"
+            Loop="False"
             IndicatorView="indicatorView"
             BackgroundColor="Transparent">
             <CarouselView.ItemsSource>
@@ -94,7 +95,7 @@
               <DataTemplate>
                <!-- boxes view  -->
                 <Grid>
-                <Grid.RowDefinitions>
+                  <Grid.RowDefinitions>
                     <!-- category button -->
                     <RowDefinition Height="Auto"></RowDefinition>
                     <!-- qr scan button -->
@@ -140,8 +141,10 @@
                   <CollectionView 
                     Grid.Row="1"
                     SelectionMode="Single"
-                    VerticalOptions="Fill">
-                    <CollectionView.ItemTemplate>
+                    VerticalOptions="Fill"
+                    ItemsLayout="VerticalList"
+                    HorizontalScrollBarVisibility="Never">
+                     <CollectionView.ItemTemplate>
                       <DataTemplate>
                         <Grid Padding="10">
                            <!-- Transparent item click -->
