@@ -78,10 +78,10 @@
             VerticalOptions="Center"/> 
 
         <!-- Carousel View  -->
-        <CarouselView 
-            Grid.Row = "2" 
-            IsVisible="True"
+        <CarouselView
+            Grid.Row = "2"
             Loop="False"
+            IsVisible="True"
             IndicatorView="indicatorView"
             BackgroundColor="Transparent">
             <CarouselView.ItemsSource>

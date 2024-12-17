@@ -17,14 +17,14 @@
 
                 <!-- Back button -->
                 <Button
-                Grid.Row="0"
-                Margin="15,15,0,0"
-                Command="{Binding BackNavigationCommand}"
-                HorizontalOptions="Start"
-                VerticalOptions="Start"
-                BackgroundColor="{StaticResource DarkGrey}"
-                CornerRadius="5"
-                Padding="2">
+                    Grid.Row="0"
+                    Margin="15,15,0,0"
+                    Command="{Binding BackNavigationCommand}"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start"
+                    BackgroundColor="{StaticResource DarkGrey}"
+                    CornerRadius="5"
+                    Padding="2">
                     <Button.Shadow>
                         <Shadow
                         Brush="Black"
@@ -41,23 +41,22 @@
                 </Button>
 
                 <Image
-                Margin="0,-15,0,0"
-                Source="box"
-                Aspect="AspectFit"
-                HeightRequest="180"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"/>
+                    Margin="0,-15,0,0"
+                    Source="box"
+                    Aspect="AspectFit"
+                    HeightRequest="180"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"/>
                 <Label
-                 Text="2ef1" 
-                 FontSize="40"
-                 Margin="0,110,0,0"
-                 TextTransform="Uppercase"
-                 FontAttributes="Bold"
-                 FontFamily="ItimRegular"
-                 TextColor="{StaticResource Red}"
-                 BackgroundColor="Transparent"
-                 HorizontalTextAlignment="Center"/>
-
+                     FontSize="40"
+                     Margin="0,110,0,0"
+                     TextTransform="Uppercase"
+                     FontAttributes="Bold"
+                     FontFamily="ItimRegular"
+                     Text="{Binding Barcode}" 
+                     TextColor="{StaticResource Red}"
+                     BackgroundColor="Transparent"
+                     HorizontalTextAlignment="Center"/>
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <!-- location -->
@@ -71,22 +70,22 @@
                 </Grid.RowDefinitions>
 
                     <StackLayout 
-                    Grid.Row="0"
-                    Margin="20,0,20,0"
-                    Orientation="Horizontal">
+                        Grid.Row="0"
+                        Margin="20,0,20,0"
+                        Orientation="Horizontal">
                         <!-- location  -->
                         <Image           
-                        HeightRequest="50"
-                        WidthRequest="50"
-                        Source="location"
-                        Aspect="AspectFit"/>
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Source="location"
+                            Aspect="AspectFit"/>
 
                         <!-- Placeholder for location input field -->
                         <Border 
-                         Margin="10"
-                         Background="{StaticResource DarkGrey}"
-                         StrokeShape="RoundRectangle 10"
-                         HorizontalOptions="FillAndExpand">
+                             Margin="10"
+                             Background="{StaticResource DarkGrey}"
+                             StrokeShape="RoundRectangle 10"
+                             HorizontalOptions="FillAndExpand">
                             <Border.Shadow>
                                 <Shadow
                                 Brush="Black"
@@ -97,10 +96,10 @@
                             <Grid >
                                 <!-- input field -->
                                 <Entry
-                                Margin="10,0,0,0"
-                                Placeholder="Location ..." 
-                                Style="{StaticResource NormalText}"/>
-
+                                    Margin="10,0,0,0"
+                                    Placeholder="location ..." 
+                                    Text="{Binding Location}"
+                                    Style="{StaticResource NormalText}"/>
                             </Grid>
                         </Border>
                     </StackLayout>
@@ -109,7 +108,7 @@
                      Grid.Row="1"
                      Margin="20,0,20,0"
                      Orientation="Horizontal">
-                        <!-- location  -->
+                        <!-- Category  -->
                         <Label
                           Text="Category:"               
                           FontAttributes="Bold"
@@ -133,11 +132,12 @@
                                  Offset="0,0"
                                  Radius="10"/>
                                 </Border.Shadow>
-                        <!-- input field -->
+                            <!-- input field -->
                             <Grid >
                                 <Entry
                                  Margin="10,0,0,0"
-                                 Placeholder="..." 
+                                 Placeholder="category ..." 
+                                 Text="{Binding Category}"
                                  Style="{StaticResource NormalText}"/>
                             </Grid>
                         </Border>
@@ -196,12 +196,12 @@
                                             
                                                 <!-- Move -->
                                                 <Button
-                                                 Grid.Column="2"
-                                                 CornerRadius="5"
-                                                 HeightRequest="30"
-                                                 Padding="0"
-                                                 ImageSource="move_item"
-                                                 BackgroundColor="Transparent"/>
+                                                     Grid.Column="2"
+                                                     CornerRadius="5"
+                                                     HeightRequest="30"
+                                                     Padding="0"
+                                                     ImageSource="move_item"
+                                                     BackgroundColor="Transparent"/>
                                             
                                                 <!-- delete -->
                                                 <Button

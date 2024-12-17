@@ -47,12 +47,12 @@
                 </Button>
 
                 <Image
-                Grid.Row="0"
-                Source="items_icon"
-                Aspect="AspectFit"
-                HeightRequest="180"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"/>
+                    Grid.Row="0"
+                    Source="items_icon"
+                    Aspect="AspectFit"
+                    HeightRequest="180"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"/>
             
                <!-- item name -->
                <StackLayout 
@@ -88,6 +88,7 @@
                             <Entry
                                   Margin="10,0,0,0"
                                   Placeholder="Enter name.." 
+                                  Text="{Binding ItemName}"
                                   Style="{StaticResource NormalText}"/>
                         </Grid>
                     </Border>
@@ -141,6 +142,7 @@
                          Color="{StaticResource Yellow}"/>
                     <!-- Carousel View  -->
                     <CarouselView
+                         Loop="False"
                          VerticalOptions="FillAndExpand"
                          BackgroundColor="Transparent">
                         <CarouselView.ItemsSource>
@@ -196,6 +198,7 @@
                   VerticalOptions="End"
                   CornerRadius="50"
                   Padding="10"
+                  Command="{Binding AddItemCommand}"
                   BackgroundColor="{StaticResource Primary}">
                     <Button.Shadow>
                         <Shadow
@@ -220,6 +223,7 @@
                    VerticalOptions="End"
                    CornerRadius="50"
                    Padding="10"
+                   Command="{Binding SaveCommand}"
                    BackgroundColor="{StaticResource Primary}">
                 <Button.Shadow>
                     <Shadow
