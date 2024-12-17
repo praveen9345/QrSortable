@@ -128,6 +128,7 @@
                         <Entry
                             Margin="10,0,0,0"
                             Placeholder="More info..." 
+                            Text="{Binding ItemDescription}"
                             Style="{StaticResource NormalText}"/>
                     </Grid>
                     </Border>
@@ -198,7 +199,7 @@
                   VerticalOptions="End"
                   CornerRadius="50"
                   Padding="10"
-                  Command="{Binding AddItemCommand}"
+                  Command="{Binding AddItemImagesCommand}"
                   BackgroundColor="{StaticResource Primary}">
                     <Button.Shadow>
                         <Shadow

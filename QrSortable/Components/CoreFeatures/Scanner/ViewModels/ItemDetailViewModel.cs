@@ -1,5 +1,6 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.ViewModels
 {
+    using System.Collections.ObjectModel;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
@@ -13,6 +14,8 @@
     {
         private readonly IDatabaseManager _databaseManager;
         private StorageEntry _storageData;
+
+        public ObservableCollection<string> ItemImagesFilePath { get; set; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ItemDetailViewModel" />.
@@ -60,18 +63,34 @@
 
         }
 
-        public AsyncRelayCommand AddItemCommand => new AsyncRelayCommand(async () =>
+        public AsyncRelayCommand AddItemImagesCommand => new AsyncRelayCommand(async () =>
         {
-
+            
+            
+            //ItemImagesFilePath.Add("");
         });
 
         public AsyncRelayCommand SaveCommand => new AsyncRelayCommand(async () =>
         {
+            if (string.IsNullOrWhiteSpace(ItemName) || string.IsNullOrWhiteSpace(ItemDescription))
+            {
+                Console.WriteLine("Error:ItemDetailViewModel:AddItemCommand: ItemName & ItemDescription are null or empty");
+                return;
+            }
 
             if (_storageData != null)
             {
                 _storageData.CreatedDate = DateTime.Now;
-
+                _storageData.SearchInfo = _storageData.Category + "|" + _storageData.CreatedDate + "|" +
+                                          _storageData.BarcodeValue + "|" + _storageData.BarcodeType + "|" +
+                                          _storageData.Location + "|" + ItemName +"|"+ ItemDescription;
+                
+                _storageData.Items.Add(new Item
+                    {
+                        ItemName = ItemName,
+                        Description = ItemDescription,
+                        ImagesFilePath = ItemImagesFilePath.ToList()
+                    });
 
                 //_databaseManager.BeginTransaction();
 
