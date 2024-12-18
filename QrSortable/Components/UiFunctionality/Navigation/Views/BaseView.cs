@@ -20,7 +20,7 @@
            
             Shell.SetNavBarIsVisible(this, false);
 
-            BackgroundImageSource = ImageSource.FromFile("background_layout.webp");
+            //BackgroundImageSource = ImageSource.FromFile("background_layout.webp");
 
             ControlTemplate = Application.Current?.Resources["ContentPageTemplate"] as ControlTemplate;
 

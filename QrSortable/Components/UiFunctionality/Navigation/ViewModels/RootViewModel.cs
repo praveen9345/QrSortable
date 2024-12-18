@@ -34,8 +34,18 @@
 
         public AsyncRelayCommand QrScanCommand => new AsyncRelayCommand(async () =>
         {
-            await NavigationService.Navigate<QrBrScannerView>();
+            //await NavigationService.Navigate<QrBrScannerView>();
 
+            //await DialogService.ShowAlertDialog("error",
+            //        "Something went wrong", "lökjyajflj");
+
+            var isDialogConfirmed = await DialogService.ShowRequestDialog(
+               "lksajdlk",
+               "ökdsf",
+               "Cancel",
+              "OK");
+
+            Console.WriteLine("ccccccccccccccccccccc=" + isDialogConfirmed);
             //await NavigationService.Navigate<BoxDetailView>();
             //var sample = new SampleModel
             //{

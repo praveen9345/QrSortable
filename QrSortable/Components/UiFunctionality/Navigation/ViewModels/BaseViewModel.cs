@@ -1,12 +1,12 @@
 namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
 {
     using QrSortable.Components.PlatformUtils;
-
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using Localization;
     using System.Threading.Tasks;
-   
+    using QrSortable.Components.UiFunctionality.Notification;
+
     /// <summary>
     ///     The implementation of a base view model that provides general logic and information needed on all screens.
     /// </summary>
@@ -15,15 +15,14 @@ namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
         private bool _isBackNavigationEnabled = true;
 
         /// <summary>
-        ///     Gets or sets a value determining whether the current viewmodel./>.
-        /// </summary>
-        [ObservableProperty]
-        private bool _shallCurrentViewModelBeSet = true;
-
-        /// <summary>
         ///     Gets the navigation service to handle navigation throughout the app.
         /// </summary>
         public INavigationService NavigationService { get; }
+
+        /// <summary>
+        ///     Gets the dialog service to provide information to the user.
+        /// </summary>
+        public IDialogService DialogService { get; }
 
         /// <summary>
         ///     Initializes an instance of the <see cref="BaseViewModel"/> class.
@@ -31,6 +30,7 @@ namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
         protected BaseViewModel()
         {
             NavigationService = ServiceHelper.GetService<INavigationService>();
+            DialogService = ServiceHelper.GetService<IDialogService>();
             BackNavigationCommand = new AsyncRelayCommand(OnBackButtonPressed, () => _isBackNavigationEnabled);
         }
 
@@ -48,10 +48,6 @@ namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
         public virtual void ViewAppearing()
         {
             
-            if (ShallCurrentViewModelBeSet)
-            {
-
-            }
         }
 
         /// <summary>

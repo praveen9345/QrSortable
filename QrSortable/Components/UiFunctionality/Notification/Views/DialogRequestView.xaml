@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseView 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogRequestView"
+    BackgroundColor="{OnPlatform Android='#80000000', iOS='#99000000'}"
+    Shell.PresentationMode="Modal">
+    <views:BaseView.Content >
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="15" AutomationId="RequestStackLayout">
+            <Frame
+                x:Name="RequestFrame"
+                BackgroundColor="White" 
+                CornerRadius="15" 
+                Padding="0"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                IsClippedToBounds="True"
+                HasShadow="False">
+                <Grid ColumnSpacing="0" Padding ="0, 30, 0, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="51"/>
+                        <!--Hard code this height as the button has a hardcoded height anyways.-->
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="0.5"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" 
+                           Grid.Column="0"
+                           Grid.ColumnSpan="3"
+                           Text="{Binding DialogTitle}" 
+                           IsVisible="{Binding TitleExists}"
+                           HorizontalOptions="CenterAndExpand" 
+                           Style="{StaticResource TitleLabelStyle}" 
+                           HorizontalTextAlignment="Center"
+                           Margin="20,0,20,5"
+                           AutomationId="TitleLabel"/>
+                    <Label Grid.Row="1"  
+                           Grid.Column="0"
+                           Grid.ColumnSpan="3"
+                           Text="{Binding DialogText}" 
+                           Style="{StaticResource TitleLabelStyle}"
+                           HorizontalOptions="CenterAndExpand" 
+                           HorizontalTextAlignment="Center"
+                           Margin="20,5,20,30"
+                           VerticalOptions="StartAndExpand"
+                           AutomationId="TextLabel"/>
+                    <Button Grid.Row="2" 
+                            Grid.Column="0"
+                            Text="{Binding DialogCancelButtonText}"
+                            Command="{Binding CancelButtonCommand}"
+                            Style="{StaticResource DialogButtonStyle}"
+                            Margin="-1,0,0,-6"
+                            CornerRadius="0"
+                            AutomationId="CancelButton"/>
+                    <Button Grid.Row="2"
+                            Grid.Column="2"
+                            Text="{Binding DialogConfirmButtonText}"
+                            Command="{Binding ConfirmButtonCommand}"
+                            Style="{StaticResource DialogButtonStyle}"
+                            Margin="0,0,-1,-6"
+                            CornerRadius="0"
+                            AutomationId="ConfirmButton"/>
+                    <BoxView Grid.Row="2"
+                             Grid.Column="1"
+                             HeightRequest="57"
+                             WidthRequest="0.5"
+                             BackgroundColor="{StaticResource DialogButtonSeparatorColor}"/>
+                </Grid>
+            </Frame>
+        </StackLayout>
+    </views:BaseView.Content>
+</views:BaseView>

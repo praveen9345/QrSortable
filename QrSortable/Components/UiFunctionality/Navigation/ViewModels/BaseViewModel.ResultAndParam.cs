@@ -1,17 +1,21 @@
 namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
 {
     /// <summary>
-    ///     The implementation of a base view model enabling the transfer of a parameter.
+    ///     The implementation of a base view model enabling the transfer of a parameter and result.
     /// </summary>
-    public abstract partial class BaseViewModel<TParameter> : BaseViewModel, IQueryAttributable
+    public abstract class BaseViewModel<TParameter, TResult> : BaseViewModelResult<TResult>, IQueryAttributable
         where TParameter : notnull
+        where TResult : notnull
     {
+        /// <summary>
+        ///    Gets the parameters that were passed on navigation.
+        /// </summary>
         protected IDictionary<string, object> NavigationParameters;
 
         /// <summary>
-        ///     Initializes an instance of <see cref="BaseViewModel"/> class.
-        /// </summary>  
-        protected BaseViewModel(){}
+        ///     Initializes an instance of <see cref="BaseViewModel{TParameter,TResult}"/> class.
+        /// </summary>
+        protected BaseViewModel(){ }
 
         /// <summary>
         ///     Enabled to prepare the current view model with the passed parameter.

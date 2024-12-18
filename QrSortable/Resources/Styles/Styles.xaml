@@ -32,4 +32,20 @@
         <Setter Property= "ContentLayout" Value="Top,0" />
         <Setter Property="HorizontalOptions" Value="Fill" />
     </Style>
+
+    <Style x:Key="TitleLabelStyle" TargetType="Label" >
+        <Setter Property="FontFamily" Value="ItimRegular" />
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="TextColor" Value="Black"/>
+    </Style>
+
+    <Style x:Key="DialogButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{DynamicResource Primary}"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="TextTransform" Value="None"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="VerticalOptions" Value="End"/>
+        <Setter Property="FontFamily" Value="ItimRegular"/>
+        <Setter Property="HeightRequest" Value="60"/>
+    </Style>
 </ResourceDictionary>

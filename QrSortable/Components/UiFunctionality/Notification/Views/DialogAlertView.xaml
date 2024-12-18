@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseView 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogAlertView"
+    BackgroundColor="{OnPlatform Android='#80000000', iOS='#99000000'}"
+    Shell.PresentationMode="Modal">
+    <views:BaseView.Content >
+        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Padding="15" AutomationId="AlertStackLayout">
+            <Frame BackgroundColor="{StaticResource White}" 
+                   CornerRadius="15" 
+                   Padding="0"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   IsClippedToBounds="True"
+                   HasShadow="False">
+                <Grid ColumnSpacing="0" 
+                      Padding ="0, 30, 0, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="51"/> <!--Hard code this height as the button has a hardcoded height anyways.-->
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" 
+                           Text="{Binding DialogTitle}" 
+                           IsVisible="{Binding TitleExists}"
+                           HorizontalOptions="CenterAndExpand" 
+                           Style="{StaticResource TitleLabelStyle}" 
+                           HorizontalTextAlignment="Center"
+                           Margin="20, 0, 20,5"
+                           AutomationId="TitleLabel"/>
+                    <Label Grid.Row="1" 
+                           Text="{Binding DialogText}" 
+                           Style="{StaticResource TitleLabelStyle}"
+                           HorizontalOptions="CenterAndExpand" 
+                           HorizontalTextAlignment="Center"
+                           Margin="20,5,20,30"
+                           VerticalOptions="StartAndExpand"
+                           AutomationId="TextLabel"/>
+                    <Button Grid.Row="2" 
+                            Text="{Binding DialogButtonText}"
+                            Command="{Binding CloseDialogCommand}"
+                            Style="{StaticResource DialogButtonStyle}"
+                            Margin="-2,0,-1,-6"
+                            AutomationId="CloseButton"/>
+                </Grid>
+            </Frame>
+        </StackLayout>
+    </views:BaseView.Content>
+</views:BaseView>

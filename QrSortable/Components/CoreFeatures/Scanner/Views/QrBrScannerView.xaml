@@ -5,7 +5,8 @@
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
-    x:Class="QrSortable.Components.CoreFeatures.Scanner.Views.QrBrScannerView">
+    x:Class="QrSortable.Components.CoreFeatures.Scanner.Views.QrBrScannerView"
+    BackgroundImageSource ="background_layout.webp">
     <views:BaseView.Content>
         <Grid>
             <!-- Camera view -->

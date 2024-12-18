@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseView 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogActivityIndicatorView"
+    BackgroundColor="{OnPlatform Android='#80000000', iOS='#99000000'}" x:Name="This"
+    Shell.PresentationMode="Modal">
+    <views:BaseView.Content >
+        <StackLayout x:Name="DialogLayout" 
+                     HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Padding="15">
+            <Frame BackgroundColor="White" 
+                   CornerRadius="15" 
+                   Padding="30,30,30,20"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   IsClippedToBounds="True"
+                   HasShadow="False">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ActivityIndicator Grid.Row="0" HeightRequest="40" IsRunning="True" Color="LightGray" AutomationId="ActivityIndicator" />
+                    <Label Grid.Row="1" Text="{Binding Text}" HorizontalTextAlignment="Center" Margin="0,10,0,0" AutomationId="ActivityIndicatorLabel"/>
+                </Grid>
+            </Frame>
+        </StackLayout>
+    </views:BaseView.Content>
+</views:BaseView>
