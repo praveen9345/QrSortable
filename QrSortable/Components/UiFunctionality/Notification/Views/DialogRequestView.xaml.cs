@@ -24,7 +24,7 @@
 
         /// <summary>
         /// Overrides the OnSizeAllocated method to handle changes in the size of the view.
-        /// Adjusts the WidthRequest of the RequestFrame, accounting for left and right padding.
+        /// Adjusts the WidthRequest of the RequestBorder, accounting for left and right padding.
         /// </summary>
         /// <param name="width">The width of the view.</param>
         /// <param name="height">The height of the view.</param>
@@ -33,7 +33,7 @@
             base.OnSizeAllocated(width, height);
 
             //The number 30 is the left + right padding of the stack layout 
-            RequestFrame.WidthRequest = width - 30;
+            RequestBorder.WidthRequest = width - 30;
         }
     }
 }

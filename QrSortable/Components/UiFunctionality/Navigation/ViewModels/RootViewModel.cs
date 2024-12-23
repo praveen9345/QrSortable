@@ -36,16 +36,22 @@
         {
             //await NavigationService.Navigate<QrBrScannerView>();
 
+            //var wasCodeSuccessfullyUpdated = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+            //   async () =>
+            //       {
+            //           await Task.Delay(1000);
+            //           return true;
+            //       });
+
             //await DialogService.ShowAlertDialog("error",
             //        "Something went wrong", "lökjyajflj");
 
-            var isDialogConfirmed = await DialogService.ShowRequestDialog(
-               "lksajdlk",
-               "ökdsf",
-               "Cancel",
-              "OK");
+            //var isDialogConfirmed = await DialogService.ShowRequestDialog(
+            //   "lksajdlk",
+            //   "ökdsf",
+            //   "Cancel",
+            //  "OK");
 
-            Console.WriteLine("ccccccccccccccccccccc=" + isDialogConfirmed);
             //await NavigationService.Navigate<BoxDetailView>();
             //var sample = new SampleModel
             //{

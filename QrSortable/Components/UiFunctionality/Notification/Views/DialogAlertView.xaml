@@ -7,14 +7,17 @@
     BackgroundColor="{OnPlatform Android='#80000000', iOS='#99000000'}"
     Shell.PresentationMode="Modal">
     <views:BaseView.Content >
-        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Padding="15" AutomationId="AlertStackLayout">
-            <Frame BackgroundColor="{StaticResource White}" 
-                   CornerRadius="15" 
-                   Padding="0"
-                   VerticalOptions="Center"
-                   HorizontalOptions="Center"
-                   IsClippedToBounds="True"
-                   HasShadow="False">
+        <StackLayout 
+            HorizontalOptions="CenterAndExpand" 
+            VerticalOptions="CenterAndExpand" 
+            Padding="15">
+            <Border 
+                BackgroundColor="{StaticResource White}" 
+                Stroke="Transparent" 
+                StrokeShape="RoundRectangle 15" 
+                Padding="0"
+                VerticalOptions="Center"
+                HorizontalOptions="Center">
                 <Grid ColumnSpacing="0" 
                       Padding ="0, 30, 0, 0">
                     <Grid.RowDefinitions>
@@ -28,24 +31,21 @@
                            HorizontalOptions="CenterAndExpand" 
                            Style="{StaticResource TitleLabelStyle}" 
                            HorizontalTextAlignment="Center"
-                           Margin="20, 0, 20,5"
-                           AutomationId="TitleLabel"/>
+                           Margin="20, 0, 20,5"/>
                     <Label Grid.Row="1" 
                            Text="{Binding DialogText}" 
                            Style="{StaticResource TitleLabelStyle}"
                            HorizontalOptions="CenterAndExpand" 
                            HorizontalTextAlignment="Center"
                            Margin="20,5,20,30"
-                           VerticalOptions="StartAndExpand"
-                           AutomationId="TextLabel"/>
+                           VerticalOptions="StartAndExpand"/>
                     <Button Grid.Row="2" 
                             Text="{Binding DialogButtonText}"
                             Command="{Binding CloseDialogCommand}"
                             Style="{StaticResource DialogButtonStyle}"
-                            Margin="-2,0,-1,-6"
-                            AutomationId="CloseButton"/>
+                            Margin="-2,0,-1,-6"/>
                 </Grid>
-            </Frame>
+            </Border>
         </StackLayout>
     </views:BaseView.Content>
 </views:BaseView>

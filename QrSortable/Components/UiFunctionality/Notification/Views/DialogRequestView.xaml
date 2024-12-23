@@ -7,17 +7,21 @@
     BackgroundColor="{OnPlatform Android='#80000000', iOS='#99000000'}"
     Shell.PresentationMode="Modal">
     <views:BaseView.Content >
-        <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="15" AutomationId="RequestStackLayout">
-            <Frame
-                x:Name="RequestFrame"
-                BackgroundColor="White" 
-                CornerRadius="15" 
-                Padding="0"
-                VerticalOptions="Center"
-                HorizontalOptions="Center"
-                IsClippedToBounds="True"
-                HasShadow="False">
-                <Grid ColumnSpacing="0" Padding ="0, 30, 0, 0">
+        <StackLayout 
+            HorizontalOptions="Center"
+            VerticalOptions="Center" 
+            Padding="15">
+            <Border
+                 Padding="0"
+                 x:Name="RequestBorder"
+                 BackgroundColor="White" 
+                 Stroke="Transparent" 
+                 StrokeThickness="1"
+                 StrokeShape="RoundRectangle 15" 
+                 VerticalOptions="Center"
+                 HorizontalOptions="Center">
+                <Grid ColumnSpacing="0" 
+                      Padding ="0, 30, 0, 0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -36,10 +40,9 @@
                            Text="{Binding DialogTitle}" 
                            IsVisible="{Binding TitleExists}"
                            HorizontalOptions="CenterAndExpand" 
-                           Style="{StaticResource TitleLabelStyle}" 
+                           Style="{StaticResource TitleLabelStyle}"
                            HorizontalTextAlignment="Center"
-                           Margin="20,0,20,5"
-                           AutomationId="TitleLabel"/>
+                           Margin="20,0,20,5"/>
                     <Label Grid.Row="1"  
                            Grid.Column="0"
                            Grid.ColumnSpan="3"
@@ -48,31 +51,28 @@
                            HorizontalOptions="CenterAndExpand" 
                            HorizontalTextAlignment="Center"
                            Margin="20,5,20,30"
-                           VerticalOptions="StartAndExpand"
-                           AutomationId="TextLabel"/>
+                           VerticalOptions="StartAndExpand"/>
                     <Button Grid.Row="2" 
                             Grid.Column="0"
                             Text="{Binding DialogCancelButtonText}"
                             Command="{Binding CancelButtonCommand}"
                             Style="{StaticResource DialogButtonStyle}"
                             Margin="-1,0,0,-6"
-                            CornerRadius="0"
-                            AutomationId="CancelButton"/>
+                            CornerRadius="0"/>
                     <Button Grid.Row="2"
                             Grid.Column="2"
                             Text="{Binding DialogConfirmButtonText}"
                             Command="{Binding ConfirmButtonCommand}"
                             Style="{StaticResource DialogButtonStyle}"
                             Margin="0,0,-1,-6"
-                            CornerRadius="0"
-                            AutomationId="ConfirmButton"/>
+                            CornerRadius="0"/>
                     <BoxView Grid.Row="2"
                              Grid.Column="1"
                              HeightRequest="57"
                              WidthRequest="0.5"
-                             BackgroundColor="{StaticResource DialogButtonSeparatorColor}"/>
+                             BackgroundColor="Black"/>
                 </Grid>
-            </Frame>
+            </Border>
         </StackLayout>
     </views:BaseView.Content>
 </views:BaseView>
