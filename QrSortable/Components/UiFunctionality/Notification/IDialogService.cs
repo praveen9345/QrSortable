@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using QrSortable.Components.UiFunctionality.Notification.Models;
 
 
     /// <summary>
@@ -64,5 +65,13 @@
         /// <param name="awaitableFunction"> The function which contains the task whose completion shall be awaited.</param>
         /// <returns>An awaitable task which signals the outcome of the task.</returns>
         Task<object> ShowActivityIndicatorAndReturnResult(string text, Func<Task<object>> awaitableFunction);
+
+        /// <summary>
+        /// Navigates to the viewmodel belonging to the selecting photo dialog.
+        /// </summary>
+        /// <returns>
+        ///     Awaitable task of the navigation. Awaiting it returns the chosen response.
+        /// </returns>
+        Task<PhotoSelectionResponse> ShowPhotoSelectionDialog();
     }
 }

@@ -1,13 +1,11 @@
 ﻿namespace QrSortable.Components.UiFunctionality.Notification.Views
 {
     using Navigation.Views;
-    using Microsoft.Maui.Controls.Xaml;
     using ViewModels;
 
     /// <summary>
     ///     The code behind of the generic dialog activity indicator view.
     /// </summary>
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DialogGenericActivityIndicatorView : BaseView
 
     {

@@ -36,6 +36,16 @@
         {
             //await NavigationService.Navigate<QrBrScannerView>();
 
+            //var s= (int) await DialogService.ShowPhotoSelectionDialog();
+            //Console.WriteLine("ffffffffffffffffffff="+s);
+
+            //await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+            // async () =>
+            //    {
+            //      await Task.Delay(1000);
+            //      return true;
+            //    });
+
             //var wasCodeSuccessfullyUpdated = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
             //   async () =>
             //       {

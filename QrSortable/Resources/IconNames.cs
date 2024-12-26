@@ -150,5 +150,14 @@ namespace QrSortable.Resources
         /// </summary>
         public const string Save = "\uF689";
 
+        /// <summary>
+        ///     The name of the add camera icon.
+        /// </summary>
+        public const string Camera = "\uF255";
+
+        /// <summary>
+        ///     The name of the add gallery icon.
+        /// </summary>
+        public const string Gallery = "\uF4d6";
     }
 }

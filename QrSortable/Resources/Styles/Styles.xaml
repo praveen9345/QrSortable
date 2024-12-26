@@ -32,6 +32,17 @@
         <Setter Property= "ContentLayout" Value="Top,0" />
         <Setter Property="HorizontalOptions" Value="Fill" />
     </Style>
+    
+    <Style TargetType="Button" x:Key="HorizontalTextButton">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="FontFamily" Value="ItimRegular" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{DynamicResource White}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property= "CornerRadius" Value="0" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+    </Style>
 
     <Style x:Key="TitleLabelStyle" TargetType="Label" >
         <Setter Property="FontFamily" Value="ItimRegular" />

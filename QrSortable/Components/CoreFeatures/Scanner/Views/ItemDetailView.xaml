@@ -218,29 +218,29 @@
                 </Button>
             
                 <!-- save button -->
-            <Button
-                   Grid.Row="4"
-                   Margin="0,15,15,15"
-                   HorizontalOptions="End"
-                   VerticalOptions="End"
-                   CornerRadius="50"
-                   Padding="10"
-                   Command="{Binding SaveCommand}"
-                   BackgroundColor="{StaticResource Primary}">
-                <Button.Shadow>
-                    <Shadow
-                           Brush="{StaticResource Primary}"
-                           Opacity="0.5"
-                           Offset="0,0"
-                           Radius="10"/>
-                </Button.Shadow>
-                <Button.ImageSource >
-                    <FontImageSource 
-                           FontFamily="FluentIcons" 
-                           Color="{StaticResource Black}"
-                           Glyph="{x:Static local:IconNames.Save}"/>
-                </Button.ImageSource>
-            </Button>
+                <Button
+                       Grid.Row="4"
+                       Margin="0,15,15,15"
+                       HorizontalOptions="End"
+                       VerticalOptions="End"
+                       CornerRadius="50"
+                       Padding="10"
+                       Command="{Binding SaveCommand}"
+                       BackgroundColor="{StaticResource Primary}">
+                    <Button.Shadow>
+                        <Shadow
+                               Brush="{StaticResource Primary}"
+                               Opacity="0.5"
+                               Offset="0,0"
+                               Radius="10"/>
+                    </Button.Shadow>
+                    <Button.ImageSource >
+                        <FontImageSource 
+                               FontFamily="FluentIcons" 
+                               Color="{StaticResource Black}"
+                               Glyph="{x:Static local:IconNames.Save}"/>
+                    </Button.ImageSource>
+                </Button>
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>

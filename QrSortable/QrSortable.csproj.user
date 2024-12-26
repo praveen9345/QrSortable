@@ -16,6 +16,9 @@
     <MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogAlertView.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
+    <MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogPhotoSelectionView.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
     <MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogGenericActivityIndicatorView.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>

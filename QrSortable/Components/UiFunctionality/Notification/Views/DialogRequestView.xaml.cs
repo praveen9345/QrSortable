@@ -3,13 +3,11 @@
     using Navigation.Views;
     using Microsoft.Maui.Controls.PlatformConfiguration;
     using Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;
-    using Microsoft.Maui.Controls.Xaml;
     using ViewModels;
 
     /// <summary>
     ///     The code behind of the dialog request view.
     /// </summary>
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DialogRequestView : BaseView
     {
         /// <summary>

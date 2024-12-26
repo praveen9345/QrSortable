@@ -99,5 +99,16 @@
             var data = new DialogGenericActivityIndicatorData(text, awaitableFunction);
             return _navigationService.OpenDialogAndAwaitResultAsync<DialogGenericActivityIndicatorView, DialogGenericActivityIndicatorData, object>(data);
         }
+
+        /// <summary>
+        /// Navigates to the viewmodel belonging to the selecting photo dialog.
+        /// </summary>
+        /// <returns>
+        ///     Awaitable task of the navigation. Awaiting it returns the chosen response.
+        /// </returns>
+        public Task<PhotoSelectionResponse> ShowPhotoSelectionDialog()
+        {
+            return _navigationService.OpenDialogAndAwaitResultAsync<DialogPhotoSelectionView, PhotoSelectionResponse>();
+        }
     }
 }
