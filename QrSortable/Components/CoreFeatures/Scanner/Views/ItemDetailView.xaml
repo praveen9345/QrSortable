@@ -4,60 +4,113 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Class="QrSortable.Components.CoreFeatures.Scanner.Views.ItemDetailView"
+    xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
     BackgroundImageSource ="background_layout.webp">
+    <views:BaseView.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="BoolInverter" />
+        </ResourceDictionary>
+    </views:BaseView.Resources>
     <views:BaseView.Content>
         <Grid>
-             <Grid.RowDefinitions>
-                    <!-- back -->
-                    <RowDefinition Height="Auto"></RowDefinition>
-                <!-- item name -->
-                    <RowDefinition Height="Auto"></RowDefinition>
-                <!-- item name -->
+            <Grid.RowDefinitions>
+                <!-- back -->
                 <RowDefinition Height="Auto"></RowDefinition>
                 <!-- item view -->
-                    <RowDefinition Height="*"></RowDefinition>
-                <!-- add item image -->
-                <RowDefinition Height="Auto"></RowDefinition>
-
+                <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-
-                <!-- Back button -->
-                <Button
+            
+            <!-- Camera view -->
+            <scanner:CameraView
                 Grid.Row="0"
-                Margin="15,15,0,0"
-                Command="{Binding BackNavigationCommand}"
-                HorizontalOptions="Start"
-                VerticalOptions="Start"
-                BackgroundColor="{StaticResource DarkGrey}"
-                CornerRadius="5"
-                Padding="2">
-                    <Button.Shadow>
-                        <Shadow
-                        Brush="Black"
-                        Opacity="0.5"
-                        Offset="0,0"
-                        Radius="10"/>
-                    </Button.Shadow>
-                    <Button.ImageSource >
-                        <FontImageSource 
+                x:Name="cameraView"  
+                TapToFocusEnabled="True"
+                CaptureQuality="High"
+                CaptureNextFrame ="{Binding IsCameraCapture}"
+                OnImageCapturedCommand="{Binding ImageCapturedCommand}"
+                IsVisible="{Binding IsCameraCaptureVisable}"
+                CameraEnabled="{Binding IsCameraEnabled}"/>
+
+            <!-- Back button -->
+            <Button
+              Grid.Row="0"
+              CornerRadius="5"
+              Padding="2"
+              Margin="15,15,0,0"
+              Command="{Binding BackNavigationCommand}"
+              HorizontalOptions="Start"
+              VerticalOptions="Start"
+              BackgroundColor="{StaticResource DarkGrey}"
+              IsVisible="{Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}">
+                <Button.Shadow>
+                    <Shadow
+                      Brush="Black"
+                      Opacity="0.5"
+                      Offset="0,0"
+                      Radius="10"/>
+                </Button.Shadow>
+                <Button.ImageSource >
+                    <FontImageSource 
+                          FontFamily="FluentIcons" 
+                          Color="{StaticResource Primary}"
+                          Glyph="{x:Static local:IconNames.Back}"/>
+                </Button.ImageSource>
+            </Button>
+            <!-- page icon -->
+            <Image
+               Grid.Row="0"
+               Source="items_icon"
+               Aspect="AspectFit"
+               HeightRequest="180"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               IsVisible="{Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}"/>
+            
+            <!-- capture buttom -->
+            <Button
+                 Margin="0,0,0,50"
+                 HorizontalOptions="Center"
+                 VerticalOptions="End"
+                 CornerRadius="50"
+                 Padding="10"
+                 Command="{Binding CameraCommand}"
+                 BackgroundColor="{StaticResource DarkGrey}"
+                 IsVisible="{Binding IsCameraCaptureVisable}">
+                <Button.Shadow>
+                    <Shadow
+                       Brush="Black"
+                       Opacity="0.5"
+                       Offset="0,0"
+                       Radius="10"/>
+                </Button.Shadow>
+                <Button.ImageSource>
+                    <FontImageSource 
+                        Size="50"
                         FontFamily="FluentIcons" 
                         Color="{StaticResource Primary}"
-                        Glyph="{x:Static local:IconNames.Back}"/>
-                    </Button.ImageSource>
-                </Button>
+                        Glyph="{x:Static local:IconNames.Capture}"/>
+                </Button.ImageSource>
+            </Button>
 
-                <Image
-                    Grid.Row="0"
-                    Source="items_icon"
-                    Aspect="AspectFit"
-                    HeightRequest="180"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"/>
-            
+            <Grid Grid.Row="1" 
+                  IsVisible="{Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}">
+                <Grid.RowDefinitions>
+                    <!-- item name -->
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <!-- item name -->
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <!-- item view -->
+                    <RowDefinition Height="*"></RowDefinition>
+                    <!-- add item image -->
+                    <RowDefinition Height="Auto"></RowDefinition>
+
+                </Grid.RowDefinitions>
+
                <!-- item name -->
                <StackLayout 
-                      Grid.Row="1"
+                      Grid.Row="0"
                       Margin="10,0,5,0"
                       Orientation="Horizontal">
                     <!-- item name  -->
@@ -97,7 +150,7 @@
 
                 <!-- item remarks -->
                 <StackLayout 
-                    Grid.Row="2"
+                    Grid.Row="1"
                     Margin="10,0,5,0"
                     Orientation="Horizontal">
                     <!-- remarks  -->
@@ -136,7 +189,7 @@
                 </StackLayout>
 
                 <StackLayout
-                         Grid.Row="3"
+                         Grid.Row="2"
                          Background="{StaticResource DarkGrey}">
                     <!-- seprator -->
                     <BoxView 
@@ -194,7 +247,7 @@
             
                 <!-- add image button -->
                 <Button
-                  Grid.Row="4"
+                  Grid.Row="3"
                   Margin="0,15,80,15"
                   HorizontalOptions="End"
                   VerticalOptions="End"
@@ -219,7 +272,7 @@
             
                 <!-- save button -->
                 <Button
-                       Grid.Row="4"
+                       Grid.Row="3"
                        Margin="0,15,15,15"
                        HorizontalOptions="End"
                        VerticalOptions="End"
@@ -241,6 +294,7 @@
                                Glyph="{x:Static local:IconNames.Save}"/>
                     </Button.ImageSource>
                 </Button>
+        </Grid>
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>

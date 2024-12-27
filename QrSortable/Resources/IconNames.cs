@@ -159,5 +159,10 @@ namespace QrSortable.Resources
         ///     The name of the add gallery icon.
         /// </summary>
         public const string Gallery = "\uF4d6";
+
+        /// <summary>
+        ///     The name of the add capture image icon.
+        /// </summary>
+        public const string Capture = "\uF695";
     }
 }

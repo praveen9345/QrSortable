@@ -18,5 +18,22 @@
             BindingContext = viewModel;
             
         }
+
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height);
+            cameraView.HeightRequest = height;
+        }
+
+        private void cameraView_OnImageCaptured(object sender, BarcodeScanning.OnImageCapturedEventArg e)
+        {
+           
+
+        }
+
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            cameraView.CaptureNextFrame = true;
+        }
     }
 }

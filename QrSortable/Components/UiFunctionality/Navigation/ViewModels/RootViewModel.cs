@@ -34,10 +34,7 @@
 
         public AsyncRelayCommand QrScanCommand => new AsyncRelayCommand(async () =>
         {
-            //await NavigationService.Navigate<QrBrScannerView>();
-
-            //var s= (int) await DialogService.ShowPhotoSelectionDialog();
-            //Console.WriteLine("ffffffffffffffffffff="+s);
+            await NavigationService.Navigate<QrBrScannerView>();
 
             //await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
             // async () =>

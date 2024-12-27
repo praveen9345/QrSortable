@@ -1,11 +1,17 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.ViewModels
 {
     using System.Collections.ObjectModel;
+    using BarcodeScanning;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using Microsoft.Maui.ApplicationModel;
+    using Microsoft.Maui.Graphics.Platform;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using QrSortable.Components.UiFunctionality.Notification.Models;
+
 
     /// <summary>
     ///     The view model of the ItemDetailView screen.
@@ -13,8 +19,10 @@
     public partial class ItemDetailViewModel : BaseViewModel<StorageEntry>
     {
         private readonly IDatabaseManager _databaseManager;
+        private readonly IImageService _imageService;
+        
         private StorageEntry _storageData;
-
+        private byte[] _jpegCaptureImages;
         public ObservableCollection<string> ItemImagesFilePath { get; set; }
 
         /// <summary>
@@ -22,10 +30,11 @@
         /// </summary>
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
-        public ItemDetailViewModel(IDatabaseManager databaseManager)
+        public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
+            _imageService = imageService;
         }
 
         /// <summary>
@@ -36,6 +45,7 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
+            await Methods.AskForRequiredPermissionAsync();
         }
 
         [ObservableProperty]
@@ -43,6 +53,15 @@
 
         [ObservableProperty]
         private string _itemDescription;
+
+        [ObservableProperty]
+        private bool _isCameraEnabled;
+
+        [ObservableProperty]
+        private bool _isCameraCapture;
+
+        [ObservableProperty]
+        private bool _isCameraCaptureVisable;
 
         /// <summary>
         ///     Prepares the viewmode with an storage raw data.
@@ -63,10 +82,58 @@
 
         }
 
+        public override void ViewAppearing()
+        {
+            base.ViewAppearing();
+            IsCameraEnabled = true;
+            IsCameraCapture = false;
+            IsCameraCaptureVisable = false;
+        }
+
+        public override void ViewDisappearing()
+        {
+            base.ViewDisappearing();
+            IsCameraEnabled = false;
+        }
+
+        public AsyncRelayCommand CameraCommand => new AsyncRelayCommand(async () =>
+        {
+            IsCameraCapture = true;
+        });
+
+        public AsyncRelayCommand<object> ImageCapturedCommand => new AsyncRelayCommand<object>(async (image) =>
+        {
+            if (image is PlatformImage platformImage)
+            {
+                var result = (bool) await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+                 async () =>
+                 {
+                     _jpegCaptureImages = await _imageService.PlatformImageConvertAsync(platformImage);
+                     return true;
+                 });
+
+                if (result == false) 
+                { 
+                    await DialogService.ShowAlertDialog("Could not able to capture the image", "Ok");
+                }  
+            }
+            else
+            {
+                Console.WriteLine("ItemDetailViewModel: Invalid image data. Expected a PlatformImage.");
+            }
+            IsCameraCapture = IsCameraCaptureVisable = false;
+        });
+
         public AsyncRelayCommand AddItemImagesCommand => new AsyncRelayCommand(async () =>
         {
-            
-            
+            var picture = (int)await DialogService.ShowPhotoSelectionDialog();
+
+            if(picture == (int)PhotoSelectionResponse.Camera)
+            {
+                IsCameraEnabled = IsCameraCaptureVisable = true;
+
+            }
+           
             //ItemImagesFilePath.Add("");
         });
 

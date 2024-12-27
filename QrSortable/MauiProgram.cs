@@ -7,13 +7,15 @@
     using BarcodeScanning;
 
 #if ANDROID
-      using Android.Graphics.Drawables;
-      using Android.Graphics;
-      using Microsoft.Maui.Controls.Handlers;
-      using Android.Widget;
+    using Android.Graphics.Drawables;
+    using Android.Graphics;
+    using Microsoft.Maui.Controls.Handlers;
+    using Android.Widget;
+    using Platforms.Android.Components.PlatformUtils;
     
 #elif IOS
-      using UIKit;
+    using UIKit;
+    using QrSortable.Platforms.iOS.Components.PlatformUtils;
 #endif
 
     public static class MauiProgram
@@ -91,8 +93,14 @@
                 }
             }
 
+#if ANDROID
+            builder.Services.AddSingleton<IImageService, AndroidImageService>();   
+#elif IOS
+            builder.Services.AddSingleton<IImageService, IosImageService>();
+#endif
+
             //External Services
-            
+
             return builder;
         }
 
