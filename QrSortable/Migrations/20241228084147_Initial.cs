@@ -71,7 +71,7 @@ namespace QrSortable.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false),
                     ItemName = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
-                    ImagesFilePath = table.Column<string>(type: "TEXT", nullable: false)
+                    Images = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

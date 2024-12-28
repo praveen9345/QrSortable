@@ -4,6 +4,6 @@
     {
         public string ItemName { get; set; }
         public string Description { get; set; }
-        public List<string> ImagesFilePath { get; set; } = new List<string>();
+        public List<byte[]> Images { get; set; } = new List<byte[]>();
     }
 }

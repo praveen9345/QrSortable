@@ -188,25 +188,26 @@
                     </Border>
                 </StackLayout>
 
-                <StackLayout
-                         Grid.Row="2"
-                         Background="{StaticResource DarkGrey}">
+                <Grid
+                    Grid.Row="2"
+                    Background="{StaticResource DarkGrey}">
+                    <!-- default image icon -->
+                    <Image 
+                        Source="image_icon" 
+                        Aspect="AspectFill"
+                        HorizontalOptions="FillAndExpand"
+                        VerticalOptions="FillAndExpand" />
                     <!-- seprator -->
                     <BoxView 
                          HeightRequest="2"
+                        VerticalOptions="Start"
                          Color="{StaticResource Yellow}"/>
                     <!-- Carousel View  -->
                     <CarouselView
                          Loop="False"
                          VerticalOptions="FillAndExpand"
-                         BackgroundColor="Transparent">
-                        <CarouselView.ItemsSource>
-                            <x:Array Type="{x:Type x:String}">
-                                <x:String>Storage room</x:String>
-                                <x:String>Bed room</x:String>
-                                <x:String>Living room</x:String>
-                            </x:Array>
-                        </CarouselView.ItemsSource>
+                         BackgroundColor="Transparent"
+                         ItemsSource="{Binding ImageArray}">
                         <CarouselView.ItemTemplate>
                             <DataTemplate>
                                 <!-- boxes view  -->
@@ -214,11 +215,12 @@
                                     <!-- images -->
                                     <Image
                                        Margin="2,0,2,0"
-                                       Source="image_icon"
+                                       Source="{Binding Image}"
                                        Aspect="AspectFill"
+                                       Rotation="90"
                                        HorizontalOptions="FillAndExpand"
                                        VerticalOptions="FillAndExpand"/>
-
+                                  
                                     <!-- Swipe view  -->
                                     <Button
                                         Padding="0"
@@ -241,9 +243,10 @@
                      </CarouselView>
                     <!-- seprator -->
                     <BoxView 
-                      HeightRequest="2"
-                      Color="{StaticResource Yellow}"/>
-                 </StackLayout>
+                        HeightRequest="2"
+                        VerticalOptions="End"
+                        Color="{StaticResource Yellow}"/>
+                </Grid>
             
                 <!-- add image button -->
                 <Button

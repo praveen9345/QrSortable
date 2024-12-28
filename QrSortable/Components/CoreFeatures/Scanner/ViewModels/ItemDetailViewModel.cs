@@ -22,8 +22,7 @@
         private readonly IImageService _imageService;
         
         private StorageEntry _storageData;
-        private byte[] _jpegCaptureImages;
-        public ObservableCollection<string> ItemImagesFilePath { get; set; }
+        public ObservableCollection<Images> ImageArray { get; set; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ItemDetailViewModel" />.
@@ -35,6 +34,7 @@
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
             _imageService = imageService;
+            ImageArray = new ObservableCollection<Images>();
         }
 
         /// <summary>
@@ -79,7 +79,6 @@
             {
                 Console.WriteLine("Error:ItemDetailViewModel:Prepare: storageData is null");
             }
-
         }
 
         public override void ViewAppearing()
@@ -105,17 +104,30 @@
         {
             if (image is PlatformImage platformImage)
             {
+                byte[] jpegCaptureImages= new byte[0];
                 var result = (bool) await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
                  async () =>
                  {
-                     _jpegCaptureImages = await _imageService.PlatformImageConvertAsync(platformImage);
+                     jpegCaptureImages = await _imageService.PlatformImageConvertAsync(platformImage);
+                     
                      return true;
                  });
 
                 if (result == false) 
                 { 
                     await DialogService.ShowAlertDialog("Could not able to capture the image", "Ok");
-                }  
+                }
+                else
+                {
+                    if (jpegCaptureImages.Length != 0)
+                    {
+                        ImageArray.Add(new Images()
+                        {
+                            Image = ConvertToImageSource(jpegCaptureImages)
+                        });
+                    }
+                }
+
             }
             else
             {
@@ -133,8 +145,6 @@
                 IsCameraEnabled = IsCameraCaptureVisable = true;
 
             }
-           
-            //ItemImagesFilePath.Add("");
         });
 
         public AsyncRelayCommand SaveCommand => new AsyncRelayCommand(async () =>
@@ -152,12 +162,12 @@
                                           _storageData.BarcodeValue + "|" + _storageData.BarcodeType + "|" +
                                           _storageData.Location + "|" + ItemName +"|"+ ItemDescription;
                 
-                _storageData.Items.Add(new Item
-                    {
-                        ItemName = ItemName,
-                        Description = ItemDescription,
-                        ImagesFilePath = ItemImagesFilePath.ToList()
-                    });
+                //_storageData.Items.Add(new Item
+                //    {
+                //        ItemName = ItemName,
+                //        Description = ItemDescription,
+                //        ImagesFilePath = ItemImagesFilePath.ToList()
+                //    });
 
                 //_databaseManager.BeginTransaction();
 
@@ -178,6 +188,19 @@
                 Console.WriteLine("Error:ItemDetailViewModel:SaveCommand: storageData is null");
             }
         });
+
+         private ImageSource ConvertToImageSource(byte[] jpegBytes)
+         {
+            if (jpegBytes == null || jpegBytes.Length == 0)
+                return null;
+
+            // Convert byte array to a MemoryStream
+            var stream = new MemoryStream(jpegBytes);
+
+            // Create a StreamImageSource from the MemoryStream
+            return ImageSource.FromStream(() => stream);
+         }
+
 
     }
 }

@@ -124,7 +124,7 @@ namespace QrSortable.Migrations
                                 .IsRequired()
                                 .HasColumnType("TEXT");
 
-                            b1.PrimitiveCollection<string>("ImagesFilePath")
+                            b1.PrimitiveCollection<string>("Images")
                                 .IsRequired()
                                 .HasColumnType("TEXT");
 

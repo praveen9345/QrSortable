@@ -11,7 +11,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.General;
 namespace QrSortable.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241216140945_Initial")]
+    [Migration("20241228084147_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -127,7 +127,7 @@ namespace QrSortable.Migrations
                                 .IsRequired()
                                 .HasColumnType("TEXT");
 
-                            b1.PrimitiveCollection<string>("ImagesFilePath")
+                            b1.PrimitiveCollection<string>("Images")
                                 .IsRequired()
                                 .HasColumnType("TEXT");
 
