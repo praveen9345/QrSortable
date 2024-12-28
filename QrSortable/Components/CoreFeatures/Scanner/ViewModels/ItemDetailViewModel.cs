@@ -147,21 +147,27 @@
                 IsCameraEnabled = IsCameraCaptureVisable = true;
             }
 
-            if(picture == (int)PhotoSelectionResponse.Gallery)
+            if (picture == (int)PhotoSelectionResponse.Gallery)
             {
-                var imageStream = await _filePickerService.ImageAsync();
-                
-                if(imageStream != null)
+                Stream imageStream = null;
+                var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+                async () =>
                 {
-                    ImageArray.Add(new Images()
-                    {
-                        Image = ImageSource.FromStream(() => imageStream),
-                        Rotate = 0
-                    });
+                    imageStream = await _filePickerService.ImageAsync();
+                    return true;
+                });
+
+                if (!result || imageStream == null)
+                {
+                    await DialogService.ShowAlertDialog("Could not able to pick the image", "Ok");
                 }
                 else
                 {
-                    Console.WriteLine("ItemDetailViewModel: Image not picked..");
+                  ImageArray.Add(new Images()
+                  {
+                     Image = ImageSource.FromStream(() => imageStream),
+                     Rotate = 0
+                  });
                 }
             }
         });
