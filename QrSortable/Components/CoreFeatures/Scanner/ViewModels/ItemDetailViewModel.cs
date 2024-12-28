@@ -4,7 +4,6 @@
     using BarcodeScanning;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
-    using Microsoft.Maui.ApplicationModel;
     using Microsoft.Maui.Graphics.Platform;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
@@ -19,6 +18,7 @@
     public partial class ItemDetailViewModel : BaseViewModel<StorageEntry>
     {
         private readonly IDatabaseManager _databaseManager;
+        private readonly IFilePickerService _filePickerService;
         private readonly IImageService _imageService;
         
         private StorageEntry _storageData;
@@ -29,11 +29,12 @@
         /// </summary>
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
-        public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService)
+        public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, IFilePickerService filePickerService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
             _imageService = imageService;
+            _filePickerService = filePickerService;
             ImageArray = new ObservableCollection<Images>();
         }
 
@@ -123,7 +124,8 @@
                     {
                         ImageArray.Add(new Images()
                         {
-                            Image = ConvertToImageSource(jpegCaptureImages)
+                            Image = ConvertToImageSource(jpegCaptureImages),
+                            Rotate = 90
                         });
                     }
                 }
@@ -143,7 +145,24 @@
             if(picture == (int)PhotoSelectionResponse.Camera)
             {
                 IsCameraEnabled = IsCameraCaptureVisable = true;
+            }
 
+            if(picture == (int)PhotoSelectionResponse.Gallery)
+            {
+                var imageStream = await _filePickerService.ImageAsync();
+                
+                if(imageStream != null)
+                {
+                    ImageArray.Add(new Images()
+                    {
+                        Image = ImageSource.FromStream(() => imageStream),
+                        Rotate = 0
+                    });
+                }
+                else
+                {
+                    Console.WriteLine("ItemDetailViewModel: Image not picked..");
+                }
             }
         });
 

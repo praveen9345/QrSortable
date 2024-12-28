@@ -6,6 +6,8 @@
     public class Images : INotifyPropertyChanged
     {
         private ImageSource _image;
+        
+        private int _rotate;
 
         /// <summary>
         /// Gets or sets the source of the image.
@@ -18,6 +20,22 @@
                 if (_image != value)
                 {
                     _image = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the image rotation.
+        /// </summary>
+        public int Rotate
+        {
+            get => _rotate;
+            set
+            {
+                if (_rotate != value)
+                {
+                    _rotate = value;
                     OnPropertyChanged();
                 }
             }
