@@ -165,7 +165,7 @@
                 {
                   ImageArray.Add(new Images()
                   {
-                     Image = ImageSource.FromStream(() => imageStream),
+                     Image = ConvertToImageSource(imageStream),
                      Rotate = 0
                   });
                 }
@@ -214,17 +214,23 @@
             }
         });
 
-         private ImageSource ConvertToImageSource(byte[] jpegBytes)
-         {
-            if (jpegBytes == null || jpegBytes.Length == 0)
-                return null;
+        private ImageSource ConvertToImageSource(object input)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
 
-            // Convert byte array to a MemoryStream
-            var stream = new MemoryStream(jpegBytes);
+            Stream stream = input switch
+            {
+                byte[] jpegBytes when jpegBytes.Length > 0 => new MemoryStream(jpegBytes),
+                Stream jpegStream => jpegStream,
+                _ => throw new ArgumentException("Unsupported input type", nameof(input))
+            };
 
-            // Create a StreamImageSource from the MemoryStream
-            return ImageSource.FromStream(() => stream);
-         }
+            if (stream.CanSeek)
+                stream.Position = 0;
+
+            return ImageSource.FromStream(() => stream ?? throw new InvalidOperationException("Stream cannot be null"));
+        }
 
 
     }

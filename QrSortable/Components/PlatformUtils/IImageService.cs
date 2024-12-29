@@ -13,5 +13,7 @@
         /// <param name="platformImage">..........</param>
         /// <returns>........................</returns>
         Task<byte[]> PlatformImageConvertAsync(PlatformImage platformImage);
+
+        Task<byte[]> ConvertToJpegBytes(Stream inputStream);
     }
 }

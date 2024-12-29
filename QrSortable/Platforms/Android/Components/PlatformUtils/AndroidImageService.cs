@@ -30,10 +30,34 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"AndroidImageService: Error processing image: {ex.Message}");
+                Console.WriteLine($"AndroidImageService: PlatformImageConvertAsync: Error processing image: {ex.Message}");
                 return null;
             }
  
+        }
+
+        /// <summary>
+        /// ...............................
+        /// </summary>
+        /// <param name="inputStream"></param>
+        /// <returns></returns>
+        public async Task<byte[]> ConvertToJpegBytes(Stream inputStream)
+        {
+            try
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await inputStream.CopyToAsync(memoryStream);
+                    byte[] imageBytes = memoryStream.ToArray();
+
+                    return ConvertToJpeg(imageBytes);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"AndroidImageService: ConvertToJpegBytes :Error processing image: {ex.Message}");
+                return null;
+            }
         }
 
         private byte[] ConvertToJpeg(byte[] imageBytes)
