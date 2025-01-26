@@ -47,12 +47,6 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // Configure 'Item' as an owned type within 'StorageEntry'
-            modelBuilder.Entity<StorageEntry>()
-                        .OwnsMany(se => se.Items, item =>
-                        {
-                            item.WithOwner(); // Each 'Item' is owned by a single 'StorageEntry'
-                        });
         }
     }
 }

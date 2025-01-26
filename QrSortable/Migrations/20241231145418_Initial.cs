@@ -37,7 +37,10 @@ namespace QrSortable.Migrations
                     BarcodeValue = table.Column<string>(type: "TEXT", nullable: false),
                     BarcodeType = table.Column<string>(type: "TEXT", nullable: false),
                     Location = table.Column<string>(type: "TEXT", nullable: false),
-                    SearchInfo = table.Column<string>(type: "TEXT", nullable: false)
+                    SearchInfo = table.Column<string>(type: "TEXT", nullable: false),
+                    ItemName = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    ImageList = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,27 +65,6 @@ namespace QrSortable.Migrations
                 {
                     table.PrimaryKey("PK_UserInformation", x => x.ID);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "Item",
-                columns: table => new
-                {
-                    StorageEntryID = table.Column<int>(type: "INTEGER", nullable: false),
-                    Id = table.Column<int>(type: "INTEGER", nullable: false),
-                    ItemName = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    Images = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Item", x => new { x.StorageEntryID, x.Id });
-                    table.ForeignKey(
-                        name: "FK_Item_StorageEntries_StorageEntryID",
-                        column: x => x.StorageEntryID,
-                        principalTable: "StorageEntries",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
         }
 
         /// <inheritdoc />
@@ -92,13 +74,10 @@ namespace QrSortable.Migrations
                 name: "GeneralInformation");
 
             migrationBuilder.DropTable(
-                name: "Item");
+                name: "StorageEntries");
 
             migrationBuilder.DropTable(
                 name: "UserInformation");
-
-            migrationBuilder.DropTable(
-                name: "StorageEntries");
         }
     }
 }

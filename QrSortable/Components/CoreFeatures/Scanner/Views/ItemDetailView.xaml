@@ -212,14 +212,14 @@
                             <DataTemplate>
                                 <!-- boxes view  -->
                                 <Grid Margin="2,0,2,0">
-                                    <!-- images -->
+                                    <!-- images  -->
                                     <Image
                                        Source="{Binding Image}"
                                        Aspect="AspectFill"
                                        Rotation="{Binding Rotate}"
                                        HorizontalOptions="FillAndExpand"
                                        VerticalOptions="FillAndExpand"/>
-                                  
+
                                     <!-- Swipe view  -->
                                     <Button
                                         Padding="0"

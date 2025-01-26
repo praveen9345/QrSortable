@@ -1,6 +1,8 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.ViewModels
 {
+    using System.Collections;
     using System.Collections.ObjectModel;
+    using System.Text;
     using BarcodeScanning;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
@@ -20,7 +22,8 @@
         private readonly IDatabaseManager _databaseManager;
         private readonly IFilePickerService _filePickerService;
         private readonly IImageService _imageService;
-        
+        private List<byte[]> _imageArrayDb = new List<byte[]>();
+
         private StorageEntry _storageData;
         public ObservableCollection<Images> ImageArray { get; set; }
 
@@ -64,11 +67,14 @@
         [ObservableProperty]
         private bool _isCameraCaptureVisable;
 
+        [ObservableProperty]
+        private ImageSource _i;
+
         /// <summary>
         ///     Prepares the viewmode with an storage raw data.
         /// </summary>
         /// <param name="storageData">The string storage data.</param>
-        public override async void Prepare(StorageEntry storageData)
+        public override void Prepare(StorageEntry storageData)
         {
             _storageData = storageData;
 
@@ -122,6 +128,7 @@
                 {
                     if (jpegCaptureImages.Length != 0)
                     {
+                        _imageArrayDb.Add(jpegCaptureImages);
                         ImageArray.Add(new Images()
                         {
                             Image = ConvertToImageSource(jpegCaptureImages),
@@ -163,17 +170,20 @@
                 }
                 else
                 {
-                  ImageArray.Add(new Images()
-                  {
-                     Image = ConvertToImageSource(imageStream),
-                     Rotate = 0
-                  });
+                    var byteImage = await _imageService.ConvertToJpegBytes(imageStream);
+                    _imageArrayDb.Add(byteImage);
+                    ImageArray.Add(new Images()
+                    {
+                       Image = ConvertToImageSource(imageStream), 
+                       Rotate = 0
+                    }); 
                 }
             }
         });
 
         public AsyncRelayCommand SaveCommand => new AsyncRelayCommand(async () =>
         {
+
             if (string.IsNullOrWhiteSpace(ItemName) || string.IsNullOrWhiteSpace(ItemDescription))
             {
                 Console.WriteLine("Error:ItemDetailViewModel:AddItemCommand: ItemName & ItemDescription are null or empty");
@@ -185,28 +195,26 @@
                 _storageData.CreatedDate = DateTime.Now;
                 _storageData.SearchInfo = _storageData.Category + "|" + _storageData.CreatedDate + "|" +
                                           _storageData.BarcodeValue + "|" + _storageData.BarcodeType + "|" +
-                                          _storageData.Location + "|" + ItemName +"|"+ ItemDescription;
-                
-                //_storageData.Items.Add(new Item
-                //    {
-                //        ItemName = ItemName,
-                //        Description = ItemDescription,
-                //        ImagesFilePath = ItemImagesFilePath.ToList()
-                //    });
+                                          _storageData.Location + "|" + ItemName + "|" + ItemDescription;
 
-                //_databaseManager.BeginTransaction();
 
-                //var wasAddingItemSuccessful = await _databaseManager.AddAsync(_storageData);
+                _storageData.ItemName = ItemName;
+                _storageData.Description = ItemDescription;
+                _storageData.ImageList = _imageArrayDb.ToList();
 
-                //if (wasAddingItemSuccessful != null)
-                //{
-                //    _databaseManager.CommitTransaction();
-                //    Console.WriteLine("Error:ItemDetailViewModel:SaveCommand: storageData is Saved");
-                //}
-                //else
-                //{
-                //    _databaseManager.Rollback();
-                //}
+                _databaseManager.BeginTransaction();
+
+                var wasAddingItemSuccessful = await _databaseManager.AddAsync(_storageData);
+
+                if (wasAddingItemSuccessful != null)
+                {
+                    _databaseManager.CommitTransaction();
+                    Console.WriteLine("Error:ItemDetailViewModel:SaveCommand: storageData is Saved");
+                }
+                else
+                {
+                    _databaseManager.Rollback();
+                }
             }
             else
             {
@@ -231,7 +239,5 @@
 
             return ImageSource.FromStream(() => stream ?? throw new InvalidOperationException("Stream cannot be null"));
         }
-
-
     }
 }

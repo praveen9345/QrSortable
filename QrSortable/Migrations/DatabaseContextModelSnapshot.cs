@@ -55,6 +55,18 @@ namespace QrSortable.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.PrimitiveCollection<string>("ImageList")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -107,40 +119,6 @@ namespace QrSortable.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("UserInformation");
-                });
-
-            modelBuilder.Entity("QrSortable.Components.CoreFeatures.DataManagement.General.Models.StorageEntry", b =>
-                {
-                    b.OwnsMany("QrSortable.Components.CoreFeatures.DataManagement.General.Models.Item", "Items", b1 =>
-                        {
-                            b1.Property<int>("StorageEntryID")
-                                .HasColumnType("INTEGER");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("INTEGER");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
-
-                            b1.PrimitiveCollection<string>("Images")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("ItemName")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
-
-                            b1.HasKey("StorageEntryID", "Id");
-
-                            b1.ToTable("Item");
-
-                            b1.WithOwner()
-                                .HasForeignKey("StorageEntryID");
-                        });
-
-                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

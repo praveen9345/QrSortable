@@ -11,8 +11,10 @@
         public string BarcodeType { get; set; }
         public string Location { get; set; }
         public string SearchInfo { get; set; }
-        public List<Item> Items { get; set; } = new List<Item>();
-    
+        public string ItemName { get; set; }
+        public string Description { get; set; }
+        public IList<byte[]> ImageList { get; set; }
+
         public StorageEntry() 
         {
             StorageId = Guid.NewGuid();
