@@ -1,17 +1,15 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.ViewModels
 {
-    using System.Collections;
     using System.Collections.ObjectModel;
-    using System.Text;
     using BarcodeScanning;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using Microsoft.Maui.Graphics.Platform;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
-    using QrSortable.Components.UiFunctionality.Navigation.Views;
     using QrSortable.Components.UiFunctionality.Notification;
     using QrSortable.Components.UiFunctionality.Notification.Models;
 
@@ -215,7 +213,7 @@
                 {
                     _databaseManager.CommitTransaction();
                     await _toastService.DisplayToast("Successfully saved");
-                    await NavigationService.Navigate<RootView>();
+                    await NavigationService.Navigate<BoxDetailView>();
                 }
                 else
                 {
