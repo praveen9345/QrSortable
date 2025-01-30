@@ -11,6 +11,8 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using QrSortable.Components.UiFunctionality.Navigation.Views;
+    using QrSortable.Components.UiFunctionality.Notification;
     using QrSortable.Components.UiFunctionality.Notification.Models;
 
 
@@ -22,8 +24,9 @@
         private readonly IDatabaseManager _databaseManager;
         private readonly IFilePickerService _filePickerService;
         private readonly IImageService _imageService;
+        private readonly IToastService _toastService;
+        
         private List<byte[]> _imageArrayDb = new List<byte[]>();
-
         private StorageEntry _storageData;
         public ObservableCollection<Images> ImageArray { get; set; }
 
@@ -32,12 +35,14 @@
         /// </summary>
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
-        public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, IFilePickerService filePickerService)
+        /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
+        public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, IFilePickerService filePickerService, IToastService toastService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
             _imageService = imageService;
             _filePickerService = filePickerService;
+            _toastService = toastService;
             ImageArray = new ObservableCollection<Images>();
         }
 
@@ -186,7 +191,7 @@
 
             if (string.IsNullOrWhiteSpace(ItemName) || string.IsNullOrWhiteSpace(ItemDescription))
             {
-                Console.WriteLine("Error:ItemDetailViewModel:AddItemCommand: ItemName & ItemDescription are null or empty");
+                await DialogService.ShowAlertDialog("ItemName and ItemDescription fields are required and cannot be left empty.", "Ok");
                 return;
             }
 
@@ -209,11 +214,13 @@
                 if (wasAddingItemSuccessful != null)
                 {
                     _databaseManager.CommitTransaction();
-                    Console.WriteLine("Error:ItemDetailViewModel:SaveCommand: storageData is Saved");
+                    await _toastService.DisplayToast("Successfully saved");
+                    await NavigationService.Navigate<RootView>();
                 }
                 else
                 {
                     _databaseManager.Rollback();
+                    await DialogService.ShowAlertDialog("Data could not be saved, try again later.", "Ok");                  
                 }
             }
             else

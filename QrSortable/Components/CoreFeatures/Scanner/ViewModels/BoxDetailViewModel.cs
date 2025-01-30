@@ -69,6 +69,12 @@
 
         public AsyncRelayCommand AddItemCommand => new AsyncRelayCommand(async () =>
         {
+            if (string.IsNullOrWhiteSpace(Location) || string.IsNullOrWhiteSpace(Category))
+            {
+                await DialogService.ShowAlertDialog("Location and Category fields are required and cannot be left empty.", "Ok");
+                return;
+            }
+
             _storageData.Location = Location;
             _storageData.Category = Category;
             await NavigationService.Navigate<ItemDetailView>(_storageData);
