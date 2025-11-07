@@ -109,7 +109,6 @@
 	  <Folder Include="Components\CoreFeatures\Cloud\AccessManagement\" />
 	  <Folder Include="Components\CoreFeatures\Cloud\Wrappers\" />
 	  <Folder Include="Components\CoreFeatures\Onboarding\" />
-	  <Folder Include="Components\CoreFeatures\Scanner\Models\" />
 	</ItemGroup>
 
 	<ItemGroup>

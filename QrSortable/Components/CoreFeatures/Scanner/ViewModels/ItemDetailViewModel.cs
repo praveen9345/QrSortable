@@ -26,6 +26,10 @@
         
         private List<byte[]> _imageArrayDb = new List<byte[]>();
         private StorageEntry _storageData;
+
+        /// <summary>
+        /// A collection of images associated with the storage entry.
+        /// </summary>
         public ObservableCollection<Images> ImageArray { get; set; }
 
         /// <summary>
@@ -81,14 +85,13 @@
         {
             _storageData = storageData;
 
-            if (_storageData != null) 
-            { 
-                //TODO: furhter implementaion
-            }
-            else
+            if (_storageData == null)
             {
-                Console.WriteLine("Error:ItemDetailViewModel:Prepare: storageData is null");
+                Console.WriteLine("Error: ItemDetailViewModel.Prepare: storageData is null");
+                return;
             }
+
+            // TODO: Implement logic to load existing data
         }
 
         public override void ViewAppearing()
@@ -114,7 +117,7 @@
         {
             if (image is PlatformImage platformImage)
             {
-                byte[] jpegCaptureImages= new byte[0];
+                byte[] jpegCaptureImages= Array.Empty<byte>();
                 var result = (bool) await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
                  async () =>
                  {
@@ -123,7 +126,7 @@
                      return true;
                  });
 
-                if (result == false) 
+                if (!result || jpegCaptureImages.Length == 0) 
                 { 
                     await DialogService.ShowAlertDialog("Could not able to capture the image", "Ok");
                 }
@@ -174,12 +177,15 @@
                 else
                 {
                     var byteImage = await _imageService.ConvertToJpegBytes(imageStream);
-                    _imageArrayDb.Add(byteImage);
-                    ImageArray.Add(new Images()
+                    if (byteImage != null && byteImage.Length > 0)
                     {
-                       Image = ConvertToImageSource(imageStream), 
-                       Rotate = 0
-                    }); 
+                        _imageArrayDb.Add(byteImage);
+                        ImageArray.Add(new Images()
+                        {
+                            Image = ConvertToImageSource(byteImage),
+                            Rotate = 0
+                        });
+                    }
                 }
             }
         });
@@ -196,30 +202,54 @@
             if (_storageData != null)
             {
                 _storageData.CreatedDate = DateTime.Now;
-                _storageData.SearchInfo = _storageData.Category + "|" + _storageData.CreatedDate + "|" +
-                                          _storageData.BarcodeValue + "|" + _storageData.BarcodeType + "|" +
-                                          _storageData.Location + "|" + ItemName + "|" + ItemDescription;
-
+             
+                _storageData.SearchInfo = $"{_storageData.Category}|{_storageData.CreatedDate}|{_storageData.BarcodeValue}|" +
+                                            $"{_storageData.BarcodeType}|{_storageData.Location}|{ItemName}|{ItemDescription}";
 
                 _storageData.ItemName = ItemName;
                 _storageData.Description = ItemDescription;
                 _storageData.ImageList = _imageArrayDb.ToList();
 
-                _databaseManager.BeginTransaction();
-
-                var wasAddingItemSuccessful = await _databaseManager.AddAsync(_storageData);
-
-                if (wasAddingItemSuccessful != null)
+                try
                 {
-                    _databaseManager.CommitTransaction();
-                    await _toastService.DisplayToast("Successfully saved");
-                    await NavigationService.Navigate<BoxDetailView>();
+                    _databaseManager.BeginTransaction();
+
+                    var wasAddingItemSuccessful = await _databaseManager.AddAsync(_storageData);
+
+                    if (wasAddingItemSuccessful!= null)    
+                    {
+                        _databaseManager.CommitTransaction();
+                        await _toastService.DisplayToast("Successfully saved.");
+                        await NavigationService.Close();
+                    }
+                    else
+                    {
+                        // add server-side diagnostics log
+                        _databaseManager.Rollback();
+                        Console.WriteLine("ItemDetailViewModel: SaveCommand: AddAsync returned null - rollback performed.");
+                        await DialogService.ShowAlertDialog("Data could not be saved, try again later.", "Ok");
+                        
+                       
+
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    _databaseManager.Rollback();
-                    await DialogService.ShowAlertDialog("Data could not be saved, try again later.", "Ok");                  
+                    try
+                    {
+                        _databaseManager.Rollback();
+                    }
+                    catch
+                    {
+                        // ignore rollback errors but log
+                        Console.WriteLine("ItemDetailViewModel: SaveCommand: Rollback failed.");
+                    }
+
+                    Console.WriteLine($"ItemDetailViewModel: SaveCommand: Exception while saving: {ex}");
+                    await DialogService.ShowAlertDialog("An unexpected error occurred while saving the item. Please try again.", "Ok");
                 }
+
+
             }
             else
             {
