@@ -7,7 +7,6 @@
     using Microsoft.Maui.Graphics.Platform;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
-    using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
@@ -74,8 +73,6 @@
         [ObservableProperty]
         private bool _isCameraCaptureVisable;
 
-        [ObservableProperty]
-        private ImageSource _i;
 
         /// <summary>
         ///     Prepares the viewmode with an storage raw data.
