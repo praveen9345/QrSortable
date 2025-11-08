@@ -234,7 +234,8 @@
                                                   Grid.Column="3"
                                                   CornerRadius="5"
                                                   Padding="0"
-                                                  Command="{Binding DeleatItemCommand}"
+                                                  Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.DeleteItemCommand}"
+                                                  CommandParameter="{Binding .}"
                                                   BackgroundColor="Transparent">
                                                 <Button.ImageSource >
                                                     <FontImageSource 

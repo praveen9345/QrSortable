@@ -8,6 +8,7 @@
     using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using QrSortable.Components.UiFunctionality.Notification;
     using System.Collections.ObjectModel;
     using System.Net;
     using System.Security.Cryptography;
@@ -18,6 +19,7 @@
     public partial class BoxDetailViewModel : BaseViewModel<string>
     {
         private readonly IDatabaseManager _databaseManager;
+        private readonly IToastService _toastService;
 
         /// <summary>
         /// Gets or sets the collection of items. This collection supports dynamic data binding and 
@@ -30,10 +32,12 @@
         /// </summary>
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
-        public BoxDetailViewModel(IDatabaseManager databaseManager)
+        /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
+        public BoxDetailViewModel(IDatabaseManager databaseManager, IToastService toastService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
+            _toastService = toastService;
 
             Items = new ObservableCollection<ItemInfo>();
         }
@@ -50,7 +54,7 @@
         }
 
         /// <summary>
-        /// .............................
+        /// Called when the view appears.
         /// </summary>
         public async override void ViewAppearing()
         {
@@ -138,6 +142,9 @@
             BarcodeType = result[1].Trim();
         }
 
+        /// <summary>
+        /// Command to add a new item.
+        /// </summary>
         public AsyncRelayCommand AddItemCommand => new AsyncRelayCommand(async () =>
         {
             if (string.IsNullOrWhiteSpace(LocationText))
@@ -163,41 +170,77 @@
             await NavigationService.Navigate<ItemDetailView>(newStorageData);
         });
 
-
+        /// <summary>
+        /// Command triggered when an item selection changes.
+        /// </summary>
         public AsyncRelayCommand OnSelectionItemChangedCommand => new AsyncRelayCommand(async () =>
         {
 
             if (SelectedItem == null) return;
 
-            var allItems = await _databaseManager.GetAllAsync<StorageEntry>();
-            var itemSelectedDb = allItems?.FirstOrDefault(i => i.ItemName == SelectedItem.ItemName);
-
-            if(itemSelectedDb != null)
+            try
             {
-                await NavigationService.Navigate<ItemDetailView>(itemSelectedDb);
+                var allItems = await _databaseManager.GetAllAsync<StorageEntry>();
+                var itemSelectedDb = allItems?.FirstOrDefault(i => i.ItemName == SelectedItem.ItemName);
+
+                if (itemSelectedDb != null)
+                {
+                    await NavigationService.Navigate<ItemDetailView>(itemSelectedDb);
+                }
+                else
+                {
+                    await DialogService.ShowAlertDialog("The selected item could not be found.", AppResources.Dialog_OK_Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"BoxDetailViewModel.OnSelectionItemChangedCommand: Exception: {ex}");
             }
 
         });
 
-
-        public AsyncRelayCommand DeleatItemCommand => new AsyncRelayCommand(async () =>
+        /// <summary>
+        /// Command to delete the selected item.
+        /// </summary>
+        public AsyncRelayCommand<ItemInfo> DeleteItemCommand => new AsyncRelayCommand<ItemInfo>(async (item) =>
         {
-            var confirm = await DialogService.ShowRequestDialog(
-               AppResources.Dialog_ConfirmationMessage_Text,
-               AppResources.BoxDetailViewModel_DeletItemText,
-               AppResources.Dialog_Cancel_Text,
-              AppResources.Dialog_OK_Text);
+            if (item == null) return;
 
-            if (!confirm)
-                return;
+            try
+            {
 
-            var storageList = await _databaseManager.GetListAsync<StorageEntry>();
-            //var entryToDelete = storageList?.FirstOrDefault(e =>
-            //   e.BarcodeValue == Barcode &&
-            //   e.BarcodeType == BarcodeType &&
-            //   e.ItemName == item.ItemName);
+                var confirm = await DialogService.ShowRequestDialog(
+                    AppResources.Dialog_ConfirmationMessage_Text,
+                    AppResources.BoxDetailViewModel_DeletItemText,
+                    AppResources.Dialog_Cancel_Text,
+                    AppResources.Dialog_OK_Text);
 
+                if (!confirm)
+                    return;
 
+                // Remove the item from the database and the collection
+                var storageList = await _databaseManager.GetListAsync<StorageEntry>();
+                var entryToDelete = storageList?.FirstOrDefault(e =>
+                    e.ItemName == item.ItemName &&
+                    e.BarcodeValue == Barcode &&
+                    e.BarcodeType == BarcodeType);
+
+                if (entryToDelete != null)
+                {
+                    await _databaseManager.DeleteAsync(entryToDelete);
+                    await _toastService.DisplayToast("Successfully deleted.");
+                    Items.Remove(item);
+                }
+                else
+                {
+                    await DialogService.ShowAlertDialog("Data could not be deleted, try again later.", AppResources.Dialog_OK_Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"BoxDetailViewModel.DeleteItemCommand: Exception: {ex}");
+                await DialogService.ShowAlertDialog("An unexpected error occurred while deleting the item.", AppResources.Dialog_OK_Text);
+            }
         });
 
         private ImageSource ConvertToImageSource(object input)
