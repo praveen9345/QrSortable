@@ -10,6 +10,11 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Components\UiFunctionality\Localization\AppResources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogActivityIndicatorView.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>

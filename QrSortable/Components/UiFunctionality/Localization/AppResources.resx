@@ -130,6 +130,16 @@
     <value>No Internet connection available.</value>
     <comment></comment>
   </data>
+ 
+  <data name="Dialog_ConfirmationMessage_Text" xml:space="preserve">
+    <value>Need your action</value>
+    <comment></comment>
+  </data>
+
+  <data name="Dialog_Cancel_Text" xml:space="preserve">
+    <value>Cancel</value>
+    <comment></comment>
+  </data>
 
   <data name="Dialog_OK_Text" xml:space="preserve">
     <value>OK</value>
@@ -145,7 +155,12 @@
     <value>History</value>
     <comment></comment>
   </data>
-  
+
+  <!--BoxDetailViewModel-->
+<data name="BoxDetailViewModel_DeletItemText" xml:space="preserve">
+    <value>Are you sure you want to delete?</value>
+    <comment></comment>
+  </data>
 
 
  <!-- ###################################################################################################################### -->

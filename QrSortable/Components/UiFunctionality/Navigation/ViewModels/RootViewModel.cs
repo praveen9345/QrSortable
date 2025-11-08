@@ -5,6 +5,7 @@
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
+    using QrSortable.Components.UiFunctionality.Localization;
 
     /// <summary>
     ///     The view model of the root view screen.

@@ -1,13 +1,16 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.ViewModels
 {
-    using System.Collections.ObjectModel;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using System.Collections.ObjectModel;
+    using System.Net;
+    using System.Security.Cryptography;
 
     /// <summary>
     ///     The view model of the box view screen.
@@ -105,6 +108,13 @@
         private bool _isNewBarcode;
 
         /// <summary>
+        /// Represents the currently selected item in the application.
+        /// </summary>
+        [ObservableProperty]
+        private ItemInfo _selectedItem;
+
+
+        /// <summary>
         ///     Prepares the viewmode with an barcode raw data or string data.
         /// </summary>
         /// <param name="data">The string data.</param>
@@ -151,6 +161,43 @@
 
             // Navigate to ItemDetailView with the new instance
             await NavigationService.Navigate<ItemDetailView>(newStorageData);
+        });
+
+
+        public AsyncRelayCommand OnSelectionItemChangedCommand => new AsyncRelayCommand(async () =>
+        {
+
+            if (SelectedItem == null) return;
+
+            var allItems = await _databaseManager.GetAllAsync<StorageEntry>();
+            var itemSelectedDb = allItems?.FirstOrDefault(i => i.ItemName == SelectedItem.ItemName);
+
+            if(itemSelectedDb != null)
+            {
+                await NavigationService.Navigate<ItemDetailView>(itemSelectedDb);
+            }
+
+        });
+
+
+        public AsyncRelayCommand DeleatItemCommand => new AsyncRelayCommand(async () =>
+        {
+            var confirm = await DialogService.ShowRequestDialog(
+               AppResources.Dialog_ConfirmationMessage_Text,
+               AppResources.BoxDetailViewModel_DeletItemText,
+               AppResources.Dialog_Cancel_Text,
+              AppResources.Dialog_OK_Text);
+
+            if (!confirm)
+                return;
+
+            var storageList = await _databaseManager.GetListAsync<StorageEntry>();
+            //var entryToDelete = storageList?.FirstOrDefault(e =>
+            //   e.BarcodeValue == Barcode &&
+            //   e.BarcodeType == BarcodeType &&
+            //   e.ItemName == item.ItemName);
+
+
         });
 
         private ImageSource ConvertToImageSource(object input)

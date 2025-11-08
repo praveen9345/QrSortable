@@ -176,7 +176,9 @@
                          <CollectionView 
                              SelectionMode="Single"
                              VerticalOptions="FillAndExpand"
-                             ItemsSource="{Binding Items}">
+                             ItemsSource="{Binding Items}"
+                             SelectedItem="{Binding SelectedItem}"
+                             SelectionChangedCommand="{Binding OnSelectionItemChangedCommand}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Padding="5">
@@ -232,6 +234,7 @@
                                                   Grid.Column="3"
                                                   CornerRadius="5"
                                                   Padding="0"
+                                                  Command="{Binding DeleatItemCommand}"
                                                   BackgroundColor="Transparent">
                                                 <Button.ImageSource >
                                                     <FontImageSource 

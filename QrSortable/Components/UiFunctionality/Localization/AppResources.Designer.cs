@@ -58,6 +58,63 @@ namespace QrSortable.Components.UiFunctionality.Localization
             }
         }
 
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dialog InternetConnection Message Text!!.
+        /// </summary>
+        public static string Dialog_InternetConnection_Message
+        {
+            get
+            {
+                return ResourceManager.GetString("Dialog_InternetConnection_Message", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dialog InternetConnection Title Text!!.
+        /// </summary>
+        public static string Dialog_InternetConnection_Title
+        {
+            get
+            {
+                return ResourceManager.GetString("Dialog_InternetConnection_Title", resourceCulture);
+            }
+        }
+
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dialog ConfirmationMessage Text!!.
+        /// </summary>
+        public static string Dialog_ConfirmationMessage_Text
+        {
+            get
+            {
+                return ResourceManager.GetString("Dialog_ConfirmationMessage_Text", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dialog Cancel Text Text!!.
+        /// </summary>
+        public static string Dialog_Cancel_Text
+        {
+            get
+            {
+                return ResourceManager.GetString("Dialog_Cancel_Text", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dialog OK Text!!.
+        /// </summary>
+        public static string Dialog_OK_Text
+        {
+            get
+            {
+                return ResourceManager.GetString("Dialog_OK_Text", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to RootViewModel MenuText!!.
         /// </summary>
@@ -76,6 +133,16 @@ namespace QrSortable.Components.UiFunctionality.Localization
             }
         }
 
-    
+        /// <summary>
+        ///   Looks up a localized string similar to BoxDetailViewModel DeletItemText!!.
+        /// </summary>
+        public static string BoxDetailViewModel_DeletItemText
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_DeletItemText", resourceCulture);
+            }
+        }
+
     }
 }

@@ -8,6 +8,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.PlatformUtils;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
     using QrSortable.Components.UiFunctionality.Notification.Models;
@@ -25,6 +26,8 @@
         
         private List<byte[]> _imageArrayDb = new List<byte[]>();
         private StorageEntry _storageData;
+        private bool _isUpdateItem;
+        private Guid _storageUpdateItemId;
 
         /// <summary>
         /// A collection of images associated with the storage entry.
@@ -88,7 +91,28 @@
                 return;
             }
 
-            // TODO: Implement logic to load existing data
+            if(!string.IsNullOrWhiteSpace(_storageData.ItemName) && !string.IsNullOrWhiteSpace(_storageData.Description))
+            {
+                _isUpdateItem = true;
+                ItemName = _storageData.ItemName;
+                ItemDescription = _storageData.Description;
+                _storageUpdateItemId = _storageData.StorageId;
+
+                if (_storageData.ImageList != null && _storageData.ImageList.Count > 0)
+                {
+                    foreach (var imageBytes in _storageData.ImageList)
+                    {
+                        _imageArrayDb.Add(imageBytes);
+                        ImageArray.Add(new Images()
+                        {
+                            Image = ConvertToImageSource(imageBytes),
+                            Rotate = 0
+                        });
+                    }
+                }
+            }
+
+
         }
 
         public override void ViewAppearing()
@@ -125,7 +149,7 @@
 
                 if (!result || jpegCaptureImages.Length == 0) 
                 { 
-                    await DialogService.ShowAlertDialog("Could not able to capture the image", "Ok");
+                    await DialogService.ShowAlertDialog("Could not able to capture the image", AppResources.Dialog_OK_Text);
                 }
                 else
                 {
@@ -189,31 +213,123 @@
 
         public AsyncRelayCommand SaveCommand => new AsyncRelayCommand(async () =>
         {
-
+            // ===========================
+            // VALIDATION
+            // ===========================
             if (string.IsNullOrWhiteSpace(ItemName) || string.IsNullOrWhiteSpace(ItemDescription))
             {
-                await DialogService.ShowAlertDialog("ItemName and ItemDescription fields are required and cannot be left empty.", "Ok");
+                await DialogService.ShowAlertDialog(
+                    "ItemName and ItemDescription fields are required and cannot be left empty.",
+                    AppResources.Dialog_OK_Text
+                );
                 return;
             }
 
-            if (_storageData != null)
+            try
             {
-                _storageData.CreatedDate = DateTime.Now;
-             
-                _storageData.SearchInfo = $"{_storageData.Category}|{_storageData.CreatedDate}|{_storageData.BarcodeValue}|" +
-                                            $"{_storageData.BarcodeType}|{_storageData.Location}|{ItemName}|{ItemDescription}";
+                var allItems = await _databaseManager.GetAllAsync<StorageEntry>();
+                if (allItems == null)
+                {
+                    await DialogService.ShowAlertDialog("Could not retrieve items from the database.", AppResources.Dialog_OK_Text);
+                    return;
+                }
 
-                _storageData.ItemName = ItemName;
-                _storageData.Description = ItemDescription;
-                _storageData.ImageList = _imageArrayDb.ToList();
+                // ===========================
+                // UPDATE EXISTING ITEM
+                // ===========================
+                if (_isUpdateItem)
+                {
+                    var item = allItems.FirstOrDefault(i => i.StorageId == _storageUpdateItemId);
+                    if (item == null)
+                    {
+                        Console.WriteLine("Error: SaveCommand: Could not find the item to update.");
+                        await DialogService.ShowAlertDialog("Item not found. Please refresh and try again.", AppResources.Dialog_OK_Text);
+                        return;
+                    }
+
+                    // Prevent changing the item name
+                    if (item.ItemName != ItemName)
+                    {
+                        await DialogService.ShowAlertDialog(
+                            $"Item name '{ItemName}' cannot be modified. Please try again.",
+                            AppResources.Dialog_OK_Text
+                        );
+                        ItemName = item.ItemName;
+                        return;
+                    }
+
+                    try
+                    {
+                        // Prepare updated fields
+                        item.Description = ItemDescription;
+                        item.ImageList = _imageArrayDb.ToList();
+                        item.SearchInfo =
+                            $"{item.Category}|{item.CreatedDate}|{item.BarcodeValue}|{item.BarcodeType}|{item.Location}|{ItemName}|{ItemDescription}";
+
+                        // Perform update (no explicit transaction needed)
+                        var updatedItem = await _databaseManager.UpdateAsync(item);
+
+                        if (updatedItem != null)
+                        {
+                            await _toastService.DisplayToast("Successfully updated.");
+                            await NavigationService.Close();
+                        }
+                        else
+                        {
+                            await DialogService.ShowAlertDialog("Data could not be updated, try again later.", AppResources.Dialog_OK_Text);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"SaveCommand: Exception during update: {ex}");
+                        await DialogService.ShowAlertDialog(
+                            "An unexpected error occurred while updating the item.",
+                            AppResources.Dialog_OK_Text
+                        );
+                    }
+
+                    return;
+                }
+
+                // ===========================
+                // ADD NEW ITEM
+                // ===========================
+                if (_storageData == null)
+                {
+                    Console.WriteLine("Error: SaveCommand: _storageData is null");
+                    await DialogService.ShowAlertDialog(
+                        "Unexpected error: storage data is missing.",
+                        AppResources.Dialog_OK_Text
+                    );
+                    return;
+                }
+
+                // Check for duplicate item name
+                var isDuplicate = allItems.Any(i => i.ItemName == ItemName);
+                if (isDuplicate)
+                {
+                    await DialogService.ShowAlertDialog(
+                        $"An item with the name '{ItemName}' already exists. Please choose a different name.",
+                        AppResources.Dialog_OK_Text
+                    );
+                    ItemName = string.Empty;
+                    return;
+                }
 
                 try
                 {
                     _databaseManager.BeginTransaction();
 
-                    var wasAddingItemSuccessful = await _databaseManager.AddAsync(_storageData);
+                    _storageData.CreatedDate = DateTime.Now;
+                    _storageData.ItemName = ItemName;
+                    _storageData.Description = ItemDescription;
+                    _storageData.ImageList = _imageArrayDb.ToList();
+                    _storageData.SearchInfo =
+                        $"{_storageData.Category}|{_storageData.CreatedDate}|{_storageData.BarcodeValue}|{_storageData.BarcodeType}|{_storageData.Location}|{ItemName}|{ItemDescription}";
 
-                    if (wasAddingItemSuccessful!= null)    
+                    var addedItem = await _databaseManager.AddAsync(_storageData);
+
+                    if (addedItem != null)
                     {
                         _databaseManager.CommitTransaction();
                         await _toastService.DisplayToast("Successfully saved.");
@@ -221,13 +337,9 @@
                     }
                     else
                     {
-                        // add server-side diagnostics log
                         _databaseManager.Rollback();
-                        Console.WriteLine("ItemDetailViewModel: SaveCommand: AddAsync returned null - rollback performed.");
-                        await DialogService.ShowAlertDialog("Data could not be saved, try again later.", "Ok");
-                        
-                       
-
+                        Console.WriteLine("SaveCommand: AddAsync returned null - rollback performed.");
+                        await DialogService.ShowAlertDialog("Data could not be saved, try again later.", AppResources.Dialog_OK_Text);
                     }
                 }
                 catch (Exception ex)
@@ -238,19 +350,23 @@
                     }
                     catch
                     {
-                        // ignore rollback errors but log
-                        Console.WriteLine("ItemDetailViewModel: SaveCommand: Rollback failed.");
+                        Console.WriteLine("SaveCommand: Rollback failed after add exception.");
                     }
 
-                    Console.WriteLine($"ItemDetailViewModel: SaveCommand: Exception while saving: {ex}");
-                    await DialogService.ShowAlertDialog("An unexpected error occurred while saving the item. Please try again.", "Ok");
+                    Console.WriteLine($"SaveCommand: Exception during add: {ex}");
+                    await DialogService.ShowAlertDialog(
+                        "An unexpected error occurred while saving the item. Please try again.",
+                        AppResources.Dialog_OK_Text
+                    );
                 }
-
-
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Error:ItemDetailViewModel:SaveCommand: storageData is null");
+                Console.WriteLine($"SaveCommand: Unexpected exception: {ex}");
+                await DialogService.ShowAlertDialog(
+                    "An unexpected error occurred while processing your request.",
+                    AppResources.Dialog_OK_Text
+                );
             }
         });
 
