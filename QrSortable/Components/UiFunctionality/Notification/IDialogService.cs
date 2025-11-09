@@ -73,5 +73,7 @@
         ///     Awaitable task of the navigation. Awaiting it returns the chosen response.
         /// </returns>
         Task<PhotoSelectionResponse> ShowPhotoSelectionDialog();
+
+        Task<string> ShowMoveToDialog(object objectData);
     }
 }

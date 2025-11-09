@@ -2,6 +2,7 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using Microsoft.Maui.Graphics.Platform;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Models;
@@ -181,7 +182,8 @@
             try
             {
                 var allItems = await _databaseManager.GetAllAsync<StorageEntry>();
-                var itemSelectedDb = allItems?.FirstOrDefault(i => i.ItemName == SelectedItem.ItemName);
+                var itemSelectedDb = allItems?.FirstOrDefault(i => i.ItemName == SelectedItem.ItemName
+                                      && i.BarcodeValue == Barcode && i.BarcodeType == BarcodeType);
 
                 if (itemSelectedDb != null)
                 {
@@ -208,7 +210,6 @@
 
             try
             {
-
                 var confirm = await DialogService.ShowRequestDialog(
                     AppResources.Dialog_ConfirmationMessage_Text,
                     AppResources.BoxDetailViewModel_DeletItemText,
@@ -240,6 +241,38 @@
             {
                 Console.WriteLine($"BoxDetailViewModel.DeleteItemCommand: Exception: {ex}");
                 await DialogService.ShowAlertDialog("An unexpected error occurred while deleting the item.", AppResources.Dialog_OK_Text);
+            }
+        });
+
+
+        /// <summary>
+        /// Command to move the selected item.
+        /// </summary>
+        public AsyncRelayCommand<ItemInfo> MoveItemCommand => new AsyncRelayCommand<ItemInfo>(async (item) =>
+        {
+            if (item == null) return;
+
+            try
+            {
+                var storageList = await _databaseManager.GetListAsync<StorageEntry>();
+                var entryTomove = storageList?.FirstOrDefault(e => e.ItemName == item.ItemName 
+                && e.BarcodeValue == Barcode 
+                && e.BarcodeType == BarcodeType);
+
+                if (entryTomove != null)
+                {
+                    var result = await DialogService.ShowMoveToDialog(entryTomove);
+                    await _toastService.DisplayToast("Successfully moved.");
+                }
+                else
+                {
+                    await DialogService.ShowAlertDialog("Data could not be moved, try again later.", AppResources.Dialog_OK_Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"BoxDetailViewModel.DeleteItemCommand: Exception: {ex}");
+                await DialogService.ShowAlertDialog("An unexpected error occurred while moving the item.", AppResources.Dialog_OK_Text);
             }
         });
 

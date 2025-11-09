@@ -110,5 +110,10 @@
         {
             return _navigationService.OpenDialogAndAwaitResultAsync<DialogPhotoSelectionView, PhotoSelectionResponse>();
         }
+
+        public Task<string> ShowMoveToDialog(object objectData)
+        {
+            return _navigationService.OpenDialogAndAwaitResultAsync<DialogMoveToView, object, string>(objectData);
+        }
     }
 }

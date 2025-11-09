@@ -227,7 +227,9 @@
                                                      HeightRequest="30"
                                                      Padding="0"
                                                      ImageSource="move_item"
-                                                     BackgroundColor="Transparent"/>
+                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.MoveItemCommand}"
+                                                     CommandParameter="{Binding .}"
+                                                     BackgroundColor="Transparent"/> 
 
                                             <!-- delete -->
                                             <Button
