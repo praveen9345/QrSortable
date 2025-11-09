@@ -262,7 +262,84 @@
                 if (entryTomove != null)
                 {
                     var result = await DialogService.ShowMoveToDialog(entryTomove);
-                    await _toastService.DisplayToast("Successfully moved.");
+                    if (!string.IsNullOrWhiteSpace(result))
+                    {
+
+                        // If the user selected the same box, just inform and return
+                        if (result == entryTomove.BarcodeValue)
+                        {
+                            await DialogService.ShowAlertDialog("The selected item is already in the chosen box.", AppResources.Dialog_OK_Text);
+                            return;
+                        }
+
+                        try
+                        {
+                           
+                            var targetToMove = storageList?.FirstOrDefault(e => e.BarcodeValue == result);
+
+                            if (targetToMove == null)
+                            {
+                                await DialogService.ShowAlertDialog("The target box could not be found.", AppResources.Dialog_OK_Text);
+                                return;
+                            }
+
+                            var createdDate = DateTime.UtcNow;
+                            
+                            _databaseManager.BeginTransaction();
+
+                            var newEntry = new StorageEntry
+                            {
+                                Category = targetToMove.Category,
+                                CreatedDate = createdDate,
+                                BarcodeValue = result,
+                                BarcodeType = targetToMove.BarcodeType,
+                                Location = targetToMove.Location,
+                                SearchInfo = $"{targetToMove.Category}|{createdDate}|{result}|{targetToMove.BarcodeType}|{targetToMove.Location}|{entryTomove.ItemName}|{entryTomove.Description}",
+                                ItemName = entryTomove.ItemName,
+                                Description = entryTomove.Description,
+                                ImageList = entryTomove.ImageList != null ? new List<byte[]>(entryTomove.ImageList) : null
+                            };
+                            // Add new entry
+                            var added = await _databaseManager.AddAsync(newEntry);
+                            if (added == null)
+                            {
+                                _databaseManager.Rollback();
+                                await DialogService.ShowAlertDialog("Data could not be moved, try again later.", AppResources.Dialog_OK_Text);
+                                return;
+                            }
+
+                            // Delete the original entry
+                            var deleted = await _databaseManager.DeleteAsync(entryTomove);
+                            if (!deleted)
+                            {
+                                _databaseManager.Rollback();
+                                await DialogService.ShowAlertDialog("Data could not be moved, try again later.", AppResources.Dialog_OK_Text);
+                                return;
+                            }
+
+                            // Commit on success
+                            _databaseManager.CommitTransaction();
+
+                            // Update UI
+                            Items.Remove(item);
+                            await _toastService.DisplayToast("Successfully moved.");
+
+                        }
+                        catch (Exception ex)
+                        {
+                            try 
+                            { 
+                                _databaseManager.Rollback(); 
+                            } 
+                            catch (Exception rollbackEx)
+                            {
+                                Console.WriteLine($"Rollback failed: {rollbackEx}");
+                            }
+                            Console.WriteLine($"BoxDetailViewModel.MoveItemCommand: Exception: {ex}");
+                            await DialogService.ShowAlertDialog("An unexpected error occurred while moving the item.", AppResources.Dialog_OK_Text);
+                        }
+                    }
+
                 }
                 else
                 {
