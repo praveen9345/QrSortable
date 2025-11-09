@@ -283,45 +283,57 @@
                                 return;
                             }
 
-                            var createdDate = DateTime.UtcNow;
-                            
-                            _databaseManager.BeginTransaction();
 
-                            var newEntry = new StorageEntry
+                            var outcomeObj = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+                            async () =>
                             {
-                                Category = targetToMove.Category,
-                                CreatedDate = createdDate,
-                                BarcodeValue = result,
-                                BarcodeType = targetToMove.BarcodeType,
-                                Location = targetToMove.Location,
-                                SearchInfo = $"{targetToMove.Category}|{createdDate}|{result}|{targetToMove.BarcodeType}|{targetToMove.Location}|{entryTomove.ItemName}|{entryTomove.Description}",
-                                ItemName = entryTomove.ItemName,
-                                Description = entryTomove.Description,
-                                ImageList = entryTomove.ImageList != null ? new List<byte[]>(entryTomove.ImageList) : null
-                            };
-                            // Add new entry
-                            var added = await _databaseManager.AddAsync(newEntry);
-                            if (added == null)
+                                var createdDate = DateTime.UtcNow;
+
+                                _databaseManager.BeginTransaction();
+
+                                var newEntry = new StorageEntry
+                                {
+                                    Category = targetToMove.Category,
+                                    CreatedDate = createdDate,
+                                    BarcodeValue = result,
+                                    BarcodeType = targetToMove.BarcodeType,
+                                    Location = targetToMove.Location,
+                                    SearchInfo = $"{targetToMove.Category}|{createdDate}|{result}|{targetToMove.BarcodeType}|{targetToMove.Location}|{entryTomove.ItemName}|{entryTomove.Description}",
+                                    ItemName = entryTomove.ItemName,
+                                    Description = entryTomove.Description,
+                                    ImageList = entryTomove.ImageList != null ? new List<byte[]>(entryTomove.ImageList) : null
+                                };
+                                // Add new entry
+                                var added = await _databaseManager.AddAsync(newEntry);
+                                if (added == null)
+                                {
+                                    _databaseManager.Rollback();
+                                    return false;
+                                }
+
+                                // Delete the original entry
+                                var deleted = await _databaseManager.DeleteAsync(entryTomove);
+                                if (!deleted)
+                                {
+                                    _databaseManager.Rollback();
+                                    return false;
+                                }
+
+                                // Commit on success
+                                _databaseManager.CommitTransaction();
+                                return true;
+                            });
+
+                            if (!outcomeObj)
                             {
-                                _databaseManager.Rollback();
                                 await DialogService.ShowAlertDialog("Data could not be moved, try again later.", AppResources.Dialog_OK_Text);
                                 return;
                             }
+                            // Perform UI updates on main thread after dialog closed
+                            var itemInCollection = Items.FirstOrDefault(i => i.ItemName == item.ItemName);
+                            if (itemInCollection != null)
+                                MainThread.BeginInvokeOnMainThread(() => Items.Remove(itemInCollection));
 
-                            // Delete the original entry
-                            var deleted = await _databaseManager.DeleteAsync(entryTomove);
-                            if (!deleted)
-                            {
-                                _databaseManager.Rollback();
-                                await DialogService.ShowAlertDialog("Data could not be moved, try again later.", AppResources.Dialog_OK_Text);
-                                return;
-                            }
-
-                            // Commit on success
-                            _databaseManager.CommitTransaction();
-
-                            // Update UI
-                            Items.Remove(item);
                             await _toastService.DisplayToast("Successfully moved.");
 
                         }
