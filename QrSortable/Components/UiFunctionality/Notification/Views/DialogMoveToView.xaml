@@ -99,7 +99,7 @@
 												  HasShadow="False"
 												  BorderColor="Transparent"
 												  VerticalOptions="Center">
-												<Label Text="✔" TextColor="#FFC857" FontSize="16"/>
+												<Label Text="✔" TextColor="#13A852" FontSize="16"/>
 											</Frame>
 
 											<!-- Visual states - CollectionView will set "Selected" state for the root element when selected -->

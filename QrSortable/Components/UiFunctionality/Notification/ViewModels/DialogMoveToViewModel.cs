@@ -82,13 +82,6 @@
         });
 
 
-        // Command used by the DataTemplate row tap to set selection immediately
-        public RelayCommand<object> SelectionChangedCommand => new RelayCommand<object>(item =>
-        {
-            if (item == null) return;
-            SelectedMoveTo = item.ToString();
-        });
-
         // Cancel / close without result
         public AsyncRelayCommand CancelCommand => new AsyncRelayCommand(async () =>
         {
