@@ -12,16 +12,19 @@
     public partial class DialogMoveToViewModel : BaseViewModel<StorageEntry>
     {
         private readonly IDatabaseManager _databaseManager;
+        private readonly IToastService _toastService;
 
         /// <summary>
         /// ...............
         /// </summary>
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
-        public DialogMoveToViewModel(IDatabaseManager databaseManager)
+        /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
+        public DialogMoveToViewModel(IDatabaseManager databaseManager, IToastService toastService)
         {
             IsBackNavigationEnabled = false;
             _databaseManager = databaseManager;
+            _toastService = toastService;
         }
 
         // Optional title shown in the view (bind if needed)
@@ -74,7 +77,7 @@
             // CloseDialog expects the dialog result (string)
             if(string.IsNullOrEmpty(SelectedMoveTo))
             {
-                await DialogService.ShowAlertDialog("Error", "Please select a Box bar code.", AppResources.Dialog_OK_Text);
+                await _toastService.DisplayToast("Please select a Box bar code.");
                 return;
             }
             NavigationService.CloseDialog(SelectedMoveTo);
