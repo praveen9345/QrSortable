@@ -40,7 +40,8 @@ namespace QrSortable.Migrations
                     SearchInfo = table.Column<string>(type: "TEXT", nullable: false),
                     ItemName = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
-                    ImageList = table.Column<string>(type: "TEXT", nullable: false)
+                    ImageList = table.Column<string>(type: "TEXT", nullable: false),
+                    BackgroundColorHex = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

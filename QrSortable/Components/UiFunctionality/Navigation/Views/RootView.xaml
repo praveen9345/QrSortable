@@ -164,12 +164,11 @@
 
                                         <!-- Box view -->
                                         <Border 
-                                            x:Name="BoxBorder"
                                             HorizontalOptions="Fill"
                                             VerticalOptions="Fill"
                                             StrokeShape="RoundRectangle 10"
                                             Padding="5"
-                                            Background="{StaticResource White}" >
+                                            Background="{Binding BackgroundColor}" >
                                             <Border.Shadow>
                                                 <Shadow 
                                                     Brush="{StaticResource Black}" 

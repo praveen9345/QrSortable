@@ -11,7 +11,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.General;
 namespace QrSortable.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241231145418_Initial")]
+    [Migration("20251112135826_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -42,6 +42,10 @@ namespace QrSortable.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("BackgroundColorHex")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("BarcodeType")
                         .IsRequired()

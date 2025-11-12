@@ -40,6 +40,10 @@ namespace QrSortable.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("BackgroundColorHex")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("BarcodeType")
                         .IsRequired()
                         .HasColumnType("TEXT");
