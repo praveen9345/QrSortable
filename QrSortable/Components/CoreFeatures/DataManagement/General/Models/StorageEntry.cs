@@ -37,12 +37,26 @@
 
         private Color RandomColor()
         {
-            // Random RGB
-            return Color.FromRgb(
-                _random.Next(50, 256), // Avoid very dark colors
-                _random.Next(50, 256),
-                _random.Next(50, 256)
-            );
+            Color color;
+            do
+            {
+                color = Color.FromRgb(
+                    _random.Next(0, 256),
+                    _random.Next(0, 256),
+                    _random.Next(0, 256)
+                );
+            }
+            while (IsTooDark(color)); // Repeat until it's not black or near-black
+
+            return color;
         }
+
+        private bool IsTooDark(Color color)
+        {
+            // MAUI Colors use double precision 0–1 range
+            double brightness = (0.299 * color.Red + 0.587 * color.Green + 0.114 * color.Blue);
+            return brightness < 0.15; // exclude dark colors (tweak threshold)
+        }
+
     }
 }
