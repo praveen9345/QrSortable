@@ -157,7 +157,7 @@
                                                 </VisualState>
                                                 <VisualState Name="Selected">
                                                     <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="{StaticResource Yellow}" />
+                                                        <Setter Property="BackgroundColor" Value="Transparent" />
                                                     </VisualState.Setters>
                                                 </VisualState>
                                             </VisualStateGroup>

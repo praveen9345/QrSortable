@@ -54,6 +54,11 @@
                 {
                     Console.WriteLine($"RootView.cs.OnSelectionChanged: Exception: {ex}");
                 }
+                finally
+                {
+                    // Reset selection immediately after processing
+                    collectionView.SelectedItem = null;
+                }
             }
         }
     }
