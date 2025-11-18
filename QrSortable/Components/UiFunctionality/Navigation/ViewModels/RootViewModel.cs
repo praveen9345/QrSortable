@@ -1,5 +1,6 @@
 ﻿namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
 {
+    using BarcodeScanning;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using Google.Cloud.Firestore;
@@ -20,6 +21,8 @@
         private readonly IBackendCommunicationService _backendCommunicationService;
         private readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
+
+        private bool _isInitializeVisible = false;
 
         /// <summary>
         ///     Gets or sets the collection of categories available in the system.
@@ -50,18 +53,40 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
+           
+            _isInitializeVisible = true;
 
-            var outcomeObj = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
-            async () =>{ return await LoadCategoryAsync();});
+            bool outcome = false;
 
-            if(!outcomeObj)
+            // Ensure we run UI code on the main thread
+            await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                await _toastService.DisplayToast("Failed to load categories or no storage entries found.");        
+                outcome = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+                    async () => await LoadCategoryAsync());
+            });
+
+            if (!outcome)
+            {
+                await _toastService.DisplayToast("Failed to load categories or no storage entries found.");
+            }
+        }
+
+        public override async void ViewAppearing()
+        {
+            base.ViewAppearing();
+            if (!_isInitializeVisible)
+            {
+                var success = await LoadCategoryAsync();
+                if (!success)
+                {
+                    await _toastService.DisplayToast("Failed to refresh categories.");
+                }
             }
         }
 
         public AsyncRelayCommand QrScanCommand => new AsyncRelayCommand(async () =>
         {
+            _isInitializeVisible = false;
             await NavigationService.Navigate<QrBrScannerView>();
 
             //await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
@@ -107,7 +132,7 @@
 
                 if (storageList == null || !storageList.Any())
                 {
-                    Categories.Clear();
+                    await MainThread.InvokeOnMainThreadAsync(() => Categories.Clear());
                     return false;
                 }
 
@@ -130,11 +155,14 @@
                         return group;
                     });
 
-                Categories.Clear();
-                foreach (var group in grouped) 
-                { 
-                    Categories.Add(group); 
-                }
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Categories.Clear();
+                    foreach (var group in grouped)
+                    {
+                        Categories.Add(group);
+                    }
+                });
                 return true;
 
             }
@@ -145,7 +173,5 @@
                 return false;
             }
         }
-    }
-
-   
+    }  
 }

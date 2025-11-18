@@ -134,15 +134,16 @@
 
                         <!-- CollectionView   -->
                         <CollectionView 
-                        Grid.Row="1"
-                        x:Name="ItemsCollectionView" 
-                        SelectionMode="Single"
-                        VerticalOptions="Fill"
-                        ItemsLayout="VerticalList"
-                        ItemsSource="{Binding VisibleItems}"
-                        RemainingItemsThreshold="5"
-                        RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
-                        HorizontalScrollBarVisibility="Never">
+                            Grid.Row="1"
+                            x:Name="ItemsCollectionView" 
+                            SelectionMode="Single"
+                            VerticalOptions="Fill"
+                            ItemsLayout="VerticalList"
+                            RemainingItemsThreshold="5"
+                            ItemsSource="{Binding VisibleItems}"
+                            HorizontalScrollBarVisibility="Never"
+                            SelectionChanged="OnSelectionChanged"
+                            RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Padding="10">
@@ -156,7 +157,7 @@
                                                 </VisualState>
                                                 <VisualState Name="Selected">
                                                     <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="Transparent" />
+                                                        <Setter Property="BackgroundColor" Value="{StaticResource Yellow}" />
                                                     </VisualState.Setters>
                                                 </VisualState>
                                             </VisualStateGroup>
