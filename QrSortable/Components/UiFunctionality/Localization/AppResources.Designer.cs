@@ -123,17 +123,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
                 return ResourceManager.GetString("RootViewModel_MenuText", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Looks up a localized string similar to RootViewModel HistoryText!!.
-        /// </summary>
-        public static string RootViewModel_HistoryText {
+        ///   Looks up a localized string similar to RootViewModel CodeGeneratorText!!.
+        ///</summary>
+        public static string RootViewModel_CodeGeneratorText {
             get {
-                return ResourceManager.GetString("RootViewModel_HistoryText", resourceCulture);
+                return ResourceManager.GetString("RootViewModel_CodeGeneratorText", resourceCulture);
             }
         }
 
-        /// <summary>
+/// <summary>
         ///   Looks up a localized string similar to BoxDetailViewModel DeletItemText!!.
         /// </summary>
         public static string BoxDetailViewModel_DeletItemText

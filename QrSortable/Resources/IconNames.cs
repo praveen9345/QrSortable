@@ -21,6 +21,11 @@ namespace QrSortable.Resources
         public const string MyStory = "\uF3ce";
 
         /// <summary>
+        ///     The name of the icon code generator.
+        /// </summary>
+        public const string CodeGen = "\uF63f";
+
+        /// <summary>
         ///     The name of the icon filter.
         /// </summary>
         public const string Filter = "\uF4a8";

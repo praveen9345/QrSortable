@@ -485,17 +485,17 @@
                     CornerRadius="100">
                 </Button>
 
-                <!-- history button  -->
+                <!-- code generator button  -->
                 <Button
                     Grid.Column="2" 
-                    Text="{Binding [HistoryText]}"
+                    Text="{Binding [CodeGeneratorText]}"
                     Style="{StaticResource BottomButton}"
-                    Command="{Binding HistoryCommand}"
+                    Command="{Binding CodeGeneratorCommand}"
                     CornerRadius="0">
                     <Button.ImageSource >
                         <FontImageSource 
                             FontFamily="FluentIcons"
-                            Glyph="{x:Static local:IconNames.MyStory}"/>
+                            Glyph="{x:Static local:IconNames.CodeGen}"/>
                     </Button.ImageSource>
                 </Button>
             </Grid>

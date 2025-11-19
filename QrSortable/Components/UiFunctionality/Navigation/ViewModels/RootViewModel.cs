@@ -6,6 +6,7 @@
     using Google.Cloud.Firestore;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
+    using QrSortable.Components.CoreFeatures.CodeGenerator.Views;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
@@ -123,6 +124,14 @@
 
             //var userId = await _backendCommunicationService.GetUserUIDByName("Sample");
         });
+
+        public AsyncRelayCommand CodeGeneratorCommand => new AsyncRelayCommand(async () =>
+        {
+            _isInitializeVisible = false;
+            await NavigationService.Navigate<CodeGeneratorView>();
+
+        });
+
 
         private async Task<bool> LoadCategoryAsync()
         {

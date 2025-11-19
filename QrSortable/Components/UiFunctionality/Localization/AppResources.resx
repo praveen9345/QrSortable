@@ -117,51 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-
-  <!-- ###################################################################################################################### -->
-
-  <!--Global Variable-->
   <data name="Dialog_InternetConnection_Title" xml:space="preserve">
     <value>Connectivity!</value>
-    <comment></comment>
   </data>
-
   <data name="Dialog_InternetConnection_Message" xml:space="preserve">
     <value>No Internet connection available.</value>
-    <comment></comment>
   </data>
- 
   <data name="Dialog_ConfirmationMessage_Text" xml:space="preserve">
     <value>Need your action</value>
-    <comment></comment>
   </data>
-
   <data name="Dialog_Cancel_Text" xml:space="preserve">
     <value>Cancel</value>
-    <comment></comment>
   </data>
-
   <data name="Dialog_OK_Text" xml:space="preserve">
     <value>OK</value>
-    <comment></comment>
   </data>
-
-  <!--RootView ViewModel-->
   <data name="RootViewModel_MenuText" xml:space="preserve">
     <value>Menu</value>
-    <comment></comment>
   </data>
-  <data name="RootViewModel_HistoryText" xml:space="preserve">
-    <value>History</value>
-    <comment></comment>
+  <data name="RootViewModel_CodeGeneratorText" xml:space="preserve">
+    <value>Generator</value>
   </data>
-
-  <!--BoxDetailViewModel-->
-<data name="BoxDetailViewModel_DeletItemText" xml:space="preserve">
+  <data name="BoxDetailViewModel_DeletItemText" xml:space="preserve">
     <value>Are you sure you want to delete?</value>
-    <comment></comment>
   </data>
-
-
- <!-- ###################################################################################################################### -->
 </root>
