@@ -1,5 +1,6 @@
 ﻿namespace QrSortable.Components.CoreFeatures.CodeGenerator.ViewModels
 {
+    using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
 
     /// <summary>
@@ -28,7 +29,19 @@
             
         }
 
-      
+        public AsyncRelayCommand SelectQrCommand => new AsyncRelayCommand(async () =>
+        {
+
+          
+
+        });
+
+        public AsyncRelayCommand SelectBarcodeCommand => new AsyncRelayCommand(async () =>
+        {
+
+
+
+        });
 
     }
 }

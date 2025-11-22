@@ -13,11 +13,11 @@
             <scanner:CameraView
                 Grid.Row="0"
                 x:Name="cameraView"  
-                AimMode="True"
                 ViewfinderMode="True"
                 TapToFocusEnabled="True"
                 TorchOn="{Binding IsFlashOn}"
                 CameraEnabled="{Binding IsCameraEnabled}"
+                BarcodeSymbologies="QRCode,Code128"
                 OnDetectionFinishedCommand="{Binding DetectionFinishedCommand}"/>
             <!-- Back button -->
             <Button

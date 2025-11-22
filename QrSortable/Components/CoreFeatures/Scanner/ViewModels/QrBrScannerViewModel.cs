@@ -3,6 +3,7 @@
     using BarcodeScanning;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using QrSortable.Components.CoreFeatures.CodeGenerator.Helper;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
 
@@ -11,6 +12,8 @@
     /// </summary>
     public partial class QrBrScannerViewModel : BaseViewModel
     {
+        private readonly IAesHelper _aesHelper;
+
         private bool _isBarcodeDetected = false;
         public string FlashOnGlyph => "\uF41a";
         public string FlashOffGlyph => "\uF41b";
@@ -18,10 +21,10 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="QrBrScannerViewModel" />.
         /// </summary>
-        public QrBrScannerViewModel()
+        public QrBrScannerViewModel(IAesHelper aesHelper)
         {
             IsBackNavigationEnabled = true;
-           
+           _aesHelper = aesHelper;
         }
 
         /// <summary>
@@ -67,7 +70,19 @@
         {
             if (result.Count > 0)
             {
-                string displayValue = result.FirstOrDefault()?.DisplayValue +"," + result.FirstOrDefault()?.BarcodeFormat.ToString();
+                string decryptedValue;
+                var firstResult = result.FirstOrDefault()?.DisplayValue;
+                try
+                {
+                    decryptedValue = _aesHelper.Decrypt(firstResult);
+                }
+                catch
+                {
+                    // TODO: Handle decryption errors by displaying a message to the user.
+                    decryptedValue = "Invalid";
+                }
+               
+                string displayValue = decryptedValue + "," + result.FirstOrDefault()?.BarcodeFormat.ToString();
                 Console.WriteLine("Found the BarcodeResult: " + result.Count + " ; " + $"{displayValue}");
                 if (!_isBarcodeDetected)
                 {

@@ -32,8 +32,36 @@
                   Glyph="{x:Static local:IconNames.Back}"/>
                 </Button.ImageSource>
             </Button>
-            
-            
+
+            <ScrollView>
+                <VerticalStackLayout Padding="20" Spacing="20">
+
+                    <Entry x:Name="CodeEntry"
+                   Placeholder="Enter 6-digit code"
+                   MaxLength="13"
+                   HorizontalOptions="FillAndExpand" />
+
+                    <Picker x:Name="TypePicker" Title="Select type">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>QR Code</x:String>
+                                <x:String>Barcode</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+
+                    <Entry x:Name="ColorEntry"
+                   Placeholder="Enter HEX color (e.g., #FF0000)"
+                   HorizontalOptions="FillAndExpand" />
+
+                    <Button Text="Generate" Clicked="OnGenerateClicked" />
+
+                    <Label x:Name="ResultLabel" FontAttributes="Bold" IsVisible="False"/>
+                    <Image x:Name="ResultImage" HeightRequest="300" WidthRequest="600" IsVisible="False"/>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
         </Grid> 
     </views:BaseView.Content>
 </views:BaseView>
