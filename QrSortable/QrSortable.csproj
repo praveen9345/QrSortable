@@ -64,6 +64,11 @@
 	<ItemGroup>
 		<MauiImage Include="Resources\Images\background_layout.webp" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\Fonts\OpenSans-Regular.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\OpenSans-Semibold.ttf" />
+	</ItemGroup>
  
     <!-- Register the AppResources files -->
 	<ItemGroup>
@@ -106,6 +111,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="PdfSharpCore" Version="1.3.67" />
 		<PackageReference Include="QRCoder" Version="1.7.0" />
 		<PackageReference Include="ZXing.Net.MAUI" Version="0.6.0" />
 		<PackageReference Include="SkiaSharp" Version="3.119.1" />
@@ -116,7 +122,6 @@
 	<ItemGroup>
 	  <Folder Include="Components\CoreFeatures\Cloud\AccessManagement\" />
 	  <Folder Include="Components\CoreFeatures\Cloud\Wrappers\" />
-	  <Folder Include="Components\CoreFeatures\CodeGenerator\Models\" />
 	  <Folder Include="Components\CoreFeatures\Onboarding\" />
 	</ItemGroup>
 

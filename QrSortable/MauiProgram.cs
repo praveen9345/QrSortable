@@ -5,6 +5,8 @@
     using Microsoft.Maui.Controls.Compatibility.Hosting;
     using QrSortable.Components.PlatformUtils;
     using BarcodeScanning;
+    using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
+    using PdfSharpCore.Fonts;
 
 #if ANDROID
     using Android.Graphics.Drawables;
@@ -53,7 +55,10 @@
 
                 });
 
-			var app = builder.Build();
+            
+            PdfSharpCore.Fonts.GlobalFontSettings.FontResolver = new PdfFontResolver();
+            
+            var app = builder.Build();
             // Needs to be initialized after building the app to link the services to the created singletons.
             ServiceHelper.Initialize(app.Services);
 			return app;
