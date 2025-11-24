@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<views:BaseView 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    xmlns:local="clr-namespace:QrSortable.Resources"
+    x:Class="QrSortable.Components.CoreFeatures.OrdersPayments.Views.AddToBasketView"
+    BackgroundImageSource ="background_layout.webp">
+    <views:BaseView.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <!-- back -->
+                <RowDefinition Height="Auto"></RowDefinition>
+                <!-- cart order view-->
+                <RowDefinition Height="40"></RowDefinition>
+                <!-- item view -->
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <!-- Back button -->
+            <Button
+              Grid.Row="0"
+              Margin="15,15,0,0"
+              Command="{Binding BackNavigationCommand}"
+              HorizontalOptions="Start"
+              VerticalOptions="Start"
+              BackgroundColor="{StaticResource DarkGrey}"
+              CornerRadius="5"
+              Padding="2">
+                <Button.Shadow>
+                    <Shadow
+                      Brush="Black"
+                      Opacity="0.5"
+                      Offset="0,0"
+                      Radius="10"/>
+                </Button.Shadow>
+                <Button.ImageSource >
+                    <FontImageSource 
+                  FontFamily="FluentIcons" 
+                  Color="{StaticResource Primary}"
+                  Glyph="{x:Static local:IconNames.Back}"/>
+                </Button.ImageSource>
+            </Button>
+
+            <!-- page icon -->
+            <Image
+                Grid.Row="0"
+                Margin="10"
+                Source="cart_yellow_icon"
+                Aspect="AspectFit"
+                HeightRequest="120"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"/>
+
+            <!-- cart order view-->
+            <Grid 
+                Grid.Row="1"
+                WidthRequest="80" 
+                HeightRequest="89" 
+                HorizontalOptions="End"
+                Margin="5"
+                BackgroundColor="Transparent">
+                <!-- Cart Icon -->
+                <Image 
+                    Source="cart_yellow_icon"
+                    WidthRequest="45"
+                    HeightRequest="45"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center" />
+
+                <!-- Item Count -->
+                <Label 
+                    Text="2"
+                    FontSize="28"
+                    TextColor="White"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Start"
+                    Margin="5,-5,0,0"
+                    FontAttributes="Bold" />
+            </Grid>
+
+            <!-- item view -->
+            <CollectionView 
+                 Grid.Row="2"
+                 SelectionMode="Single"
+                 VerticalOptions="Fill">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="5">
+                            <!-- Box view -->
+                            <Border 
+                             HorizontalOptions="Fill"
+                             VerticalOptions="Fill"
+                             Background="{StaticResource Primary}"
+                             StrokeShape="RoundRectangle 10"
+                             Padding="5">
+                                <StackLayout>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <!-- product detail view -->
+                                            <RowDefinition Height="8*"></RowDefinition>
+                                            <!-- cart view -->
+                                            <RowDefinition Height="40"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="8*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                           
+                                            <VerticalStackLayout
+                                                Grid.Column="0"
+                                                Padding="9">
+                                                <Label
+                                                  Text="Generate A4 QR or bar code yourself" 
+                                                  FontSize="Large" 
+                                                  FontAttributes="Bold"
+                                                  FontFamily="ItimRegular"
+                                                  TextColor="{StaticResource Black}"
+                                                  BackgroundColor="Transparent"
+                                                  HorizontalTextAlignment="Start"
+                                                  VerticalTextAlignment="Center"/>
+
+                                                <Label
+                                                  Text="* Select color" 
+                                                  FontSize="Medium" 
+                                                  FontFamily="ItimRegular"
+                                                  FontAttributes="None"
+                                                  TextColor="{StaticResource Black}"
+                                                  BackgroundColor="Transparent"
+                                                  HorizontalTextAlignment="Start"
+                                                  VerticalTextAlignment="Center"/>
+                                                
+                                                <Label
+                                                   Text="10€ only" 
+                                                   FontSize="Large" 
+                                                   FontAttributes="Bold"
+                                                   FontFamily="ItimRegular"
+                                                   TextColor="{StaticResource Black}"
+                                                   BackgroundColor="Transparent"
+                                                   HorizontalTextAlignment="Start"
+                                                   VerticalTextAlignment="Center"/>
+
+                                            </VerticalStackLayout>
+
+                                            <Image
+                                                Grid.Column="1"
+                                                Margin="5"
+                                                Source="code_pdf_icon"
+                                                Aspect="AspectFit"
+                                                HeightRequest="120"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"/>
+                                        </Grid>
+
+                                        <Grid Grid.Row="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="9*" />
+                                                    <ColumnDefinition Width="5*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Image
+                                                     Grid.Column="0"
+                                                     Source="cart_icon.svg"
+                                                     Aspect="AspectFit"
+                                                     HeightRequest="45"
+                                                     HorizontalOptions="End"
+                                                     VerticalOptions="Center"/>
+
+                                                <Border
+                                                    Grid.Column="1"
+                                                    Background="#D3D3D3"
+                                                    StrokeShape="RoundRectangle 30"
+                                                    Padding="5"
+                                                    VerticalOptions="Center">
+
+                                                    <Grid 
+                                                        VerticalOptions="Center">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        
+                                                        <!-- Minus Button -->
+                                                        <Button
+                                                            Grid.Column="0"
+                                                             Padding="0"
+                                                             WidthRequest="24"
+                                                             HeightRequest="24"
+                                                             CornerRadius="50"
+                                                             Margin="10"
+                                                             HorizontalOptions="Start"
+                                                             VerticalOptions="Center"
+                                                             BackgroundColor="Transparent"
+                                                             FontAttributes="Bold"
+                                                             Command="{Binding DecreaseQuantityCommand}">
+                                                            <Button.ImageSource >
+                                                                <FontImageSource 
+                                                                 FontFamily="FluentIcons" 
+                                                                 Color="{StaticResource Black}"
+                                                                 Glyph="{x:Static local:IconNames.Minus}"/>
+                                                            </Button.ImageSource>
+                                                        </Button>
+                                                        
+                                                        <!-- Quantity Label -->
+                                                        <Label 
+                                                             Grid.Column="1"
+                                                            Text="0"
+                                                            FontSize="28"
+                                                            Padding="-5"
+                                                            HorizontalOptions="Center"
+                                                            VerticalOptions="Center"
+                                                            FontAttributes="Bold"
+                                                            TextColor="Black"/>
+
+                                                        <!-- Plus Button -->
+                                                        <Button
+                                                             Grid.Column="2"
+                                                             Padding="0"
+                                                             WidthRequest="24"
+                                                             HeightRequest="24"
+                                                             Margin="10"
+                                                             CornerRadius="50"
+                                                             HorizontalOptions="End"
+                                                             VerticalOptions="Center"
+                                                             BackgroundColor="Transparent"
+                                                             FontAttributes="Bold"
+                                                             Command="{Binding IncreaseQuantityCommand}">
+                                                            <Button.ImageSource>
+                                                                <FontImageSource 
+                                                                 FontFamily="FluentIcons" 
+                                                                 Color="{StaticResource Black}"
+                                                                 Glyph="{x:Static local:IconNames.Plus}"/>
+                                                            </Button.ImageSource>
+                                                        </Button>
+                                                    </Grid>
+                                                    
+                                                </Border>
+
+                                            </Grid>
+
+                                        </Grid>
+
+                                    </Grid>
+                                </StackLayout>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Item 1</x:String>
+                        <x:String>Item 2</x:String>
+                        <x:String>Item 3</x:String>
+                        <x:String>Item 4</x:String>
+                        <x:String>Item 5</x:String>
+                    </x:Array>
+                </CollectionView.ItemsSource>
+            </CollectionView>
+
+
+        </Grid>
+    </views:BaseView.Content>
+</views:BaseView>

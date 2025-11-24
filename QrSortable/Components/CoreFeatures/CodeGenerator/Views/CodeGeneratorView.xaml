@@ -8,6 +8,15 @@
     BackgroundImageSource ="background_layout.webp">
     <views:BaseView.Content>
         <Grid>
+            <Grid.RowDefinitions>
+                <!-- back -->
+                <RowDefinition Height="Auto"></RowDefinition>
+                <!-- cart order view-->
+                <RowDefinition Height="40"></RowDefinition>
+                <!-- item view -->
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
             <!-- Back button -->
             <Button
               Grid.Row="0"
@@ -20,10 +29,10 @@
               Padding="2">
                 <Button.Shadow>
                     <Shadow
-                  Brush="Black"
-                  Opacity="0.5"
-                  Offset="0,0"
-                  Radius="10"/>
+                      Brush="Black"
+                      Opacity="0.5"
+                      Offset="0,0"
+                      Radius="10"/>
                 </Button.Shadow>
                 <Button.ImageSource >
                     <FontImageSource 
@@ -33,38 +42,44 @@
                 </Button.ImageSource>
             </Button>
 
-            <ScrollView>
-                <VerticalStackLayout Padding="20" Spacing="20">
+            <!-- page icon -->
+            <Image
+               Grid.Row="0"
+               Margin="10"
+               Source="qr_barcode_icon"
+               Aspect="AspectFit"
+               HeightRequest="120"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"/>
 
-                    <Entry x:Name="CodeEntry"
-                   Placeholder="Enter 6-digit code"
-                   MaxLength="13"
-                   HorizontalOptions="FillAndExpand" />
+            <!-- cart order view-->
+            <Grid 
+               Grid.Row="1"
+               WidthRequest="80" 
+               HeightRequest="89" 
+               HorizontalOptions="End"
+               Margin="5"
+               BackgroundColor="Transparent">
+                <!-- Cart Icon -->
+                <Image 
+                   Source="cart_yellow_icon"
+                   WidthRequest="45"
+                   HeightRequest="45"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
 
-                    <Picker x:Name="TypePicker" Title="Select type">
-                        <Picker.ItemsSource>
-                            <x:Array Type="{x:Type x:String}">
-                                <x:String>QR Code</x:String>
-                                <x:String>Barcode</x:String>
-                            </x:Array>
-                        </Picker.ItemsSource>
-                    </Picker>
+                <!-- Item Count -->
+                <Label 
+                   Text="2"
+                   FontSize="28"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Start"
+                   Margin="5,-5,0,0"
+                   FontAttributes="Bold" />
+            </Grid>
 
-                    <Entry x:Name="ColorEntry"
-                   Placeholder="Enter HEX color (e.g., #FF0000)"
-                   HorizontalOptions="FillAndExpand" />
 
-                    <Button Text="Generate" Clicked="OnGenerateClicked" />
-
-                    <Label x:Name="ResultLabel" FontAttributes="Bold" IsVisible="False"/>
-                    <Image x:Name="ResultImage" HeightRequest="300" WidthRequest="600" IsVisible="False"/>
-
-                </VerticalStackLayout>
-            </ScrollView>
-
-        </Grid> 
+        </Grid>
     </views:BaseView.Content>
 </views:BaseView>
-
-
-           

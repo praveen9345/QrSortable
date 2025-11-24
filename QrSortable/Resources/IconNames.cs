@@ -146,6 +146,11 @@ namespace QrSortable.Resources
         public const string Plus = "\uF10a";
 
         /// <summary>
+        ///     The name of the minus icon.
+        /// </summary>
+        public const string Minus = "\uEBC9";
+
+        /// <summary>
         ///     The name of the add image icon.
         /// </summary>
         public const string AddImage = "\uF493";

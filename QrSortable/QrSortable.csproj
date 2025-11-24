@@ -63,6 +63,7 @@
 	<!-- Register the MAUI images -->
 	<ItemGroup>
 		<MauiImage Include="Resources\Images\background_layout.webp" />
+		<MauiImage Include="Resources\Images\code_pdf_icon.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -72,6 +73,12 @@
  
     <!-- Register the AppResources files -->
 	<ItemGroup>
+       <Compile Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml.cs">
+         <DependentUpon>SelectProductView.xaml</DependentUpon>
+       </Compile>
+       <Compile Update="Components\CoreFeatures\OrdersPayments\Views\AddToBasketView.xaml.cs">
+         <DependentUpon>AddToBasketView.xaml</DependentUpon>
+       </Compile>
        <Compile Update="Components\CoreFeatures\Scanner\Views\ItemDetailView.xaml.cs">
          <DependentUpon>ItemDetailView.xaml</DependentUpon>
        </Compile>
@@ -126,6 +133,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\AddToBasketView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Components\CoreFeatures\Scanner\Views\ItemDetailView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

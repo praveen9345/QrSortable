@@ -1,19 +1,18 @@
-﻿namespace QrSortable.Components.CoreFeatures.CodeGenerator.ViewModels
+﻿namespace QrSortable.Components.CoreFeatures.OrdersPayments.ViewModels
 {
     using CommunityToolkit.Mvvm.Input;
-    using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
 
     /// <summary>
-    ///     The view model of the code generator view screen.
+    ///     The view model of the Select Product view screen.
     /// </summary>
-    public partial class CodeGeneratorViewModel : BaseViewModel<Product>
+    public partial class AddToBasketViewModel : BaseViewModel
     {
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CodeGeneratorViewModel" />.
+        ///     Initializes a new instance of the <see cref="AddToBasketViewModel" />.
         /// </summary>
-        public CodeGeneratorViewModel()
+        public AddToBasketViewModel()
         {
             IsBackNavigationEnabled = true;
            
@@ -28,11 +27,6 @@
         {
             await base.InitializeAsync();
             
-        }
-
-        public override void Prepare(Product parameter)
-        {
-
         }
 
         public AsyncRelayCommand SelectQrCommand => new AsyncRelayCommand(async () =>

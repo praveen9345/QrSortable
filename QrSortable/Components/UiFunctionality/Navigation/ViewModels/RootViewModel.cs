@@ -9,6 +9,7 @@
     using QrSortable.Components.CoreFeatures.CodeGenerator.Views;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Notification;
@@ -128,7 +129,7 @@
         public AsyncRelayCommand CodeGeneratorCommand => new AsyncRelayCommand(async () =>
         {
             _isInitializeVisible = false;
-            await NavigationService.Navigate<CodeGeneratorView>();
+            await NavigationService.Navigate<SelectProductView>();
 
         });
 
