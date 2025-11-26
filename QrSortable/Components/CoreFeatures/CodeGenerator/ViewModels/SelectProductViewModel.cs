@@ -48,7 +48,7 @@
             {
                if(SelectedItem.Title == "Generate A4 QR or bar code yourself!")
                {
-                    await NavigationService.Navigate<CodeGeneratorView>(SelectedItem);
+                    await NavigationService.Navigate<CodeGeneratorView>();
                }
 
                SelectedItem = null;

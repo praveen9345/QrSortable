@@ -1,8 +1,9 @@
-﻿<?xml version = "1.0" encoding = "UTF-8" ?>
-<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:QrSortable"
-             x:Class="QrSortable.App">
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Application
+    x:Class="QrSortable.App"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:QrSortable">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -12,13 +13,17 @@
             <ControlTemplate x:Key="ContentPageTemplate">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <BoxView Grid.Row="0" BackgroundColor="Black" HeightRequest="{OnPlatform Android='0.1', iOS='0.3'}"
-                             HorizontalOptions="Fill"
-                             Opacity="0.35" />
-                    <ContentPresenter Grid.Row="1"/>
+                    <BoxView
+                        Grid.Row="0"
+                        BackgroundColor="Black"
+                        HeightRequest="{OnPlatform Android='0.1',
+                                                   iOS='0.3'}"
+                        HorizontalOptions="Fill"
+                        Opacity="0.35" />
+                    <ContentPresenter Grid.Row="1" />
                 </Grid>
             </ControlTemplate>
         </ResourceDictionary>

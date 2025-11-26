@@ -1,14 +1,22 @@
 ﻿namespace QrSortable.Components.CoreFeatures.CodeGenerator.ViewModels
 {
+    using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
-    using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
+    using Google.Rpc;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     ///     The view model of the code generator view screen.
     /// </summary>
-    public partial class CodeGeneratorViewModel : BaseViewModel<Product>
+    public partial class CodeGeneratorViewModel : BaseViewModel
     {
+        private const int _priceEachPaper = 5;
+        
+        /// <summary>
+        /// .....................
+        /// </summary>
+        public ObservableCollection<string> PageSelected { get; set; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="CodeGeneratorViewModel" />.
@@ -16,7 +24,13 @@
         public CodeGeneratorViewModel()
         {
             IsBackNavigationEnabled = true;
-           
+
+            PageSelected = new ObservableCollection<string>
+            {
+                "A4(12 code)",
+                "A5(6 code)"
+            };
+
         }
 
         /// <summary>
@@ -30,23 +44,84 @@
             
         }
 
-        public override void Prepare(Product parameter)
+        /// <summary>
+        /// Represents the currently selected demo image in the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _demoImage = "qr_code_demo.png";
+
+        /// <summary>
+        /// Represents the currently selected code in the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _selectedCode = "QR code";
+
+        /// <summary>
+        /// Represents the currently color item in the application.
+        /// </summary>
+        [ObservableProperty]
+        private bool _colorVisible = true;
+
+        /// <summary>
+        /// Represents the currently number page count in the application.
+        /// </summary>
+        [ObservableProperty]
+        private int _pageCount = 0;
+
+
+        [ObservableProperty]
+        private string _selectedPage;
+
+        /// <summary>
+        /// Represents the currently total amount to pay in the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _totalAmount = "0€";
+
+
+        public AsyncRelayCommand OnSelectionCodeChangedCommand => new AsyncRelayCommand(async () =>
         {
+            if (!string.IsNullOrWhiteSpace(SelectedCode))
+            {
+                if (SelectedCode == "QR code")
+                {
+                    ColorVisible = true;
+                    DemoImage = "qr_code_demo.png";
 
-        }
+                    PageSelected.Clear();
+                    PageSelected.Add("A4(12 code)");
+                    PageSelected.Add("A5(6 code)");
+                }
+                else if (SelectedCode == "Bar code")
+                {
+                    ColorVisible = false;
+                    DemoImage = "bar_code_demo.png";
 
-        public AsyncRelayCommand SelectQrCommand => new AsyncRelayCommand(async () =>
+                    PageSelected.Clear();
+                    PageSelected.Add("A4(18 code)");
+                    PageSelected.Add("A5(10 code)");
+
+                }
+
+            }
+        });
+        
+
+        public AsyncRelayCommand DecreaseQuantityCommand => new AsyncRelayCommand(async () =>
         {
-
-          
-
+            if (PageCount > 0) 
+            { 
+                PageCount--;
+                TotalAmount = (PageCount * _priceEachPaper).ToString() + "€";
+            }
         });
 
-        public AsyncRelayCommand SelectBarcodeCommand => new AsyncRelayCommand(async () =>
+        public AsyncRelayCommand IncreaseQuantityCommand => new AsyncRelayCommand(async () =>
         {
+            if (PageCount < 0) { PageCount = 0; }
 
-
-
+            PageCount++;
+            TotalAmount = (PageCount * _priceEachPaper).ToString() + "€";
         });
 
     }
