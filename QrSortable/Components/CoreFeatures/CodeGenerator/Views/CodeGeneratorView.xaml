@@ -428,7 +428,8 @@
                         HorizontalOptions="FillAndExpand"
                         Text="Buy Now"
                         TextColor="Black"
-                        VerticalOptions="Center">
+                        VerticalOptions="Center"
+                        Command="{Binding BuyNowCommand}">
                         <Button.Shadow>
                             <Shadow
                                 Brush="Black"

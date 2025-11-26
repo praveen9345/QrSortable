@@ -109,7 +109,7 @@
 
         public AsyncRelayCommand DecreaseQuantityCommand => new AsyncRelayCommand(async () =>
         {
-            if (PageCount > 0) 
+            if (PageCount > 1) 
             { 
                 PageCount--;
                 TotalAmount = (PageCount * _priceEachPaper).ToString() + "€";
@@ -118,10 +118,13 @@
 
         public AsyncRelayCommand IncreaseQuantityCommand => new AsyncRelayCommand(async () =>
         {
-            if (PageCount < 0) { PageCount = 0; }
-
             PageCount++;
             TotalAmount = (PageCount * _priceEachPaper).ToString() + "€";
+        });
+
+        public AsyncRelayCommand BuyNowCommand => new AsyncRelayCommand(async () =>
+        {
+
         });
 
     }
