@@ -255,7 +255,7 @@
                                     Margin="10,0,0,0"
                                     Placeholder="e.g. Kitchen"
                                     Style="{StaticResource NormalText}"
-                                    Text="{Binding ItemName}" />
+                                    Text="{Binding TagName}" />
                             </Grid>
                         </Border>
                     </StackLayout>
@@ -296,7 +296,7 @@
                                     Margin="10,0,0,0"
                                     Placeholder="e.g. #000000"
                                     Style="{StaticResource NormalText}"
-                                    Text="{Binding ItemName}" />
+                                    Text="{Binding HexCode}" />
                             </Grid>
                         </Border>
                     </StackLayout>
@@ -421,15 +421,15 @@
                     <Button
                         Margin="20,0,20,0"
                         BackgroundColor="{StaticResource Primary}"
+                        Command="{Binding BuyNowCommand}"
                         CornerRadius="10"
                         FontAttributes="Bold"
                         FontFamily="ItimRegular"
-                        FontSize="24"
+                        FontSize="20"
                         HorizontalOptions="FillAndExpand"
                         Text="Buy Now"
                         TextColor="Black"
-                        VerticalOptions="Center"
-                        Command="{Binding BuyNowCommand}">
+                        VerticalOptions="Center">
                         <Button.Shadow>
                             <Shadow
                                 Brush="Black"

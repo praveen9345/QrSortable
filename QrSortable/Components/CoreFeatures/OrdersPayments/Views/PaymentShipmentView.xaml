@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<views:BaseView
+    x:Class="QrSortable.Components.CoreFeatures.OrdersPayments.Views.PaymentShipmentView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    BackgroundImageSource="background_layout.webp">
+    <views:BaseView.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <!--  back  -->
+                <RowDefinition Height="Auto" />
+                <!--  item view  -->
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Back button  -->
+            <Button
+                Grid.Row="0"
+                Margin="15,15,0,0"
+                Padding="2"
+                BackgroundColor="{StaticResource DarkGrey}"
+                Command="{Binding BackNavigationCommand}"
+                CornerRadius="5"
+                HorizontalOptions="Start"
+                VerticalOptions="Start">
+                <Button.Shadow>
+                    <Shadow
+                        Brush="Black"
+                        Opacity="0.5"
+                        Radius="10"
+                        Offset="0,0" />
+                </Button.Shadow>
+                <Button.ImageSource>
+                    <FontImageSource
+                        FontFamily="FluentIcons"
+                        Glyph="{x:Static local:IconNames.Back}"
+                        Color="{StaticResource Primary}" />
+                </Button.ImageSource>
+            </Button>
+
+            <!--  page icon  -->
+            <Image
+                Grid.Row="0"
+                Margin="0,-20,0,0"
+                Aspect="AspectFit"
+                HeightRequest="150"
+                HorizontalOptions="Center"
+                Source="payment"
+                VerticalOptions="Center" />
+
+            <ScrollView Grid.Row="1">
+                <StackLayout Margin="10,0,0,10">
+                    <!--  Shipping and Billing Address view  -->
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="24"
+                        HorizontalTextAlignment="Start"
+                        Text="Shipping and Billing Address:"
+                        TextColor="{StaticResource Primary}"
+                        VerticalTextAlignment="Center" />
+
+                    <!--  Person name view  -->
+                    <StackLayout
+                        Grid.Row="0"
+                        Margin="15,0,15,0"
+                        Orientation="Horizontal">
+                        <!--  name  -->
+                        <Label
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HorizontalTextAlignment="Center"
+                            Text="Name:"
+                            TextColor="{StaticResource White}"
+                            VerticalTextAlignment="Center" />
+
+                        <!--  Placeholder for input field  -->
+                        <Border
+                            Margin="10,0,0,0"
+                            Background="{StaticResource DarkGrey}"
+                            HorizontalOptions="FillAndExpand"
+                            StrokeShape="RoundRectangle 10">
+                            <Border.Shadow>
+                                <Shadow
+                                    Brush="Black"
+                                    Opacity="0.5"
+                                    Radius="10"
+                                    Offset="0,0" />
+                            </Border.Shadow>
+                            <!--  input field  -->
+                            <Grid>
+                                <Entry
+                                    Margin="10,0,0,0"
+                                    Placeholder="e.g. enter name.."
+                                    Style="{StaticResource NormalText}"
+                                    Text="{Binding Name}" />
+                            </Grid>
+                        </Border>
+                    </StackLayout>
+
+                    <!--  Street name view  -->
+                    <StackLayout
+                        Grid.Row="0"
+                        Margin="15,10,15,0"
+                        Orientation="Horizontal">
+                        <!--  streer name  -->
+                        <Label
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HorizontalTextAlignment="Center"
+                            Text="Street:"
+                            TextColor="{StaticResource White}"
+                            VerticalTextAlignment="Center" />
+
+                        <!--  Placeholder for input field  -->
+                        <Border
+                            Margin="10,0,0,0"
+                            Background="{StaticResource DarkGrey}"
+                            HorizontalOptions="FillAndExpand"
+                            StrokeShape="RoundRectangle 10">
+                            <Border.Shadow>
+                                <Shadow
+                                    Brush="Black"
+                                    Opacity="0.5"
+                                    Radius="10"
+                                    Offset="0,0" />
+                            </Border.Shadow>
+                            <!--  input field  -->
+                            <Grid>
+                                <Entry
+                                    Margin="10,0,0,0"
+                                    Placeholder="e.g. enter street name.."
+                                    Style="{StaticResource NormalText}"
+                                    Text="{Binding StreetName}" />
+                            </Grid>
+                        </Border>
+                    </StackLayout>
+
+                    <!--  House number view  -->
+                    <StackLayout
+                        Grid.Row="0"
+                        Margin="15,10,15,0"
+                        Orientation="Horizontal">
+                        <!--  house no.  -->
+                        <Label
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HorizontalTextAlignment="Center"
+                            Text="House No.:"
+                            TextColor="{StaticResource White}"
+                            VerticalTextAlignment="Center" />
+
+                        <!--  Placeholder for input field  -->
+                        <Border
+                            Margin="10,0,0,0"
+                            Background="{StaticResource DarkGrey}"
+                            HorizontalOptions="FillAndExpand"
+                            StrokeShape="RoundRectangle 10">
+                            <Border.Shadow>
+                                <Shadow
+                                    Brush="Black"
+                                    Opacity="0.5"
+                                    Radius="10"
+                                    Offset="0,0" />
+                            </Border.Shadow>
+                            <!--  input field  -->
+                            <Grid>
+                                <Entry
+                                    Margin="10,0,0,0"
+                                    Keyboard="Numeric"
+                                    Placeholder="e.g. enter house number.."
+                                    Style="{StaticResource NormalText}"
+                                    Text="{Binding HouseNumber}" />
+                            </Grid>
+                        </Border>
+                    </StackLayout>
+
+                    <!--  postal code view  -->
+                    <StackLayout
+                        Grid.Row="0"
+                        Margin="15,10,15,0"
+                        Orientation="Horizontal">
+                        <!--  postal code  -->
+                        <Label
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HorizontalTextAlignment="Center"
+                            Text="ZIP code:"
+                            TextColor="{StaticResource White}"
+                            VerticalTextAlignment="Center" />
+
+                        <!--  Placeholder for input field  -->
+                        <Border
+                            Margin="10,0,0,0"
+                            Background="{StaticResource DarkGrey}"
+                            HorizontalOptions="FillAndExpand"
+                            StrokeShape="RoundRectangle 10">
+                            <Border.Shadow>
+                                <Shadow
+                                    Brush="Black"
+                                    Opacity="0.5"
+                                    Radius="10"
+                                    Offset="0,0" />
+                            </Border.Shadow>
+                            <!--  input field  -->
+                            <Grid>
+                                <Entry
+                                    Margin="10,0,0,0"
+                                    Placeholder="e.g. enter ZIP/Postal code.."
+                                    Style="{StaticResource NormalText}"
+                                    Text="{Binding ZipCode}" />
+                            </Grid>
+                        </Border>
+                    </StackLayout>
+
+                    <!--  city view  -->
+                    <StackLayout
+                        Grid.Row="0"
+                        Margin="15,10,15,0"
+                        Orientation="Horizontal">
+                        <!--  city name  -->
+                        <Label
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HorizontalTextAlignment="Center"
+                            Text="City:"
+                            TextColor="{StaticResource White}"
+                            VerticalTextAlignment="Center" />
+
+                        <!--  Placeholder for input field  -->
+                        <Border
+                            Margin="10,0,0,0"
+                            Background="{StaticResource DarkGrey}"
+                            HorizontalOptions="FillAndExpand"
+                            StrokeShape="RoundRectangle 10">
+                            <Border.Shadow>
+                                <Shadow
+                                    Brush="Black"
+                                    Opacity="0.5"
+                                    Radius="10"
+                                    Offset="0,0" />
+                            </Border.Shadow>
+                            <!--  input field  -->
+                            <Grid>
+                                <Entry
+                                    Margin="10,0,0,0"
+                                    Placeholder="e.g. enter city.."
+                                    Style="{StaticResource NormalText}"
+                                    Text="{Binding CityName}" />
+                            </Grid>
+                        </Border>
+                    </StackLayout>
+
+                    <!--  country view  -->
+                    <StackLayout
+                        Grid.Row="0"
+                        Margin="15,10,15,0"
+                        Orientation="Horizontal">
+                        <!--  country name  -->
+                        <Label
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HorizontalTextAlignment="Center"
+                            Text="Country:"
+                            TextColor="{StaticResource White}"
+                            VerticalTextAlignment="Center" />
+
+                        <!--  Placeholder for input field  -->
+                        <Border
+                            Margin="10,0,0,0"
+                            Background="{StaticResource DarkGrey}"
+                            HorizontalOptions="FillAndExpand"
+                            StrokeShape="RoundRectangle 10">
+                            <Border.Shadow>
+                                <Shadow
+                                    Brush="Black"
+                                    Opacity="0.5"
+                                    Radius="10"
+                                    Offset="0,0" />
+                            </Border.Shadow>
+                            <!--  input field  -->
+                            <Grid>
+                                <Entry
+                                    Margin="10,0,0,0"
+                                    Placeholder="e.g. enter country.."
+                                    Style="{StaticResource NormalText}"
+                                    Text="{Binding CountryName}" />
+                            </Grid>
+                        </Border>
+                    </StackLayout>
+
+                    <!--  enail id view  -->
+                    <StackLayout
+                        Grid.Row="0"
+                        Margin="15,10,15,0"
+                        Orientation="Horizontal">
+                        <!--  enmail id  -->
+                        <Label
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HorizontalTextAlignment="Center"
+                            Text="Email:"
+                            TextColor="{StaticResource White}"
+                            VerticalTextAlignment="Center" />
+
+                        <!--  Placeholder for input field  -->
+                        <Border
+                            Margin="10,0,0,0"
+                            Background="{StaticResource DarkGrey}"
+                            HorizontalOptions="FillAndExpand"
+                            StrokeShape="RoundRectangle 10">
+                            <Border.Shadow>
+                                <Shadow
+                                    Brush="Black"
+                                    Opacity="0.5"
+                                    Radius="10"
+                                    Offset="0,0" />
+                            </Border.Shadow>
+                            <!--  input field  -->
+                            <Grid>
+                                <Entry
+                                    Margin="10,0,0,0"
+                                    Keyboard="Email"
+                                    Placeholder="e.g. yourname@example.com"
+                                    Style="{StaticResource NormalText}"
+                                    Text="{Binding CountryName}" />
+                            </Grid>
+                        </Border>
+                    </StackLayout>
+
+                    <!--  amount view  -->
+                    <StackLayout
+                        Grid.Row="0"
+                        Margin="15,20,15,0"
+                        HorizontalOptions="Center"
+                        Orientation="Horizontal">
+                        <!--  total name  -->
+                        <Label
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="24"
+                            HorizontalTextAlignment="Center"
+                            Text="Total:"
+                            TextColor="{StaticResource Primary}"
+                            VerticalTextAlignment="Center" />
+
+                        <!--  total name  -->
+                        <Label
+                            Margin="10,0,0,0"
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="28"
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding TotalAmount}"
+                            TextColor="{StaticResource Primary}"
+                            VerticalTextAlignment="Center" />
+                    </StackLayout>
+
+                    <Button
+                        Margin="10,20,10,0"
+                        BackgroundColor="{StaticResource Primary}"
+                        Command="{Binding PaymentByCardCommand}"
+                        CornerRadius="10"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="20"
+                        HorizontalOptions="FillAndExpand"
+                        Text="Card payment"
+                        TextColor="Black"
+                        VerticalOptions="Center">
+                        <Button.Shadow>
+                            <Shadow
+                                Brush="Black"
+                                Opacity="0.3"
+                                Radius="10"
+                                Offset="5,5" />
+                        </Button.Shadow>
+                    </Button>
+
+                    <Button
+                        Margin="10,20,10,0"
+                        BackgroundColor="{StaticResource Primary}"
+                        Command="{Binding PaymentByBankCommand}"
+                        CornerRadius="10"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="20"
+                        HorizontalOptions="FillAndExpand"
+                        Text="Bank transfer(10% discount)"
+                        TextColor="Black"
+                        VerticalOptions="Center"
+                        IsVisible="{Binding BankTransferVisible}">
+                        <Button.Shadow>
+                            <Shadow
+                                Brush="Black"
+                                Opacity="0.3"
+                                Radius="10"
+                                Offset="5,5" />
+                        </Button.Shadow>
+                    </Button>
+
+                </StackLayout>
+
+            </ScrollView>
+        </Grid>
+    </views:BaseView.Content>
+</views:BaseView>
