@@ -6,7 +6,7 @@
     using ViewModels;
 
     /// <summary>
-    /// The code behind of the AddToBasketView view.
+    /// The code behind of the AddToBasketView.
     /// </summary>
     public partial class AddToBasketView : BaseView
     {

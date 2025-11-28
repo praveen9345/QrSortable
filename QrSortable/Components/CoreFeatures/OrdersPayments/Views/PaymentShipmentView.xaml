@@ -97,6 +97,7 @@
                                 <Entry
                                     Margin="10,0,0,0"
                                     Placeholder="e.g. enter name.."
+                                    PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding Name}" />
                             </Grid>
@@ -137,6 +138,7 @@
                                 <Entry
                                     Margin="10,0,0,0"
                                     Placeholder="e.g. enter street name.."
+                                    PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding StreetName}" />
                             </Grid>
@@ -178,6 +180,7 @@
                                     Margin="10,0,0,0"
                                     Keyboard="Numeric"
                                     Placeholder="e.g. enter house number.."
+                                    PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding HouseNumber}" />
                             </Grid>
@@ -218,6 +221,7 @@
                                 <Entry
                                     Margin="10,0,0,0"
                                     Placeholder="e.g. enter ZIP/Postal code.."
+                                    PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding ZipCode}" />
                             </Grid>
@@ -258,6 +262,7 @@
                                 <Entry
                                     Margin="10,0,0,0"
                                     Placeholder="e.g. enter city.."
+                                    PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding CityName}" />
                             </Grid>
@@ -298,6 +303,7 @@
                                 <Entry
                                     Margin="10,0,0,0"
                                     Placeholder="e.g. enter country.."
+                                    PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding CountryName}" />
                             </Grid>
@@ -339,8 +345,9 @@
                                     Margin="10,0,0,0"
                                     Keyboard="Email"
                                     Placeholder="e.g. yourname@example.com"
+                                    PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
-                                    Text="{Binding CountryName}" />
+                                    Text="{Binding Email}" />
                             </Grid>
                         </Border>
                     </StackLayout>
@@ -376,7 +383,7 @@
                     </StackLayout>
 
                     <Button
-                        Margin="10,20,10,0"
+                        Margin="10,20,20,0"
                         BackgroundColor="{StaticResource Primary}"
                         Command="{Binding PaymentByCardCommand}"
                         CornerRadius="10"
@@ -397,7 +404,7 @@
                     </Button>
 
                     <Button
-                        Margin="10,20,10,0"
+                        Margin="10,20,20,0"
                         BackgroundColor="{StaticResource Primary}"
                         Command="{Binding PaymentByBankCommand}"
                         CornerRadius="10"
@@ -405,10 +412,10 @@
                         FontFamily="ItimRegular"
                         FontSize="20"
                         HorizontalOptions="FillAndExpand"
+                        IsVisible="{Binding BankTransferVisible}"
                         Text="Bank transfer(10% discount)"
                         TextColor="Black"
-                        VerticalOptions="Center"
-                        IsVisible="{Binding BankTransferVisible}">
+                        VerticalOptions="Center">
                         <Button.Shadow>
                             <Shadow
                                 Brush="Black"

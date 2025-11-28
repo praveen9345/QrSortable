@@ -78,6 +78,9 @@
        <Compile Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml.cs">
          <DependentUpon>SelectProductView.xaml</DependentUpon>
        </Compile>
+       <Compile Update="Components\CoreFeatures\OrdersPayments\Views\BankTransferView.xaml.cs">
+         <DependentUpon>BankTransferView.xaml</DependentUpon>
+       </Compile>
        <Compile Update="Components\CoreFeatures\OrdersPayments\Views\PaymentShipmentView.xaml.cs">
          <DependentUpon>PaymentShipmentView.xaml</DependentUpon>
        </Compile>
@@ -140,6 +143,9 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\BankTransferView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\PaymentShipmentView.xaml">

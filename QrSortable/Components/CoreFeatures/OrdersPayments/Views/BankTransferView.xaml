@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<views:BaseView
+    x:Class="QrSortable.Components.CoreFeatures.OrdersPayments.Views.BankTransferView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    BackgroundImageSource="background_layout.webp">
+    <views:BaseView.Content>
+        <Grid RowSpacing="0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Back button  -->
+            <Button
+                Grid.Row="0"
+                Margin="15"
+                Padding="2"
+                BackgroundColor="{StaticResource DarkGrey}"
+                Command="{Binding BackNavigationCommand}"
+                CornerRadius="5"
+                HorizontalOptions="Start"
+                VerticalOptions="Start">
+
+                <Button.Shadow>
+                    <Shadow
+                        Brush="Black"
+                        Opacity="0.5"
+                        Radius="10" />
+                </Button.Shadow>
+
+                <Button.ImageSource>
+                    <FontImageSource
+                        FontFamily="FluentIcons"
+                        Glyph="{x:Static local:IconNames.Back}"
+                        Color="{StaticResource Primary}" />
+                </Button.ImageSource>
+            </Button>
+
+            <!--  Page icon  -->
+            <Image
+                Grid.Row="0"
+                Margin="10"
+                Aspect="AspectFit"
+                HeightRequest="120"
+                HorizontalOptions="Center"
+                Source="bank_transfer"
+                VerticalOptions="Center" />
+
+            <!--  Order Summary Section  -->
+            <VerticalStackLayout
+                Grid.Row="1"
+                Margin="15"
+                HorizontalOptions="Center"
+                Spacing="8">
+
+                <!--  Amount  -->
+                <HorizontalStackLayout Spacing="10">
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="18"
+                        HorizontalTextAlignment="Start"
+                        Text="Amount to Pay:"
+                        TextColor="{StaticResource White}"
+                        VerticalTextAlignment="Center" />
+
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="20"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding TotalAmount}"
+                        TextColor="{StaticResource Primary}"
+                        VerticalTextAlignment="Center" />
+                </HorizontalStackLayout>
+
+                <!--  Discount  -->
+                <HorizontalStackLayout Spacing="10">
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="18"
+                        HorizontalTextAlignment="Start"
+                        Text="10% discount:"
+                        TextColor="{StaticResource White}"
+                        VerticalTextAlignment="Center" />
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="20"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding DiscountAmount}"
+                        TextColor="{StaticResource Primary}"
+                        VerticalTextAlignment="Center" />
+                </HorizontalStackLayout>
+
+                <BoxView
+                    BackgroundColor="White"
+                    HeightRequest="2"
+                    WidthRequest="250" />
+
+                <!--  Net Total  -->
+                <HorizontalStackLayout Spacing="10">
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="20"
+                        HorizontalTextAlignment="Start"
+                        Text="Total:              "
+                        TextColor="{StaticResource White}"
+                        VerticalTextAlignment="Center" />
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="20"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding NetTotalAmount}"
+                        TextColor="{StaticResource Primary}"
+                        VerticalTextAlignment="Center" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <!--  IBAN + Reference Section  -->
+            <VerticalStackLayout
+                Grid.Row="2"
+                Margin="10,0,10,0"
+                Spacing="5">
+
+                <!--  IBAN  -->
+                <HorizontalStackLayout Spacing="10">
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="18"
+                        HorizontalTextAlignment="Start"
+                        Text="IBAN:"
+                        TextColor="{StaticResource White}"
+                        VerticalTextAlignment="Center" />
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="18"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding IbanCode}"
+                        TextColor="{StaticResource White}"
+                        VerticalTextAlignment="Center" />
+
+                    <Button
+                        BackgroundColor="{StaticResource Primary}"
+                        Command="{Binding CopyIbanCommand}"
+                        CornerRadius="20"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="16"
+                        HorizontalOptions="Fill"
+                        Text="Copy"
+                        TextColor="Black"
+                        VerticalOptions="Center">
+                        <Button.Shadow>
+                            <Shadow
+                                Brush="Black"
+                                Opacity="0.3"
+                                Radius="10"
+                                Offset="5,5" />
+                        </Button.Shadow>
+                    </Button>
+                </HorizontalStackLayout>
+
+                <!--  Reference  -->
+                <HorizontalStackLayout Spacing="10">
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="18"
+                        HorizontalTextAlignment="Start"
+                        Text="Reference code:"
+                        TextColor="{StaticResource White}"
+                        VerticalTextAlignment="Center" />
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="18"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding ReferenceCode}"
+                        TextColor="{StaticResource White}"
+                        VerticalTextAlignment="Center" />
+
+                    <Button
+                        BackgroundColor="{StaticResource Primary}"
+                        Command="{Binding CopyReferenceCodeCommand}"
+                        CornerRadius="20"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="16"
+                        HorizontalOptions="Fill"
+                        Text="Copy"
+                        TextColor="Black"
+                        VerticalOptions="Center">
+                        <Button.Shadow>
+                            <Shadow
+                                Brush="Black"
+                                Opacity="0.3"
+                                Radius="10"
+                                Offset="5,5" />
+                        </Button.Shadow>
+                    </Button>
+                </HorizontalStackLayout>
+
+                <Border
+                    Margin="0,10,0,0"
+                    Padding="20"
+                    Background="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 20"
+                    StrokeThickness="0">
+                    <VerticalStackLayout Spacing="10">
+                        <Label
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HorizontalTextAlignment="Start"
+                            Text="• Please include the provided reference code in your payment details."
+                            TextColor="Black" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HorizontalTextAlignment="Start"
+                            Text="• Ensure the transfer is completed within 5 business days."
+                            TextColor="Black" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HorizontalTextAlignment="Start"
+                            Text="• Click “Place an Order” to finalize your purchase."
+                            TextColor="Black" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Button
+                    Margin="10,30,10,0"
+                    BackgroundColor="{StaticResource Primary}"
+                    Command="{Binding PlaceAnOrderCommand}"
+                    CornerRadius="10"
+                    FontAttributes="Bold"
+                    FontFamily="ItimRegular"
+                    FontSize="20"
+                    HorizontalOptions="Fill"
+                    IsVisible="{Binding BankTransferVisible}"
+                    Text="Place an Order"
+                    TextColor="Black"
+                    VerticalOptions="Center">
+                    <Button.Shadow>
+                        <Shadow
+                            Brush="Black"
+                            Opacity="0.3"
+                            Radius="10"
+                            Offset="5,5" />
+                    </Button.Shadow>
+                </Button>
+
+            </VerticalStackLayout>
+
+        </Grid>
+    </views:BaseView.Content>
+</views:BaseView>

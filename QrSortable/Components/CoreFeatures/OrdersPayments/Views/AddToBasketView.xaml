@@ -1,157 +1,155 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<views:BaseView 
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
-    xmlns:local="clr-namespace:QrSortable.Resources"
+<?xml version="1.0" encoding="UTF-8" ?>
+<views:BaseView
     x:Class="QrSortable.Components.CoreFeatures.OrdersPayments.Views.AddToBasketView"
-    BackgroundImageSource ="background_layout.webp">
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    BackgroundImageSource="background_layout.webp">
     <views:BaseView.Content>
         <Grid>
             <Grid.RowDefinitions>
-                <!-- back -->
-                <RowDefinition Height="Auto"></RowDefinition>
-                <!-- cart order view-->
-                <RowDefinition Height="40"></RowDefinition>
-                <!-- item view -->
-                <RowDefinition Height="*"></RowDefinition>
+                <!--  back  -->
+                <RowDefinition Height="Auto" />
+                <!--  cart order view  -->
+                <RowDefinition Height="40" />
+                <!--  item view  -->
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <!-- Back button -->
+            <!--  Back button  -->
             <Button
-              Grid.Row="0"
-              Margin="15,15,0,0"
-              Command="{Binding BackNavigationCommand}"
-              HorizontalOptions="Start"
-              VerticalOptions="Start"
-              BackgroundColor="{StaticResource DarkGrey}"
-              CornerRadius="5"
-              Padding="2">
+                Grid.Row="0"
+                Margin="15,15,0,0"
+                Padding="2"
+                BackgroundColor="{StaticResource DarkGrey}"
+                Command="{Binding BackNavigationCommand}"
+                CornerRadius="5"
+                HorizontalOptions="Start"
+                VerticalOptions="Start">
                 <Button.Shadow>
                     <Shadow
-                      Brush="Black"
-                      Opacity="0.5"
-                      Offset="0,0"
-                      Radius="10"/>
+                        Brush="Black"
+                        Opacity="0.5"
+                        Radius="10"
+                        Offset="0,0" />
                 </Button.Shadow>
-                <Button.ImageSource >
-                    <FontImageSource 
-                  FontFamily="FluentIcons" 
-                  Color="{StaticResource Primary}"
-                  Glyph="{x:Static local:IconNames.Back}"/>
+                <Button.ImageSource>
+                    <FontImageSource
+                        FontFamily="FluentIcons"
+                        Glyph="{x:Static local:IconNames.Back}"
+                        Color="{StaticResource Primary}" />
                 </Button.ImageSource>
             </Button>
 
-            <!-- page icon -->
+            <!--  page icon  -->
             <Image
                 Grid.Row="0"
                 Margin="10"
-                Source="cart_yellow_icon"
                 Aspect="AspectFit"
                 HeightRequest="120"
                 HorizontalOptions="Center"
-                VerticalOptions="Center"/>
+                Source="cart_yellow_icon"
+                VerticalOptions="Center" />
 
-            <!-- cart order view-->
-            <Grid 
+            <!--  cart order view  -->
+            <Grid
                 Grid.Row="1"
-                WidthRequest="80" 
-                HeightRequest="89" 
-                HorizontalOptions="End"
                 Margin="5"
-                BackgroundColor="Transparent">
-                <!-- Cart Icon -->
-                <Image 
-                    Source="cart_yellow_icon"
-                    WidthRequest="45"
+                BackgroundColor="Transparent"
+                HeightRequest="89"
+                HorizontalOptions="End"
+                WidthRequest="80">
+                <!--  Cart Icon  -->
+                <Image
                     HeightRequest="45"
                     HorizontalOptions="Center"
-                    VerticalOptions="Center" />
+                    Source="cart_yellow_icon"
+                    VerticalOptions="Center"
+                    WidthRequest="45" />
 
-                <!-- Item Count -->
-                <Label 
-                    Text="2"
-                    FontSize="28"
-                    TextColor="White"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Start"
+                <!--  Item Count  -->
+                <Label
                     Margin="5,-5,0,0"
-                    FontAttributes="Bold" />
+                    FontAttributes="Bold"
+                    FontSize="28"
+                    HorizontalOptions="Center"
+                    Text="2"
+                    TextColor="White"
+                    VerticalOptions="Start" />
             </Grid>
 
-            <!-- item view -->
-            <CollectionView 
-                 Grid.Row="2"
-                 SelectionMode="Single"
-                 VerticalOptions="Fill">
+            <!--  item view  -->
+            <CollectionView
+                Grid.Row="2"
+                SelectionMode="Single"
+                VerticalOptions="Fill">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Padding="5">
-                            <!-- Box view -->
-                            <Border 
-                             HorizontalOptions="Fill"
-                             VerticalOptions="Fill"
-                             Background="{StaticResource Primary}"
-                             StrokeShape="RoundRectangle 10"
-                             Padding="5">
+                            <!--  Box view  -->
+                            <Border
+                                Padding="5"
+                                Background="{StaticResource Primary}"
+                                HorizontalOptions="Fill"
+                                StrokeShape="RoundRectangle 10"
+                                VerticalOptions="Fill">
                                 <StackLayout>
                                     <Grid>
                                         <Grid.RowDefinitions>
-                                            <!-- product detail view -->
-                                            <RowDefinition Height="8*"></RowDefinition>
-                                            <!-- cart view -->
-                                            <RowDefinition Height="40"></RowDefinition>
+                                            <!--  product detail view  -->
+                                            <RowDefinition Height="8*" />
+                                            <!--  cart view  -->
+                                            <RowDefinition Height="40" />
                                         </Grid.RowDefinitions>
-                                        
+
                                         <Grid Grid.Row="0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="8*" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                           
-                                            <VerticalStackLayout
-                                                Grid.Column="0"
-                                                Padding="9">
+
+                                            <VerticalStackLayout Grid.Column="0" Padding="9">
                                                 <Label
-                                                  Text="Generate A4 QR or bar code yourself" 
-                                                  FontSize="Large" 
-                                                  FontAttributes="Bold"
-                                                  FontFamily="ItimRegular"
-                                                  TextColor="{StaticResource Black}"
-                                                  BackgroundColor="Transparent"
-                                                  HorizontalTextAlignment="Start"
-                                                  VerticalTextAlignment="Center"/>
+                                                    BackgroundColor="Transparent"
+                                                    FontAttributes="Bold"
+                                                    FontFamily="ItimRegular"
+                                                    FontSize="Large"
+                                                    HorizontalTextAlignment="Start"
+                                                    Text="Generate A4 QR or bar code yourself"
+                                                    TextColor="{StaticResource Black}"
+                                                    VerticalTextAlignment="Center" />
 
                                                 <Label
-                                                  Text="* Select color" 
-                                                  FontSize="Medium" 
-                                                  FontFamily="ItimRegular"
-                                                  FontAttributes="None"
-                                                  TextColor="{StaticResource Black}"
-                                                  BackgroundColor="Transparent"
-                                                  HorizontalTextAlignment="Start"
-                                                  VerticalTextAlignment="Center"/>
-                                                
+                                                    BackgroundColor="Transparent"
+                                                    FontAttributes="None"
+                                                    FontFamily="ItimRegular"
+                                                    FontSize="Medium"
+                                                    HorizontalTextAlignment="Start"
+                                                    Text="* Select color"
+                                                    TextColor="{StaticResource Black}"
+                                                    VerticalTextAlignment="Center" />
+
                                                 <Label
-                                                   Text="10€ only" 
-                                                   FontSize="Large" 
-                                                   FontAttributes="Bold"
-                                                   FontFamily="ItimRegular"
-                                                   TextColor="{StaticResource Black}"
-                                                   BackgroundColor="Transparent"
-                                                   HorizontalTextAlignment="Start"
-                                                   VerticalTextAlignment="Center"/>
+                                                    BackgroundColor="Transparent"
+                                                    FontAttributes="Bold"
+                                                    FontFamily="ItimRegular"
+                                                    FontSize="Large"
+                                                    HorizontalTextAlignment="Start"
+                                                    Text="10€ only"
+                                                    TextColor="{StaticResource Black}"
+                                                    VerticalTextAlignment="Center" />
 
                                             </VerticalStackLayout>
 
                                             <Image
                                                 Grid.Column="1"
                                                 Margin="5"
-                                                Source="code_pdf_icon"
                                                 Aspect="AspectFit"
                                                 HeightRequest="120"
                                                 HorizontalOptions="Center"
-                                                VerticalOptions="Center"/>
+                                                Source="code_pdf_icon"
+                                                VerticalOptions="Center" />
                                         </Grid>
 
                                         <Grid Grid.Row="1">
@@ -161,82 +159,81 @@
                                                     <ColumnDefinition Width="5*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Image
-                                                     Grid.Column="0"
-                                                     Source="cart_icon.svg"
-                                                     Aspect="AspectFit"
-                                                     HeightRequest="45"
-                                                     HorizontalOptions="End"
-                                                     VerticalOptions="Center"/>
+                                                    Grid.Column="0"
+                                                    Aspect="AspectFit"
+                                                    HeightRequest="45"
+                                                    HorizontalOptions="End"
+                                                    Source="cart_icon.svg"
+                                                    VerticalOptions="Center" />
 
                                                 <Border
                                                     Grid.Column="1"
+                                                    Padding="5"
                                                     Background="#D3D3D3"
                                                     StrokeShape="RoundRectangle 30"
-                                                    Padding="5"
                                                     VerticalOptions="Center">
 
-                                                    <Grid 
-                                                        VerticalOptions="Center">
+                                                    <Grid VerticalOptions="Center">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="*" />
                                                             <ColumnDefinition Width="*" />
                                                             <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
-                                                        
-                                                        <!-- Minus Button -->
+
+                                                        <!--  Minus Button  -->
                                                         <Button
                                                             Grid.Column="0"
-                                                             Padding="0"
-                                                             WidthRequest="24"
-                                                             HeightRequest="24"
-                                                             CornerRadius="50"
-                                                             Margin="10"
-                                                             HorizontalOptions="Start"
-                                                             VerticalOptions="Center"
-                                                             BackgroundColor="Transparent"
-                                                             FontAttributes="Bold"
-                                                             Command="{Binding DecreaseQuantityCommand}">
-                                                            <Button.ImageSource >
-                                                                <FontImageSource 
-                                                                 FontFamily="FluentIcons" 
-                                                                 Color="{StaticResource Black}"
-                                                                 Glyph="{x:Static local:IconNames.Minus}"/>
+                                                            Margin="10"
+                                                            Padding="0"
+                                                            BackgroundColor="Transparent"
+                                                            Command="{Binding DecreaseQuantityCommand}"
+                                                            CornerRadius="50"
+                                                            FontAttributes="Bold"
+                                                            HeightRequest="24"
+                                                            HorizontalOptions="Start"
+                                                            VerticalOptions="Center"
+                                                            WidthRequest="24">
+                                                            <Button.ImageSource>
+                                                                <FontImageSource
+                                                                    FontFamily="FluentIcons"
+                                                                    Glyph="{x:Static local:IconNames.Minus}"
+                                                                    Color="{StaticResource Black}" />
                                                             </Button.ImageSource>
                                                         </Button>
-                                                        
-                                                        <!-- Quantity Label -->
-                                                        <Label 
-                                                             Grid.Column="1"
-                                                            Text="0"
-                                                            FontSize="28"
-                                                            Padding="-5"
-                                                            HorizontalOptions="Center"
-                                                            VerticalOptions="Center"
-                                                            FontAttributes="Bold"
-                                                            TextColor="Black"/>
 
-                                                        <!-- Plus Button -->
+                                                        <!--  Quantity Label  -->
+                                                        <Label
+                                                            Grid.Column="1"
+                                                            Padding="-5"
+                                                            FontAttributes="Bold"
+                                                            FontSize="28"
+                                                            HorizontalOptions="Center"
+                                                            Text="0"
+                                                            TextColor="Black"
+                                                            VerticalOptions="Center" />
+
+                                                        <!--  Plus Button  -->
                                                         <Button
-                                                             Grid.Column="2"
-                                                             Padding="0"
-                                                             WidthRequest="24"
-                                                             HeightRequest="24"
-                                                             Margin="10"
-                                                             CornerRadius="50"
-                                                             HorizontalOptions="End"
-                                                             VerticalOptions="Center"
-                                                             BackgroundColor="Transparent"
-                                                             FontAttributes="Bold"
-                                                             Command="{Binding IncreaseQuantityCommand}">
+                                                            Grid.Column="2"
+                                                            Margin="10"
+                                                            Padding="0"
+                                                            BackgroundColor="Transparent"
+                                                            Command="{Binding IncreaseQuantityCommand}"
+                                                            CornerRadius="50"
+                                                            FontAttributes="Bold"
+                                                            HeightRequest="24"
+                                                            HorizontalOptions="End"
+                                                            VerticalOptions="Center"
+                                                            WidthRequest="24">
                                                             <Button.ImageSource>
-                                                                <FontImageSource 
-                                                                 FontFamily="FluentIcons" 
-                                                                 Color="{StaticResource Black}"
-                                                                 Glyph="{x:Static local:IconNames.Plus}"/>
+                                                                <FontImageSource
+                                                                    FontFamily="FluentIcons"
+                                                                    Glyph="{x:Static local:IconNames.Plus}"
+                                                                    Color="{StaticResource Black}" />
                                                             </Button.ImageSource>
                                                         </Button>
                                                     </Grid>
-                                                    
+
                                                 </Border>
 
                                             </Grid>

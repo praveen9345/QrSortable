@@ -91,7 +91,7 @@
 
 
         [ObservableProperty]
-        private string _selectedPage;
+        private string _selectedPage = "A4(12 code)";
 
         /// <summary>
         /// Represents the currently total amount to pay in the application.
