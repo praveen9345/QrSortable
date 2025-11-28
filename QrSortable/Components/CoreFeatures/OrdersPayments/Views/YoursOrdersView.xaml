@@ -87,22 +87,6 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Padding="5">
-                            <!-- Transparent item click -->
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup Name="CommonStates">
-                                    <VisualState Name="Normal">
-                                        <VisualState.Setters>
-                                            <Setter Property="BackgroundColor" Value="Transparent" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState Name="Selected">
-                                        <VisualState.Setters>
-                                            <Setter Property="BackgroundColor" Value="Transparent" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            
                             <!--  Box view  -->
                             <Border
                                 Padding="5"
@@ -220,6 +204,21 @@
                                     </Grid>
                                 </StackLayout>
                             </Border>
+                            <!--  Transparent item click  -->
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

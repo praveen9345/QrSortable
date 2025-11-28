@@ -1,76 +1,81 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<views:BaseView 
+<views:BaseView
+    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogRequestView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
-    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogRequestView"
-    BackgroundColor="{OnPlatform Android='#80000000', iOS='#99000000'}"
+    BackgroundColor="{OnPlatform Android='#80000000',
+                                 iOS='#99000000'}"
     Shell.PresentationMode="Modal">
-    <views:BaseView.Content >
-        <StackLayout 
+    <views:BaseView.Content>
+        <StackLayout
+            Padding="15"
             HorizontalOptions="Center"
-            VerticalOptions="Center" 
-            Padding="15">
+            VerticalOptions="Center">
             <Border
-                 Padding="0"
-                 x:Name="RequestBorder"
-                 BackgroundColor="White" 
-                 Stroke="Transparent" 
-                 StrokeThickness="1"
-                 StrokeShape="RoundRectangle 15" 
-                 VerticalOptions="Center"
-                 HorizontalOptions="Center">
-                <Grid ColumnSpacing="0" 
-                      Padding ="0, 30, 0, 0">
+                x:Name="RequestBorder"
+                Padding="0"
+                BackgroundColor="White"
+                HorizontalOptions="Center"
+                Stroke="Transparent"
+                StrokeShape="RoundRectangle 15"
+                StrokeThickness="1"
+                VerticalOptions="Center">
+                <Grid Padding="0,30,0,0" ColumnSpacing="0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="51"/>
-                        <!--Hard code this height as the button has a hardcoded height anyways.-->
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="51" />
+                        <!--  Hard code this height as the button has a hardcoded height anyways.  -->
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="0.5"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="0.5" />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" 
-                           Grid.Column="0"
-                           Grid.ColumnSpan="3"
-                           Text="{Binding DialogTitle}" 
-                           IsVisible="{Binding TitleExists}"
-                           HorizontalOptions="CenterAndExpand" 
-                           Style="{StaticResource TitleLabelStyle}"
-                           HorizontalTextAlignment="Center"
-                           Margin="20,0,20,5"/>
-                    <Label Grid.Row="1"  
-                           Grid.Column="0"
-                           Grid.ColumnSpan="3"
-                           Text="{Binding DialogText}" 
-                           Style="{StaticResource TitleLabelStyle}"
-                           HorizontalOptions="CenterAndExpand" 
-                           HorizontalTextAlignment="Center"
-                           Margin="20,5,20,30"
-                           VerticalOptions="StartAndExpand"/>
-                    <Button Grid.Row="2" 
-                            Grid.Column="0"
-                            Text="{Binding DialogCancelButtonText}"
-                            Command="{Binding CancelButtonCommand}"
-                            Style="{StaticResource DialogButtonStyle}"
-                            Margin="-1,0,0,-6"
-                            CornerRadius="0"/>
-                    <Button Grid.Row="2"
-                            Grid.Column="2"
-                            Text="{Binding DialogConfirmButtonText}"
-                            Command="{Binding ConfirmButtonCommand}"
-                            Style="{StaticResource DialogButtonStyle}"
-                            Margin="0,0,-1,-6"
-                            CornerRadius="0"/>
-                    <BoxView Grid.Row="2"
-                             Grid.Column="1"
-                             HeightRequest="57"
-                             WidthRequest="0.5"
-                             BackgroundColor="Black"/>
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="20,0,20,5"
+                        HorizontalOptions="CenterAndExpand"
+                        HorizontalTextAlignment="Center"
+                        IsVisible="{Binding TitleExists}"
+                        Style="{StaticResource TitleLabelStyle}"
+                        Text="{Binding DialogTitle}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="20,5,20,30"
+                        HorizontalOptions="CenterAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Style="{StaticResource TitleLabelStyle}"
+                        Text="{Binding DialogText}"
+                        VerticalOptions="StartAndExpand" />
+                    <Button
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Margin="-1,0,0,-6"
+                        Command="{Binding CancelButtonCommand}"
+                        CornerRadius="0"
+                        Style="{StaticResource DialogButtonStyle}"
+                        Text="{Binding DialogCancelButtonText}" />
+                    <Button
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Margin="0,0,-1,-6"
+                        Command="{Binding ConfirmButtonCommand}"
+                        CornerRadius="0"
+                        Style="{StaticResource DialogButtonStyle}"
+                        Text="{Binding DialogConfirmButtonText}" />
+                    <BoxView
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        BackgroundColor="Black"
+                        HeightRequest="57"
+                        WidthRequest="0.5" />
                 </Grid>
             </Border>
         </StackLayout>

@@ -12,6 +12,7 @@
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.UiFunctionality.Localization;
+    using QrSortable.Components.UiFunctionality.Navigation.Views;
     using QrSortable.Components.UiFunctionality.Notification;
     using System.Collections.ObjectModel;
 
@@ -133,6 +134,12 @@
 
         });
 
+        public AsyncRelayCommand MenuCommand => new AsyncRelayCommand(async () =>
+        {
+            _isInitializeVisible = false;
+            await NavigationService.Navigate<MenuView>();
+
+        });
 
         private async Task<bool> LoadCategoryAsync()
         {

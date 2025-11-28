@@ -174,5 +174,15 @@ namespace QrSortable.Resources
         ///     The name of the add capture image icon.
         /// </summary>
         public const string Capture = "\uF695";
+
+        /// <summary>
+        ///     The name of the delete profile icon.
+        /// </summary>
+        public const string ProfileDelete = "\uF5db";
+
+        /// <summary>
+        ///     The name of the your orders.
+        /// </summary>
+        public const string YourOrders = "\uF336";
     }
 }

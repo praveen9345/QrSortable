@@ -107,6 +107,9 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>AppResources.resx</DependentUpon>
 		</Compile>
+       <Compile Update="Components\UiFunctionality\Navigation\Views\MenuView.xaml.cs">
+         <DependentUpon>MenuView.xaml</DependentUpon>
+       </Compile>
        <Compile Update="Components\UiFunctionality\Notification\Views\DialogPhotoSelectionView.xaml.cs">
          <DependentUpon>DialogPhotoSelectionView.xaml</DependentUpon>
        </Compile>
@@ -170,6 +173,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Components\CoreFeatures\Scanner\Views\QrBrScannerView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Components\UiFunctionality\Navigation\Views\MenuView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogMoveToView.xaml">

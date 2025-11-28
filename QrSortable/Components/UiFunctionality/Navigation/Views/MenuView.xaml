@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<views:BaseView
+    x:Class="QrSortable.Components.UiFunctionality.Navigation.Views.MenuView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    BackgroundImageSource="background_layout.webp">
+    <views:BaseView.Content>
+        <Grid Padding="20">
+            <VerticalStackLayout Spacing="20">
+                <!--  Logo and Close Button  -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Image
+                        HeightRequest="80"
+                        HorizontalOptions="Start"
+                        Source="qr_barcode_icon"
+                        WidthRequest="80" />
+
+                    <ImageButton
+                        Margin="0,0,10,0"
+                        BackgroundColor="Transparent"
+                        Command="{Binding CloseButtonCommand}"
+                        HeightRequest="25"
+                        HorizontalOptions="End"
+                        WidthRequest="25">
+                        <ImageButton.Source>
+                            <FontImageSource
+                                FontFamily="FluentIcons"
+                                Glyph="{x:Static local:IconNames.Close}"
+                                Color="{StaticResource Primary}" />
+                        </ImageButton.Source>
+                    </ImageButton>
+                </Grid>
+
+                <!--  Menu Items  -->
+                <CollectionView
+                    x:Name="MenuCollection"
+                    ItemsSource="{Binding MenuItems}"
+                    SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay}"
+                    SelectionChangedCommand="{Binding OnSelectionMenuItemChangedCommand}"
+                    SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference MenuCollection}}"
+                    SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid
+                                    Padding="10"
+                                    BackgroundColor="#00000033"
+                                    ColumnDefinitions="Auto,*,Auto">
+                                    <!--  Icon  -->
+                                    <Image HeightRequest="30" WidthRequest="30">
+                                        <Image.Source>
+                                            <FontImageSource
+                                                FontFamily="FluentIcons"
+                                                Glyph="{Binding Icon}"
+                                                Color="{StaticResource Primary}" />
+                                        </Image.Source>
+                                    </Image>
+                                    <!--  Text  -->
+                                    <Label
+                                        Grid.Column="1"
+                                        Margin="5,0,0,0"
+                                        FontAttributes="Bold"
+                                        FontFamily="ItimRegular"
+                                        FontSize="20"
+                                        Text="{Binding Title}"
+                                        TextColor="White"
+                                        VerticalOptions="Center" />
+                                    <!--  Badge or Arrow  -->
+                                    <Grid Grid.Column="2" HorizontalOptions="End">
+                                        <Label
+                                            Margin="0,0,30,0"
+                                            Padding="5"
+                                            BackgroundColor="Green"
+                                            FontAttributes="Italic"
+                                            FontFamily="ItimRegular"
+                                            IsVisible="{Binding HasBadge}"
+                                            Text="{Binding Badge}"
+                                            TextColor="White" />
+
+                                        <Image
+                                            HeightRequest="30"
+                                            HorizontalOptions="End"
+                                            WidthRequest="30">
+                                            <Image.Source>
+                                                <FontImageSource
+                                                    FontFamily="FluentIcons"
+                                                    Glyph="{x:Static local:IconNames.Forward}"
+                                                    Color="{StaticResource Primary}" />
+                                            </Image.Source>
+                                        </Image>
+                                    </Grid>
+
+                                </Grid>
+                                <BoxView
+                                    BackgroundColor="White"
+                                    HeightRequest="1"
+                                    Opacity="0.2"
+                                    VerticalOptions="End" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </Grid>
+    </views:BaseView.Content>
+</views:BaseView>

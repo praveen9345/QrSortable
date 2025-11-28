@@ -1,6 +1,8 @@
 ﻿namespace QrSortable.Components.CoreFeatures.OrdersPayments.ViewModels
 {
+    using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using QrSortable.Components.UiFunctionality.Navigation.Models;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
 
     /// <summary>
@@ -29,21 +31,6 @@
             await base.InitializeAsync();
             
         }
-
-
-        public AsyncRelayCommand SelectQrCommand => new AsyncRelayCommand(async () =>
-        {
-
-          
-
-        });
-
-        public AsyncRelayCommand SelectBarcodeCommand => new AsyncRelayCommand(async () =>
-        {
-
-
-
-        });
 
     }
 }
