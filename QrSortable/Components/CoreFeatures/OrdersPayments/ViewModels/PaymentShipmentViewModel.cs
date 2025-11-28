@@ -39,7 +39,7 @@
             TotalAmount = _product.TotalPrice.ToString() + "€";
             if (_product.Title == "Generate A4 QR or bar code yourself!") 
             { 
-                BankTransferVisible = true; 
+                BankTransferVisible = false; 
             }
             else { BankTransferVisible = true; }
         }

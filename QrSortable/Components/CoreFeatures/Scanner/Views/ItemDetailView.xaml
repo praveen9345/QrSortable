@@ -141,6 +141,7 @@
                             <Entry
                                 Margin="10,0,0,0"
                                 Placeholder="Enter name.."
+                                PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding ItemName}" />
                         </Grid>
@@ -181,6 +182,7 @@
                             <Entry
                                 Margin="10,0,0,0"
                                 Placeholder="More info..."
+                                PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding ItemDescription}" />
                         </Grid>
