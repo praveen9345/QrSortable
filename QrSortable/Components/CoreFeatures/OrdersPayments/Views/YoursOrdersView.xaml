@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<views:BaseView
+    x:Class="QrSortable.Components.CoreFeatures.OrdersPayments.Views.YoursOrdersView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    BackgroundImageSource="background_layout.webp">
+    <views:BaseView.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <!--  back  -->
+                <RowDefinition Height="Auto" />
+                <!--  cart order view  -->
+                <RowDefinition Height="40" />
+                <!--  item view  -->
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Back button  -->
+            <Button
+                Grid.Row="0"
+                Margin="15,15,0,0"
+                Padding="2"
+                BackgroundColor="{StaticResource DarkGrey}"
+                Command="{Binding BackNavigationCommand}"
+                CornerRadius="5"
+                HorizontalOptions="Start"
+                VerticalOptions="Start">
+                <Button.Shadow>
+                    <Shadow
+                        Brush="Black"
+                        Opacity="0.5"
+                        Radius="10"
+                        Offset="0,0" />
+                </Button.Shadow>
+                <Button.ImageSource>
+                    <FontImageSource
+                        FontFamily="FluentIcons"
+                        Glyph="{x:Static local:IconNames.Back}"
+                        Color="{StaticResource Primary}" />
+                </Button.ImageSource>
+            </Button>
+
+            <!--  page icon  -->
+            <Image
+                Grid.Row="0"
+                Margin="10"
+                Aspect="AspectFit"
+                HeightRequest="100"
+                HorizontalOptions="Center"
+                Source="your_order_icon"
+                VerticalOptions="Center" />
+
+            <!--  cart order view  -->
+            <Grid
+                Grid.Row="1"
+                Margin="5"
+                BackgroundColor="Transparent"
+                HeightRequest="80"
+                HorizontalOptions="End"
+                WidthRequest="80">
+                <!--  Cart Icon  -->
+                <Image
+                    HeightRequest="35"
+                    HorizontalOptions="Center"
+                    Source="cart_yellow_icon"
+                    VerticalOptions="Center"
+                    WidthRequest="35" />
+
+                <!--  Item Count  -->
+                <Label
+                    Margin="5,0,0,0"
+                    FontAttributes="Bold"
+                    FontSize="25"
+                    HorizontalOptions="Center"
+                    Text="8"
+                    TextColor="White"
+                    VerticalOptions="Start" />
+            </Grid>
+
+            <!--  item view  -->
+            <CollectionView
+                Grid.Row="2"
+                SelectionMode="Single"
+                VerticalOptions="Fill">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="5">
+                            <!-- Transparent item click -->
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            
+                            <!--  Box view  -->
+                            <Border
+                                Padding="5"
+                                Background="{StaticResource Primary}"
+                                HorizontalOptions="Fill"
+                                StrokeShape="RoundRectangle 20"
+                                VerticalOptions="Fill">
+                                <StackLayout>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <!--  product detail view  -->
+                                            <RowDefinition Height="8*" />
+                                            <!--  cart view  -->
+                                            <RowDefinition Height="40" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="8*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <VerticalStackLayout Grid.Column="0" Padding="9">
+
+                                                <Label
+                                                    BackgroundColor="Transparent"
+                                                    FontAttributes="Bold"
+                                                    FontFamily="ItimRegular"
+                                                    FontSize="Large"
+                                                    HorizontalTextAlignment="Start"
+                                                    Text="22.11.2025 07.42"
+                                                    TextColor="{StaticResource Black}"
+                                                    VerticalTextAlignment="Center" />
+
+                                                <Label
+                                                    BackgroundColor="Transparent"
+                                                    FontAttributes="Bold"
+                                                    FontFamily="ItimRegular"
+                                                    FontSize="Large"
+                                                    HorizontalTextAlignment="Start"
+                                                    Text="Generate A4 QR or bar code yourself"
+                                                    TextColor="{StaticResource Black}"
+                                                    VerticalTextAlignment="Center" />
+
+                                                <Label
+                                                    BackgroundColor="Transparent"
+                                                    FontAttributes="None"
+                                                    FontFamily="ItimRegular"
+                                                    FontSize="Medium"
+                                                    HorizontalTextAlignment="Start"
+                                                    Text="* Select color"
+                                                    TextColor="{StaticResource Black}"
+                                                    VerticalTextAlignment="Center" />
+
+                                                <Button
+                                                    BackgroundColor="Green"
+                                                    Command="{Binding CopyReferenceCodeCommand}"
+                                                    CornerRadius="50"
+                                                    FontAttributes="Bold"
+                                                    FontFamily="ItimRegular"
+                                                    FontSize="Large"
+                                                    HorizontalOptions="Start"
+                                                    Text="Completed..."
+                                                    TextColor="Black"
+                                                    VerticalOptions="Center">
+                                                    <Button.Shadow>
+                                                        <Shadow
+                                                            Brush="Black"
+                                                            Opacity="0.3"
+                                                            Radius="10"
+                                                            Offset="5,5" />
+                                                    </Button.Shadow>
+                                                </Button>
+
+                                            </VerticalStackLayout>
+
+                                            <Image
+                                                Grid.Column="1"
+                                                Margin="5"
+                                                Aspect="AspectFit"
+                                                HeightRequest="150"
+                                                HorizontalOptions="Center"
+                                                Source="image_icon"
+                                                VerticalOptions="Center" />
+                                        </Grid>
+
+                                        <Grid Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label
+                                                Grid.Column="0"
+                                                BackgroundColor="Transparent"
+                                                FontAttributes="Bold"
+                                                FontFamily="ItimRegular"
+                                                FontSize="Large"
+                                                HorizontalTextAlignment="Start"
+                                                Text="DHL:JJD1234567890123"
+                                                TextColor="{StaticResource Black}"
+                                                VerticalTextAlignment="Center" />
+                                            <Label
+                                                Grid.Column="1"
+                                                Margin="10,0,20,0"
+                                                BackgroundColor="Transparent"
+                                                FontAttributes="Bold"
+                                                FontFamily="ItimRegular"
+                                                FontSize="Large"
+                                                HorizontalTextAlignment="Start"
+                                                Text="20€"
+                                                TextColor="{StaticResource Black}"
+                                                VerticalTextAlignment="Center" />
+                                        </Grid>
+
+                                    </Grid>
+                                </StackLayout>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Item 1</x:String>
+                        <x:String>Item 2</x:String>
+                        <x:String>Item 3</x:String>
+                        <x:String>Item 4</x:String>
+                        <x:String>Item 5</x:String>
+                    </x:Array>
+                </CollectionView.ItemsSource>
+            </CollectionView>
+
+
+        </Grid>
+    </views:BaseView.Content>
+</views:BaseView>
