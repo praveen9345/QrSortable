@@ -30,20 +30,5 @@
             
         }
 
-
-        public AsyncRelayCommand SelectQrCommand => new AsyncRelayCommand(async () =>
-        {
-
-          
-
-        });
-
-        public AsyncRelayCommand SelectBarcodeCommand => new AsyncRelayCommand(async () =>
-        {
-
-
-
-        });
-
     }
 }

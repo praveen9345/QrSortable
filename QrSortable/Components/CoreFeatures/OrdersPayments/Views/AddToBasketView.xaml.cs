@@ -1,8 +1,6 @@
 ﻿namespace QrSortable.Components.CoreFeatures.OrdersPayments.Views
 {
-    using Microsoft.Maui.Controls;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
-    using System.IO;
     using ViewModels;
 
     /// <summary>
@@ -19,6 +17,15 @@
         {
             InitializeComponent();
             BindingContext = viewModel;
+        }
+
+        private void OnIncreaseQuantityButtonClicked(object sender, EventArgs e)
+        {
+            DisplayAlert("Clicked!", "You clicked the button.", "OK");
+        }
+        private void OnDecreaseQuantityButtonClicked(object sender, EventArgs e)
+        {
+            DisplayAlert("Clicked!", "You clicked the button.", "OK");
         }
     }
 }

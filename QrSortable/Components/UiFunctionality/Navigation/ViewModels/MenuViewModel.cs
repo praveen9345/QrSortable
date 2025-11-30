@@ -14,6 +14,17 @@
     {
         public ObservableCollection<MenuItem> MenuItems { get; set; }
 
+        private const string ProfileTitle = "Profile";
+        private const string SubscribeTitle ="Subscribe";
+        private const string ShareTitle = "Share";
+        private const string AddToBasketTitle = "AddToBasket";
+        private const string YourOrdersTitle = "YourOrders";
+        private const string SettingsTitle = "Settings";
+        private const string FeedbackTitle = "Feedback";
+        private const string LogOutTitle = "LogOut";
+        private const string ProfileDeleteTitle = "ProfileDelete";
+        
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="MenuViewModel" />.
         /// </summary>
@@ -23,14 +34,15 @@
             
             MenuItems = new ObservableCollection<MenuItem>
             {
-                new MenuItem { Icon=IconNames.Profile, Title="Profile" },
-                new MenuItem { Icon=IconNames.Subscribe, Title="Subscribe" },
-                new MenuItem { Icon=IconNames.Share, Title="Share" },
-                new MenuItem { Icon=IconNames.YourOrders, Title="Your Orders" },
-                new MenuItem { Icon=IconNames.Settings, Title="Settings" },
-                new MenuItem { Icon=IconNames.Feedback, Title="Feedback" },
-                new MenuItem { Icon=IconNames.LogOut, Title="LogOut" , HasBadge=true, Badge="Coming Soon"},
-                new MenuItem { Icon=IconNames.ProfileDelete, Title="Delete Account" }
+                new MenuItem { Icon=IconNames.Profile, Title= ProfileTitle },
+                new MenuItem { Icon=IconNames.Subscribe, Title=SubscribeTitle },
+                new MenuItem { Icon=IconNames.Share, Title=ShareTitle },
+                new MenuItem { Icon=IconNames.YourOrders, Title= AddToBasketTitle },
+                new MenuItem { Icon=IconNames.YourOrders, Title=YourOrdersTitle },
+                new MenuItem { Icon=IconNames.Settings, Title=SettingsTitle },
+                new MenuItem { Icon=IconNames.Feedback, Title=FeedbackTitle },
+                new MenuItem { Icon=IconNames.LogOut, Title=LogOutTitle , HasBadge=true, Badge="Coming Soon"},
+                new MenuItem { Icon=IconNames.ProfileDelete, Title=ProfileDeleteTitle }
             };
 
         }
@@ -59,7 +71,10 @@
 
                 switch (selected.Title)
                 {
-                    case "Your Orders":
+                    case AddToBasketTitle:
+                        await NavigationService.Navigate<AddToBasketView>();
+                        break;
+                    case YourOrdersTitle:
                         await NavigationService.Navigate<YoursOrdersView>();
                         break;
                     case "":
