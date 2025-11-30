@@ -75,6 +75,9 @@
  
     <!-- Register the AppResources files -->
 	<ItemGroup>
+       <Compile Update="Components\CoreFeatures\CodeGenerator\Views\PaperProductView.xaml.cs">
+         <DependentUpon>PaperProductView.xaml</DependentUpon>
+       </Compile>
        <Compile Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml.cs">
          <DependentUpon>SelectProductView.xaml</DependentUpon>
        </Compile>
@@ -148,6 +151,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Components\CoreFeatures\CodeGenerator\Views\PaperProductView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

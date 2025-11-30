@@ -46,12 +46,16 @@
         {
             if (SelectedItem!=null)
             {
-               if(SelectedItem.Title == "Generate A4 QR or bar code yourself!")
-               {
+                if (SelectedItem.Title == "Generate A4 QR or bar code yourself!")
+                {
                     await NavigationService.Navigate<CodeGeneratorView>(SelectedItem);
-               }
+                }
+                else
+                {
+                    await NavigationService.Navigate<PaperProductView>(SelectedItem);
+                }
 
-               SelectedItem = null;
+                        SelectedItem = null;
             }
         });
 
