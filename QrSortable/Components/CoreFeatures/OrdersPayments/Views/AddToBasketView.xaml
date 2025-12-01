@@ -240,8 +240,6 @@
                     </x:Array>
                 </CollectionView.ItemsSource>
             </CollectionView>
-
-
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>

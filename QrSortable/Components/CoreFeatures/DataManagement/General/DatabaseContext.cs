@@ -40,6 +40,16 @@
         public DbSet<StorageEntry> StorageEntries { get; set; }
 
         /// <summary>
+        ///     Gets or sets the AddToBasketData entry in the database.
+        /// </summary>
+        public DbSet<AddToBasketData> BasketEntries { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the OrderPlaced entry in the database.
+        /// </summary>
+        public DbSet<YoursOrderData> OrderPlacedEntries { get; set; }
+
+        /// <summary>
         ///      Method called implicitly when the model is being created. It registers entity property
         ///     conversions.
         /// </summary>

@@ -1,5 +1,6 @@
 ﻿namespace QrSortable.Components.CoreFeatures.CodeGenerator
 {
+    using PdfSharpCore.Drawing;
     using QRCoder;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Helper;
     using SkiaSharp;
@@ -48,10 +49,12 @@
                     // 1. Generate random code
                     string input = GenerateRandomCode(random);
 
+                    string inputColor = input+ hexColor;
+
                     // 2. Encrypt
                     string encrypted;
-                    try { encrypted = _aesHelper.Encrypt(input); }
-                    catch { encrypted = input; }
+                    try { encrypted = _aesHelper.Encrypt(inputColor); }
+                    catch { encrypted = inputColor; }
 
                     // 3. Create QR code data
                     var qrData = qrGenerator.CreateQrCode(encrypted, QRCodeGenerator.ECCLevel.Q);
@@ -125,9 +128,11 @@
                 {
                     string input = GenerateRandomCode(random);
 
+                    string inputColor = input + "#000000"; // Append a default color for barcodes
+
                     string encrypted;
-                    try { encrypted = _aesHelper.Encrypt(input); }
-                    catch { encrypted = input; }
+                    try { encrypted = _aesHelper.Encrypt(inputColor); }
+                    catch { encrypted = inputColor; }
 
                     var writer = new BarcodeWriterPixelData
                     {

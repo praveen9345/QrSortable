@@ -5,8 +5,6 @@
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
-    using static Android.Renderscripts.ScriptGroup;
-
 
     /// <summary>
     ///     The view model of the PaperProductView screen.

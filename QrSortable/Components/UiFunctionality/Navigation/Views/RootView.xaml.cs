@@ -42,7 +42,7 @@
                   
                     if (selected != null)
                     {
-                        string displayValue = selected.BarcodeValue + "," + selected.BarcodeType;
+                        string displayValue = selected.BarcodeValue + selected.BackgroundColorHex + "," + selected.BarcodeType;
                         await _viewModel.NavigationService.Navigate<BoxDetailView>(displayValue);
                     }
                     else

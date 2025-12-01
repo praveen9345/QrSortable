@@ -12,6 +12,24 @@ namespace QrSortable.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "BasketEntries",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Price = table.Column<string>(type: "TEXT", nullable: false),
+                    ProductQuantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BasketEntries", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GeneralInformation",
                 columns: table => new
                 {
@@ -23,6 +41,34 @@ namespace QrSortable.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GeneralInformation", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderPlacedEntries",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    OrderId = table.Column<string>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    ProductQuantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    TotalPrice = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Street = table.Column<string>(type: "TEXT", nullable: false),
+                    HouseNo = table.Column<string>(type: "TEXT", nullable: false),
+                    ZipCode = table.Column<string>(type: "TEXT", nullable: false),
+                    City = table.Column<string>(type: "TEXT", nullable: false),
+                    Country = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    ReferenceCode = table.Column<string>(type: "TEXT", nullable: false),
+                    ShipmentTracking = table.Column<string>(type: "TEXT", nullable: false),
+                    StatusOfOrder = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderPlacedEntries", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,7 +118,13 @@ namespace QrSortable.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "BasketEntries");
+
+            migrationBuilder.DropTable(
                 name: "GeneralInformation");
+
+            migrationBuilder.DropTable(
+                name: "OrderPlacedEntries");
 
             migrationBuilder.DropTable(
                 name: "StorageEntries");

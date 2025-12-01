@@ -22,6 +22,8 @@
         private readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
 
+        private string _colorCodeHex;
+
         /// <summary>
         /// Gets or sets the collection of items. This collection supports dynamic data binding and 
         /// notifies listeners of changes such as when items are added, removed, or the entire list is refreshed.
@@ -139,7 +141,13 @@
             //}
 
             string[] result = data.Split(',');
-            Barcode = result[0].Trim();
+
+            string codeColorData = result[0].Trim();
+            string[] parts = codeColorData.Split('#');
+
+            Barcode = parts[0];  // "QR345"
+            _colorCodeHex = "#" + parts[1];  // "#F54927"
+
             BarcodeType = result[1].Trim();
         }
 
@@ -164,7 +172,8 @@
                 Category = string.IsNullOrWhiteSpace(LocationText) ? Category : CategoryText,
                 Location = string.IsNullOrWhiteSpace(LocationText) ? Location : LocationText,
                 BarcodeValue = Barcode,
-                BarcodeType = BarcodeType
+                BarcodeType = BarcodeType,
+                BackgroundColorHex = _colorCodeHex
             };
 
             // Navigate to ItemDetailView with the new instance
@@ -301,7 +310,8 @@
                                     SearchInfo = $"{targetToMove.Category}|{createdDate}|{result}|{targetToMove.BarcodeType}|{targetToMove.Location}|{entryTomove.ItemName}|{entryTomove.Description}",
                                     ItemName = entryTomove.ItemName,
                                     Description = entryTomove.Description,
-                                    ImageList = entryTomove.ImageList != null ? new List<byte[]>(entryTomove.ImageList) : null
+                                    ImageList = entryTomove.ImageList != null ? new List<byte[]>(entryTomove.ImageList) : null,
+                                    BackgroundColorHex = targetToMove.BackgroundColorHex
                                 };
                                 // Add new entry
                                 var added = await _databaseManager.AddAsync(newEntry);
