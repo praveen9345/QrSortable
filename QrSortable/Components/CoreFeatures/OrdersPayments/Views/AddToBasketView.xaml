@@ -87,6 +87,16 @@
                                                 FontFamily="ItimRegular"
                                                 FontSize="Large"
                                                 HorizontalTextAlignment="Start"
+                                                Text="22.11.2025 07.42"
+                                                TextColor="{StaticResource Black}"
+                                                VerticalTextAlignment="Center" />
+
+                                            <Label
+                                                BackgroundColor="Transparent"
+                                                FontAttributes="Bold"
+                                                FontFamily="ItimRegular"
+                                                FontSize="Large"
+                                                HorizontalTextAlignment="Start"
                                                 Text="Generate A4 QR or bar code yourself"
                                                 TextColor="{StaticResource Black}"
                                                 VerticalTextAlignment="Center" />

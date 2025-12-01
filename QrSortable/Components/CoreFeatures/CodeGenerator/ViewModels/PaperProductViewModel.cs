@@ -5,6 +5,7 @@
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using static Android.Renderscripts.ScriptGroup;
 
 
     /// <summary>
@@ -13,6 +14,8 @@
     public partial class PaperProductViewModel : BaseViewModel<Product>
     {
         private Product _product;
+
+        private int _amount;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PaperProductViewModel" />.
@@ -38,6 +41,10 @@
             _product = parameter;
             Title = _product.Title;
             Discription = _product.Description;
+            string numberString = new string(_product.Price.Where(char.IsDigit).ToArray());
+            _amount = int.Parse(numberString);
+
+            TotalAmount = _amount.ToString() + "€";
         }
 
         /// <summary>
@@ -51,6 +58,34 @@
         /// </summary>
         [ObservableProperty]
         private string _discription;
+
+        /// <summary>
+        /// Represents the currently number page count in the application.
+        /// </summary>
+        [ObservableProperty]
+        private int _productCount = 1;
+
+        /// <summary>
+        /// Represents the currently total amount to pay in the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _totalAmount;
+
+        public AsyncRelayCommand DecreaseQuantityCommand => new AsyncRelayCommand(async () =>
+        {
+            if (ProductCount > 1)
+            {
+                ProductCount--;
+                TotalAmount = (ProductCount * _amount).ToString() + "€";
+            }
+        });
+
+        public AsyncRelayCommand IncreaseQuantityCommand => new AsyncRelayCommand(async () =>
+        {
+            ProductCount++;
+            TotalAmount = (ProductCount * _amount).ToString() + "€";
+        });
+
 
         public AsyncRelayCommand AddToBasketCommand => new AsyncRelayCommand(async () =>
         {

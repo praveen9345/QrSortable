@@ -7,197 +7,302 @@
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
     <views:BaseView.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <!--  back  -->
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <!--  Back button  -->
-            <Button
-                Grid.Row="0"
-                Margin="15,15,0,0"
-                Padding="2"
-                BackgroundColor="{StaticResource DarkGrey}"
-                Command="{Binding BackNavigationCommand}"
-                CornerRadius="5"
-                HorizontalOptions="Start"
-                VerticalOptions="Start">
-                <Button.Shadow>
-                    <Shadow
-                        Brush="Black"
-                        Opacity="0.5"
-                        Radius="10"
-                        Offset="0,0" />
-                </Button.Shadow>
-                <Button.ImageSource>
-                    <FontImageSource
-                        FontFamily="FluentIcons"
-                        Glyph="{x:Static local:IconNames.Back}"
-                        Color="{StaticResource Primary}" />
-                </Button.ImageSource>
-            </Button>
-
-            <!--  cart order view  -->
-            <Grid
-                Grid.Row="0"
-                Padding="5"
-                BackgroundColor="Transparent"
-                HeightRequest="80"
-                HorizontalOptions="End"
-                WidthRequest="80">
-                <!--  Cart Icon  -->
-                <Image
-                    HeightRequest="35"
-                    HorizontalOptions="Center"
-                    Source="cart_yellow_icon"
-                    VerticalOptions="Center"
-                    WidthRequest="35" />
-
-                <!--  Item Count  -->
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="25"
-                    HorizontalOptions="Center"
-                    Text="8"
-                    TextColor="White"
-                    VerticalOptions="Start" />
-            </Grid>
-
-            <Grid Grid.Row="1" Margin="10,-15,10,10">
+        <ScrollView>
+            <Grid>
                 <Grid.RowDefinitions>
+                    <!--  back  -->
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
-
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <!--  Title  -->
-                <Label
+
+                <!--  Back button  -->
+                <Button
                     Grid.Row="0"
-                    BackgroundColor="Transparent"
-                    FontAttributes="Bold"
-                    FontFamily="ItimRegular"
-                    FontSize="Large"
-                    HorizontalTextAlignment="Center"
-                    Text="{Binding Title}"
-                    TextColor="{StaticResource Primary}"
-                    VerticalTextAlignment="Start" />
-                <!--  Discription  -->
-                <Label
-                    Grid.Row="1"
-                    BackgroundColor="Transparent"
-                    FontAttributes="Bold"
-                    FontFamily="ItimRegular"
-                    FontSize="Medium"
-                    HorizontalTextAlignment="Start"
-                    Text="{Binding Discription}"
-                    TextColor="{StaticResource White}"
-                    VerticalTextAlignment="Start" />
-            </Grid>
+                    Margin="15,15,0,0"
+                    Padding="2"
+                    BackgroundColor="{StaticResource DarkGrey}"
+                    Command="{Binding BackNavigationCommand}"
+                    CornerRadius="5"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start">
+                    <Button.Shadow>
+                        <Shadow
+                            Brush="Black"
+                            Opacity="0.5"
+                            Radius="10"
+                            Offset="0,0" />
+                    </Button.Shadow>
+                    <Button.ImageSource>
+                        <FontImageSource
+                            FontFamily="FluentIcons"
+                            Glyph="{x:Static local:IconNames.Back}"
+                            Color="{StaticResource Primary}" />
+                    </Button.ImageSource>
+                </Button>
 
-            <Grid Grid.Row="2" Background="{StaticResource DarkGrey}">
-                <!--  default image icon  -->
-                <Image
-                    Aspect="AspectFill"
+                <!--  cart order view  -->
+                <Grid
+                    Grid.Row="0"
+                    Padding="5"
+                    BackgroundColor="Transparent"
+                    HeightRequest="80"
+                    HorizontalOptions="End"
+                    WidthRequest="80">
+                    <!--  Cart Icon  -->
+                    <Image
+                        HeightRequest="35"
+                        HorizontalOptions="Center"
+                        Source="cart_yellow_icon"
+                        VerticalOptions="Center"
+                        WidthRequest="35" />
+
+                    <!--  Item Count  -->
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="25"
+                        HorizontalOptions="Center"
+                        Text="8"
+                        TextColor="White"
+                        VerticalOptions="Start" />
+                </Grid>
+
+                <!--  Product title and discription  -->
+                <Grid Grid.Row="1" Margin="10,-15,10,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+
+                    </Grid.RowDefinitions>
+                    <!--  Title  -->
+                    <Label
+                        Grid.Row="0"
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="Large"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Title}"
+                        TextColor="{StaticResource Primary}"
+                        VerticalTextAlignment="Start" />
+                    <!--  Discription  -->
+                    <Label
+                        Grid.Row="1"
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="Medium"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding Discription}"
+                        TextColor="{StaticResource White}"
+                        VerticalTextAlignment="Start" />
+                </Grid>
+
+                <Grid Grid.Row="2" Background="{StaticResource DarkGrey}">
+                    <!--  default image icon  -->
+                    <Image
+                        Aspect="AspectFill"
+                        HorizontalOptions="Fill"
+                        Source="image_icon"
+                        VerticalOptions="Fill" />
+                    <!--  seprator  -->
+                    <BoxView
+                        HeightRequest="2"
+                        VerticalOptions="Start"
+                        Color="{StaticResource Yellow}" />
+                    <!--  Carousel View  -->
+                    <CarouselView
+                        BackgroundColor="Transparent"
+                        ItemsSource="{Binding ImageArray}"
+                        Loop="False"
+                        VerticalOptions="Fill">
+                        <CarouselView.ItemTemplate>
+                            <DataTemplate>
+                                <!--  boxes view  -->
+                                <Grid Margin="2,0,2,0">
+                                    <!--  images  -->
+                                    <Image
+                                        Aspect="AspectFill"
+                                        HorizontalOptions="Fill"
+                                        Rotation="{Binding Rotate}"
+                                        Source="{Binding Image}"
+                                        VerticalOptions="Fill" />
+
+                                    <!--  Swipe view  -->
+                                    <Button
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        CornerRadius="50"
+                                        HeightRequest="30"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Start"
+                                        WidthRequest="30">
+                                        <Button.ImageSource>
+                                            <FontImageSource
+                                                FontFamily="FluentIcons"
+                                                Glyph="{x:Static local:IconNames.Swipe}"
+                                                Color="{StaticResource Yellow}" />
+                                        </Button.ImageSource>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </CarouselView.ItemTemplate>
+                    </CarouselView>
+                    <!--  seprator  -->
+                    <BoxView
+                        HeightRequest="2"
+                        VerticalOptions="End"
+                        Color="{StaticResource Yellow}" />
+                </Grid>
+                <HorizontalStackLayout Grid.Row="3" Margin="10,10,10,5">
+
+                    <!--  nof of product  -->
+                    <Label
+                        Margin="0,0,10,0"
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="18"
+                        HorizontalTextAlignment="Center"
+                        Text="Quantity:"
+                        TextColor="{StaticResource White}"
+                        VerticalTextAlignment="Center" />
+
+                    <!-- plus minus view  -->
+                    <Border
+                        Grid.Column="1"
+                        Padding="5"
+                        Background="{StaticResource Primary}"
+                        HeightRequest="50"
+                        StrokeShape="RoundRectangle 30"
+                        VerticalOptions="Center"
+                        WidthRequest="200">
+
+                        <Grid VerticalOptions="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+
+                            <!--  Minus Button  -->
+                            <Button
+                                Grid.Column="0"
+                                Margin="10"
+                                Padding="0"
+                                BackgroundColor="Transparent"
+                                Command="{Binding DecreaseQuantityCommand}"
+                                CornerRadius="50"
+                                FontAttributes="Bold"
+                                HeightRequest="24"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center"
+                                WidthRequest="24">
+                                <Button.ImageSource>
+                                    <FontImageSource
+                                        FontFamily="FluentIcons"
+                                        Glyph="{x:Static local:IconNames.Minus}"
+                                        Color="{StaticResource Black}" />
+                                </Button.ImageSource>
+                            </Button>
+
+                            <!--  Quantity Label  -->
+                            <Label
+                                Grid.Column="1"
+                                Padding="-5"
+                                FontAttributes="Bold"
+                                FontSize="28"
+                                HorizontalOptions="Center"
+                                Text="{Binding ProductCount}"
+                                TextColor="Black"
+                                VerticalOptions="Center" />
+
+                            <!--  Plus Button  -->
+                            <Button
+                                Grid.Column="2"
+                                Margin="10"
+                                Padding="0"
+                                BackgroundColor="Transparent"
+                                Command="{Binding IncreaseQuantityCommand}"
+                                CornerRadius="50"
+                                FontAttributes="Bold"
+                                HeightRequest="24"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center"
+                                WidthRequest="24">
+                                <Button.ImageSource>
+                                    <FontImageSource
+                                        FontFamily="FluentIcons"
+                                        Glyph="{x:Static local:IconNames.Plus}"
+                                        Color="{StaticResource Black}" />
+                                </Button.ImageSource>
+                            </Button>
+                        </Grid>
+                    </Border>
+                    <!--  total amount  -->
+                    <Label
+                        Margin="10,0,0,0"
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="30"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding TotalAmount}"
+                        TextColor="{StaticResource Primary}"
+                        VerticalTextAlignment="Center" />
+                </HorizontalStackLayout>
+
+                <!--  add to basket  -->
+                <Button
+                    Grid.Row="4"
+                    Margin="20,5,20,5"
+                    BackgroundColor="{StaticResource Primary}"
+                    Command="{Binding AddToBasketCommand}"
+                    CornerRadius="10"
+                    FontAttributes="Bold"
+                    FontFamily="ItimRegular"
+                    FontSize="20"
                     HorizontalOptions="Fill"
-                    Source="image_icon"
-                    VerticalOptions="Fill" />
-                <!--  seprator  -->
-                <BoxView
-                    HeightRequest="2"
-                    VerticalOptions="Start"
-                    Color="{StaticResource Yellow}" />
-                <!--  Carousel View  -->
-                <CarouselView
-                    BackgroundColor="Transparent"
-                    ItemsSource="{Binding ImageArray}"
-                    Loop="False"
-                    VerticalOptions="Fill">
-                    <CarouselView.ItemTemplate>
-                        <DataTemplate>
-                            <!--  boxes view  -->
-                            <Grid Margin="2,0,2,0">
-                                <!--  images  -->
-                                <Image
-                                    Aspect="AspectFill"
-                                    HorizontalOptions="Fill"
-                                    Rotation="{Binding Rotate}"
-                                    Source="{Binding Image}"
-                                    VerticalOptions="Fill" />
+                    Text="Add to Basket"
+                    TextColor="Black"
+                    VerticalOptions="Center">
+                    <Button.Shadow>
+                        <Shadow
+                            Brush="Black"
+                            Opacity="0.3"
+                            Radius="10"
+                            Offset="5,5" />
+                    </Button.Shadow>
+                </Button>
 
-                                <!--  Swipe view  -->
-                                <Button
-                                    Padding="0"
-                                    BackgroundColor="Transparent"
-                                    CornerRadius="50"
-                                    HeightRequest="30"
-                                    HorizontalOptions="End"
-                                    VerticalOptions="Start"
-                                    WidthRequest="30">
-                                    <Button.ImageSource>
-                                        <FontImageSource
-                                            FontFamily="FluentIcons"
-                                            Glyph="{x:Static local:IconNames.Swipe}"
-                                            Color="{StaticResource Yellow}" />
-                                    </Button.ImageSource>
-                                </Button>
-                            </Grid>
-                        </DataTemplate>
-                    </CarouselView.ItemTemplate>
-                </CarouselView>
-                <!--  seprator  -->
-                <BoxView
-                    HeightRequest="2"
-                    VerticalOptions="End"
-                    Color="{StaticResource Yellow}" />
+                <!--  buy now  -->
+                <Button
+                    Grid.Row="5"
+                    Margin="20,5,20,10"
+                    BackgroundColor="{StaticResource Primary}"
+                    Command="{Binding BuyNowCommand}"
+                    CornerRadius="10"
+                    FontAttributes="Bold"
+                    FontFamily="ItimRegular"
+                    FontSize="20"
+                    HorizontalOptions="Fill"
+                    Text="Buy Now"
+                    TextColor="Black"
+                    VerticalOptions="Center">
+                    <Button.Shadow>
+                        <Shadow
+                            Brush="Black"
+                            Opacity="0.3"
+                            Radius="10"
+                            Offset="5,5" />
+                    </Button.Shadow>
+                </Button>
             </Grid>
-
-            <Button
-                Grid.Row="3"
-                Margin="20,20,20,10"
-                BackgroundColor="{StaticResource Primary}"
-                Command="{Binding AddToBasketCommand}"
-                CornerRadius="10"
-                FontAttributes="Bold"
-                FontFamily="ItimRegular"
-                FontSize="20"
-                HorizontalOptions="Fill"
-                Text="Add to Basket"
-                TextColor="Black"
-                VerticalOptions="Center">
-                <Button.Shadow>
-                    <Shadow
-                        Brush="Black"
-                        Opacity="0.3"
-                        Radius="10"
-                        Offset="5,5" />
-                </Button.Shadow>
-            </Button>
-            <Button
-                Grid.Row="4"
-                Margin="20,10,20,20"
-                BackgroundColor="{StaticResource Primary}"
-                Command="{Binding BuyNowCommand}"
-                CornerRadius="10"
-                FontAttributes="Bold"
-                FontFamily="ItimRegular"
-                FontSize="20"
-                HorizontalOptions="Fill"
-                Text="Buy Now"
-                TextColor="Black"
-                VerticalOptions="Center">
-                <Button.Shadow>
-                    <Shadow
-                        Brush="Black"
-                        Opacity="0.3"
-                        Radius="10"
-                        Offset="5,5" />
-                </Button.Shadow>
-            </Button>
-        </Grid>
+        </ScrollView>
     </views:BaseView.Content>
 </views:BaseView>
