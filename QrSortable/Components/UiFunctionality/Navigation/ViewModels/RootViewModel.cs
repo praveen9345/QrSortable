@@ -61,6 +61,22 @@
 
             bool outcome = false;
 
+            try
+            {
+                var basketData = await _databaseManager.GetListAsync<AddToBasketData>();
+
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    BasketCount = basketData != null && basketData.Count > 0
+                        ? basketData.Count.ToString()
+                        : "0";
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"RootViewModel:Error loading categories: {ex.Message}");
+            }
+
             // Ensure we run UI code on the main thread
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
@@ -73,6 +89,12 @@
                 await _toastService.DisplayToast("Failed to load categories or no storage entries found.");
             }
         }
+
+        /// <summary>
+        /// Represents the currently add to basket countin the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _basketCount;
 
         public override async void ViewAppearing()
         {

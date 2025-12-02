@@ -3,6 +3,8 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.General;
+    using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
 
@@ -11,6 +13,8 @@
     /// </summary>
     public partial class PaperProductViewModel : BaseViewModel<Product>
     {
+        private readonly IDatabaseManager _databaseManager;
+
         private Product _product;
 
         private int _amount;
@@ -18,10 +22,12 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="PaperProductViewModel" />.
         /// </summary>
-        public PaperProductViewModel()
+        /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
+        /// used for managing database operations.</param>
+        public PaperProductViewModel(IDatabaseManager databaseManager)
         {
             IsBackNavigationEnabled = true;
-
+            _databaseManager = databaseManager;
         }
 
         /// <summary>
@@ -32,6 +38,21 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
+            try
+            {
+                var basketData = await _databaseManager.GetListAsync<AddToBasketData>();
+
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    BasketCount = basketData != null && basketData.Count > 0
+                        ? basketData.Count.ToString()
+                        : "0";
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"PaperProductViewModel:Error loading categories: {ex.Message}");
+            }
         }
 
         public override void Prepare(Product parameter)
@@ -68,6 +89,12 @@
         /// </summary>
         [ObservableProperty]
         private string _totalAmount;
+
+        /// <summary>
+        /// Represents the currently add to basket countin the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _basketCount;
 
         public AsyncRelayCommand DecreaseQuantityCommand => new AsyncRelayCommand(async () =>
         {

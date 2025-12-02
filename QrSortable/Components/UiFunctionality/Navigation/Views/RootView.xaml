@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:localhex="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Converter"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
     <views:BaseView.Resources>
@@ -26,55 +27,98 @@
             </Grid.RowDefinitions>
 
             <!--  Placeholder for serch and others  -->
-            <Border
-                Grid.Row="0"
-                Margin="10"
-                Padding="2"
-                Background="{StaticResource DarkGrey}"
-                HorizontalOptions="Fill"
-                StrokeShape="RoundRectangle 20">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <!--  menu button  -->
-                        <ColumnDefinition Width="*" />
-                        <!--  qr scan button  -->
-                        <ColumnDefinition Width="8*" />
-                        <!--  history button  -->
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <!--  serch icon  -->
-                    <Image Grid.Column="0" HeightRequest="30">
-                        <Image.Source>
-                            <FontImageSource
-                                FontFamily="FluentIcons"
-                                Glyph="{x:Static local:IconNames.Search}"
-                                Color="{StaticResource Yellow}" />
-                        </Image.Source>
-                    </Image>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="8*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Border
+                    Grid.Column="0"
+                    Margin="10"
+                    Padding="2"
+                    Background="{StaticResource DarkGrey}"
+                    HorizontalOptions="Fill"
+                    StrokeShape="RoundRectangle 20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <!--  menu button  -->
+                            <ColumnDefinition Width="*" />
+                            <!--  qr scan button  -->
+                            <ColumnDefinition Width="8*" />
+                            <!--  history button  -->
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <!--  serch icon  -->
+                        <Image Grid.Column="0" HeightRequest="30">
+                            <Image.Source>
+                                <FontImageSource
+                                    FontFamily="FluentIcons"
+                                    Glyph="{x:Static local:IconNames.Search}"
+                                    Color="{StaticResource Yellow}" />
+                            </Image.Source>
+                        </Image>
 
-                    <!--  Serch Text  -->
-                    <Entry
-                        Grid.Column="1"
-                        Placeholder="Find ..."
-                        PlaceholderColor="{StaticResource PlaceholderColor}"
-                        Style="{StaticResource NormalText}" />
+                        <!--  Serch Text  -->
+                        <Entry
+                            Grid.Column="1"
+                            Placeholder="Find ..."
+                            PlaceholderColor="{StaticResource PlaceholderColor}"
+                            Style="{StaticResource NormalText}" />
 
-                    <!--  microphone button  -->
-                    <Button
-                        Grid.Column="2"
-                        Padding="0"
-                        BackgroundColor="Transparent"
-                        CornerRadius="100"
-                        HeightRequest="30">
-                        <Button.ImageSource>
-                            <FontImageSource
-                                FontFamily="FluentIcons"
-                                Glyph="{x:Static local:IconNames.Gift}"
-                                Color="{StaticResource Yellow}" />
-                        </Button.ImageSource>
-                    </Button>
+                        <!--  microphone button  -->
+                        <Button
+                            Grid.Column="2"
+                            Padding="0"
+                            BackgroundColor="Transparent"
+                            CornerRadius="100"
+                            HeightRequest="30">
+                            <Button.ImageSource>
+                                <FontImageSource
+                                    FontFamily="FluentIcons"
+                                    Glyph="{x:Static local:IconNames.Gift}"
+                                    Color="{StaticResource Yellow}" />
+                            </Button.ImageSource>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!--  cart order view  -->
+                <Grid
+                    Grid.Column="1"
+                    Margin="0,0,15,15"
+                    Padding="5"
+                    BackgroundColor="Transparent"
+                    HeightRequest="30"
+                    HorizontalOptions="End"
+                    VerticalOptions="End"
+                    WidthRequest="30">
+                    <Grid.Behaviors>
+                        <toolkit:TouchBehavior
+                            Command="{Binding CartTappedCommand}"
+                            PressedOpacity="0.8"
+                            PressedScale="0.9" />
+                    </Grid.Behaviors>
+
+
+                    <!--  Cart Icon  -->
+                    <Image
+                        HeightRequest="35"
+                        HorizontalOptions="Center"
+                        Source="cart_yellow_icon"
+                        VerticalOptions="Center"
+                        WidthRequest="35" />
+
+                    <!--  Item Count  -->
+                    <Label
+                        Margin="0,-30,0,0"
+                        FontAttributes="Bold"
+                        FontSize="25"
+                        HorizontalOptions="Center"
+                        Text="{Binding BasketCount}"
+                        TextColor="White"
+                        VerticalOptions="Start" />
                 </Grid>
-            </Border>
+            </Grid>
 
             <!--  separator  -->
             <BoxView
