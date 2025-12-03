@@ -43,21 +43,13 @@
                 </Button.ImageSource>
             </Button>
 
-            <!--  page icon  -->
-            <Image
-                Grid.Row="0"
-                Margin="10"
-                Aspect="AspectFit"
-                HeightRequest="100"
-                HorizontalOptions="Center"
-                Source="qr_barcode_icon"
-                VerticalOptions="Center" />
 
             <!--  code demo image  -->
             <Image
                 Grid.Row="1"
                 Margin="0,0,0,10"
                 Aspect="AspectFit"
+                HeightRequest="170"
                 HorizontalOptions="Center"
                 Source="{Binding DemoImage}"
                 VerticalOptions="Center" />

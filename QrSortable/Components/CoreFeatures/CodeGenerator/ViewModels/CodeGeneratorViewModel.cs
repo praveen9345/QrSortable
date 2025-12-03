@@ -112,6 +112,8 @@
                     PageSelected.Clear();
                     PageSelected.Add("A4(12 code)");
                     PageSelected.Add("A5(6 code)");
+
+                    SelectedPage = "A4(12 code)";
                 }
                 else if (SelectedCode == "Bar code")
                 {
@@ -122,6 +124,7 @@
                     PageSelected.Add("A4(18 code)");
                     PageSelected.Add("A5(10 code)");
 
+                    SelectedPage = "A4(18 code)";
                 }
 
             }
@@ -145,6 +148,19 @@
 
         public AsyncRelayCommand BuyNowCommand => new AsyncRelayCommand(async () =>
         {
+
+            if (string.IsNullOrWhiteSpace(SelectedCode))
+            {
+                await DialogService.ShowAlertDialog("Missing selection", "Please select a code type (QR code or Bar code).", "Ok");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(SelectedPage))
+            {
+                await DialogService.ShowAlertDialog("Missing selection", "Please select a page type (e.g., A4 or A5).", "Ok");
+                return;
+            }
+
             _product.CodeType = SelectedCode;
             _product.PageType = SelectedPage;
             _product.TagName = TagName;
