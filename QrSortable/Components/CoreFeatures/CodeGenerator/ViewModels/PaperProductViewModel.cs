@@ -6,6 +6,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
     using System.Collections.ObjectModel;
@@ -126,7 +127,7 @@
             string totalAmountDeciaml = new string(TotalAmount.Where(char.IsDigit).ToArray());
             try
             {
-                await _databaseManager.AddAsync(new AddToBasketData
+                var basketItem = new AddToBasketData
                 {
                     Title = _product.Title,
                     Description = _product.Description,
@@ -134,9 +135,25 @@
                     ProductQuantity = ProductCount,
                     DateTime = DateTime.Now,
                     TotalPrice = decimal.Parse(totalAmountDeciaml)
-                });
-                await LoadBasketCountAsync();
-                await _toastService.DisplayToast("Product added to basket successfully.");
+                };
+                _databaseManager.BeginTransaction();
+                var addedItem = await _databaseManager.AddAsync(basketItem);
+
+                if (addedItem != null)
+                {
+                    _databaseManager.CommitTransaction();
+                    await LoadBasketCountAsync();
+                    await _toastService.DisplayToast("Product added to basket successfully.");
+                }
+                else
+                {
+                    _databaseManager.Rollback();
+                    await DialogService.ShowAlertDialog(
+                         "An unexpected error occurred while saving the item. Please try again.",
+                        AppResources.Dialog_OK_Text
+                     );
+                }
+                
             }
             catch (Exception ex)
             {

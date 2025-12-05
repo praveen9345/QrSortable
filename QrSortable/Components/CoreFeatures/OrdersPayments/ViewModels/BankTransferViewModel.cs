@@ -2,16 +2,24 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using Microsoft.Maui.Graphics.Platform;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.General;
+    using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.PlatformUtils;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
+    using System;
 
     /// <summary>
     ///     The view model of the  BankTransferViewModel screen.
     /// </summary>
     public partial class BankTransferViewModel : BaseViewModel<Product>
     {
+        public readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
+        private readonly ISharedMethodService _sharedMethodService;
 
         private Product _product;
 
@@ -19,10 +27,14 @@
         ///     Initializes a new instance of the <see cref=" BankTransferViewModel" />.
         /// </summary>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
-        public BankTransferViewModel(IToastService toastService)
+        /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
+        /// used for managing database operations.</param>
+        public BankTransferViewModel(IToastService toastService, IDatabaseManager databaseManager, ISharedMethodService sharedMethodService)
         {
             IsBackNavigationEnabled = true;
             _toastService = toastService;
+            _databaseManager = databaseManager;
+            _sharedMethodService = sharedMethodService;
 
             ReferenceCode = GenerateReferenceCode();
         }
@@ -97,16 +109,72 @@
 
         public AsyncRelayCommand PlaceAnOrderCommand => new AsyncRelayCommand(async () =>
         {
-            await DialogService.ShowAlertDialog(
-                "Confirmation",
-                "Thank you for your order. We will send you an email shortly.",
-                "OK");
+            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+            async () =>{return await DatabaseAndBackendStoringAsync(); });
 
-            /*TODO: *send email to user and to me and 
-                 *generated code send to the backgend when user placed an order
-                 * save all data to the order database and send to backend
-             */
+            if (result)
+            {
+                await DialogService.ShowAlertDialog(
+                    "Confirmation",
+                    "Thank you for your order. We will send you an email shortly.",
+                    "OK");
+            }
+            else
+            {
+                await DialogService.ShowAlertDialog("An unexpected error occurred while saving the item. Please try again.", AppResources.Dialog_OK_Text);
+            }
         });
+
+        private async Task<bool> DatabaseAndBackendStoringAsync() 
+        {
+            /*TODO: *send email to user and to me and 
+            *send saved to the backgend when user placed an order
+            */
+            try
+            {
+                var orderedItem = new YoursOrderData
+                {
+                    OrderId = GenereateOrderedId(),
+                    Title = _product.Title,
+                    Description = _product.Description,
+                    ProductQuantity = _product.NumberOfPages,
+                    DateTime = DateTime.Now,
+                    TotalPrice = _sharedMethodService.ParsePrice(NetTotalAmount).ToString(),
+                    Name = _product.Name,
+                    Street = _product.Street,
+                    HouseNo = _product.HouseNo,
+                    ZipCode = _product.ZipCode,
+                    City = _product.City,
+                    Country = _product.Country,
+                    Email = _product.Email,
+                    ReferenceCode = ReferenceCode,
+                    ShipmentTracking = "DHL:",
+                    StatusOfOrder = "Pending..."
+                };
+
+                _databaseManager.BeginTransaction();
+                var addedItem = await _databaseManager.AddAsync(orderedItem);
+
+                if (addedItem != null)
+                {
+                    _databaseManager.CommitTransaction();
+                    Console.WriteLine("Successfully placed an ordered.");
+                    return true;
+                }
+                else
+                {
+                    _databaseManager.Rollback();
+                    Console.WriteLine("DatabaseAndBackendStoringAsync: AddAsync returned null - rollback performed.");
+                    return false;
+                }
+
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine($"DatabaseAndBackendStoringAsync::Exception during add: {ex}");
+                return false;
+            }
+        }
 
         private string GenerateReferenceCode()
         {
@@ -116,6 +184,23 @@
             var randomPart = new string(Enumerable.Repeat(chars, 5)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
             return prefix + randomPart; 
+        }
+
+        private string GenereateOrderedId() 
+        {
+            string seg1 = GenerateNumber(6);
+            string seg2 = GenerateNumber(4);
+            string seg3 = GenerateNumber(3);
+
+            return $"QS-{seg1}-{seg2}-{seg3}";
+        }
+
+        private static string GenerateNumber(int digits)
+        {
+            Random random = new Random();
+            int max = (int)Math.Pow(10, digits);
+            int min = max / 10;
+            return random.Next(min, max).ToString();
         }
 
     }

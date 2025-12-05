@@ -117,7 +117,7 @@
                                                     FontFamily="ItimRegular"
                                                     FontSize="Large"
                                                     HorizontalTextAlignment="Start"
-                                                    Text="22.11.2025 07.42"
+                                                    Text="QR-135796-8506-457"
                                                     TextColor="{StaticResource Black}"
                                                     VerticalTextAlignment="Center" />
 
@@ -125,7 +125,18 @@
                                                     BackgroundColor="Transparent"
                                                     FontAttributes="Bold"
                                                     FontFamily="ItimRegular"
-                                                    FontSize="Large"
+                                                    FontSize="Medium"
+                                                    HorizontalTextAlignment="Start"
+                                                    Text="22.11.2025 07.42"
+                                                    TextColor="{StaticResource Black}"
+                                                    VerticalTextAlignment="Center" />
+
+
+                                                <Label
+                                                    BackgroundColor="Transparent"
+                                                    FontAttributes="Bold"
+                                                    FontFamily="ItimRegular"
+                                                    FontSize="Medium"
                                                     HorizontalTextAlignment="Start"
                                                     Text="Generate A4 QR or bar code yourself"
                                                     TextColor="{StaticResource Black}"
@@ -147,7 +158,7 @@
                                                     CornerRadius="50"
                                                     FontAttributes="Bold"
                                                     FontFamily="ItimRegular"
-                                                    FontSize="Large"
+                                                    FontSize="Medium"
                                                     HorizontalOptions="Start"
                                                     Text="Completed..."
                                                     TextColor="Black"

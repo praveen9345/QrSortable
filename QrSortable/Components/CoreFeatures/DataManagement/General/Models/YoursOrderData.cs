@@ -29,7 +29,7 @@
         public DateTime DateTime { get; set; }
 
         /// <summary>
-        /// Total price for the request.
+        /// Total price for the order.
         /// </summary>
         public string TotalPrice { get; set; }
 
