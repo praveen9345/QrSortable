@@ -128,6 +128,36 @@
             await NavigationService.Navigate<BankTransferView>(_product);
         });
 
+        public AsyncRelayCommand PaymentByCardCommand => new AsyncRelayCommand(async () =>
+        {
+
+            if (string.IsNullOrWhiteSpace(Name) ||
+                string.IsNullOrWhiteSpace(StreetName) ||
+                string.IsNullOrWhiteSpace(HouseNumber) ||
+                string.IsNullOrWhiteSpace(ZipCode) ||
+                string.IsNullOrWhiteSpace(CityName) ||
+                string.IsNullOrWhiteSpace(CountryName) ||
+                string.IsNullOrWhiteSpace(Email))
+            {
+                await DialogService.ShowAlertDialog("Missing Information",
+                    "Please fill in all fields before proceeding.", "OK");
+                return;
+            }
+
+            if (!IsValidEmail(Email))
+            {
+                await DialogService.ShowAlertDialog("Invalid Email",
+                    "Please enter a valid email address.", "OK");
+                return;
+            }
+
+            // Add info to product
+            AddInformationToProducts();
+
+            // TODO: need to handle mollie payment here
+
+        });
+
         private void AddInformationToProducts()
         {
             _product.Name = Name;

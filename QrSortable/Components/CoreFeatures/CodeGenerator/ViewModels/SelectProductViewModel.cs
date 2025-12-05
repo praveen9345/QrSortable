@@ -1,6 +1,5 @@
 ﻿namespace QrSortable.Components.CoreFeatures.CodeGenerator.ViewModels
 {
-    using Android.Webkit;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
@@ -39,7 +38,11 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            
+        }
+
+        public async override void ViewAppearing()
+        {
+            base.ViewAppearing();
             try
             {
                 var basketData = await _databaseManager.GetListAsync<AddToBasketData>();
@@ -86,9 +89,6 @@
                 SelectedItem = null;
             }
         });
-
-
-
 
         private void LoadProducts()
         {

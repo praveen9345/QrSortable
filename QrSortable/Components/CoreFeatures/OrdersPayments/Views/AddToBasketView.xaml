@@ -53,6 +53,7 @@
             <!--  order view  -->
             <CollectionView
                 Grid.Row="1"
+                ItemsSource="{Binding AddToBasketData}"
                 SelectionMode="Single"
                 VerticalOptions="Fill">
                 <CollectionView.ItemTemplate>
@@ -87,9 +88,10 @@
                                                 FontFamily="ItimRegular"
                                                 FontSize="Large"
                                                 HorizontalTextAlignment="Start"
-                                                Text="22.11.2025 07.42"
+                                                Text="{Binding DateTime}"
                                                 TextColor="{StaticResource Black}"
                                                 VerticalTextAlignment="Center" />
+
 
                                             <Label
                                                 BackgroundColor="Transparent"
@@ -97,7 +99,7 @@
                                                 FontFamily="ItimRegular"
                                                 FontSize="Large"
                                                 HorizontalTextAlignment="Start"
-                                                Text="Generate A4 QR or bar code yourself"
+                                                Text="{Binding Title}"
                                                 TextColor="{StaticResource Black}"
                                                 VerticalTextAlignment="Center" />
 
@@ -107,7 +109,7 @@
                                                 FontFamily="ItimRegular"
                                                 FontSize="Medium"
                                                 HorizontalTextAlignment="Start"
-                                                Text="* Select color"
+                                                Text="{Binding Description}"
                                                 TextColor="{StaticResource Black}"
                                                 VerticalTextAlignment="Center" />
 
@@ -117,26 +119,45 @@
                                                 FontFamily="ItimRegular"
                                                 FontSize="Large"
                                                 HorizontalTextAlignment="Start"
-                                                Text="10€ only"
+                                                Text="{Binding Price}"
                                                 TextColor="{StaticResource Black}"
                                                 VerticalTextAlignment="Center" />
 
                                         </VerticalStackLayout>
 
-                                        <Image
-                                            Grid.Column="1"
-                                            Margin="5"
-                                            Aspect="AspectFit"
-                                            HeightRequest="120"
-                                            HorizontalOptions="Center"
-                                            Source="code_pdf_icon"
-                                            VerticalOptions="Center" />
+                                        <VerticalStackLayout Grid.Column="1">
+                                            <!--  delete  -->
+                                            <Button
+                                                Padding="0"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.DeleteAddedOrderCommand}"
+                                                CommandParameter="{Binding .}"
+                                                CornerRadius="5"
+                                                VerticalOptions="Start">
+                                                <Button.ImageSource>
+                                                    <FontImageSource
+                                                        FontFamily="FluentIcons"
+                                                        Glyph="{x:Static local:IconNames.Delete}"
+                                                        Color="{StaticResource Black}" />
+                                                </Button.ImageSource>
+                                            </Button>
+
+                                            <Image
+                                                Margin="5"
+                                                Aspect="AspectFit"
+                                                HeightRequest="120"
+                                                HorizontalOptions="Center"
+                                                Source="code_pdf_icon"
+                                                VerticalOptions="Center" />
+                                        </VerticalStackLayout>
+
                                     </Grid>
 
                                     <Grid Grid.Row="1">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="9*" />
+                                            <ColumnDefinition Width="4*" />
                                             <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <Image
@@ -188,7 +209,7 @@
                                                     FontAttributes="Bold"
                                                     FontSize="28"
                                                     HorizontalOptions="Center"
-                                                    Text="0"
+                                                    Text="{Binding ProductQuantity}"
                                                     TextColor="Black"
                                                     VerticalOptions="Center" />
 
@@ -221,24 +242,39 @@
                                             FontAttributes="Bold"
                                             FontSize="28"
                                             HorizontalOptions="Center"
-                                            Text="10€"
+                                            Text="{Binding TotalPrice, StringFormat='{}{0}€'}"
                                             TextColor="Black"
                                             VerticalOptions="Center" />
+                                        <!--  buy now  -->
+                                        <Button
+                                            Grid.Column="3"
+                                            Margin="5,0,5,0"
+                                            Padding="5"
+                                            BackgroundColor="#25BA98"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.BuyNowCommand}"
+                                            CommandParameter="{Binding .}"
+                                            CornerRadius="50"
+                                            FontAttributes="Bold"
+                                            FontFamily="ItimRegular"
+                                            FontSize="15"
+                                            HorizontalOptions="Fill"
+                                            Text="Buy Now"
+                                            TextColor="Black"
+                                            VerticalOptions="Center">
+                                            <Button.Shadow>
+                                                <Shadow
+                                                    Brush="Black"
+                                                    Opacity="0.5"
+                                                    Radius="3"
+                                                    Offset="1,1" />
+                                            </Button.Shadow>
+                                        </Button>
                                     </Grid>
                                 </Grid>
                             </Border>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-                <CollectionView.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Item 1</x:String>
-                        <x:String>Item 2</x:String>
-                        <x:String>Item 3</x:String>
-                        <x:String>Item 4</x:String>
-                        <x:String>Item 5</x:String>
-                    </x:Array>
-                </CollectionView.ItemsSource>
             </CollectionView>
         </Grid>
     </views:BaseView.Content>

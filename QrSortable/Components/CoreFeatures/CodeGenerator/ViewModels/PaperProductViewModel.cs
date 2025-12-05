@@ -7,6 +7,8 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using QrSortable.Components.UiFunctionality.Notification;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     ///     The view model of the PaperProductView screen.
@@ -14,20 +16,30 @@
     public partial class PaperProductViewModel : BaseViewModel<Product>
     {
         private readonly IDatabaseManager _databaseManager;
+        private readonly IToastService _toastService;
 
         private Product _product;
 
         private int _amount;
 
         /// <summary>
+        /// A collection of images associated with the storage entry.
+        /// </summary>
+        public ObservableCollection<Images> ImageArray { get; set; }
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="PaperProductViewModel" />.
         /// </summary>
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
-        public PaperProductViewModel(IDatabaseManager databaseManager)
+        /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
+        public PaperProductViewModel(IDatabaseManager databaseManager, IToastService toastService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
+            _toastService = toastService;
+            ImageArray = new ObservableCollection<Images>();
+           
         }
 
         /// <summary>
@@ -38,21 +50,18 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            try
-            {
-                var basketData = await _databaseManager.GetListAsync<AddToBasketData>();
+           
 
-                await MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    BasketCount = basketData != null && basketData.Count > 0
-                        ? basketData.Count.ToString()
-                        : "0";
-                });
-            }
-            catch (Exception ex)
+            ImageArray.Add(new Images()
             {
-                Console.WriteLine($"PaperProductViewModel:Error loading categories: {ex.Message}");
-            }
+                Image = "code_pdf_icon.png",
+                Rotate = 0
+            });
+        }
+        public async override void ViewAppearing()
+        {
+            base.ViewAppearing();
+            await LoadBasketCountAsync();
         }
 
         public override void Prepare(Product parameter)
@@ -114,12 +123,52 @@
 
         public AsyncRelayCommand AddToBasketCommand => new AsyncRelayCommand(async () =>
         {
-            await NavigationService.Navigate<AddToBasketView>();
+            string totalAmountDeciaml = new string(TotalAmount.Where(char.IsDigit).ToArray());
+            try
+            {
+                await _databaseManager.AddAsync(new AddToBasketData
+                {
+                    Title = _product.Title,
+                    Description = _product.Description,
+                    Price = _product.Price,
+                    ProductQuantity = ProductCount,
+                    DateTime = DateTime.Now,
+                    TotalPrice = decimal.Parse(totalAmountDeciaml)
+                });
+                await LoadBasketCountAsync();
+                await _toastService.DisplayToast("Product added to basket successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"PaperProductViewModel:Error loading categories: {ex.Message}");
+            }
         });
 
         public AsyncRelayCommand BuyNowCommand => new AsyncRelayCommand(async () =>
         {
-            //await NavigationService.Navigate<PaymentShipmentView>(_product);
+            string totalAmountDeciaml = new string(TotalAmount.Where(char.IsDigit).ToArray());
+            _product.TotalPrice = decimal.Parse(totalAmountDeciaml);
+            await NavigationService.Navigate<PaymentShipmentView>(_product);
         });
+
+
+        private async Task LoadBasketCountAsync()
+        {
+            try
+            {
+                var basketData = await _databaseManager.GetListAsync<AddToBasketData>();
+
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    BasketCount = basketData != null && basketData.Count > 0
+                        ? basketData.Count.ToString()
+                        : "0";
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"PaperProductViewModel: Error loading basket data: {ex.Message}");
+            }
+        }
     }
 }
