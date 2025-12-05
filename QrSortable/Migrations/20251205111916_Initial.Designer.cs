@@ -11,7 +11,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.General;
 namespace QrSortable.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20251201122323_Initial")]
+    [Migration("20251205111916_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -194,6 +194,10 @@ namespace QrSortable.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.PrimitiveCollection<string>("PdfFiles")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

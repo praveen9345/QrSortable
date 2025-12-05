@@ -194,6 +194,10 @@ namespace QrSortable.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.PrimitiveCollection<string>("PdfFiles")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("ProductQuantity")
                         .HasColumnType("INTEGER");
 

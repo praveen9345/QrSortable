@@ -64,7 +64,8 @@ namespace QrSortable.Migrations
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     ReferenceCode = table.Column<string>(type: "TEXT", nullable: false),
                     ShipmentTracking = table.Column<string>(type: "TEXT", nullable: false),
-                    StatusOfOrder = table.Column<string>(type: "TEXT", nullable: false)
+                    StatusOfOrder = table.Column<string>(type: "TEXT", nullable: false),
+                    PdfFiles = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

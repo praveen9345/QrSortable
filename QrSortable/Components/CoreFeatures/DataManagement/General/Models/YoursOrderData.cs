@@ -83,5 +83,10 @@
         /// </summary>
         public string StatusOfOrder { get; set; }
 
+        /// <summary>
+        /// List of generated PDFs stored as byte arrays.
+        /// </summary>
+        public List<byte[]> PdfFiles { get; set; } = new();
+
     }
 }
