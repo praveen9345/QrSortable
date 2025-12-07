@@ -10,7 +10,7 @@
         /// <summary>
         /// Date and time of the ordered item.
         /// </summary>
-        private DateTime OrderDateTime { get; set; }
+        public DateTime OrderDateTime { get; set; }
 
         /// <summary>
         /// Title of the product.

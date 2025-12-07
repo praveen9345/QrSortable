@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
     <views:BaseView.Content>
@@ -11,8 +12,6 @@
             <Grid.RowDefinitions>
                 <!--  back  -->
                 <RowDefinition Height="Auto" />
-                <!--  cart order view  -->
-                <RowDefinition Height="40" />
                 <!--  item view  -->
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
@@ -47,19 +46,26 @@
                 Grid.Row="0"
                 Margin="10"
                 Aspect="AspectFit"
-                HeightRequest="100"
+                HeightRequest="110"
                 HorizontalOptions="Center"
                 Source="your_order_icon"
                 VerticalOptions="Center" />
 
             <!--  cart order view  -->
             <Grid
-                Grid.Row="1"
-                Margin="5"
+                Grid.Row="0"
+                Padding="5"
                 BackgroundColor="Transparent"
                 HeightRequest="80"
                 HorizontalOptions="End"
                 WidthRequest="80">
+                <Grid.Behaviors>
+                    <toolkit:TouchBehavior
+                        Command="{Binding CartTappedCommand}"
+                        PressedOpacity="0.8"
+                        PressedScale="0.9" />
+                </Grid.Behaviors>
+
                 <!--  Cart Icon  -->
                 <Image
                     HeightRequest="35"
@@ -70,18 +76,18 @@
 
                 <!--  Item Count  -->
                 <Label
-                    Margin="5,0,0,0"
                     FontAttributes="Bold"
                     FontSize="25"
                     HorizontalOptions="Center"
-                    Text="8"
+                    Text="{Binding BasketCount}"
                     TextColor="White"
                     VerticalOptions="Start" />
             </Grid>
 
             <!--  item view  -->
             <CollectionView
-                Grid.Row="2"
+                Grid.Row="1"
+                ItemsSource="{Binding OrderedDatas}"
                 SelectionMode="Single"
                 VerticalOptions="Fill">
                 <CollectionView.ItemTemplate>
@@ -117,7 +123,7 @@
                                                     FontFamily="ItimRegular"
                                                     FontSize="Large"
                                                     HorizontalTextAlignment="Start"
-                                                    Text="QR-135796-8506-457"
+                                                    Text="{Binding OrderId}"
                                                     TextColor="{StaticResource Black}"
                                                     VerticalTextAlignment="Center" />
 
@@ -127,7 +133,7 @@
                                                     FontFamily="ItimRegular"
                                                     FontSize="Medium"
                                                     HorizontalTextAlignment="Start"
-                                                    Text="22.11.2025 07.42"
+                                                    Text="{Binding OrderDateTime}"
                                                     TextColor="{StaticResource Black}"
                                                     VerticalTextAlignment="Center" />
 
@@ -138,7 +144,7 @@
                                                     FontFamily="ItimRegular"
                                                     FontSize="Medium"
                                                     HorizontalTextAlignment="Start"
-                                                    Text="Generate A4 QR or bar code yourself"
+                                                    Text="{Binding Title}"
                                                     TextColor="{StaticResource Black}"
                                                     VerticalTextAlignment="Center" />
 
@@ -148,7 +154,7 @@
                                                     FontFamily="ItimRegular"
                                                     FontSize="Medium"
                                                     HorizontalTextAlignment="Start"
-                                                    Text="* Select color"
+                                                    Text="{Binding Description}"
                                                     TextColor="{StaticResource Black}"
                                                     VerticalTextAlignment="Center" />
 
@@ -160,7 +166,8 @@
                                                     FontFamily="ItimRegular"
                                                     FontSize="Medium"
                                                     HorizontalOptions="Start"
-                                                    Text="Completed..."
+                                                    IsEnabled="{Binding IsEnabelStatusOfOrder}"
+                                                    Text="{Binding StatusOfOrder}"
                                                     TextColor="Black"
                                                     VerticalOptions="Center">
                                                     <Button.Shadow>
@@ -180,7 +187,7 @@
                                                 Aspect="AspectFit"
                                                 HeightRequest="150"
                                                 HorizontalOptions="Center"
-                                                Source="image_icon"
+                                                Source="{Binding ImageUrl}"
                                                 VerticalOptions="Center" />
                                         </Grid>
 
@@ -196,7 +203,7 @@
                                                 FontFamily="ItimRegular"
                                                 FontSize="Large"
                                                 HorizontalTextAlignment="Start"
-                                                Text="DHL:JJD1234567890123"
+                                                Text="{Binding ShipmentTracking}"
                                                 TextColor="{StaticResource Black}"
                                                 VerticalTextAlignment="Center" />
                                             <Label
@@ -207,7 +214,7 @@
                                                 FontFamily="ItimRegular"
                                                 FontSize="Large"
                                                 HorizontalTextAlignment="Start"
-                                                Text="20€"
+                                                Text="{Binding TotalPrice}"
                                                 TextColor="{StaticResource Black}"
                                                 VerticalTextAlignment="Center" />
                                         </Grid>
@@ -233,15 +240,6 @@
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-                <CollectionView.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Item 1</x:String>
-                        <x:String>Item 2</x:String>
-                        <x:String>Item 3</x:String>
-                        <x:String>Item 4</x:String>
-                        <x:String>Item 5</x:String>
-                    </x:Array>
-                </CollectionView.ItemsSource>
             </CollectionView>
         </Grid>
     </views:BaseView.Content>
