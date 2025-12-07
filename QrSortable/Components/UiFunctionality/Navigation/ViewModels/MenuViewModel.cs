@@ -37,7 +37,7 @@
                 new MenuItem { Icon=IconNames.Profile, Title= ProfileTitle },
                 new MenuItem { Icon=IconNames.Subscribe, Title=SubscribeTitle },
                 new MenuItem { Icon=IconNames.Share, Title=ShareTitle },
-                new MenuItem { Icon=IconNames.YourOrders, Title= AddToBasketTitle },
+                new MenuItem { Icon=IconNames.AddToBasket, Title= AddToBasketTitle },
                 new MenuItem { Icon=IconNames.YourOrders, Title=YourOrdersTitle },
                 new MenuItem { Icon=IconNames.Settings, Title=SettingsTitle },
                 new MenuItem { Icon=IconNames.Feedback, Title=FeedbackTitle },

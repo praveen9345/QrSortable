@@ -181,6 +181,11 @@ namespace QrSortable.Resources
         public const string ProfileDelete = "\uF5db";
 
         /// <summary>
+        ///     The name of the add to basket.
+        /// </summary>
+        public const string AddToBasket = "\uF26b";
+
+        /// <summary>
         ///     The name of the your orders.
         /// </summary>
         public const string YourOrders = "\uF336";
