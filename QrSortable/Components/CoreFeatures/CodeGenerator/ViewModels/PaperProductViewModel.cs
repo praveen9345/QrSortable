@@ -129,6 +129,7 @@
             {
                 var basketItem = new AddToBasketData
                 {
+                    OrderId = _product.OrderId,
                     Title = _product.Title,
                     Description = _product.Description,
                     Price = _product.Price,
@@ -187,5 +188,6 @@
                 Console.WriteLine($"PaperProductViewModel: Error loading basket data: {ex.Message}");
             }
         }
+       
     }
 }

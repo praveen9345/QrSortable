@@ -77,6 +77,8 @@
         {
             if (SelectedItem!=null)
             {
+                SelectedItem.OrderId = GenereateOrderedId();
+
                 if (SelectedItem.Title == "Generate A4 QR or bar code yourself!")
                 {
                     await NavigationService.Navigate<CodeGeneratorView>(SelectedItem);
@@ -119,6 +121,22 @@
                     ImageUrl = "code_pdf_icon.png"
                 }
             };
+        }
+        private string GenereateOrderedId()
+        {
+            string seg1 = GenerateNumber(6);
+            string seg2 = GenerateNumber(4);
+            string seg3 = GenerateNumber(3);
+
+            return $"QS-{seg1}-{seg2}-{seg3}";
+        }
+
+        private static string GenerateNumber(int digits)
+        {
+            Random random = new Random();
+            int max = (int)Math.Pow(10, digits);
+            int min = max / 10;
+            return random.Next(min, max).ToString();
         }
     }
 }

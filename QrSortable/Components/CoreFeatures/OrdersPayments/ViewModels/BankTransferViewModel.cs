@@ -114,6 +114,17 @@
 
             if (result)
             {
+                var dbItems = await _databaseManager.GetListAsync<AddToBasketData>();
+                var match = dbItems.FirstOrDefault(x =>
+                    x.Title == _product.Title &&
+                    x.OrderId == _product.OrderId
+                );
+
+                if (match != null)
+                {
+                    await _databaseManager.DeleteAsync(match);
+                }
+
                 await DialogService.ShowAlertDialog(
                     "Confirmation",
                     "Thank you for your order. We will send you an email shortly.",
@@ -134,7 +145,7 @@
             {
                 var orderedItem = new YoursOrderData
                 {
-                    OrderId = GenereateOrderedId(),
+                    OrderId = _product.OrderId,
                     Title = _product.Title,
                     Description = _product.Description,
                     ProductQuantity = _product.NumberOfPages,
@@ -186,22 +197,7 @@
             return prefix + randomPart; 
         }
 
-        private string GenereateOrderedId() 
-        {
-            string seg1 = GenerateNumber(6);
-            string seg2 = GenerateNumber(4);
-            string seg3 = GenerateNumber(3);
-
-            return $"QS-{seg1}-{seg2}-{seg3}";
-        }
-
-        private static string GenerateNumber(int digits)
-        {
-            Random random = new Random();
-            int max = (int)Math.Pow(10, digits);
-            int min = max / 10;
-            return random.Next(min, max).ToString();
-        }
+      
 
     }
 

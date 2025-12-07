@@ -5,6 +5,11 @@
     public class AddToBasketData : DatabaseEntry
     {
         /// <summary>
+        /// Order id of the product.
+        /// </summary>
+        public string OrderId { get; set; }
+
+        /// <summary>
         /// Title of the product.
         /// </summary>
         public string Title { get; set; }

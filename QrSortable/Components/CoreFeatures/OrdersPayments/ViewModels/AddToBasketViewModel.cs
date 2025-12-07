@@ -64,7 +64,8 @@
 
                 var match = dbItems.FirstOrDefault(x =>
                     x.Title == item.Title &&
-                    x.DateTime == item.DateTime
+                    x.DateTime == item.DateTime &&
+                    x.OrderId == item.OrderId
                 );
 
                 if (match != null)
@@ -75,7 +76,8 @@
                 // Remove from UI collection
                 var uiMatch = AddToBasketData.FirstOrDefault(x =>
                     x.Title == item.Title &&
-                    x.DateTime == item.DateTime);
+                    x.DateTime == item.DateTime &&
+                     x.OrderId == item.OrderId);
 
                 if (uiMatch != null)
                     AddToBasketData.Remove(uiMatch);
@@ -96,6 +98,7 @@
 
             var product = new Product
             {
+                OrderId = item.OrderId,
                 Title = item.Title,
                 Description = item.Description,
                 Price = item.Price,
@@ -129,6 +132,7 @@
                     {
                         AddToBasketData.Add(new BasketData
                         {
+                            OrderId = data.OrderId,
                             Title = data.Title,
                             Description = data.Description,
                             Price = data.Price,

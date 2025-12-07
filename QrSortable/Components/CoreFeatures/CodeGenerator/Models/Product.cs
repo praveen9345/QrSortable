@@ -3,6 +3,10 @@
 
     public class Product
     {
+        /// <summary>
+        /// Order id of the product.
+        /// </summary>
+        public string OrderId { get; set; }
 
         /// <summary>
         /// Title of the product.

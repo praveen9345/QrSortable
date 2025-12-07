@@ -5,6 +5,9 @@
 
     public partial class BasketData : ObservableObject
     {
+        [ObservableProperty]
+        private string _orderId;
+
         [ObservableProperty] 
         private string _title;
 

@@ -30,6 +30,10 @@ namespace QrSortable.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Price")
                         .IsRequired()
                         .HasColumnType("TEXT");

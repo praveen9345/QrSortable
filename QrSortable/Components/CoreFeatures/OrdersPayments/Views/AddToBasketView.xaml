@@ -88,6 +88,16 @@
                                                 FontFamily="ItimRegular"
                                                 FontSize="Large"
                                                 HorizontalTextAlignment="Start"
+                                                Text="{Binding OrderId}"
+                                                TextColor="{StaticResource Black}"
+                                                VerticalTextAlignment="Center" />
+
+                                            <Label
+                                                BackgroundColor="Transparent"
+                                                FontAttributes="Bold"
+                                                FontFamily="ItimRegular"
+                                                FontSize="Large"
+                                                HorizontalTextAlignment="Start"
                                                 Text="{Binding DateTime}"
                                                 TextColor="{StaticResource Black}"
                                                 VerticalTextAlignment="Center" />
