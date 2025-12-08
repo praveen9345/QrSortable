@@ -2,6 +2,7 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using PdfSharpCore.Drawing.BarCodes;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Models;
@@ -60,6 +61,14 @@
         /// </summary>
         [ObservableProperty]
         private string _basketCount;
+
+
+        public AsyncRelayCommand<OrderedData> CopyOrderIdCommand => new AsyncRelayCommand<OrderedData>(async (item) =>
+        {
+            if (item == null) return;
+            await Clipboard.Default.SetTextAsync(item.OrderId);
+            await _toastService.DisplayToast("OrderId copied to clipboard!");
+        });
 
         private async Task LoadOrderedDataAsync()
         {
