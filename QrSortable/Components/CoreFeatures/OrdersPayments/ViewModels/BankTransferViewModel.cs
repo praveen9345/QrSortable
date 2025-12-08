@@ -9,6 +9,7 @@
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using QrSortable.Components.UiFunctionality.Navigation.Views;
     using QrSortable.Components.UiFunctionality.Notification;
     using System;
 
@@ -129,6 +130,7 @@
                     "Confirmation",
                     "Thank you for your order. We will send you an email shortly.",
                     "OK");
+                await NavigationService.Navigate<RootView>();
             }
             else
             {

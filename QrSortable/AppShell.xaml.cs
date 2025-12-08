@@ -1,6 +1,6 @@
 ﻿namespace QrSortable
 {
-
+    using QrSortable.Components.UiFunctionality.Navigation.Views;
     using System.Reflection;
     /// <summary>
 	///     AppShell class for describing the visual hierarchy of the application.
@@ -18,6 +18,11 @@
 
             foreach (var view in views)
             {
+                if (view.Name == "RootView")
+                {
+                    Routing.RegisterRoute("//" + nameof(MainPage) + "/" + nameof(RootView), view);
+                    continue;
+                }
                 Routing.RegisterRoute(view.Name, view);
             }
 		}
