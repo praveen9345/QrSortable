@@ -127,7 +127,7 @@
                 }
 
                 await DialogService.ShowAlertDialog(
-                    "Confirmation",
+                    "Confirmation 🎉",
                     "Thank you for your order. We will send you an email shortly.",
                     "OK");
                 await NavigationService.Navigate<RootView>();
@@ -198,9 +198,6 @@
                 .Select(s => s[random.Next(s.Length)]).ToArray());
             return prefix + randomPart; 
         }
-
-      
-
     }
 
 }

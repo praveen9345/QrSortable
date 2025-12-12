@@ -43,21 +43,32 @@
             <!--  page icon  -->
             <Image
                 Grid.Row="0"
-                Margin="0,-20,0,0"
+                Margin="0,-15,0,-10"
                 Aspect="AspectFit"
-                HeightRequest="150"
+                HeightRequest="110"
                 HorizontalOptions="Center"
                 Source="payment"
                 VerticalOptions="Center" />
 
             <ScrollView Grid.Row="1">
                 <StackLayout Margin="10,0,0,10">
+                    <!--  Product Title  -->
+                    <Label
+                        Margin="0,0,0,5"
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="23"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding ProductTitle}"
+                        TextColor="{StaticResource White}"
+                        VerticalTextAlignment="Center" />
                     <!--  Shipping and Billing Address view  -->
                     <Label
                         BackgroundColor="Transparent"
                         FontAttributes="Bold"
                         FontFamily="ItimRegular"
-                        FontSize="24"
+                        FontSize="22"
                         HorizontalTextAlignment="Start"
                         Text="Shipping and Billing Address:"
                         TextColor="{StaticResource Primary}"
@@ -356,7 +367,7 @@
                     <StackLayout
                         Grid.Row="0"
                         Margin="15,20,15,0"
-                        HorizontalOptions="Center"
+                        HorizontalOptions="Start"
                         Orientation="Horizontal">
                         <!--  total name  -->
                         <Label
@@ -371,7 +382,7 @@
 
                         <!--  total name  -->
                         <Label
-                            Margin="10,0,0,0"
+                            Margin="10,0,10,0"
                             BackgroundColor="Transparent"
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
@@ -380,10 +391,68 @@
                             Text="{Binding TotalAmount}"
                             TextColor="{StaticResource Primary}"
                             VerticalTextAlignment="Center" />
+
+                        <CollectionView
+                            ItemsSource="{Binding CurrencyItem}"
+                            SelectedItem="{Binding SelectedCurrencyItem, Mode=TwoWay}"
+                            SelectionChangedCommand="{Binding OnSelectionChangedCommand}"
+                            SelectionMode="Single">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Padding="10"
+                                        Stroke="{StaticResource Primary}"
+                                        StrokeShape="RoundRectangle 30"
+                                        StrokeThickness="2">
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontFamily="ItimRegular"
+                                            FontSize="16"
+                                            HorizontalOptions="Center"
+                                            HorizontalTextAlignment="Center"
+                                            Text="{Binding .}"
+                                            TextColor="White"
+                                            VerticalOptions="Center" />
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup Name="CommonStates">
+                                                <VisualState Name="Normal">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="Transparent" />
+                                                        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                                <VisualState Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                                        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                                                        <Setter Property="StrokeThickness" Value="2" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
                     </StackLayout>
 
+                    <Label
+                        Margin="10,10,10,0"
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="Large"
+                        HorizontalTextAlignment="Center"
+                        IsVisible="{Binding IsPaymentMessageVisible}"
+                        Text="{Binding PaymentStatusMessage}"
+                        TextColor="{StaticResource Red}"
+                        VerticalTextAlignment="Center" />
+
                     <Button
-                        Margin="10,20,20,0"
+                        Margin="10,10,20,0"
                         BackgroundColor="{StaticResource Primary}"
                         Command="{Binding PaymentByCardCommand}"
                         CornerRadius="10"

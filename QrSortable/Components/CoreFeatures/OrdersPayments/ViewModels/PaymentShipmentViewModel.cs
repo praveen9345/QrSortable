@@ -3,23 +3,62 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.General;
+    using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
+    using QrSortable.Components.PlatformUtils;
+    using QrSortable.Components.PlatformUtils.Wrappers;
+    using QrSortable.Components.TimeHandling;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using QrSortable.Components.UiFunctionality.Navigation.Views;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     ///     The view model of the Select Product view screen.
     /// </summary>
     public partial class PaymentShipmentViewModel : BaseViewModel<Product>
     {
+        private readonly IMollieService _mollieService;
+        private readonly ITimerService _timeService;
+        public readonly IDatabaseManager _databaseManager;
+        private readonly ISharedMethodService _sharedMethodService;
+        private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
+
         private Product _product;
+        private string _paymentId;
+        private Timer _timer;
+        private bool _orderProcessed = false;
+        private readonly object _lock = new object();
+
+        public ObservableCollection<string> CurrencyItem { get; } =
+        new ObservableCollection<string>
+        {
+           "Euro(€)",
+           "USD($)"
+        };
+
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PaymentShipmentViewModel" />.
         /// </summary>
-        public PaymentShipmentViewModel()
+        /// <param name="mollieService">The service handling Mollie payment-related operations.</param>
+        /// <param name="timerService">The service managing timing-related operations.</param>
+        /// <param name="mauiEssentialsWrapper">An instance of <see cref="IMauiEssentialsWrapper" /> used to access platform-specific features.</param>
+        /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
+        /// used for managing database operations.</param>
+        public PaymentShipmentViewModel(IMollieService mollieService, ITimerService timerService, IDatabaseManager databaseManager,
+            ISharedMethodService sharedMethodService,IMauiEssentialsWrapper mauiEssentialsWrapper)
         {
             IsBackNavigationEnabled = true;
-           
+
+            _mollieService = mollieService;
+            _timeService = timerService;
+            _databaseManager = databaseManager;
+            _sharedMethodService = sharedMethodService;
+            _mauiEssentialsWrapper = mauiEssentialsWrapper;
+
+            SelectedCurrencyItem = CurrencyItem[0];
         }
 
         /// <summary>
@@ -36,6 +75,8 @@
         public override void Prepare(Product parameter)
         {
             _product = parameter;
+            ProductTitle = parameter.Title;
+
             TotalAmount = _product.TotalPrice.ToString() + "€";
             if (_product.Title == "Generate A4 QR or bar code yourself!") 
             { 
@@ -43,6 +84,12 @@
             }
             else { BankTransferVisible = true; }
         }
+
+        /// <summary>
+        /// Represents the currently product tile in the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _productTitle;
 
         /// <summary>
         /// Represents the currently total amount to pay in the application.
@@ -98,6 +145,39 @@
         [ObservableProperty]
         private string _email;
 
+        /// <summary>
+        /// Represents the currently payment message visible in the application.
+        /// </summary>
+        [ObservableProperty]
+        private bool _isPaymentMessageVisible = false;
+
+        /// <summary>
+        /// Represents the payment status message in the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _paymentStatusMessage;
+
+        /// <summary>
+        /// Represents the currently selected currenc item in the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _selectedCurrencyItem;
+
+        public AsyncRelayCommand OnSelectionChangedCommand => new AsyncRelayCommand(async () =>
+        {
+            if (SelectedCurrencyItem != null)
+            {
+                if(SelectedCurrencyItem == CurrencyItem[0])
+                {
+                    TotalAmount = _product.TotalPrice.ToString() + "€";
+                }
+                else 
+                {
+                    TotalAmount = _product.TotalPrice.ToString() + "$";
+                }
+            }
+        });
+
         public AsyncRelayCommand PaymentByBankCommand => new AsyncRelayCommand(async () =>
         {
 
@@ -123,6 +203,8 @@
 
             // Add info to product
             AddInformationToProducts();
+
+            IsPaymentMessageVisible = false;
 
             // Navigate to BankTransferView
             await NavigationService.Navigate<BankTransferView>(_product);
@@ -154,9 +236,167 @@
             // Add info to product
             AddInformationToProducts();
 
-            // TODO: need to handle mollie payment here
+            IsPaymentMessageVisible = true;
+
+            var paymentResponse = await _mollieService.CreatePaymentAsync(
+              _product.TotalPrice,
+              SelectedCurrencyItem,
+              "Card",
+              "Payment"
+            );
+
+            if (paymentResponse != null && paymentResponse.Links.Checkout != null)
+            {
+                _paymentId = paymentResponse.Id;
+
+                _timer = _timeService.StartPeriodicTimer(CheckStatusAsync, TimeSpan.FromSeconds(15));
+
+                await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.SystemPreferred);
+            }
+            else
+            {
+                Console.WriteLine("PaymentShipmentViewModel:Error: Failed to create payment.");
+            }
 
         });
+
+        private async void CheckStatusAsync(object state)
+        {
+            if (string.IsNullOrEmpty(_paymentId))
+            {
+                Console.WriteLine("PaymentShipmentViewModel:Error: No payment ID found.");
+                return;
+            }
+
+            var paymentResponse = await _mollieService.GetPaymentStatusAsync(_paymentId);
+
+            if (paymentResponse == null)
+            {
+                Console.WriteLine("PaymentShipmentViewModel:Error: Failed to retrieve payment status.");
+                return;
+            }
+
+            PaymentStatusMessage = paymentResponse.Status switch
+            {
+                "paid" => "Your payment was successful!",
+                "pending" => "Your payment is pending.",
+                "open" => "Your payment is still open.",
+                "failed" => "Your payment failed.",
+                "canceled" => "Your payment was canceled.",
+                _ => "Unknown payment status."
+            };
+
+            if (paymentResponse.Status != "paid") { return; }
+
+            lock (_lock)
+            {
+                if (_orderProcessed)
+                    return; // Already handled → exit immediately
+
+                _orderProcessed = true;  // Mark as processed
+            }
+
+            _timeService.StopPeriodicTimer(_timer);
+            _timer.Dispose();
+
+            PaymentStatusMessage = "Order received! We'll send a confirmation email shortly.! 🎉";
+
+            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+            async () => { return await DatabaseAndBackendStoringAsync(); });
+
+            if (result)
+            {
+                var dbItems = await _databaseManager.GetListAsync<AddToBasketData>();
+                var match = dbItems.FirstOrDefault(x =>
+                    x.Title == _product.Title &&
+                    x.OrderId == _product.OrderId
+                );
+
+                if (match != null)
+                {
+                    await _databaseManager.DeleteAsync(match);
+                }
+
+                await NavigationService.Navigate<RootView>();
+            }
+            else
+            {
+                await DialogService.ShowAlertDialog("An unexpected error occurred while saving the item. Please try again.", AppResources.Dialog_OK_Text);
+            }
+        }
+
+        private async Task<bool> DatabaseAndBackendStoringAsync()
+        {
+            /*TODO: *send email to user and to me and 
+            *send saved to the backgend when user placed an order
+            */
+            try
+            {
+                var dbItems = await _databaseManager.GetListAsync<YoursOrderData>();
+                var existing = dbItems.FirstOrDefault(x =>
+                    x.Title == _product.Title &&
+                    x.OrderId == _product.OrderId
+                );
+
+                if (existing != null)
+                {
+                    Console.WriteLine("PaymentShipmentViewModel:Error:Order already exists — skipping insert.");
+                    return true; 
+                }
+
+                var orderedItem = new YoursOrderData
+                {
+                    OrderId = _product.OrderId,
+                    Title = _product.Title,
+                    Description = _product.Description,
+                    ProductQuantity = _product.NumberOfPages,
+                    DateTime = DateTime.Now,
+                    TotalPrice = _sharedMethodService.ParsePrice(TotalAmount).ToString(),
+                    Name = _product.Name,
+                    Street = _product.Street,
+                    HouseNo = _product.HouseNo,
+                    ZipCode = _product.ZipCode,
+                    City = _product.City,
+                    Country = _product.Country,
+                    Email = _product.Email,
+                    ReferenceCode = "PaidByCard",
+                    ShipmentTracking = "DHL:",
+                    StatusOfOrder = StatusOfOrder()
+                };
+
+                _databaseManager.BeginTransaction();
+                var addedItem = await _databaseManager.AddAsync(orderedItem);
+
+                if (addedItem != null)
+                {
+                    _databaseManager.CommitTransaction();
+                    Console.WriteLine("Successfully placed an ordered.");
+                    return true;
+                }
+                else
+                {
+                    _databaseManager.Rollback();
+                    Console.WriteLine("DatabaseAndBackendStoringAsync: AddAsync returned null - rollback performed.");
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"DatabaseAndBackendStoringAsync::Exception during add: {ex}");
+                return false;
+            }
+        }
+
+        private string StatusOfOrder()
+        {
+            string status = "Pending...";
+            if (_product.Title == "Generate A4 QR or bar code yourself!")
+            {
+                status = "Download";
+            }
+            return status;
+        }
 
         private void AddInformationToProducts()
         {
