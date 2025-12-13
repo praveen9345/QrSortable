@@ -23,6 +23,16 @@
         public string Description { get; set; }
 
         /// <summary>
+        /// Type of code to generate (e.g., "QR code" or "Bar code").
+        /// </summary>
+        public string CodeType { get; set; } = "QR code";
+
+        /// <summary>
+        /// Page type (e.g., "A4(12 code)" or "A5(6 code)").
+        /// </summary>
+        public string PageType { get; set; }
+
+        /// <summary>
         /// URL of the product image.
         /// </summary>
         public string ImageUrl { get; set; } = "image_icon";

@@ -128,6 +128,8 @@
                         OrderDateTime = item.DateTime,       
                         Title = item.Title,
                         Description = item.Description,
+                        CodeType = item.CodeType,
+                        PageType = item.PageType,
                         ImageUrl = _urlImage,
                         StatusOfOrder = item.StatusOfOrder,
                         IsEnabelStatusOfOrder = _isEnabelStatusOfOrder,

@@ -158,6 +158,28 @@
                                                     TextColor="{StaticResource Black}"
                                                     VerticalTextAlignment="Center" />
 
+                                                <HorizontalStackLayout>
+                                                    <Label
+                                                        BackgroundColor="Transparent"
+                                                        FontAttributes="Bold"
+                                                        FontFamily="ItimRegular"
+                                                        FontSize="Medium"
+                                                        HorizontalTextAlignment="Start"
+                                                        Text="{Binding CodeType}"
+                                                        TextColor="{StaticResource Black}"
+                                                        VerticalTextAlignment="Center" />
+                                                    <Label
+                                                        Margin="10,0,0,0"
+                                                        BackgroundColor="Transparent"
+                                                        FontAttributes="Bold"
+                                                        FontFamily="ItimRegular"
+                                                        FontSize="Medium"
+                                                        HorizontalTextAlignment="Start"
+                                                        Text="{Binding PageType}"
+                                                        TextColor="{StaticResource Black}"
+                                                        VerticalTextAlignment="Center" />
+                                                </HorizontalStackLayout>
+
                                                 <Button
                                                     BackgroundColor="Green"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.DownloadPDFCommand}"
@@ -185,7 +207,7 @@
                                             <VerticalStackLayout Grid.Column="1">
                                                 <Button
                                                     Margin="2"
-                                                    BackgroundColor="#F0C70F"
+                                                    BackgroundColor="#00b8d5"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.CopyOrderIdCommand}"
                                                     CommandParameter="{Binding .}"
                                                     CornerRadius="50"
@@ -193,7 +215,7 @@
                                                     FontFamily="ItimRegular"
                                                     FontSize="Medium"
                                                     HorizontalOptions="Center"
-                                                    Text="Copy"
+                                                    Text="Copy ID"
                                                     TextColor="Black"
                                                     VerticalOptions="Center">
                                                     <Button.Shadow>

@@ -150,6 +150,8 @@
                     OrderId = _product.OrderId,
                     Title = _product.Title,
                     Description = _product.Description,
+                    CodeType = GetCodeAndPageType(_product.CodeType),
+                    PageType = GetCodeAndPageType(_product.PageType),
                     ProductQuantity = _product.NumberOfPages,
                     DateTime = DateTime.Now,
                     TotalPrice = _sharedMethodService.ParsePrice(NetTotalAmount).ToString(),
@@ -162,7 +164,8 @@
                     Email = _product.Email,
                     ReferenceCode = ReferenceCode,
                     ShipmentTracking = "DHL:",
-                    StatusOfOrder = "Pending..."
+                    StatusOfOrder = "Pending...",
+                    PdfFiles = new List<byte[]>()
                 };
 
                 _databaseManager.BeginTransaction();
@@ -189,6 +192,15 @@
             }
         }
 
+        private string GetCodeAndPageType(string data)
+        {
+            if (_product.Title == "Generate A4 QR or bar code yourself!")
+            {
+                return data;
+            }
+            return string.Empty;
+
+        }
         private string GenerateReferenceCode()
         {
             string prefix = "#QS";

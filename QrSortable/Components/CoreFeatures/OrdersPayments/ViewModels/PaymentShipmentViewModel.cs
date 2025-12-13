@@ -373,8 +373,8 @@
                     OrderId = _product.OrderId,
                     Title = _product.Title,
                     Description = _product.Description,
-                    CodeType = _product.CodeType,
-                    PageType = _product.PageType,
+                    CodeType = GetCodeAndPageType(_product.CodeType),
+                    PageType = GetCodeAndPageType(_product.PageType),
                     ProductQuantity = _product.NumberOfPages,
                     DateTime = DateTime.Now,
                     TotalPrice = _sharedMethodService.ParsePrice(TotalAmount).ToString(),
@@ -413,6 +413,16 @@
                 Console.WriteLine($"DatabaseAndBackendStoringAsync::Exception during add: {ex}");
                 return false;
             }
+        }
+
+        private string GetCodeAndPageType(string data)
+        {
+            if(_product.Title == CODE_GENERATED_NAME)
+            {
+                return data;
+            }
+            return string.Empty;
+
         }
 
         private string StatusOfOrder()
