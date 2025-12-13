@@ -171,6 +171,10 @@ namespace QrSortable.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CodeType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -195,6 +199,10 @@ namespace QrSortable.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PageType")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

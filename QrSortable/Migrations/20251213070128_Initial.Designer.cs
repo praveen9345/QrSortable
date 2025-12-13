@@ -11,7 +11,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.General;
 namespace QrSortable.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20251207095722_Initial")]
+    [Migration("20251213070128_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -174,6 +174,10 @@ namespace QrSortable.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CodeType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -198,6 +202,10 @@ namespace QrSortable.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PageType")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

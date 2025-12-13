@@ -70,6 +70,46 @@
             await _toastService.DisplayToast("OrderId copied to clipboard!");
         });
 
+        public AsyncRelayCommand<OrderedData> DownloadPDFCommand => new AsyncRelayCommand<OrderedData>(async (item) =>
+        {
+            if (item == null) return;
+            try
+            {
+                var dbItems = await _databaseManager.GetListAsync<YoursOrderData>();
+                var existing = dbItems.FirstOrDefault(x =>
+                    x.Title == item.Title &&
+                    x.OrderId == item.OrderId
+                );
+                if (existing != null)
+                {
+
+                    var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                    var fileName = (existing.CodeType == "QR code") ? $"{timestamp}Your_QR_Codes.pdf"
+                        : $"{timestamp}Your_Barcodes.pdf";
+
+                    string filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+                    File.WriteAllBytes(filePath, existing.PdfFiles[0]);
+
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        await Share.RequestAsync(new ShareFileRequest
+                        {
+                            Title = fileName,
+                            File = new ShareFile(filePath)
+                        });
+                    });
+                }
+
+                }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"DatabaseAndBackendStoringAsync::Exception during add: {ex}");
+
+            }
+
+        });
+
+
         private async Task LoadOrderedDataAsync()
         {
             try

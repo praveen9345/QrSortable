@@ -53,6 +53,8 @@ namespace QrSortable.Migrations
                     OrderId = table.Column<string>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
+                    CodeType = table.Column<string>(type: "TEXT", nullable: false),
+                    PageType = table.Column<string>(type: "TEXT", nullable: false),
                     ProductQuantity = table.Column<int>(type: "INTEGER", nullable: false),
                     DateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     TotalPrice = table.Column<string>(type: "TEXT", nullable: false),

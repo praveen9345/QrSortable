@@ -2,6 +2,9 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using Google.Cloud.Firestore;
+    using Microsoft.Maui.Storage;
+    using QrSortable.Components.CoreFeatures.CodeGenerator;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
@@ -23,6 +26,8 @@
         private readonly ITimerService _timeService;
         public readonly IDatabaseManager _databaseManager;
         private readonly ISharedMethodService _sharedMethodService;
+        private readonly ICodeGeneratorService _codeService;
+        private readonly IPdfGeneratorService _pdfService;
         private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
 
         private Product _product;
@@ -30,6 +35,7 @@
         private Timer _timer;
         private bool _orderProcessed = false;
         private readonly object _lock = new object();
+        private const string CODE_GENERATED_NAME = "Generate A4 QR or bar code yourself!";
 
         public ObservableCollection<string> CurrencyItem { get; } =
         new ObservableCollection<string>
@@ -48,7 +54,8 @@
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
         public PaymentShipmentViewModel(IMollieService mollieService, ITimerService timerService, IDatabaseManager databaseManager,
-            ISharedMethodService sharedMethodService,IMauiEssentialsWrapper mauiEssentialsWrapper)
+            ISharedMethodService sharedMethodService, ICodeGeneratorService codeService, IPdfGeneratorService pdfGeneratorService,
+            IMauiEssentialsWrapper mauiEssentialsWrapper)
         {
             IsBackNavigationEnabled = true;
 
@@ -56,6 +63,8 @@
             _timeService = timerService;
             _databaseManager = databaseManager;
             _sharedMethodService = sharedMethodService;
+            _codeService = codeService;
+            _pdfService = pdfGeneratorService;
             _mauiEssentialsWrapper = mauiEssentialsWrapper;
 
             SelectedCurrencyItem = CurrencyItem[0];
@@ -78,7 +87,7 @@
             ProductTitle = parameter.Title;
 
             TotalAmount = _product.TotalPrice.ToString() + "€";
-            if (_product.Title == "Generate A4 QR or bar code yourself!") 
+            if (_product.Title == CODE_GENERATED_NAME) 
             { 
                 BankTransferVisible = false; 
             }
@@ -239,11 +248,7 @@
             IsPaymentMessageVisible = true;
 
             var paymentResponse = await _mollieService.CreatePaymentAsync(
-              _product.TotalPrice,
-              SelectedCurrencyItem,
-              "Card",
-              "Payment"
-            );
+              _product.TotalPrice, SelectedCurrencyItem,"Card","Payment");
 
             if (paymentResponse != null && paymentResponse.Links.Checkout != null)
             {
@@ -301,23 +306,42 @@
 
             PaymentStatusMessage = "Order received! We'll send a confirmation email shortly.! 🎉";
 
+            var pdfFiles = new List<byte[]>();
+
             var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
-            async () => { return await DatabaseAndBackendStoringAsync(); });
+            async () =>
+            {
+                pdfFiles = await GeneratePdfFilesAsync();
+                return await DatabaseAndBackendStoringAsync(pdfFiles); 
+            });
 
             if (result)
             {
-                var dbItems = await _databaseManager.GetListAsync<AddToBasketData>();
-                var match = dbItems.FirstOrDefault(x =>
-                    x.Title == _product.Title &&
-                    x.OrderId == _product.OrderId
-                );
+                await RemoveProductFromBasket();
 
-                if (match != null)
+                if(_product.Title == CODE_GENERATED_NAME)
                 {
-                    await _databaseManager.DeleteAsync(match);
-                }
+                    var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                    var fileName = (_product.CodeType == "QR code") ? $"{timestamp}Your_QR_Codes.pdf"
+                        : $"{timestamp}Your_Barcodes.pdf";
 
-                await NavigationService.Navigate<RootView>();
+                    string filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+                    File.WriteAllBytes(filePath, pdfFiles[0]);
+
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        await Share.RequestAsync(new ShareFileRequest
+                        {
+                            Title = fileName,
+                            File = new ShareFile(filePath)
+                        });
+                    });
+                }
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await NavigationService.Navigate<RootView>();
+                });
+               
             }
             else
             {
@@ -325,7 +349,7 @@
             }
         }
 
-        private async Task<bool> DatabaseAndBackendStoringAsync()
+        private async Task<bool> DatabaseAndBackendStoringAsync(List<byte[]> pdfFiles)
         {
             /*TODO: *send email to user and to me and 
             *send saved to the backgend when user placed an order
@@ -349,6 +373,8 @@
                     OrderId = _product.OrderId,
                     Title = _product.Title,
                     Description = _product.Description,
+                    CodeType = _product.CodeType,
+                    PageType = _product.PageType,
                     ProductQuantity = _product.NumberOfPages,
                     DateTime = DateTime.Now,
                     TotalPrice = _sharedMethodService.ParsePrice(TotalAmount).ToString(),
@@ -361,7 +387,8 @@
                     Email = _product.Email,
                     ReferenceCode = "PaidByCard",
                     ShipmentTracking = "DHL:",
-                    StatusOfOrder = StatusOfOrder()
+                    StatusOfOrder = StatusOfOrder(),
+                    PdfFiles = pdfFiles
                 };
 
                 _databaseManager.BeginTransaction();
@@ -391,11 +418,58 @@
         private string StatusOfOrder()
         {
             string status = "Pending...";
-            if (_product.Title == "Generate A4 QR or bar code yourself!")
+            if (_product.Title == CODE_GENERATED_NAME)
             {
                 status = "Download";
             }
             return status;
+        }
+
+        private async Task<List<byte[]>> GeneratePdfFilesAsync()
+        {
+            var pdfBytes = new List<byte[]>();
+
+            if (_product.Title == CODE_GENERATED_NAME)
+            {
+                if (_product.CodeType == "QR code")
+                {
+                    var qrCodesCustom = await _codeService.GenerateQrCodesAsync(
+                        tag: _product.TagName,
+                        noOfPage: _product.NumberOfPages,
+                        hexColor: _product.ColorHex
+                    );
+
+                    var pdf = await _pdfService.GenerateQrPdfAsync(qrCodesCustom);
+                    pdfBytes.Add(pdf);
+                }
+                else
+                {
+                    var barCodesCustom = await _codeService.GenerateBarcodesAsync(
+                        tag: _product.TagName,
+                        noOfPage: _product.NumberOfPages
+                    );
+
+                    var pdf = await _pdfService.GenerateBarcodePdfAsync(barCodesCustom);
+                    pdfBytes.Add(pdf);
+                }
+            }
+
+            return pdfBytes;
+        }
+
+        private async Task RemoveProductFromBasket()
+        {
+            var dbItems = await _databaseManager.GetListAsync<AddToBasketData>();
+
+            var match = dbItems.FirstOrDefault(x =>
+                x.Title == _product.Title &&
+                x.OrderId == _product.OrderId
+            );
+
+            if (match != null)
+            {
+                await _databaseManager.DeleteAsync(match);
+            }
         }
 
         private void AddInformationToProducts()

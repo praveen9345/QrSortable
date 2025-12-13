@@ -160,7 +160,8 @@
 
                                                 <Button
                                                     BackgroundColor="Green"
-                                                    Command="{Binding CopyReferenceCodeCommand}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.DownloadPDFCommand}"
+                                                    CommandParameter="{Binding .}"
                                                     CornerRadius="50"
                                                     FontAttributes="Bold"
                                                     FontFamily="ItimRegular"
