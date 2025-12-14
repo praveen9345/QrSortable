@@ -44,7 +44,6 @@
            "USD($)"
         };
 
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="PaymentShipmentViewModel" />.
         /// </summary>
@@ -492,7 +491,6 @@
             _product.Country = CountryName;
             _product.Email = Email;
         }
-
 
         private bool IsValidEmail(string email)
         {

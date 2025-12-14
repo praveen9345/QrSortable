@@ -6,11 +6,11 @@ namespace QrSortable.Components.CoreFeatures.AppStart
     using QrSortable.Components.CoreFeatures.DataManagement;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.CoreFeatures.Onboarding.Views;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.UiFunctionality.Navigation;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
-
 
     /// <summary>
     /// Represents a service responsible for initializing and managing various application components.
@@ -51,7 +51,10 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         public async Task OnStartAsync()
         {
             await ConfigureAndInitializeFirebaseAsync();
-            await NavigateToFirstViewModelAsync();     
+            await NavigateToFirstViewModelAsync();
+
+           
+        
         }
 
         /// <summary>
@@ -60,7 +63,8 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// </summary>
         private async Task NavigateToFirstViewModelAsync()
         {
-           await _navigationService.Navigate<RootView>();
+            //await _navigationService.Navigate<RootView>();
+            await  _navigationService.Navigate<OnboardingView>();
         }
 
         private async Task ConfigureAndInitializeFirebaseAsync()
@@ -122,6 +126,5 @@ namespace QrSortable.Components.CoreFeatures.AppStart
                 _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
             }
         }
-
     }
 }

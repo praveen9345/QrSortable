@@ -138,6 +138,7 @@
             //  "OK");
 
             //await NavigationService.Navigate<BoxDetailView>();
+
             //var sample = new SampleModel
             //{
             //    Name = "kumar",

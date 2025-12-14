@@ -104,7 +104,6 @@
             catch (Exception ex)
             {
                 Console.WriteLine($"DatabaseAndBackendStoringAsync::Exception during add: {ex}");
-
             }
 
         });
@@ -113,8 +112,7 @@
         private async Task LoadOrderedDataAsync()
         {
             try
-            {
-                
+            {  
                 var dbItems = await _databaseManager.GetListAsync<YoursOrderData>();
 
                 OrderedDatas.Clear();

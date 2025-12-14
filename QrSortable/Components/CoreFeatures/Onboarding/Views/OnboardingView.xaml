@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<views:BaseView
+    x:Class="QrSortable.Components.CoreFeatures.Onboarding.Views.OnboardingView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    BackgroundImageSource="background_layout.webp">
+    <views:BaseView.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <!--  back  -->
+                <RowDefinition Height="Auto" />
+                <!--  item view  -->
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Back button  -->
+            <Button
+                Grid.Row="0"
+                Margin="15,15,0,0"
+                Padding="2"
+                BackgroundColor="{StaticResource DarkGrey}"
+                Command="{Binding BackNavigationCommand}"
+                CornerRadius="5"
+                HorizontalOptions="Start"
+                VerticalOptions="Start">
+                <Button.Shadow>
+                    <Shadow
+                        Brush="Black"
+                        Opacity="0.5"
+                        Radius="10"
+                        Offset="0,0" />
+                </Button.Shadow>
+                <Button.ImageSource>
+                    <FontImageSource
+                        FontFamily="FluentIcons"
+                        Glyph="{x:Static local:IconNames.Back}"
+                        Color="{StaticResource Primary}" />
+                </Button.ImageSource>
+            </Button>
+
+            <!--  page icon  -->
+            <Image
+                Grid.Row="0"
+                Margin="10"
+                Aspect="AspectFit"
+                HeightRequest="100"
+                HorizontalOptions="Center"
+                Source="cart_yellow_icon"
+                VerticalOptions="Center" />
+
+            <Label
+                Grid.Row="1"
+                Padding="0"
+                FontAttributes="Bold"
+                FontSize="28"
+                HorizontalOptions="Center"
+                Text="{Binding MultiuserId}"
+                TextColor="White"
+                VerticalOptions="Center" />
+
+        </Grid>
+    </views:BaseView.Content>
+</views:BaseView>

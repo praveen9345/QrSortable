@@ -13,7 +13,6 @@
     using QrSortable.Components.UiFunctionality.Notification;
     using QrSortable.Components.UiFunctionality.Notification.Models;
 
-
     /// <summary>
     ///     The view model of the ItemDetailView screen.
     /// </summary>
