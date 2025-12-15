@@ -17,7 +17,7 @@
             _aesHelper = aesHelper;
         }
 
-        public async Task InsertAsync<T>(T data) where T : FirestoreData
+        public async Task InsertAsync<T>(T data) where T : DtoFirestoreData
         {
             Validate(data);
 
@@ -34,7 +34,7 @@
                     .CreateAsync(doc);
         }
 
-        public async Task<T?> GetAsync<T>(string id) where T : FirestoreData, new()
+        public async Task<T?> GetAsync<T>(string id) where T : DtoFirestoreData, new()
         {
             var temp = new T();
             var docRef = Db.Collection(temp.CollectionName).Document(id);
@@ -46,7 +46,7 @@
             return DecryptData<T>(encryptedJson);
         }
 
-        public async Task UpdateAsync<T>(T data) where T : FirestoreData
+        public async Task UpdateAsync<T>(T data) where T : DtoFirestoreData
         {
             Validate(data);
 
@@ -84,7 +84,7 @@
             return JsonSerializer.Deserialize<T>(json) ?? throw new InvalidOperationException("Failed to deserialize decrypted data.");
         }
 
-        private static void Validate(FirestoreData data)
+        private static void Validate(DtoFirestoreData data)
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));

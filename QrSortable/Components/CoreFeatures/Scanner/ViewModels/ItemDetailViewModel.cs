@@ -5,6 +5,7 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using Microsoft.Maui.Graphics.Platform;
+    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.PlatformUtils;
@@ -22,6 +23,7 @@
         private readonly IFilePickerService _filePickerService;
         private readonly IImageService _imageService;
         private readonly IToastService _toastService;
+        private readonly IBackendCommunicationService _backendCommunicationService;
         
         private List<byte[]> _imageArrayDb = new List<byte[]>();
         private StorageEntry _storageData;
@@ -39,13 +41,15 @@
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
-        public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, IFilePickerService filePickerService, IToastService toastService)
+        public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, 
+            IFilePickerService filePickerService, IToastService toastService, IBackendCommunicationService backendCommunicationService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
             _imageService = imageService;
             _filePickerService = filePickerService;
             _toastService = toastService;
+            _backendCommunicationService = backendCommunicationService;
             ImageArray = new ObservableCollection<Images>();
         }
 

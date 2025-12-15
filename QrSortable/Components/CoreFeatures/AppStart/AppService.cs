@@ -63,8 +63,8 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// </summary>
         private async Task NavigateToFirstViewModelAsync()
         {
-            //await _navigationService.Navigate<RootView>();
-            await  _navigationService.Navigate<OnboardingView>();
+            await _navigationService.Navigate<RootView>();
+            //await  _navigationService.Navigate<OnboardingView>();
         }
 
         private async Task ConfigureAndInitializeFirebaseAsync()

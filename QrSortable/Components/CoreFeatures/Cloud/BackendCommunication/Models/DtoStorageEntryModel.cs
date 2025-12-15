@@ -6,7 +6,7 @@
     /// Firestore persistence model for StorageEntry.
     /// </summary>
     [FirestoreData]
-    public class StorageEntryModel : FirestoreData
+    public class DtoStorageEntryModel : DtoFirestoreData
     {
         /// <summary>
         /// Firestore document id (assigned). Must be get for Firestore SDK.

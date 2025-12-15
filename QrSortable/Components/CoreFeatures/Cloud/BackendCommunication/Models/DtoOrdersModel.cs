@@ -6,7 +6,7 @@
     /// Firestore persistence model for Orders.
     /// </summary>
     [FirestoreData]
-    public class OrdersModel : FirestoreData
+    public class DtoOrdersModel : DtoFirestoreData
     {
         /// <summary>
         /// Firestore document id (assigned). Must be get for Firestore SDK.
