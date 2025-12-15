@@ -59,6 +59,10 @@ namespace QrSortable.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("MultiUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("NotificationPermissionStatus")
                         .HasColumnType("INTEGER");
 

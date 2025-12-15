@@ -24,26 +24,8 @@
         {
             base.ViewAppearing();
 
-
+            MultiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
         }
-
-
-        private string GenereatedMultiuserId()
-        {
-            string seg1 = GenerateNumber(4);
-            string seg2 = GenerateNumber(5);
-
-            return $"QS{seg1}{seg2}";
-        }
-
-        private static string GenerateNumber(int digits)
-        {
-            Random random = new Random();
-            int max = (int)Math.Pow(10, digits);
-            int min = max / 10;
-            return random.Next(min, max).ToString();
-        }
-
 
         /// <summary>
         /// Represents the currently multiuser identification in the application.

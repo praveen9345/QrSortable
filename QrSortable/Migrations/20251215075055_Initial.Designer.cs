@@ -11,7 +11,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.General;
 namespace QrSortable.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20251213070128_Initial")]
+    [Migration("20251215075055_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -61,6 +61,10 @@ namespace QrSortable.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("MultiUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("NotificationPermissionStatus")
                         .HasColumnType("INTEGER");

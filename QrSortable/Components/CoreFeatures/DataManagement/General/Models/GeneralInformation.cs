@@ -18,6 +18,8 @@ namespace QrSortable.Components.CoreFeatures.DataManagement.General.Models
         ///     Gets or sets the current onboarding progress.
         /// </summary>
         public OnboardingProgress OnboardingProgress { get; set; }
-   
+
+        public string MultiUserId { get; set; } = string.Empty;
+
     }
 }

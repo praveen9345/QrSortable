@@ -1,10 +1,11 @@
 ﻿namespace QrSortable.Components.CoreFeatures.DataManagement.General
 {
+    using FirebaseAdmin.Messaging;
     using Models;
     using System;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Reflection;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     Provides logic for handling the general information entity.
@@ -92,6 +93,28 @@
             return await UpdateGeneralInformationAsync(generalInformation);
         }
 
+        /// <summary>
+        /// Asynchronously determines whether a multiuser identifier is available for the current context.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if a multiuser
+        /// identifier is available; otherwise, <see langword="false"/>.</returns>
+        public async Task<bool> GenerateTheMultiuserIdAsync()
+        {
+            var generalInformation = await GetGeneralInformationAsync();
+           
+            // Only generate if MultiUserId is null/empty/whitespace
+            if (!string.IsNullOrWhiteSpace(generalInformation.MultiUserId))
+            {
+                return true; 
+            }
+
+            Console.WriteLine($"Generating {nameof(GeneralInformation.MultiUserId)} …");
+            generalInformation.MultiUserId = GenereatedMultiuserId();
+
+            return await UpdateGeneralInformationAsync(generalInformation);
+
+        }
+
         private async Task<bool> UpdateGeneralInformationAsync(GeneralInformation generalInformation)
         {
             var updatedEntity = await _databaseManager.UpdateAsync(generalInformation);
@@ -105,5 +128,20 @@
             return false;
         }
 
+        private string GenereatedMultiuserId()
+        {
+            string seg1 = GenerateNumber(4);
+            string seg2 = GenerateNumber(5);
+
+            return $"QS-{seg1}-{seg2}";
+        }
+        
+        private static string GenerateNumber(int digits)
+        {
+            Random random = new Random();
+            int max = (int)Math.Pow(10, digits);
+            int min = max / 10;
+            return random.Next(min, max).ToString();
+        }
     }
 }

@@ -124,6 +124,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             if (file)
             {
                 _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
+                _generalInformationManager.GenerateTheMultiuserIdAsync();
             }
         }
     }
