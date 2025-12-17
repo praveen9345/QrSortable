@@ -50,6 +50,11 @@
         public DbSet<YoursOrderData> OrderPlacedEntries { get; set; }
 
         /// <summary>
+        ///     Gets or sets the UploadQueue entries used for persistent retry.
+        /// </summary>
+        public DbSet<UploadQueueEntry> UploadQueueEntries { get; set; }
+
+        /// <summary>
         ///      Method called implicitly when the model is being created. It registers entity property
         ///     conversions.
         /// </summary>

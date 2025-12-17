@@ -1,11 +1,13 @@
 ﻿namespace QrSortable
 {
 	using QrSortable.Components.CoreFeatures.AppStart;
+    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
+    using QrSortable.Components.PlatformUtils;
 
     /// <summary>
-	///     Class representing the cross-platform application.
-	/// </summary>
-	public partial class App : Application
+    ///     Class representing the cross-platform application.
+    /// </summary>
+    public partial class App : Application
 	{
 		private readonly IAppService _appService;
 
@@ -44,6 +46,14 @@
             base.OnStart();
 			
             await _appService.OnStartAsync();
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            // Add using to the sync manager namespace
+            var sync = ServiceHelper.GetService<IBackendSynchronizationManager>();
+            _ = sync?.ForceProcessQueueAsync();
         }
     }
 }

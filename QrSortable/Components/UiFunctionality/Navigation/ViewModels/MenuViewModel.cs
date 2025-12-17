@@ -3,6 +3,7 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
+    using QrSortable.Components.CoreFeatures.Settings.Views;
     using QrSortable.Components.UiFunctionality.Navigation.Models;
     using QrSortable.Resources;
     using System.Collections.ObjectModel;
@@ -76,6 +77,9 @@
                         break;
                     case YourOrdersTitle:
                         await NavigationService.Navigate<YoursOrdersView>();
+                        break;
+                    case SettingsTitle:
+                        await NavigationService.Navigate<SettingView>();
                         break;
                     case "":
                         // Future Implementation

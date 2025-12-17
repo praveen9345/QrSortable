@@ -3,6 +3,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
     using System.Text;
     using FirebaseAdmin;
     using Google.Apis.Auth.OAuth2;
+    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
@@ -51,6 +52,8 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         public async Task OnStartAsync()
         {
             await ConfigureAndInitializeFirebaseAsync();
+            var backendSync = ServiceHelper.GetService<IBackendSynchronizationManager>();
+            if (backendSync != null) await backendSync.InitializeAsync();
             await NavigateToFirstViewModelAsync();
 
            

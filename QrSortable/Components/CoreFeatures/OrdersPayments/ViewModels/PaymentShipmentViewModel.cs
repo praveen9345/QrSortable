@@ -4,6 +4,8 @@
     using CommunityToolkit.Mvvm.Input;
     using Google.Cloud.Firestore;
     using Microsoft.Maui.Storage;
+    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
+    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
     using QrSortable.Components.CoreFeatures.CodeGenerator;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
@@ -29,6 +31,9 @@
         private readonly ICodeGeneratorService _codeService;
         private readonly IPdfGeneratorService _pdfService;
         private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
+        private readonly IBackendCommunicationService _backendCommunicationService;
+        private readonly IBackendSynchronizationManager _backendSynchronizationManager;
+        private readonly IGeneralInformationManager _generalInformationManager;
 
         private Product _product;
         private string _paymentId;
@@ -54,7 +59,8 @@
         /// used for managing database operations.</param>
         public PaymentShipmentViewModel(IMollieService mollieService, ITimerService timerService, IDatabaseManager databaseManager,
             ISharedMethodService sharedMethodService, ICodeGeneratorService codeService, IPdfGeneratorService pdfGeneratorService,
-            IMauiEssentialsWrapper mauiEssentialsWrapper)
+            IMauiEssentialsWrapper mauiEssentialsWrapper, IBackendCommunicationService backendCommunicationService, 
+            IBackendSynchronizationManager backendSynchronizationManager, IGeneralInformationManager generalInformationManager)
         {
             IsBackNavigationEnabled = true;
 
@@ -67,6 +73,9 @@
             _mauiEssentialsWrapper = mauiEssentialsWrapper;
 
             SelectedCurrencyItem = CurrencyItem[0];
+            _backendCommunicationService = backendCommunicationService;
+            _backendSynchronizationManager = backendSynchronizationManager;
+            _generalInformationManager = generalInformationManager;
         }
 
         /// <summary>
@@ -389,6 +398,55 @@
                     StatusOfOrder = StatusOfOrder(),
                     PdfFiles = pdfFiles
                 };
+
+
+                try
+                {
+                    // create DTO for backend (reuse DtoOrdersModel)
+                    var dto = new DtoOrdersModel
+                    {
+                        OrderId = orderedItem.OrderId,
+                        Title = orderedItem.Title,
+                        Description = orderedItem.Description,
+                        CodeType = orderedItem.CodeType,
+                        PageType = orderedItem.PageType,
+                        ProductQuantity = orderedItem.ProductQuantity.ToString(),
+                        DateTime = orderedItem.DateTime.ToString("o"),
+                        TotalPrice = orderedItem.TotalPrice,
+                        Name = orderedItem.Name,
+                        Street = orderedItem.Street,
+                        HouseNo = orderedItem.HouseNo,
+                        ZipCode = orderedItem.ZipCode,
+                        City = orderedItem.City,
+                        Country = orderedItem.Country,
+                        Email = orderedItem.Email,
+                        ReferenceCode = orderedItem.ReferenceCode,
+                        ShipmentTracking = orderedItem.ShipmentTracking,
+                        StatusOfOrder = orderedItem.StatusOfOrder,
+                        PdfFiles = orderedItem.PdfFiles ?? new List<byte[]>()
+                    };
+
+                    // set MultiuserId via reflection (reuse helper or inline)
+                    var gi = await _generalInformationManager.GetGeneralInformationAsync();
+                    var multiId = gi?.MultiUserId ?? string.Empty;
+                    // reflection helper - same logic as in GeneralDatabaseSynchronizationManager
+                    var field = dto.GetType().GetField("<MultiuserId>k__BackingField", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                    if (field != null) field.SetValue(dto, multiId);
+
+                    // try insert; if fails enqueue for background retry
+                    try
+                    {
+                        await _backendCommunicationService.InsertAsync(dto);
+                    }
+                    catch (Exception)
+                    {
+                        await _backendSynchronizationManager.EnqueueAsync(dto);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"DatabaseAndBackendStoringAsync::Exception during backend save: {ex}");
+                }
 
                 _databaseManager.BeginTransaction();
                 var addedItem = await _databaseManager.AddAsync(orderedItem);

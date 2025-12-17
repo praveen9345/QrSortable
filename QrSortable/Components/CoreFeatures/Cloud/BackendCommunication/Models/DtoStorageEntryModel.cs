@@ -12,7 +12,7 @@
         /// Firestore document id (assigned). Must be get for Firestore SDK.
         /// </summary>
         [FirestoreDocumentId]
-        public override string MultiuserId { get; } //multiple user id
+        public override string MultiuserId { get; set; } //multiple user id
 
         /// <summary>
         /// Collection name for these documents.

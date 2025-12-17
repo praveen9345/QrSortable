@@ -11,6 +11,11 @@
         Task UpdateAsync<T>(T data) where T : DtoFirestoreData;
 
         Task DeleteAsync<T>(string id, string collectionName);
+
+        Task<List<T>> GetAllAsync<T>() where T : DtoFirestoreData, new();
+
+        Task<List<T>> GetByMultiuserIdAsync<T>(string multiuserId) where T : DtoFirestoreData, new();
+
     }
 }
 

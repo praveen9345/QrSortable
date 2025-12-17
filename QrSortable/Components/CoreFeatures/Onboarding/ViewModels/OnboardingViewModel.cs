@@ -11,15 +11,15 @@
     /// <summary>
     ///     The view model of the OnboardingViewModel screen.
     /// </summary>
-    public partial class OnboardingViewModel : BaseViewModel
+    public partial class SettingViewModel : BaseViewModel
     {
         private readonly IGeneralInformationManager _generalInformationManager;
         private readonly IToastService _toastService;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="OnboardingViewModel" />.
+        ///     Initializes a new instance of the <see cref="SettingViewModel" />.
         /// </summary>
-        public OnboardingViewModel(IGeneralInformationManager generalInformationManager, IToastService toastService)
+        public SettingViewModel(IGeneralInformationManager generalInformationManager, IToastService toastService)
         {
             IsBackNavigationEnabled = true;
             _toastService = toastService;
