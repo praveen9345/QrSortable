@@ -6,7 +6,6 @@
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
     using QrSortable.Components.CoreFeatures.DataManagement;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
@@ -20,17 +19,19 @@
         private readonly IBackendCommunicationService _backend;
         private readonly IGeneralInformationManager _generalInfoManager;
         private readonly IToastService _toast;
+        private readonly IFirebaseStorageService _firebaseStorageService;
 
         public GeneralDatabaseSynchronizationManager(
             IDatabaseManager database,
             IBackendCommunicationService backend,
             IGeneralInformationManager generalInfoManager,
-            IToastService toast)
+            IToastService toast, IFirebaseStorageService firebaseStorageService)
         {
             _database = database ?? throw new ArgumentNullException(nameof(database));
             _backend = backend ?? throw new ArgumentNullException(nameof(backend));
             _generalInfoManager = generalInfoManager ?? throw new ArgumentNullException(nameof(generalInfoManager));
             _toast = toast;
+            _firebaseStorageService = firebaseStorageService;
         }
 
         public async Task<bool> UploadAllAsync(CancellationToken cancellationToken = default)
@@ -51,6 +52,7 @@
                 // Upload StorageEntry
                 bool storageOk = await UploadEntitiesAsync<StorageEntry>(entity =>
                 {
+                    var imageUrls = (_firebaseStorageService.UploadImagesAsync(entity.ImageList)).Result;
                     var dto = new DtoStorageEntryModel
                     {
                         StorageId = entity.StorageId.ToString(),
@@ -62,7 +64,7 @@
                         SearchInfo = entity.SearchInfo ?? string.Empty,
                         ItemName = entity.ItemName ?? string.Empty,
                         Description = entity.Description ?? string.Empty,
-                        ImageList = entity.ImageList?.ToList() ?? new List<byte[]>(),
+                        ImageUrls = imageUrls,
                         BackgroundColorHex = entity.BackgroundColorHex ?? string.Empty
                     };
                     SetMultiuserId(dto, multiUserId);

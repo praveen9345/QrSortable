@@ -26,7 +26,8 @@
         private readonly IImageService _imageService;
         private readonly IToastService _toastService;
         private readonly IBackendCommunicationService _backendCommunicationService;
-        
+        private readonly IFirebaseStorageService _firebaseStorageService;
+
         private List<byte[]> _imageArrayDb = new List<byte[]>();
         private StorageEntry _storageData;
         private bool _isUpdateItem;
@@ -44,7 +45,8 @@
         /// used for managing database operations.</param>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
         public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, 
-            IFilePickerService filePickerService, IToastService toastService, IBackendCommunicationService backendCommunicationService)
+            IFilePickerService filePickerService, IToastService toastService, IBackendCommunicationService backendCommunicationService,
+            IFirebaseStorageService firebaseStorageService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
@@ -52,6 +54,8 @@
             _filePickerService = filePickerService;
             _toastService = toastService;
             _backendCommunicationService = backendCommunicationService;
+            _firebaseStorageService = firebaseStorageService;
+
             ImageArray = new ObservableCollection<Images>();
         }
 
@@ -203,6 +207,7 @@
                 else
                 {
                     var byteImage = await _imageService.ConvertToJpegBytes(imageStream);
+
                     if (byteImage != null && byteImage.Length > 0)
                     {
                         _imageArrayDb.Add(byteImage);
@@ -278,6 +283,8 @@
                             // send update to backend
                             try
                             {
+                                var imageUrls = await _firebaseStorageService.UploadImagesAsync(updatedItem.ImageList);
+                                
                                 var dto = new DtoStorageEntryModel
                                 {
                                     StorageId = updatedItem.StorageId.ToString(),
@@ -289,7 +296,7 @@
                                     SearchInfo = updatedItem.SearchInfo ?? string.Empty,
                                     ItemName = updatedItem.ItemName ?? string.Empty,
                                     Description = updatedItem.Description ?? string.Empty,
-                                    ImageList = updatedItem.ImageList?.ToList() ?? new List<byte[]>(),
+                                    ImageUrls = imageUrls.ToList(),
                                     BackgroundColorHex = updatedItem.BackgroundColorHex ?? string.Empty
                                 };
 
@@ -401,6 +408,7 @@
                         // send to backend (DtoStorageEntryModel)
                         try
                         {
+                            var imageUrls = await _firebaseStorageService.UploadImagesAsync(addedItem.ImageList);
                             var dto = new DtoStorageEntryModel
                             {
                                 StorageId = addedItem.StorageId.ToString(),
@@ -412,7 +420,7 @@
                                 SearchInfo = addedItem.SearchInfo ?? string.Empty,
                                 ItemName = addedItem.ItemName ?? string.Empty,
                                 Description = addedItem.Description ?? string.Empty,
-                                ImageList = addedItem.ImageList?.ToList() ?? new List<byte[]>(),
+                                ImageUrls = imageUrls.ToList(),
                                 BackgroundColorHex = addedItem.BackgroundColorHex ?? string.Empty
                             };
 

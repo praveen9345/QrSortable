@@ -77,7 +77,7 @@
         /// Firestore supports byte[]; list is stored as array of blobs.
         /// </summary>
         [FirestoreProperty]
-        public List<byte[]> ImageList { get; set; } = new();
+        public IList<String> ImageUrls { get; set; } = new List<string>();
 
         /// <summary>
         /// .......................

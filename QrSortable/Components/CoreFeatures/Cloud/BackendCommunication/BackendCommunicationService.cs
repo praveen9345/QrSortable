@@ -11,11 +11,15 @@
 
     public class BackendCommunicationService : IBackendCommunicationService
     {
+        private readonly IAesHelper _aesHelper;
+        private readonly IFirebaseStorageService _firebaseStorageService;
         private FirestoreDb Db { get; set; }
 
-        public BackendCommunicationService(IAesHelper aesHelper)
+        public BackendCommunicationService(IAesHelper aesHelper, IFirebaseStorageService firebaseStorageService)
         {
             Db = FirestoreDb.Create(Configuration.Constants.PROJECT_ID);
+            _aesHelper = aesHelper;
+            _firebaseStorageService = firebaseStorageService;
         }
 
         /// <summary>
@@ -81,7 +85,7 @@
                     { "SearchInfo", storageDto.SearchInfo },
                     { "ItemName", storageDto.ItemName },
                     { "Description", storageDto.Description },
-                    { "ImageList", storageDto.ImageList ?? new List<byte[]>() },
+                    { "ImageUrls", storageDto.ImageUrls },
                     { "BackgroundColorHex", storageDto.BackgroundColorHex }
                 };
 
@@ -140,19 +144,30 @@
 
             if (!snapshot.Exists) return null;
 
-            var encryptedJson = snapshot.GetValue<string>("EncryptedData");
-            return DecryptData<T>(encryptedJson);
+            try
+            {
+                if (snapshot.ContainsField("EncryptedData"))
+                {
+                    var encryptedJson = snapshot.GetValue<string>("EncryptedData");
+                    return DecryptData<T>(encryptedJson);
+                }
+                else
+                {
+                    return snapshot.ConvertTo<T>();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"GetAsync parse failed ({id}): {ex}");
+                return null;
+            }
         }
 
         public async Task UpdateAsync<T>(T data) where T : DtoFirestoreData
         {
             Validate(data);
 
-            // Update logic unchanged — continues to overwrite document with id == MultiuserId.
-            // NOTE: with Insert now appending (auto ids), Update using MultiuserId as document id
-            // will not find appended documents. If you need to update appended documents you must:
-            //  - keep track of Firestore document id (returned from AddAsync), or
-            //  - query by "MultiuserId" field and update the found document(s).
+            // Special-case: DtoOrdersModel
             if (data is DtoOrdersModel ordersDto)
             {
                 var document = new Dictionary<string, object>
@@ -181,8 +196,6 @@
 
                 try
                 {
-                    // If you still want to overwrite a doc by ID, keep using SetAsync with a known doc id.
-                    // Here we still use MultiuserId as doc id for backward compatibility (may not match appended docs).
                     await Db.Collection(ordersDto.CollectionName)
                             .Document(ordersDto.MultiuserId)
                             .SetAsync(document, SetOptions.Overwrite);
@@ -194,8 +207,90 @@
                 }
             }
 
-            var encryptedJsonUpdate = EncryptData(data);
+            if (data is DtoStorageEntryModel storageDto)
+            {
+                var collection = Db.Collection(storageDto.CollectionName);
 
+                // Step 1: Get all documents matching MultiuserId
+                var querySnapshot = await collection
+                    .WhereEqualTo("MultiuserId", storageDto.MultiuserId)
+                    .GetSnapshotAsync();
+
+                if (querySnapshot.Count == 0)
+                {
+                    Console.WriteLine($"No documents found with MultiuserId={storageDto.MultiuserId}");
+                    return;
+                }
+
+                // Step 2: Find the document that matches CreatedDate
+                DocumentSnapshot? targetDoc = null;
+                foreach (var doc in querySnapshot.Documents)
+                {
+
+                    if (doc.ContainsField("CreatedDate") &&
+                           doc.ContainsField("BarcodeValue") &&
+                           doc.ContainsField("ItemName") &&
+                           doc.GetValue<string>("CreatedDate") == storageDto.CreatedDate &&
+                           doc.GetValue<string>("BarcodeValue") == storageDto.BarcodeValue &&
+                           doc.GetValue<string>("ItemName") == storageDto.ItemName)
+                    {
+                        targetDoc = doc;
+
+                        //Delete old images from Firebase Storage
+                        var imageUrls = doc.GetValue<List<string>>("ImageUrls")?
+                                           .Where(u => !string.IsNullOrWhiteSpace(u))
+                                           .ToList();
+
+                        if (imageUrls != null && imageUrls.Count > 0)
+                        {
+                            await _firebaseStorageService.DeleteImagesAsync(imageUrls);
+                        }
+
+                        break;
+                    }
+                }
+
+                if (targetDoc == null)
+                {
+                    Console.WriteLine($"No document found with MultiuserId={storageDto.MultiuserId} and CreatedDate={storageDto.CreatedDate}");
+                    return;
+                }
+
+                // Step 3: Update the document
+                var document = new Dictionary<string, object>
+            {
+                { "MultiuserId", storageDto.MultiuserId ?? string.Empty },
+                { "StorageId", storageDto.StorageId },
+                { "Category", storageDto.Category },
+                { "CreatedDate", storageDto.CreatedDate },
+                { "BarcodeValue", storageDto.BarcodeValue },
+                { "BarcodeType", storageDto.BarcodeType },
+                { "Location", storageDto.Location },
+                { "SearchInfo", storageDto.SearchInfo },
+                { "ItemName", storageDto.ItemName },
+                { "Description", storageDto.Description },
+                { "ImageUrls", storageDto.ImageUrls ?? new List<string>() },
+                { "BackgroundColorHex", storageDto.BackgroundColorHex }
+            };
+
+                try
+                {
+                    await collection
+                        .Document(targetDoc.Id)
+                        .SetAsync(document, SetOptions.Overwrite);
+
+                    Console.WriteLine($"Document {targetDoc.Id} updated successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to update document {targetDoc.Id}: {ex}");
+                }
+
+                return;
+            }
+
+            // Fallback for other DTOs (encrypted)
+            var encryptedJsonUpdate = EncryptData(data);
             var docUpdate = new Dictionary<string, object>
             {
                 { "MultiuserId", data.MultiuserId ?? string.Empty },
@@ -210,24 +305,13 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"BackendCommunicationService.UpdateAsync: failed to update Firestore: {ex}");
-                try
-                {
-                    var backendSync = ServiceHelper.GetService<IBackendSynchronizationManager>();
-                    if (backendSync != null)
-                    {
-                        await backendSync.EnqueueAsync(data);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"BackendCommunicationService.UpdateAsync: enqueue failed: {e}");
-                }
+                Console.WriteLine($"UpdateAsync: failed to update Firestore: {ex}");
             }
         }
 
         public async Task DeleteAsync<T>(string id, string collectionName)
         {
+            // TODO: delete the storage for this multiuser id as well
             await Db.Collection(collectionName)
                     .Document(id)
                     .DeleteAsync();
