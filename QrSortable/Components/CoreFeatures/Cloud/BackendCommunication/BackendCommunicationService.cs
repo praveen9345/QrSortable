@@ -15,25 +15,22 @@
         private readonly IFirebaseStorageService _firebaseStorageService;
         private FirestoreDb Db { get; set; }
 
-        public BackendCommunicationService(
-            IAesHelper aesHelper,
-            IFirebaseStorageService firebaseStorageService)
+        public BackendCommunicationService(IAesHelper aesHelper, IFirebaseStorageService firebaseStorageService)
         {
             Db = FirestoreDb.Create(Configuration.Constants.PROJECT_ID);
             _aesHelper = aesHelper;
             _firebaseStorageService = firebaseStorageService;
         }
 
-        // ============================================================
-        // INSERT (RETURNS TRUE / FALSE)
-        // ============================================================
-        public async Task<bool> InsertAsync<T>(T data) where T : DtoFirestoreData
+        /// <summary>
+        /// Inserts a DTO into Firestore by appending a new document (auto-generated id).
+        /// The DTO.MultiuserId is written as a document field so it remains available for queries.
+        /// </summary>
+        public async Task InsertAsync<T>(T data) where T : DtoFirestoreData
         {
             Validate(data);
 
-            // ============================
-            // ORDERS
-            // ============================
+            // Special-case: append DtoOrdersModel as plain fields (no encryption), keep MultiuserId as a field
             if (data is DtoOrdersModel ordersDto)
             {
                 var document = new Dictionary<string, object>
@@ -62,19 +59,18 @@
 
                 try
                 {
+                    // Append new document (auto id) instead of using MultiuserId as document id
                     await Db.Collection(ordersDto.CollectionName).AddAsync(document);
-                    return true;
+                    return;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Insert Orders failed: {ex}");
-                    return false;
+                    Console.WriteLine($"BackendCommunicationService.InsertAsync (Orders append) failed: {ex}");
+                    // fallthrough to enqueue logic below
                 }
             }
 
-            // ============================
-            // STORAGE ENTRIES
-            // ============================
+            // Special-case: append DtoStorageEntryModel as plain fields (or adjust if you want encryption)
             if (data is DtoStorageEntryModel storageDto)
             {
                 var document = new Dictionary<string, object>
@@ -96,36 +92,34 @@
                 try
                 {
                     await Db.Collection(storageDto.CollectionName).AddAsync(document);
-                    return true;
+                    return;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Insert Storage failed: {ex}");
-                    return false;
+                    Console.WriteLine($"BackendCommunicationService.InsertAsync (Storage append) failed: {ex}");
+                    // fallthrough to enqueue logic below
                 }
             }
 
-            // ============================
-            // FALLBACK (ENCRYPTED DTO)
-            // ============================
+            // Default behaviour: encrypt entire DTO JSON (value) and append as a new document,
+            // writing MultiuserId as a field to keep that identifier searchable.
+            var encryptedJson = EncryptData(data);
+
+            var doc = new Dictionary<string, object>
+            {
+                { "MultiuserId", data.MultiuserId ?? string.Empty },
+                { "EncryptedData", encryptedJson }
+            };
+
             try
             {
-                var encryptedJson = EncryptData(data);
-
-                var doc = new Dictionary<string, object>
-                {
-                    { "MultiuserId", data.MultiuserId ?? string.Empty },
-                    { "EncryptedData", encryptedJson }
-                };
-
+                // Use AddAsync to append (auto-generated id) rather than CreateAsync with a specific id
                 await Db.Collection(data.CollectionName).AddAsync(doc);
-                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"InsertAsync failed: {ex}");
-
-                // enqueue for retry
+                Console.WriteLine($"BackendCommunicationService.InsertAsync: failed to write to Firestore: {ex}");
+                // Automatic enqueue for later retry (persistent)
                 try
                 {
                     var backendSync = ServiceHelper.GetService<IBackendSynchronizationManager>();
@@ -134,18 +128,14 @@
                         await backendSync.EnqueueAsync(data);
                     }
                 }
-                catch (Exception enqueueEx)
+                catch (Exception e)
                 {
-                    Console.WriteLine($"Enqueue failed: {enqueueEx}");
+                    Console.WriteLine($"BackendCommunicationService.InsertAsync: enqueue failed: {e}");
+                    // as a last resort serialize to local log or drop
                 }
-
-                return false;
             }
         }
 
-        // ============================================================
-        // GET
-        // ============================================================
         public async Task<T?> GetAsync<T>(string id) where T : DtoFirestoreData, new()
         {
             var temp = new T();
@@ -161,93 +151,172 @@
                     var encryptedJson = snapshot.GetValue<string>("EncryptedData");
                     return DecryptData<T>(encryptedJson);
                 }
-
-                return snapshot.ConvertTo<T>();
+                else
+                {
+                    return snapshot.ConvertTo<T>();
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"GetAsync failed: {ex}");
+                Console.WriteLine($"GetAsync parse failed ({id}): {ex}");
                 return null;
             }
         }
 
-        // ============================================================
-        // UPDATE
-        // ============================================================
-        public async Task<bool> UpdateAsync<T>(T data) where T : DtoFirestoreData
+        public async Task UpdateAsync<T>(T data) where T : DtoFirestoreData
         {
             Validate(data);
 
+            // Special-case: DtoOrdersModel
+            if (data is DtoOrdersModel ordersDto)
+            {
+                var document = new Dictionary<string, object>
+                {
+                    { "MultiuserId", ordersDto.MultiuserId ?? string.Empty },
+                    { "OrderId", ordersDto.OrderId },
+                    { "Title", ordersDto.Title },
+                    { "Description", ordersDto.Description },
+                    { "CodeType", ordersDto.CodeType },
+                    { "PageType", ordersDto.PageType },
+                    { "ProductQuantity", ordersDto.ProductQuantity },
+                    { "DateTime", ordersDto.DateTime },
+                    { "TotalPrice", ordersDto.TotalPrice },
+                    { "Name", ordersDto.Name },
+                    { "Street", ordersDto.Street },
+                    { "HouseNo", ordersDto.HouseNo },
+                    { "ZipCode", ordersDto.ZipCode },
+                    { "City", ordersDto.City },
+                    { "Country", ordersDto.Country },
+                    { "Email", ordersDto.Email },
+                    { "ReferenceCode", ordersDto.ReferenceCode },
+                    { "ShipmentTracking", ordersDto.ShipmentTracking },
+                    { "StatusOfOrder", ordersDto.StatusOfOrder },
+                    { "PdfFiles", ordersDto.PdfFiles ?? new List<byte[]>() }
+                };
+
+                try
+                {
+                    await Db.Collection(ordersDto.CollectionName)
+                            .Document(ordersDto.MultiuserId)
+                            .SetAsync(document, SetOptions.Overwrite);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"BackendCommunicationService.UpdateAsync (Orders) failed: {ex}");
+                }
+            }
+
+            if (data is DtoStorageEntryModel storageDto)
+            {
+                var collection = Db.Collection(storageDto.CollectionName);
+
+                // Step 1: Get all documents matching MultiuserId
+                var querySnapshot = await collection
+                    .WhereEqualTo("MultiuserId", storageDto.MultiuserId)
+                    .GetSnapshotAsync();
+
+                if (querySnapshot.Count == 0)
+                {
+                    Console.WriteLine($"No documents found with MultiuserId={storageDto.MultiuserId}");
+                    return;
+                }
+
+                // Step 2: Find the document that matches CreatedDate
+                DocumentSnapshot? targetDoc = null;
+                foreach (var doc in querySnapshot.Documents)
+                {
+
+                    if (doc.ContainsField("CreatedDate") &&
+                           doc.ContainsField("BarcodeValue") &&
+                           doc.ContainsField("ItemName") &&
+                           doc.GetValue<string>("CreatedDate") == storageDto.CreatedDate &&
+                           doc.GetValue<string>("BarcodeValue") == storageDto.BarcodeValue &&
+                           doc.GetValue<string>("ItemName") == storageDto.ItemName)
+                    {
+                        targetDoc = doc;
+
+                        //Delete old images from Firebase Storage
+                        var imageUrls = doc.GetValue<List<string>>("ImageUrls")?
+                                           .Where(u => !string.IsNullOrWhiteSpace(u))
+                                           .ToList();
+
+                        if (imageUrls != null && imageUrls.Count > 0)
+                        {
+                            await _firebaseStorageService.DeleteImagesAsync(imageUrls);
+                        }
+
+                        break;
+                    }
+                }
+
+                if (targetDoc == null)
+                {
+                    Console.WriteLine($"No document found with MultiuserId={storageDto.MultiuserId} and CreatedDate={storageDto.CreatedDate}");
+                    return;
+                }
+
+                // Step 3: Update the document
+                var document = new Dictionary<string, object>
+            {
+                { "MultiuserId", storageDto.MultiuserId ?? string.Empty },
+                { "StorageId", storageDto.StorageId },
+                { "Category", storageDto.Category },
+                { "CreatedDate", storageDto.CreatedDate },
+                { "BarcodeValue", storageDto.BarcodeValue },
+                { "BarcodeType", storageDto.BarcodeType },
+                { "Location", storageDto.Location },
+                { "SearchInfo", storageDto.SearchInfo },
+                { "ItemName", storageDto.ItemName },
+                { "Description", storageDto.Description },
+                { "ImageUrls", storageDto.ImageUrls ?? new List<string>() },
+                { "BackgroundColorHex", storageDto.BackgroundColorHex }
+            };
+
+                try
+                {
+                    await collection
+                        .Document(targetDoc.Id)
+                        .SetAsync(document, SetOptions.Overwrite);
+
+                    Console.WriteLine($"Document {targetDoc.Id} updated successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to update document {targetDoc.Id}: {ex}");
+                }
+
+                return;
+            }
+
+            // Fallback for other DTOs (encrypted)
+            var encryptedJsonUpdate = EncryptData(data);
+            var docUpdate = new Dictionary<string, object>
+            {
+                { "MultiuserId", data.MultiuserId ?? string.Empty },
+                { "EncryptedData", encryptedJsonUpdate }
+            };
+
             try
             {
-                if (data is DtoOrdersModel ordersDto)
-                {
-                    var collection = Db.Collection(ordersDto.CollectionName);
-
-                    var querySnapshot = await collection
-                        .WhereEqualTo("MultiuserId", ordersDto.MultiuserId)
-                        .WhereEqualTo("OrderId", ordersDto.OrderId)
-                        .GetSnapshotAsync();
-
-                    if (querySnapshot.Count != 1)
-                        return false;
-
-                    await collection
-                        .Document(querySnapshot.Documents[0].Id)
-                        .SetAsync(ordersDto, SetOptions.Overwrite);
-
-                    return true;
-                }
-
-                if (data is DtoStorageEntryModel storageDto)
-                {
-                    var collection = Db.Collection(storageDto.CollectionName);
-
-                    var querySnapshot = await collection
-                        .WhereEqualTo("MultiuserId", storageDto.MultiuserId)
-                        .GetSnapshotAsync();
-
-                    if (querySnapshot.Count == 0)
-                        return false;
-
-                    await collection
-                        .Document(querySnapshot.Documents[0].Id)
-                        .SetAsync(storageDto, SetOptions.Overwrite);
-
-                    return true;
-                }
-
-                var encryptedJson = EncryptData(data);
-
                 await Db.Collection(data.CollectionName)
                         .Document(data.MultiuserId)
-                        .SetAsync(new Dictionary<string, object>
-                        {
-                            { "MultiuserId", data.MultiuserId },
-                            { "EncryptedData", encryptedJson }
-                        }, SetOptions.Overwrite);
-
-                return true;
+                        .SetAsync(docUpdate, SetOptions.Overwrite);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"UpdateAsync failed: {ex}");
-                return false;
+                Console.WriteLine($"UpdateAsync: failed to update Firestore: {ex}");
             }
         }
 
-        // ============================================================
-        // DELETE
-        // ============================================================
         public async Task DeleteAsync<T>(string id, string collectionName)
         {
-            //TDOD: delete the associated images from Firebase Storage too uing multuserId and id
-            await Db.Collection(collectionName).Document(id).DeleteAsync();
+            // TODO: delete the storage for this multiuser id as well
+            await Db.Collection(collectionName)
+                    .Document(id)
+                    .DeleteAsync();
         }
 
-        // ============================================================
-        // GET LISTS
-        // ============================================================
         public async Task<List<T>> GetAllAsync<T>() where T : DtoFirestoreData, new()
         {
             var temp = new T();
@@ -262,13 +331,14 @@
             return result;
         }
 
-        public async Task<List<T>> GetByMultiuserIdAsync<T>(string multiuserId)
-            where T : DtoFirestoreData, new()
+        public async Task<List<T>> GetByMultiuserIdAsync<T>(string multiuserId) where T : DtoFirestoreData, new()
         {
+            if (string.IsNullOrWhiteSpace(multiuserId)) throw new ArgumentException(nameof(multiuserId));
+
             var temp = new T();
             var snapshot = await Db.Collection(temp.CollectionName)
-                .WhereEqualTo("MultiuserId", multiuserId)
-                .GetSnapshotAsync();
+                                    .WhereEqualTo("MultiuserId", multiuserId)
+                                    .GetSnapshotAsync();
 
             var result = new List<T>();
             foreach (var doc in snapshot.Documents)
@@ -279,35 +349,41 @@
             return result;
         }
 
-        // ============================================================
-        // HELPERS
-        // ============================================================
-        private static string EncryptData<T>(T data)
+
+        #region Helpers
+
+        protected static string EncryptData<T>(T data, Func<string, string>? encryptor = null)
         {
-            return JsonSerializer.Serialize(data);
+            var json = JsonSerializer.Serialize(data);
+            return encryptor != null ? encryptor(json) : json;
         }
 
-        private static T DecryptData<T>(string payload)
+        protected static T DecryptData<T>(string payload, Func<string, string>? decryptor = null)
         {
-            return JsonSerializer.Deserialize<T>(payload)
-                   ?? throw new InvalidOperationException("Deserialization failed.");
+            var json = decryptor != null ? decryptor(payload) : payload;
+            return JsonSerializer.Deserialize<T>(json) ?? throw new InvalidOperationException("Failed to deserialize payload.");
         }
 
-        private static void TryAdd<T>(ICollection<T> list, DocumentSnapshot doc)
-            where T : DtoFirestoreData
+
+
+        private static void TryAdd<T>(ICollection<T> list, DocumentSnapshot doc) where T : DtoFirestoreData
         {
             try
             {
                 if (doc.ContainsField("EncryptedData"))
                 {
-                    list.Add(DecryptData<T>(doc.GetValue<string>("EncryptedData")));
+                    var payload = doc.GetValue<string>("EncryptedData");
+                    list.Add(DecryptData<T>(payload));
                 }
                 else
                 {
                     list.Add(doc.ConvertTo<T>());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Document parse failed ({doc.Id}): {ex}");
+            }
         }
 
         private static void Validate(DtoFirestoreData data)
@@ -316,10 +392,13 @@
                 throw new ArgumentNullException(nameof(data));
 
             if (string.IsNullOrWhiteSpace(data.MultiuserId))
-                throw new ArgumentException("MultiuserId is required.");
+                throw new ArgumentException("Document Id is required.");
 
             if (string.IsNullOrWhiteSpace(data.CollectionName))
                 throw new ArgumentException("CollectionName is required.");
         }
+
+       
+        #endregion
     }
 }

@@ -4,18 +4,17 @@
     public interface IBackendCommunicationService
     {
 
-        Task<bool> InsertAsync<T>(T data) where T : DtoFirestoreData;
+        Task InsertAsync<T>(T data) where T : DtoFirestoreData;
 
         Task<T?> GetAsync<T>(string id) where T : DtoFirestoreData, new();
 
-        Task<bool> UpdateAsync<T>(T data) where T : DtoFirestoreData;
+        Task UpdateAsync<T>(T data) where T : DtoFirestoreData;
 
         Task DeleteAsync<T>(string id, string collectionName);
 
         Task<List<T>> GetAllAsync<T>() where T : DtoFirestoreData, new();
 
-        Task<List<T>> GetByMultiuserIdAsync<T>(string multiuserId)
-            where T : DtoFirestoreData, new();
+        Task<List<T>> GetByMultiuserIdAsync<T>(string multiuserId) where T : DtoFirestoreData, new();
 
     }
 }
