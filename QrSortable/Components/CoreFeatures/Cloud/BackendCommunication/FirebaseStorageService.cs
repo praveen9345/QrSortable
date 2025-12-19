@@ -26,7 +26,7 @@
                 var fileName = $"{folderName}/{Guid.NewGuid()}.jpg";
 
                 var url =
-                    $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.Bucket}/o" +
+                    $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o" +
                     $"?uploadType=media&name={Uri.EscapeDataString(fileName)}";
 
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
@@ -41,7 +41,7 @@
                 response.EnsureSuccessStatusCode();
 
                 return
-                    $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.Bucket}/o/" +
+                    $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/" +
                     $"{Uri.EscapeDataString(fileName)}?alt=media";
             }
             catch (Exception ex)
@@ -66,7 +66,7 @@
             try
             {
                 // Extract the file path from the URL
-                var baseUrl = $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.Bucket}/o/";
+                var baseUrl = $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/";
                 if (!imageUrl.StartsWith(baseUrl))
                     throw new Exception("Invalid Firebase Storage URL.");
 
@@ -76,7 +76,7 @@
                 if (questionMarkIndex >= 0)
                     encodedPath = encodedPath.Substring(0, questionMarkIndex);
 
-                var url = $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.Bucket}/o/{encodedPath}";
+                var url = $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/{encodedPath}";
 
                 var request = new HttpRequestMessage(HttpMethod.Delete, url);
                 request.Headers.Authorization =

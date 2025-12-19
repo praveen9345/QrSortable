@@ -17,7 +17,7 @@
 
         public BackendCommunicationService(IAesHelper aesHelper, IFirebaseStorageService firebaseStorageService)
         {
-            Db = FirestoreDb.Create(Configuration.Constants.PROJECT_ID);
+            Db = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
             _aesHelper = aesHelper;
             _firebaseStorageService = firebaseStorageService;
         }

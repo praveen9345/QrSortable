@@ -11,7 +11,7 @@
         public async Task<string> SignInAnonymouslyAsync()
         {
             var url =
-                $"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={FirebaseConfig.ApiKey}";
+                $"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={FirebaseConfig.API_KEY}";
 
             var response = await _http.PostAsync(
                 url,
