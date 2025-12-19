@@ -3,6 +3,13 @@
     using QrSortable.Components.CoreFeatures.DataManagement.Models;
     public class DtoOrdersModel : DatabaseEntry
     {
+        /// <summary>
+        /// Order data is for instert or update of the product.
+        /// </summary>
+        public bool IsUpdateData { get; set; } = false;
+        /// <summary>
+        /// Order of the product.
+        /// </summary>
         public string OrderId { get; set; }
         /// <summary>
         /// Title of the product.

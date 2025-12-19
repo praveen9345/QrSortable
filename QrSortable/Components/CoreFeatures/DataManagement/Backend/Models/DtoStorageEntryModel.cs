@@ -3,6 +3,11 @@
     using QrSortable.Components.CoreFeatures.DataManagement.Models;
     public class DtoStorageEntryModel : DatabaseEntry
     {
+        /// <summary>
+        /// Order data is for instert or update of the product.
+        /// </summary>
+        public bool IsUpdateData { get; set; } = false;
+
         public string StorageId { get; set; }
 
         /// <summary>
@@ -48,8 +53,7 @@
         /// <summary>
         /// Firestore supports byte[]; list is stored as array of blobs.
         /// </summary>
-        public IList<String> ImageUrls { get; set; } = new List<string>();
-
+        public IList<byte[]> ImageList { get; set; } = new List<byte[]>();
         /// <summary>
         /// .......................
         /// </summary>
