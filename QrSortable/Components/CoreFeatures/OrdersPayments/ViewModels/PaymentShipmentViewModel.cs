@@ -403,7 +403,7 @@
                 try
                 {
                     // create DTO for backend (reuse DtoOrdersModel)
-                    var dto = new DtoOrdersModel
+                    var dto = new OrdersModel
                     {
                         OrderId = orderedItem.OrderId,
                         Title = orderedItem.Title,
@@ -440,7 +440,8 @@
                     }
                     catch (Exception)
                     {
-                        await _backendSynchronizationManager.EnqueueAsync(dto);
+                        //TODO:1
+                        //await _backendSynchronizationManager.EnqueueAsync(dto);
                     }
                 }
                 catch (Exception ex)

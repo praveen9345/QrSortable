@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace QrSortable.Migrations
+namespace QrSortable.Migrations.General
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialGeneral : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -100,24 +100,6 @@ namespace QrSortable.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UploadQueueEntries",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    MultiuserId = table.Column<string>(type: "TEXT", nullable: false),
-                    CollectionName = table.Column<string>(type: "TEXT", nullable: false),
-                    DtoTypeName = table.Column<string>(type: "TEXT", nullable: false),
-                    Payload = table.Column<string>(type: "TEXT", nullable: false),
-                    RetryCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    QueuedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UploadQueueEntries", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserInformation",
                 columns: table => new
                 {
@@ -151,9 +133,6 @@ namespace QrSortable.Migrations
 
             migrationBuilder.DropTable(
                 name: "StorageEntries");
-
-            migrationBuilder.DropTable(
-                name: "UploadQueueEntries");
 
             migrationBuilder.DropTable(
                 name: "UserInformation");

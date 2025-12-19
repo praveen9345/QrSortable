@@ -26,12 +26,12 @@
         /// Inserts a DTO into Firestore by appending a new document (auto-generated id).
         /// The DTO.MultiuserId is written as a document field so it remains available for queries.
         /// </summary>
-        public async Task InsertAsync<T>(T data) where T : DtoFirestoreData
+        public async Task InsertAsync<T>(T data) where T : FirestoreData
         {
             Validate(data);
 
-            // Special-case: append DtoOrdersModel as plain fields (no encryption), keep MultiuserId as a field
-            if (data is DtoOrdersModel ordersDto)
+            // Special-case: append OrdersModel as plain fields (no encryption), keep MultiuserId as a field
+            if (data is OrdersModel ordersDto)
             {
                 var document = new Dictionary<string, object>
                 {
@@ -71,7 +71,7 @@
             }
 
             // Special-case: append DtoStorageEntryModel as plain fields (or adjust if you want encryption)
-            if (data is DtoStorageEntryModel storageDto)
+            if (data is StorageEntryModel storageDto)
             {
                 var document = new Dictionary<string, object>
                 {
@@ -125,7 +125,8 @@
                     var backendSync = ServiceHelper.GetService<IBackendSynchronizationManager>();
                     if (backendSync != null)
                     {
-                        await backendSync.EnqueueAsync(data);
+                        //TODO1
+                        //await backendSync.EnqueueAsync(data);
                     }
                 }
                 catch (Exception e)
@@ -136,7 +137,7 @@
             }
         }
 
-        public async Task<T?> GetAsync<T>(string id) where T : DtoFirestoreData, new()
+        public async Task<T?> GetAsync<T>(string id) where T : FirestoreData, new()
         {
             var temp = new T();
             var docRef = Db.Collection(temp.CollectionName).Document(id);
@@ -163,12 +164,12 @@
             }
         }
 
-        public async Task UpdateAsync<T>(T data) where T : DtoFirestoreData
+        public async Task UpdateAsync<T>(T data) where T : FirestoreData
         {
             Validate(data);
 
-            // Special-case: DtoOrdersModel
-            if (data is DtoOrdersModel ordersDto)
+            // Special-case: OrdersModel
+            if (data is OrdersModel ordersDto)
             {
                 var document = new Dictionary<string, object>
                 {
@@ -207,7 +208,7 @@
                 }
             }
 
-            if (data is DtoStorageEntryModel storageDto)
+            if (data is StorageEntryModel storageDto)
             {
                 var collection = Db.Collection(storageDto.CollectionName);
 
@@ -317,7 +318,7 @@
                     .DeleteAsync();
         }
 
-        public async Task<List<T>> GetAllAsync<T>() where T : DtoFirestoreData, new()
+        public async Task<List<T>> GetAllAsync<T>() where T : FirestoreData, new()
         {
             var temp = new T();
             var snapshot = await Db.Collection(temp.CollectionName).GetSnapshotAsync();
@@ -331,7 +332,7 @@
             return result;
         }
 
-        public async Task<List<T>> GetByMultiuserIdAsync<T>(string multiuserId) where T : DtoFirestoreData, new()
+        public async Task<List<T>> GetByMultiuserIdAsync<T>(string multiuserId) where T : FirestoreData, new()
         {
             if (string.IsNullOrWhiteSpace(multiuserId)) throw new ArgumentException(nameof(multiuserId));
 
@@ -366,7 +367,7 @@
 
 
 
-        private static void TryAdd<T>(ICollection<T> list, DocumentSnapshot doc) where T : DtoFirestoreData
+        private static void TryAdd<T>(ICollection<T> list, DocumentSnapshot doc) where T : FirestoreData
         {
             try
             {
@@ -386,7 +387,7 @@
             }
         }
 
-        private static void Validate(DtoFirestoreData data)
+        private static void Validate(FirestoreData data)
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));

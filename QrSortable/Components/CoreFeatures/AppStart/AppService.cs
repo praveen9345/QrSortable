@@ -1,10 +1,11 @@
 namespace QrSortable.Components.CoreFeatures.AppStart
 {
-    using System.Text;
     using FirebaseAdmin;
     using Google.Apis.Auth.OAuth2;
+    using Microsoft.Extensions.DependencyInjection;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.Onboarding.Views;
@@ -12,6 +13,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
     using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.UiFunctionality.Navigation;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
+    using System.Text;
 
     /// <summary>
     /// Represents a service responsible for initializing and managing various application components.
@@ -27,6 +29,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         private readonly IGeneralInformationManager _generalInformationManager;
 
         private const string DatabaseName = "QrSortable.sqlite3";
+        private const string BackendDatabaseName = "QrSortable.sqlite3";
 
         /// <summary>
         ///     Initializes the application.
@@ -38,6 +41,9 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             _databaseManager = ServiceHelper.GetService<IDatabaseManager>();
             _fileManager = ServiceHelper.GetService<IFileManager>();
             _generalInformationManager = ServiceHelper.GetService<IGeneralInformationManager>();
+
+            var backendDatabaseManager = ServiceHelper.GetService<IBackendDatabaseManager>();
+            backendDatabaseManager.Initialize(CreateNewBackendDbContext);
 
             ResetStorageAndDatabaseAfterReinstall();
 
@@ -53,7 +59,8 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         {
             await ConfigureAndInitializeFirebaseAsync();
             var backendSync = ServiceHelper.GetService<IBackendSynchronizationManager>();
-            if (backendSync != null) await backendSync.InitializeAsync();
+            //TODO:1
+            //if (backendSync != null) await backendSync.InitializeAsync();
             await NavigateToFirstViewModelAsync();
 
            
@@ -94,6 +101,13 @@ namespace QrSortable.Components.CoreFeatures.AppStart
 
             return new DatabaseContext(path);
         }
+
+        private BaseDatabaseContext CreateNewBackendDbContext()
+        {
+            var path = GetDatabasePathForCurrentPlatform(BackendDatabaseName);
+            return new BackendDatabaseContext(path);
+        }
+
 
         private string GetDatabasePathForCurrentPlatform(string name)
         {

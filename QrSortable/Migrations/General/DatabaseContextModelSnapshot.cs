@@ -7,7 +7,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.General;
 
 #nullable disable
 
-namespace QrSortable.Migrations
+namespace QrSortable.Migrations.General
 {
     [DbContext(typeof(DatabaseContext))]
     partial class DatabaseContextModelSnapshot : ModelSnapshot
@@ -125,39 +125,6 @@ namespace QrSortable.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("StorageEntries");
-                });
-
-            modelBuilder.Entity("QrSortable.Components.CoreFeatures.DataManagement.General.Models.UploadQueueEntry", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CollectionName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DtoTypeName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("MultiuserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Payload")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("QueuedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("RetryCount")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("UploadQueueEntries");
                 });
 
             modelBuilder.Entity("QrSortable.Components.CoreFeatures.DataManagement.General.Models.UserInfos", b =>

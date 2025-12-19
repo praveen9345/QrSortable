@@ -52,8 +52,10 @@
         {
             base.OnResume();
             // Add using to the sync manager namespace
+
+			//TODO:1
             var sync = ServiceHelper.GetService<IBackendSynchronizationManager>();
-            _ = sync?.ForceProcessQueueAsync();
+            //_ = sync?.ForceProcessQueueAsync();
         }
     }
 }

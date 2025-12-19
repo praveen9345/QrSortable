@@ -37,7 +37,7 @@
         {
             base.ViewAppearing();
 
-            var entries = await _backendCommunicationService.GetAllAsync<DtoStorageEntryModel>();
+            var entries = await _backendCommunicationService.GetAllAsync<StorageEntryModel>();
             for (int i = 0; i < entries.Count; i++)
             {
                 var entry = entries[i];

@@ -53,7 +53,7 @@
                 bool storageOk = await UploadEntitiesAsync<StorageEntry>(entity =>
                 {
                     var imageUrls = (_firebaseStorageService.UploadImagesAsync(entity.ImageList)).Result;
-                    var dto = new DtoStorageEntryModel
+                    var dto = new StorageEntryModel
                     {
                         StorageId = entity.StorageId.ToString(),
                         Category = entity.Category ?? string.Empty,
@@ -74,7 +74,7 @@
                 // Upload Orders
                 bool ordersOk = await UploadEntitiesAsync<YoursOrderData>(entity =>
                 {
-                    var dto = new DtoOrdersModel
+                    var dto = new OrdersModel
                     {
                         OrderId = entity.OrderId ?? string.Empty,
                         Title = entity.Title ?? string.Empty,
@@ -112,7 +112,7 @@
             }
         }
 
-        public async Task<bool> UploadEntitiesAsync<T>(Func<T, DtoFirestoreData> mapper)
+        public async Task<bool> UploadEntitiesAsync<T>(Func<T, FirestoreData> mapper)
             where T : DatabaseEntry
         {
             try

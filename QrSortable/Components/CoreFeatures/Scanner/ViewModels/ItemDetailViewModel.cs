@@ -285,7 +285,7 @@
                             {
                                 var imageUrls = await _firebaseStorageService.UploadImagesAsync(updatedItem.ImageList);
                                 
-                                var dto = new DtoStorageEntryModel
+                                var dto = new StorageEntryModel
                                 {
                                     StorageId = updatedItem.StorageId.ToString(),
                                     Category = updatedItem.Category ?? string.Empty,
@@ -330,7 +330,8 @@
                                     try
                                     {
                                         var backendSync = ServiceHelper.GetService<IBackendSynchronizationManager>();
-                                        if (backendSync != null) await backendSync.EnqueueAsync(dto);
+                                        //TODO:1
+                                        //if (backendSync != null) await backendSync.EnqueueAsync(dto);
                                     }
                                     catch (Exception ex)
                                     {
@@ -409,7 +410,7 @@
                         try
                         {
                             var imageUrls = await _firebaseStorageService.UploadImagesAsync(addedItem.ImageList);
-                            var dto = new DtoStorageEntryModel
+                            var dto = new StorageEntryModel
                             {
                                 StorageId = addedItem.StorageId.ToString(),
                                 Category = addedItem.Category ?? string.Empty,
@@ -453,7 +454,8 @@
                                 try
                                 {
                                     var backendSync = ServiceHelper.GetService<IBackendSynchronizationManager>();
-                                    if (backendSync != null) await backendSync.EnqueueAsync(dto);
+                                    //TODO:1
+                                   // if (backendSync != null) await backendSync.EnqueueAsync(dto);
                                 }
                                 catch (Exception ex)
                                 {

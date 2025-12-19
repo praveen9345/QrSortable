@@ -7,7 +7,7 @@
     public interface IGeneralDatabaseSynchronizationManager
     {
         Task<bool> UploadAllAsync(CancellationToken cancellationToken = default);
-        Task<bool> UploadEntitiesAsync<T>(Func<T, DtoFirestoreData> mapper)
+        Task<bool> UploadEntitiesAsync<T>(Func<T, FirestoreData> mapper)
             where T : DataManagement.Models.DatabaseEntry;
     }
 }

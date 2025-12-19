@@ -6,9 +6,6 @@
 
     public interface IBackendSynchronizationManager
     {
-        Task InitializeAsync();
-        Task EnqueueAsync(DtoFirestoreData dto);
-        Task ForceProcessQueueAsync();
-        Task StopAsync();
+      
     }
 }
