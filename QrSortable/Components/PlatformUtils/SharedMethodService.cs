@@ -16,5 +16,35 @@ namespace QrSortable.Components.PlatformUtils
 
             return 0m;
         }
+
+        public string ConvertToString(object value)
+        {
+            if (value == null)
+                return string.Empty;
+
+            switch (value)
+            {
+                case string s:
+                    return s;
+                case int i:
+                    return i.ToString();
+                case long l:
+                    return l.ToString();
+                case float f:
+                    return f.ToString("G"); // General format
+                case double d:
+                    return d.ToString("G");
+                case decimal m:
+                    return m.ToString();
+                case bool b:
+                    return b.ToString();
+                case DateTime dt:
+                    return dt.ToString("o"); // ISO 8601 format
+                case Guid g:
+                    return g.ToString();
+                default:
+                    return value.ToString(); // Fallback for any other type
+            }
+        }
     }
 }

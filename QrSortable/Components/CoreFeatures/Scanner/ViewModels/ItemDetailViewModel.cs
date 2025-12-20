@@ -6,6 +6,7 @@
     using Microsoft.Maui.Graphics.Platform;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.PlatformUtils;
@@ -120,8 +121,6 @@
                     }
                 }
             }
-
-
         }
 
         public override void ViewAppearing()
@@ -280,68 +279,13 @@
                         var updatedItem = await _databaseManager.UpdateAsync(item);
                         if (updatedItem != null)
                         {
-                            // send update to backend
                             try
                             {
-                                var imageUrls = await _firebaseStorageService.UploadImagesAsync(updatedItem.ImageList);
-                                
-                                var dto = new StorageEntryModel
-                                {
-                                    StorageId = updatedItem.StorageId.ToString(),
-                                    Category = updatedItem.Category ?? string.Empty,
-                                    CreatedDate = updatedItem.CreatedDate.ToString("o"),
-                                    BarcodeValue = updatedItem.BarcodeValue ?? string.Empty,
-                                    BarcodeType = updatedItem.BarcodeType ?? string.Empty,
-                                    Location = updatedItem.Location ?? string.Empty,
-                                    SearchInfo = updatedItem.SearchInfo ?? string.Empty,
-                                    ItemName = updatedItem.ItemName ?? string.Empty,
-                                    Description = updatedItem.Description ?? string.Empty,
-                                    ImageUrls = imageUrls.ToList(),
-                                    BackgroundColorHex = updatedItem.BackgroundColorHex ?? string.Empty
-                                };
-
-                                // set MultiuserId backing field via reflection (same as other places)
-                                try
-                                {
-                                    var generalInfoManager = ServiceHelper.GetService<IGeneralInformationManager>();
-                                    var gi = await generalInfoManager.GetGeneralInformationAsync();
-                                    if (string.IsNullOrWhiteSpace(gi?.MultiUserId))
-                                    {
-                                        await generalInfoManager.GenerateTheMultiuserIdAsync();
-                                        gi = await generalInfoManager.GetGeneralInformationAsync();
-                                    }
-
-                                    var multiId = gi?.MultiUserId ?? string.Empty;
-                                    var field = dto.GetType().GetField("<MultiuserId>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-                                    if (field != null) field.SetValue(dto, multiId);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine($"ItemDetailViewModel: Could not set MultiuserId for update: {ex}");
-                                }
-
-                                // prefer UpdateAsync for updates; fallback to enqueue on error
-                                try
-                                {
-                                    await _backendCommunicationService.UpdateAsync(dto);
-                                }
-                                catch (Exception)
-                                {
-                                    try
-                                    {
-                                        var backendSync = ServiceHelper.GetService<IBackendSynchronizationManager>();
-                                        //TODO:1
-                                        //if (backendSync != null) await backendSync.EnqueueAsync(dto);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Console.WriteLine($"ItemDetailViewModel: Backend enqueue failed during update: {ex}");
-                                    }
-                                }
+                                await _backendCommunicationService.UpdateAsync(item);
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($"ItemDetailViewModel: Exception during backend update send: {ex}");
+                                Console.WriteLine($"ItemDetailViewModel: Backend enqueue failed during update: {ex}");
                             }
 
                             await _toastService.DisplayToast("Successfully updated.");
@@ -407,66 +351,7 @@
                         _databaseManager.CommitTransaction();
 
                         // send to backend (DtoStorageEntryModel)
-                        try
-                        {
-                            var imageUrls = await _firebaseStorageService.UploadImagesAsync(addedItem.ImageList);
-                            var dto = new StorageEntryModel
-                            {
-                                StorageId = addedItem.StorageId.ToString(),
-                                Category = addedItem.Category ?? string.Empty,
-                                CreatedDate = addedItem.CreatedDate.ToString("o"),
-                                BarcodeValue = addedItem.BarcodeValue ?? string.Empty,
-                                BarcodeType = addedItem.BarcodeType ?? string.Empty,
-                                Location = addedItem.Location ?? string.Empty,
-                                SearchInfo = addedItem.SearchInfo ?? string.Empty,
-                                ItemName = addedItem.ItemName ?? string.Empty,
-                                Description = addedItem.Description ?? string.Empty,
-                                ImageUrls = imageUrls.ToList(),
-                                BackgroundColorHex = addedItem.BackgroundColorHex ?? string.Empty
-                            };
-
-                            // Set MultiuserId backing field via reflection (same pattern used elsewhere)
-                            try
-                            {
-                                var generalInfoManager = ServiceHelper.GetService<IGeneralInformationManager>();
-                                var gi = await generalInfoManager.GetGeneralInformationAsync();
-                                if (string.IsNullOrWhiteSpace(gi?.MultiUserId))
-                                {
-                                    await generalInfoManager.GenerateTheMultiuserIdAsync();
-                                    gi = await generalInfoManager.GetGeneralInformationAsync();
-                                }
-                                var multiId = gi?.MultiUserId ?? string.Empty;
-                                var field = dto.GetType().GetField("<MultiuserId>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-                                if (field != null) field.SetValue(dto, multiId);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"ItemDetailViewModel: Could not set MultiuserId: {ex}");
-                            }
-
-                            try
-                            {
-                                await _backendCommunicationService.InsertAsync(dto);
-                            }
-                            catch (Exception)
-                            {
-                                // Insert failed — fallback to enqueue in background sync manager
-                                try
-                                {
-                                    var backendSync = ServiceHelper.GetService<IBackendSynchronizationManager>();
-                                    //TODO:1
-                                   // if (backendSync != null) await backendSync.EnqueueAsync(dto);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine($"ItemDetailViewModel: Backend enqueue failed: {ex}");
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"ItemDetailViewModel: Exception during backend send: {ex}");
-                        }
+                        await _backendCommunicationService.InsertAsync(_storageData);
 
                         await _toastService.DisplayToast("Successfully saved.");
                         await NavigationService.Close();
