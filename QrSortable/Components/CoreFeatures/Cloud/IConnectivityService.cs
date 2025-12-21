@@ -12,7 +12,7 @@
         ///     Indicates whether an internet connection is currently available.
         /// </summary>
         /// <returns>True, if internet connection is available; otherwise false.</returns>
-        Task<bool> IsInternetConnectionAvailableAsync();
+        Task<bool> CheckInternetConnectionAvailableAsync();
 
         /// <summary>
         ///     An event enabling listening for internet connectivity changes.

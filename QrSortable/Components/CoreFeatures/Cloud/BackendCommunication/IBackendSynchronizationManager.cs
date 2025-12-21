@@ -6,6 +6,6 @@
 
     public interface IBackendSynchronizationManager
     {
-      
+        Task<bool> SynchronizeStoredObjectsAsync();
     }
 }

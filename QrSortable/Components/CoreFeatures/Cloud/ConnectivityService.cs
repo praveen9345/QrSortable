@@ -26,7 +26,7 @@
         ///     Indicates whether an internet connection is currently available.
         /// </summary>
         /// <returns>True, if internet connection is available; otherwise false.</returns>
-        public Task<bool> IsInternetConnectionAvailableAsync()
+        public Task<bool> CheckInternetConnectionAvailableAsync()
             => Task.FromResult(_mauiEssentialsWrapper.IsInternetConnectionAvailable());
 
 
