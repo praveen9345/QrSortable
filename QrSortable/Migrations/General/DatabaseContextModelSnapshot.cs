@@ -59,6 +59,9 @@ namespace QrSortable.Migrations.General
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsBackendUsed")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("MultiUserId")
                         .IsRequired()
                         .HasColumnType("TEXT");

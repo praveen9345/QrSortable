@@ -21,5 +21,10 @@ namespace QrSortable.Components.CoreFeatures.DataManagement.General.Models
 
         public string MultiUserId { get; set; } = string.Empty;
 
+        /// <summary>
+        ///     Gets or sets whether the backend is being used.
+        /// </summary>
+        public bool IsBackendUsed { get; set; } = false;
+
     }
 }

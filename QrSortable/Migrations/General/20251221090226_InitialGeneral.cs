@@ -38,7 +38,8 @@ namespace QrSortable.Migrations.General
                         .Annotation("Sqlite:Autoincrement", true),
                     NotificationPermissionStatus = table.Column<int>(type: "INTEGER", nullable: false),
                     OnboardingProgress = table.Column<int>(type: "INTEGER", nullable: false),
-                    MultiUserId = table.Column<string>(type: "TEXT", nullable: false)
+                    MultiUserId = table.Column<string>(type: "TEXT", nullable: false),
+                    IsBackendUsed = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

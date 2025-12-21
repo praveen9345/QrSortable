@@ -108,11 +108,26 @@
                 return true; 
             }
 
-            Console.WriteLine($"Generating {nameof(GeneralInformation.MultiUserId)} …");
+            Console.WriteLine($"Generating {nameof(GeneralInformation.MultiUserId)}");
             generalInformation.MultiUserId = GenereatedMultiuserId();
 
             return await UpdateGeneralInformationAsync(generalInformation);
 
+        }
+
+        /// <summary>
+        ///     Updates whether the backend is used or not.
+        /// </summary>
+        /// <param name="isBackendUsed">The value indicating whether the backend is used or not.</param>
+        /// <returns> True, if the update was successful. False, otherwise. </returns>
+        public async Task<bool> UpdateIsBackendUsedAsync(bool isBackendUsed)
+        {
+            var generalInformation = await GetGeneralInformationAsync();
+
+            Console.WriteLine($"Updating {nameof(GeneralInformation.IsBackendUsed)} to {isBackendUsed}");
+            generalInformation.IsBackendUsed = isBackendUsed;
+
+            return await UpdateGeneralInformationAsync(generalInformation);
         }
 
         private async Task<bool> UpdateGeneralInformationAsync(GeneralInformation generalInformation)

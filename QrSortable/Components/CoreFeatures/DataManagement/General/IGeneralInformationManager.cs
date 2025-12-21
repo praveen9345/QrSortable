@@ -41,5 +41,12 @@
         /// identifier is available; otherwise, <see langword="false"/>.</returns>
         Task<bool> GenerateTheMultiuserIdAsync();
 
+        /// <summary>
+        ///     Updates whether the backend is used or not.
+        /// </summary>
+        /// <param name="isBackendUsed">The value indicating whether the backend is used or not.</param>
+        /// <returns> True, if the update was successful. False, otherwise. </returns>
+        Task<bool> UpdateIsBackendUsedAsync(bool isBackendUsed);
+
     }
 }
