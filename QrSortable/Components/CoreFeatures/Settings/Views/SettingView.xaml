@@ -60,7 +60,7 @@
                 FontFamily="ItimRegular"
                 FontSize="20"
                 HorizontalOptions="Fill"
-                Text="Done"
+                Text="Synchronize Data"
                 TextColor="Black"
                 VerticalOptions="Center">
                 <Button.Shadow>
@@ -71,8 +71,6 @@
                         Offset="5,5" />
                 </Button.Shadow>
             </Button>
-
-
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>

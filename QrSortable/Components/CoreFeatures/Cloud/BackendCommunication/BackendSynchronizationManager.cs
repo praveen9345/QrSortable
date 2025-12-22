@@ -4,7 +4,6 @@
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
-    using QrSortable.Components.UiFunctionality.Notification;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -16,18 +15,15 @@
     public class BackendSynchronizationManager : IBackendSynchronizationManager
     {
         private readonly IBackendCommunicationService _backendCommunicationService;
-        private readonly IToastService _toastService;
         private readonly IConnectivityService _connectivityService;
         private readonly IBackendDatabaseManager _backendDatabaseManager;
         private readonly IGeneralInformationManager _generalInformationManager;
 
         public BackendSynchronizationManager(
-            IBackendCommunicationService backendCommunicationService,IToastService toastService, 
-            IConnectivityService connectivityService,IGeneralInformationManager generalInformationManager, 
-            IBackendDatabaseManager backendDatabaseManager)
+            IBackendCommunicationService backendCommunicationService,IConnectivityService connectivityService,
+            IGeneralInformationManager generalInformationManager, IBackendDatabaseManager backendDatabaseManager)
         {
             _backendCommunicationService = backendCommunicationService;
-            _toastService = toastService;
             _backendDatabaseManager = backendDatabaseManager;
             _connectivityService = connectivityService;
             _generalInformationManager = generalInformationManager;
@@ -48,7 +44,8 @@
             try
             {
                 var generalInformation = await _generalInformationManager.GetGeneralInformationAsync();
-                
+
+                //only sync storage entries if backend is used
                 if (generalInformation.IsBackendUsed)
                 {
                     var dbStoreEntries = await (await _backendDatabaseManager

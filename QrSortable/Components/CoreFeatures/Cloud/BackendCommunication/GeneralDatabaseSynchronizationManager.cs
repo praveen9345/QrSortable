@@ -1,169 +1,172 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
-    using QrSortable.Components.CoreFeatures.DataManagement;
+    using CommunityToolkit.Mvvm.DependencyInjection;
+    using Google.Cloud.Firestore;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
-    using QrSortable.Components.CoreFeatures.DataManagement.Models;
+    using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Notification;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
+    /// <summary>
+    ///     Implementation of a backend synchronization to upload data from the general database.
+    /// </summary>
     public class GeneralDatabaseSynchronizationManager : IGeneralDatabaseSynchronizationManager
     {
-        private readonly IDatabaseManager _database;
-        private readonly IBackendCommunicationService _backend;
+        private readonly IDatabaseManager _databaseManager;
         private readonly IGeneralInformationManager _generalInfoManager;
         private readonly IToastService _toast;
+        private readonly IConnectivityService _connectivityService;
         private readonly IFirebaseStorageService _firebaseStorageService;
+        private readonly ISharedMethodService _sharedMethodService;
 
-        public GeneralDatabaseSynchronizationManager(
-            IDatabaseManager database,
-            IBackendCommunicationService backend,
-            IGeneralInformationManager generalInfoManager,
-            IToastService toast, IFirebaseStorageService firebaseStorageService)
+        private string _multiUserId = string.Empty;
+
+        public GeneralDatabaseSynchronizationManager(IDatabaseManager databaseManager,IGeneralInformationManager generalInfoManager,
+            IToastService toast, IConnectivityService connectivityService,IFirebaseStorageService firebaseStorageService,
+            ISharedMethodService sharedMethodService)
         {
-            _database = database ?? throw new ArgumentNullException(nameof(database));
-            _backend = backend ?? throw new ArgumentNullException(nameof(backend));
-            _generalInfoManager = generalInfoManager ?? throw new ArgumentNullException(nameof(generalInfoManager));
+            _databaseManager = databaseManager;
+            _generalInfoManager = generalInfoManager;
             _toast = toast;
+            _connectivityService = connectivityService;
             _firebaseStorageService = firebaseStorageService;
+            _sharedMethodService = sharedMethodService;
         }
 
-        public async Task<bool> UploadAllAsync(CancellationToken cancellationToken = default)
+       
+        /// <summary>
+        ///     Transfers all relevant data that was collected within the app to the backend.
+        /// </summary>
+        /// <returns>
+        ///     True, if the last backup synchronization was updated successfully or if backend is not used. False, otherwise.
+        /// </returns>
+        public async Task<bool> SynchronizeAppDataAsync()
         {
-            try
+            var isInternetConnectionAvailable = await _connectivityService.CheckInternetConnectionAvailableAsync();
+            if (!isInternetConnectionAvailable)
             {
-                var generalInfo = await _generalInfoManager.GetGeneralInformationAsync();
-                var multiUserId = generalInfo?.MultiUserId ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(multiUserId))
-                {
-                    // Make sure multiuser id exists; try to generate
-                    var ok = await _generalInfoManager.GenerateTheMultiuserIdAsync();
-                    if (!ok) { _toast?.DisplayToast("Failed creating device id for sync."); return false; }
-                    generalInfo = await _generalInfoManager.GetGeneralInformationAsync();
-                    multiUserId = generalInfo.MultiUserId;
-                }
-
-                // Upload StorageEntry
-                bool storageOk = await UploadEntitiesAsync<StorageEntry>(entity =>
-                {
-                    var imageUrls = (_firebaseStorageService.UploadImagesAsync(entity.ImageList)).Result;
-                    var dto = new StorageEntryModel
-                    {
-                        StorageId = entity.StorageId.ToString(),
-                        Category = entity.Category ?? string.Empty,
-                        CreatedDate = entity.CreatedDate.ToString("o"),
-                        BarcodeValue = entity.BarcodeValue ?? string.Empty,
-                        BarcodeType = entity.BarcodeType ?? string.Empty,
-                        Location = entity.Location ?? string.Empty,
-                        SearchInfo = entity.SearchInfo ?? string.Empty,
-                        ItemName = entity.ItemName ?? string.Empty,
-                        Description = entity.Description ?? string.Empty,
-                        ImageUrls = imageUrls,
-                        BackgroundColorHex = entity.BackgroundColorHex ?? string.Empty
-                    };
-                    SetMultiuserId(dto, multiUserId);
-                    return dto;
-                });
-
-                // Upload Orders
-                bool ordersOk = await UploadEntitiesAsync<YoursOrderData>(entity =>
-                {
-                    var dto = new OrdersModel
-                    {
-                        OrderId = entity.OrderId ?? string.Empty,
-                        Title = entity.Title ?? string.Empty,
-                        Description = entity.Description ?? string.Empty,
-                        CodeType = entity.CodeType ?? string.Empty,
-                        PageType = entity.PageType ?? string.Empty,
-                        ProductQuantity = entity.ProductQuantity.ToString(),
-                        DateTime = entity.DateTime.ToString("o"),
-                        TotalPrice = entity.TotalPrice ?? string.Empty,
-                        Name = entity.Name ?? string.Empty,
-                        Street = entity.Street ?? string.Empty,
-                        HouseNo = entity.HouseNo ?? string.Empty,
-                        ZipCode = entity.ZipCode ?? string.Empty,
-                        City = entity.City ?? string.Empty,
-                        Country = entity.Country ?? string.Empty,
-                        Email = entity.Email ?? string.Empty,
-                        ReferenceCode = entity.ReferenceCode ?? string.Empty,
-                        ShipmentTracking = entity.ShipmentTracking ?? string.Empty,
-                        StatusOfOrder = entity.StatusOfOrder ?? string.Empty,
-                        PdfFiles = entity.PdfFiles ?? new List<byte[]>()
-                    };
-                    SetMultiuserId(dto, multiUserId);
-                    return dto;
-                });
-
-                var overall = storageOk && ordersOk;
-                if (overall) _toast?.DisplayToast("Upload finished successfully.");
-                return overall;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"GeneralDatabaseSynchronizationManager.UploadAllAsync: {ex}");
-                _toast?.DisplayToast("Upload failed.");
                 return false;
             }
-        }
 
-        public async Task<bool> UploadEntitiesAsync<T>(Func<T, FirestoreData> mapper)
-            where T : DatabaseEntry
-        {
-            try
+            var generalInformation = await _generalInfoManager.GetGeneralInformationAsync();
+            
+            _multiUserId = generalInformation.MultiUserId;
+
+            if (generalInformation.IsBackendUsed)
             {
-                var list = await _database.GetListAsync<T>();
-                if (list == null || !list.Any()) return true;
+                return false;
+            }
 
-                foreach (var entity in list)
+            var dbStorage = await _databaseManager.GetListAsync<StorageEntry>();
+
+            if (dbStorage is null || !dbStorage.Any())
+            {
+                return false;
+            }
+
+            var Db = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var collection = Db.Collection("StorageEntries");
+
+            // Step 1: Get all documents matching MultiuserId
+            var querySnapshot = await collection
+                .WhereEqualTo("MultiuserId", _multiUserId)
+                .GetSnapshotAsync();
+
+            // Convert Firestore documents into lookup dictionary
+            var backendEntries = querySnapshot.Documents
+               .Where(d => d.ContainsField("StorageId"))
+               .ToDictionary(
+                   d => d.GetValue<string>("StorageId"),
+                   d => d
+               );
+
+            // STEP 2: No backend data → upload everything
+            if (querySnapshot.Count == 0)
+            {
+                foreach (var entry in dbStorage)
                 {
-                    var dto = mapper(entity);
-                    if (dto == null) continue;
+                    var imageUrls = await _firebaseStorageService.UploadImagesAsync(entry.ImageList);
 
-                    try
+                    var document = new Dictionary<string, object>
                     {
-                        await _backend.InsertAsync(dto);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"UploadEntitiesAsync<{typeof(T).Name}>: failed: {ex}");
-                        return false;
-                    }
+                        { "MultiuserId", _multiUserId ?? string.Empty },
+                        { "StorageId", _sharedMethodService.ConvertToString(entry.StorageId) ?? string.Empty},
+                        { "Category", entry.Category ?? string.Empty},
+                        { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty},
+                        { "BarcodeValue", entry.BarcodeValue ?? string.Empty},
+                        { "BarcodeType", entry.BarcodeType ?? string.Empty},
+                        { "Location", entry.Location ?? string.Empty},
+                        { "SearchInfo", entry.SearchInfo ?? string.Empty},
+                        { "ItemName", entry.ItemName ?? string.Empty},
+                        { "Description", entry.Description ?? string.Empty},
+                        { "ImageUrls", imageUrls ?? new List<string>()},
+                        { "BackgroundColorHex", entry.BackgroundColorHex ?? string.Empty}
+                    };
+
+                    await collection.AddAsync(document);
                 }
-
                 return true;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"UploadEntitiesAsync<{typeof(T).Name}>: {ex}");
-                return false;
-            }
-        }
 
-        // Helper to set get-only auto-property MultiuserId via reflection
-        private static void SetMultiuserId(object dto, string id)
-        {
-            if (dto == null || id == null) return;
-
-            // find backing field for the auto-property
-            var field = dto.GetType().GetField("<MultiuserId>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (field != null)
+            // STEP 3. Backend exists → sync new & existing entries
+            foreach (var entry in dbStorage)
             {
-                field.SetValue(dto, id);
-                return;
+                var storageId =
+                    _sharedMethodService.ConvertToString(entry.StorageId) ?? string.Empty;
+
+                // EXISTING backend entry
+                backendEntries.TryGetValue(storageId, out var backendDoc);
+
+                // Delete old images if entry exists
+                if (backendDoc != null && backendDoc.ContainsField("ImageUrls"))
+                {
+                    var oldImageUrls = backendDoc
+                        .GetValue<List<string>>("ImageUrls")
+                        ?.Where(u => !string.IsNullOrWhiteSpace(u))
+                        .ToList();
+
+                    if (oldImageUrls != null && oldImageUrls.Count > 0)
+                    {
+                        await _firebaseStorageService.DeleteImagesAsync(oldImageUrls);
+                    }
+                }
+
+                // Upload new images
+                var imageUrls = await _firebaseStorageService.UploadImagesAsync(entry.ImageList);
+
+                var document = new Dictionary<string, object>
+                {
+                    { "MultiuserId", _multiUserId ?? string.Empty },
+                    { "StorageId", storageId },
+                    { "Category", entry.Category ?? string.Empty },
+                    { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },
+                    { "BarcodeValue", entry.BarcodeValue ?? string.Empty },
+                    { "BarcodeType", entry.BarcodeType ?? string.Empty },
+                    { "Location", entry.Location ?? string.Empty },
+                    { "SearchInfo", entry.SearchInfo ?? string.Empty },
+                    { "ItemName", entry.ItemName ?? string.Empty },
+                    { "Description", entry.Description ?? string.Empty },
+                    { "ImageUrls", imageUrls ?? new List<string>() },
+                    { "BackgroundColorHex", entry.BackgroundColorHex ?? string.Empty }
+                };
+
+                // Create or update Firestore document
+                if (backendDoc == null)
+                {
+                    // NEW entry
+                    await collection.AddAsync(document);
+                }
+                else
+                {
+                    // UPDATE existing entry
+                    await backendDoc.Reference.SetAsync(document, SetOptions.Overwrite);
+                }
             }
 
-            // fallback: try property set via reflection if a setter exists
-            var prop = dto.GetType().GetProperty("MultiuserId");
-            if (prop != null && prop.CanWrite)
-            {
-                prop.SetValue(dto, id);
-            }
+            return true;
         }
     }
 }

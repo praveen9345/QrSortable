@@ -6,6 +6,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using QrSortable.Components.UiFunctionality.Notification;
     using System.Threading.Tasks;
 
 
@@ -23,18 +24,21 @@
 
         private readonly IBackendSynchronizationManager _backendSynchronizationManager;
 
+        private readonly IToastService _toast;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="SettingViewModel" />.
         /// </summary>
         public SettingViewModel(IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager,
             IBackendCommunicationService backendCommunicationService, IBackendDatabaseManager backendDatabaseManager,
-            IBackendSynchronizationManager backendSynchronizationManager)
+            IBackendSynchronizationManager backendSynchronizationManager, IToastService toast)
         {
             IsBackNavigationEnabled = true;
             _generalDatabaseSynchronizationManager = generalDatabaseSynchronizationManager;
             _backendCommunicationService = backendCommunicationService;
             _backendDatabaseManager = backendDatabaseManager;
             _backendSynchronizationManager = backendSynchronizationManager;
+            _toast = toast;
         }
 
 
@@ -73,8 +77,6 @@
             //    var entry = entries[i];
             //}
 
-
-          
         }
 
 
@@ -83,7 +85,20 @@
 
             await DialogService.ShowActivityIndicatorAndReturnResult("Uploading...", async () =>
             {
-                var result = await _generalDatabaseSynchronizationManager.UploadAllAsync();
+                var result = await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
+                
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    if (result)
+                    {
+                        await _toast.DisplayToast("Data synchronized successfully.");
+                    }
+                    else
+                    {
+                        await _toast.DisplayToast("Data synchronization failed or no internet connection. Try again later.");
+                    }
+                });
+
                 return result;
             });
         });
