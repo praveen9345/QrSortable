@@ -60,7 +60,7 @@
             //    var entry = dto.City;
             //}
 
-            await _backendSynchronizationManager.SynchronizeStoredObjectsAsync();
+            //await _backendSynchronizationManager.SynchronizeStoredObjectsAsync();
         }
 
         public async override void ViewAppearing()

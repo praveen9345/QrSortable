@@ -1,22 +1,12 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
 {
     using Microsoft.EntityFrameworkCore;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
-    using QrSortable.Components.CoreFeatures.DataManagement;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
-    using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
-    using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.UiFunctionality.Notification;
     using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
-    using System.Text.Json;
-    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
