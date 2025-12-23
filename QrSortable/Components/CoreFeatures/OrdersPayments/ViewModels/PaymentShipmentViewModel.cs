@@ -2,17 +2,15 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
-    using Google.Cloud.Firestore;
     using Microsoft.Maui.Storage;
+    using QrSortable.Components.CoreFeatures.Cloud;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
     using QrSortable.Components.CoreFeatures.CodeGenerator;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.PlatformUtils;
-    using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.TimeHandling;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
@@ -30,10 +28,8 @@
         private readonly ISharedMethodService _sharedMethodService;
         private readonly ICodeGeneratorService _codeService;
         private readonly IPdfGeneratorService _pdfService;
-        private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
         private readonly IBackendCommunicationService _backendCommunicationService;
-        private readonly IBackendSynchronizationManager _backendSynchronizationManager;
-        private readonly IGeneralInformationManager _generalInformationManager;
+        private readonly IConnectivityService _connectivityService;
 
         private Product _product;
         private string _paymentId;
@@ -54,13 +50,11 @@
         /// </summary>
         /// <param name="mollieService">The service handling Mollie payment-related operations.</param>
         /// <param name="timerService">The service managing timing-related operations.</param>
-        /// <param name="mauiEssentialsWrapper">An instance of <see cref="IMauiEssentialsWrapper" /> used to access platform-specific features.</param>
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
         public PaymentShipmentViewModel(IMollieService mollieService, ITimerService timerService, IDatabaseManager databaseManager,
             ISharedMethodService sharedMethodService, ICodeGeneratorService codeService, IPdfGeneratorService pdfGeneratorService,
-            IMauiEssentialsWrapper mauiEssentialsWrapper, IBackendCommunicationService backendCommunicationService, 
-            IBackendSynchronizationManager backendSynchronizationManager, IGeneralInformationManager generalInformationManager)
+            IBackendCommunicationService backendCommunicationService, IConnectivityService connectivityService)
         {
             IsBackNavigationEnabled = true;
 
@@ -70,12 +64,10 @@
             _sharedMethodService = sharedMethodService;
             _codeService = codeService;
             _pdfService = pdfGeneratorService;
-            _mauiEssentialsWrapper = mauiEssentialsWrapper;
+            _backendCommunicationService = backendCommunicationService;
+            _connectivityService = connectivityService;
 
             SelectedCurrencyItem = CurrencyItem[0];
-            _backendCommunicationService = backendCommunicationService;
-            _backendSynchronizationManager = backendSynchronizationManager;
-            _generalInformationManager = generalInformationManager;
         }
 
         /// <summary>
@@ -215,6 +207,13 @@
             {
                 await DialogService.ShowAlertDialog("Invalid Email",
                     "Please enter a valid email address.", "OK");
+                return;
+            }
+
+            if(!await _connectivityService.CheckInternetConnectionAvailableAsync())
+            {
+                await DialogService.ShowAlertDialog("No Internet Connection",
+                    "To place an order, an internet connection is required. Please check your connection and try again.", "OK");
                 return;
             }
 

@@ -3,6 +3,8 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using Microsoft.Maui.Graphics.Platform;
+    using QrSortable.Components.CoreFeatures.Cloud;
+    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
@@ -21,6 +23,8 @@
         public readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
         private readonly ISharedMethodService _sharedMethodService;
+        private readonly IBackendCommunicationService _backendCommunicationService;
+        private readonly IConnectivityService _connectivityService;
 
         private Product _product;
 
@@ -30,12 +34,16 @@
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
-        public BankTransferViewModel(IToastService toastService, IDatabaseManager databaseManager, ISharedMethodService sharedMethodService)
+        public BankTransferViewModel(IToastService toastService, IDatabaseManager databaseManager, 
+            ISharedMethodService sharedMethodService, IBackendCommunicationService backendCommunicationService,
+            IConnectivityService connectivityService)
         {
             IsBackNavigationEnabled = true;
             _toastService = toastService;
             _databaseManager = databaseManager;
             _sharedMethodService = sharedMethodService;
+            _backendCommunicationService = backendCommunicationService;
+            _connectivityService = connectivityService;
 
             ReferenceCode = GenerateReferenceCode();
         }
@@ -110,7 +118,14 @@
 
         public AsyncRelayCommand PlaceAnOrderCommand => new AsyncRelayCommand(async () =>
         {
-            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+            if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+            {
+                await DialogService.ShowAlertDialog("No Internet Connection",
+                    "To place an order, an internet connection is required. Please check your connection and try again.", "OK");
+                return;
+            }
+
+            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Processing...",
             async () =>{return await DatabaseAndBackendStoringAsync(); });
 
             if (result)
@@ -174,6 +189,14 @@
                 if (addedItem != null)
                 {
                     _databaseManager.CommitTransaction();
+                    try
+                    {
+                        await _backendCommunicationService.InsertAsync(orderedItem);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"BankTransferViewModel: DatabaseAndBackendStoringAsync::Exception during backend save: {ex}");
+                    }
                     Console.WriteLine("Successfully placed an ordered.");
                     return true;
                 }
