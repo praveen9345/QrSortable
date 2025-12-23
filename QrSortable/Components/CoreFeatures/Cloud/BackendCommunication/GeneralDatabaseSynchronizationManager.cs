@@ -55,7 +55,7 @@
             
             _multiUserId = generalInformation.MultiUserId;
 
-            if (generalInformation.IsBackendUsed)
+            if (!generalInformation.IsBackendUsed)
             {
                 return false;
             }
