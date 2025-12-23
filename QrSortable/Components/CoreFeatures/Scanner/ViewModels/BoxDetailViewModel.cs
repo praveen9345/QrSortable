@@ -239,7 +239,7 @@
                 {
                     await _databaseManager.DeleteAsync(entryToDelete);
                     await _toastService.DisplayToast("Successfully deleted.");
-                    Items.Remove(item);
+                    MainThread.BeginInvokeOnMainThread(() => Items.Remove(item));
                 }
                 else
                 {
