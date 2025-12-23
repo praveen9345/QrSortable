@@ -1,49 +1,53 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<views:BaseView 
+<views:BaseView
+    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogAlertView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
-    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogAlertView"
-    BackgroundColor="{OnPlatform Android='#80000000', iOS='#99000000'}"
+    BackgroundColor="{OnPlatform Android='#80000000',
+                                 iOS='#99000000'}"
     Shell.PresentationMode="Modal">
-    <views:BaseView.Content >
-        <StackLayout 
-            HorizontalOptions="CenterAndExpand" 
-            VerticalOptions="CenterAndExpand" 
-            Padding="15">
-            <Border 
-                BackgroundColor="{StaticResource White}" 
-                Stroke="Transparent" 
-                StrokeShape="RoundRectangle 15" 
+    <views:BaseView.Content>
+        <StackLayout
+            Padding="15"
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="CenterAndExpand">
+            <Border
                 Padding="0"
-                VerticalOptions="Center"
-                HorizontalOptions="Center">
-                <Grid ColumnSpacing="0" 
-                      Padding ="0, 30, 0, 0">
+                BackgroundColor="{StaticResource White}"
+                HorizontalOptions="Center"
+                Stroke="Transparent"
+                StrokeShape="RoundRectangle 15"
+                VerticalOptions="Center">
+                <Grid Padding="0,30,0,0" ColumnSpacing="0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="51"/> <!--Hard code this height as the button has a hardcoded height anyways.-->
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="51" />
+                        <!--  Hard code this height as the button has a hardcoded height anyways.  -->
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" 
-                           Text="{Binding DialogTitle}" 
-                           IsVisible="{Binding TitleExists}"
-                           HorizontalOptions="CenterAndExpand" 
-                           Style="{StaticResource TitleLabelStyle}" 
-                           HorizontalTextAlignment="Center"
-                           Margin="20, 0, 20,5"/>
-                    <Label Grid.Row="1" 
-                           Text="{Binding DialogText}" 
-                           Style="{StaticResource TitleLabelStyle}"
-                           HorizontalOptions="CenterAndExpand" 
-                           HorizontalTextAlignment="Center"
-                           Margin="20,5,20,30"
-                           VerticalOptions="StartAndExpand"/>
-                    <Button Grid.Row="2" 
-                            Text="{Binding DialogButtonText}"
-                            Command="{Binding CloseDialogCommand}"
-                            Style="{StaticResource DialogButtonStyle}"
-                            Margin="-2,0,-1,-6"/>
+                    <Label
+                        Grid.Row="0"
+                        Margin="20,0,20,5"
+                        HorizontalOptions="CenterAndExpand"
+                        HorizontalTextAlignment="Center"
+                        IsVisible="{Binding TitleExists}"
+                        Style="{StaticResource TitleLabelStyle}"
+                        Text="{Binding DialogTitle}" />
+                    <Label
+                        Grid.Row="1"
+                        Margin="20,5,20,30"
+                        HorizontalOptions="CenterAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Style="{StaticResource TitleLabelStyle}"
+                        Text="{Binding DialogText}"
+                        VerticalOptions="StartAndExpand" />
+                    <Button
+                        Grid.Row="2"
+                        Margin="-2,0,-1,-6"
+                        Command="{Binding CloseDialogCommand}"
+                        Style="{StaticResource DialogButtonStyle}"
+                        Text="{Binding DialogButtonText}" />
                 </Grid>
             </Border>
         </StackLayout>

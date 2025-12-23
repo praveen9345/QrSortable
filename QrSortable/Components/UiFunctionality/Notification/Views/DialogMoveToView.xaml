@@ -1,158 +1,171 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <views:BaseView
+    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogMoveToView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
-    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogMoveToView"
-    BackgroundColor="{OnPlatform Android='#80000000', iOS='#99000000'}"
+    BackgroundColor="{OnPlatform Android='#80000000',
+                                 iOS='#99000000'}"
     Shell.PresentationMode="Modal">
 
-	<views:BaseView.Content>
-		<Grid VerticalOptions="Center" HorizontalOptions="Center" Padding="20">
-			<Border BackgroundColor="#3B3B3B"
-                    StrokeShape="RoundRectangle 16"
-                    Padding="18"
-                    WidthRequest="320">
-				<VerticalStackLayout Spacing="16" Padding="6">
+    <views:BaseView.Content>
+        <Grid
+            Padding="20"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+            <Border
+                Padding="18"
+                BackgroundColor="#3B3B3B"
+                StrokeShape="RoundRectangle 16"
+                WidthRequest="320">
+                <VerticalStackLayout Padding="6" Spacing="16">
 
-					<!-- Icon + Title -->
-					<HorizontalStackLayout
-						HorizontalOptions="Start"
-						VerticalOptions="Center">
-						<Border BackgroundColor="Transparent"
-                                HeightRequest="50"
-                                WidthRequest="50"
-                                VerticalOptions="Center">
-							<Image
-								Source="{Binding TitleImage}"
-								Aspect="AspectFill"/>
-						</Border>
+                    <!--  Icon + Title  -->
+                    <HorizontalStackLayout HorizontalOptions="Start" VerticalOptions="Center">
+                        <Border
+                            BackgroundColor="Transparent"
+                            HeightRequest="60"
+                            VerticalOptions="Center"
+                            WidthRequest="60">
+                            <Image Aspect="AspectFill" Source="{Binding TitleImage}" />
+                        </Border>
 
-						<Label Text="{Binding Title}"
-                               FontSize="25"
-                               TextColor="White"
-							   Margin ="5,0,0,0"
-                               VerticalTextAlignment="Center"
-                               FontFamily="ItimRegular"
-							   FontAttributes="Bold"/>
-					</HorizontalStackLayout>
+                        <Label
+                            Margin="5,0,0,0"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="25"
+                            Text="{Binding Title}"
+                            TextColor="White"
+                            VerticalTextAlignment="Center" />
+                    </HorizontalStackLayout>
 
-					<!-- Subtitle -->
-					<Label Text="Move To"
-                           FontSize="25"
-                           HorizontalOptions="Center"
-                           TextColor="White"
-						   FontFamily="ItimRegular"
-                           FontAttributes="Bold"/>
+                    <!--  Subtitle  -->
+                    <Label
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="25"
+                        HorizontalOptions="Center"
+                        Text="Move To"
+                        TextColor="White" />
 
-					<!-- Box Icon + selection list -->
-					<HorizontalStackLayout
-						HorizontalOptions="Fill"
-						VerticalOptions="Center">
-						<Image Source="box.svg"
-							   WidthRequest="50"
-							   HeightRequest="100"
-							   VerticalOptions="Center"
-							   Aspect="AspectFill"/>
+                    <!--  Box Icon + selection list  -->
+                    <HorizontalStackLayout HorizontalOptions="Fill" VerticalOptions="Center">
+                        <Image
+                            Aspect="AspectFill"
+                            HeightRequest="110"
+                            Source="box.svg"
+                            VerticalOptions="Center"
+                            WidthRequest="60" />
 
-						<Border BackgroundColor="#2D2D2D"
-                                StrokeShape="RoundRectangle 12"
-                                Padding="6"
-								Margin="10,0,0,0"
+                        <Border
+                            Margin="10,0,0,0"
+                            Padding="6"
+                            BackgroundColor="#2D2D2D"
+                            HorizontalOptions="FillAndExpand"
+                            StrokeShape="RoundRectangle 12"
+                            VerticalOptions="Center">
+                            <CollectionView
+                                HeightRequest="140"
                                 HorizontalOptions="FillAndExpand"
-                                VerticalOptions="Center">
-							<CollectionView
                                 ItemsSource="{Binding MoveToItems}"
                                 SelectedItem="{Binding SelectedMoveTo, Mode=TwoWay}"
                                 SelectionMode="Single"
-                                HeightRequest="140"
-                                VerticalOptions="Center"
-                                HorizontalOptions="FillAndExpand">
-								<CollectionView.ItemsLayout>
-									<LinearItemsLayout Orientation="Vertical" ItemSpacing="6"/>
-								</CollectionView.ItemsLayout>
+                                VerticalOptions="Center">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout ItemSpacing="6" Orientation="Vertical" />
+                                </CollectionView.ItemsLayout>
 
-								<CollectionView.ItemTemplate>
-									<DataTemplate>
-										<!-- single root element per DataTemplate -->
-										<Grid Padding="10" ColumnSpacing="8">
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition Width="*" />
-												<ColumnDefinition Width="Auto" />
-											</Grid.ColumnDefinitions>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <!--  single root element per DataTemplate  -->
+                                        <Grid Padding="10" ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="100" />
+                                            </Grid.ColumnDefinitions>
 
-											<!-- item label -->
-											<Label
+                                            <!--  item label  -->
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontFamily="ItimRegular"
+                                                FontSize="16"
+                                                LineBreakMode="TailTruncation"
                                                 Text="{Binding .}"
                                                 TextColor="White"
-                                                FontFamily="ItimRegular"
-                                                VerticalTextAlignment="Center"
-                                                LineBreakMode="TailTruncation"/>
+                                                VerticalTextAlignment="Center" />
 
-											<!-- selection marker - default hidden -->
-											<Frame x:Name="CheckFrame"
-												  Grid.Column="1"
-												  IsVisible="False"
-												  BackgroundColor="Transparent"
-												  Padding="6"
-												  HasShadow="False"
-												  BorderColor="Transparent"
-												  VerticalOptions="Center">
-												<Label Text="✔" TextColor="#13A852" FontSize="16"/>
-											</Frame>
+                                            <!--  selection marker - default hidden  -->
+                                            <Frame
+                                                x:Name="CheckFrame"
+                                                Grid.Column="1"
+                                                Padding="6"
+                                                BackgroundColor="Transparent"
+                                                BorderColor="Transparent"
+                                                HasShadow="False"
+                                                IsVisible="False"
+                                                VerticalOptions="Center">
 
-											<!-- Visual states - CollectionView will set "Selected" state for the root element when selected -->
-											<VisualStateManager.VisualStateGroups>
-												<VisualStateGroup Name="SelectionStates">
-													<VisualState Name="Normal" />
-													<VisualState Name="Selected">
-														<VisualState.Setters>
-															<!-- make the check visible when this row is selected -->
-															<Setter TargetName="CheckFrame" Property="IsVisible" Value="True" />
-														</VisualState.Setters>
-													</VisualState>
-												</VisualStateGroup>
-											</VisualStateManager.VisualStateGroups>
-										</Grid>
-									</DataTemplate>
-								</CollectionView.ItemTemplate>
-							</CollectionView>
-						</Border>
-					</HorizontalStackLayout>
+                                                <Label
+                                                    Grid.Row="0"
+                                                    Margin="70,0,0,0"
+                                                    FontSize="16"
+                                                    Text="✔"
+                                                    TextColor="#13A852" />
+                                            </Frame>
 
-					<!-- Buttons -->
-					<Grid VerticalOptions="End">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="5*"/>
-							<ColumnDefinition Width="0.5"/>
-							<ColumnDefinition Width="5*"/>
-						</Grid.ColumnDefinitions>
+                                            <!--  Visual states - CollectionView will set "Selected" state for the root element when selected  -->
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup Name="SelectionStates">
+                                                    <VisualState Name="Normal" />
+                                                    <VisualState Name="Selected">
+                                                        <VisualState.Setters>
+                                                            <!--  make the check visible when this row is selected  -->
+                                                            <Setter TargetName="CheckFrame" Property="IsVisible" Value="True" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </Border>
+                    </HorizontalStackLayout>
 
-						<Button
-							Grid.Column="0"
-							Text="Cancel"
-							Style="{StaticResource DialogButtonStyle}"
-							HorizontalOptions="FillAndExpand"
-							Command="{Binding CancelCommand}"
-							CornerRadius="4"/>
+                    <!--  Buttons  -->
+                    <Grid VerticalOptions="End">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="5*" />
+                            <ColumnDefinition Width="0.5" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
 
-						<BoxView
-						   Grid.Column="1"
-						   HeightRequest="57"
-						   WidthRequest="1"
-						   BackgroundColor="Black"/>
+                        <Button
+                            Grid.Column="0"
+                            Command="{Binding CancelCommand}"
+                            CornerRadius="4"
+                            HorizontalOptions="FillAndExpand"
+                            Style="{StaticResource DialogButtonStyle}"
+                            Text="Cancel" />
 
-						<Button
-							Grid.Column="2"
-							Text="Ok"
-							Style="{StaticResource DialogButtonStyle}"
-							HorizontalOptions="FillAndExpand"
-							Command="{Binding ConfirmCommand}"
-							CornerRadius="4"/>
-					</Grid>
-				</VerticalStackLayout>
-			</Border>
-		</Grid>
-	</views:BaseView.Content>
+                        <BoxView
+                            Grid.Column="1"
+                            BackgroundColor="Black"
+                            HeightRequest="57"
+                            WidthRequest="1" />
+
+                        <Button
+                            Grid.Column="2"
+                            Command="{Binding ConfirmCommand}"
+                            CornerRadius="4"
+                            HorizontalOptions="FillAndExpand"
+                            Style="{StaticResource DialogButtonStyle}"
+                            Text="Ok" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </views:BaseView.Content>
 </views:BaseView>

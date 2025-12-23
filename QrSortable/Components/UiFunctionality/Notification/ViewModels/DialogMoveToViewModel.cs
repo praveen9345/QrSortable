@@ -58,9 +58,11 @@
             try
             {
                 var allItems = await _databaseManager.GetAllAsync<StorageEntry>();
-                var barcodes = allItems.Select(x => x.BarcodeValue)
-                .Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList();
-                
+                var barcodes = allItems
+                 .Select(x => x.BarcodeValue)
+                 .Where(x => !string.IsNullOrEmpty(x) && x != parameter.BarcodeValue)
+                 .Distinct().ToList();
+
                 MoveToItems = new ObservableCollection<string>(barcodes);
 
             }
