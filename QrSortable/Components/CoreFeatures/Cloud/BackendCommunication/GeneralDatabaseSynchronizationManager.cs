@@ -1,6 +1,5 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
 {
-    using CommunityToolkit.Mvvm.DependencyInjection;
     using Google.Cloud.Firestore;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
@@ -78,10 +77,7 @@
             // Convert Firestore documents into lookup dictionary
             var backendEntries = querySnapshot.Documents
                .Where(d => d.ContainsField("StorageId"))
-               .ToDictionary(
-                   d => d.GetValue<string>("StorageId"),
-                   d => d
-               );
+               .ToDictionary( d => d.GetValue<string>("StorageId"),d => d);
 
             // STEP 2: No backend data → upload everything
             if (querySnapshot.Count == 0)

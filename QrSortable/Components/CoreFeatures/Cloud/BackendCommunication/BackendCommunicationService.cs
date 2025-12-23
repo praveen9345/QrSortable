@@ -9,6 +9,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.Models;
     using QrSortable.Components.PlatformUtils;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Text.Json;
     using System.Threading.Tasks;
@@ -363,9 +364,19 @@
 
                     try
                     {
-                        await Db.Collection("Orders")
-                                .Document(_multiUserId)
-                                .SetAsync(document, SetOptions.Overwrite);
+                        Query query = Db.Collection("Orders").WhereEqualTo("OrderId", dataDec.OrderId)
+                        .Limit(1); // OrderId should be unique
+
+                        QuerySnapshot snapshot = await query.GetSnapshotAsync();
+
+                        if (snapshot.Documents.Count == 0)
+                        {
+                            return false; // Not found
+                        }
+ 
+                        await Db.Collection("Orders").Document(snapshot.Documents[0].Id).
+                            SetAsync(document, SetOptions.Overwrite);
+
                         return true;
                     }
                     catch (Exception ex)
@@ -536,7 +547,6 @@
                 throw new ArgumentException("CollectionName is required.");
         }
 
-       
         #endregion
     }
 }
