@@ -6,7 +6,7 @@
         /// <summary>
         /// Order data is for instert or update of the product.
         /// </summary>
-        public bool IsUpdateData { get; set; } = false;
+        public string IsUpdateData { get; set; } = "false";
         /// <summary>
         /// Order of the product.
         /// </summary>

@@ -16,7 +16,7 @@ namespace QrSortable.Migrations.Backend
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    IsUpdateData = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsUpdateData = table.Column<string>(type: "TEXT", nullable: false),
                     OrderId = table.Column<string>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
@@ -48,7 +48,7 @@ namespace QrSortable.Migrations.Backend
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    IsUpdateData = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsUpdateData = table.Column<string>(type: "TEXT", nullable: false),
                     StorageId = table.Column<string>(type: "TEXT", nullable: false),
                     Category = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedDate = table.Column<string>(type: "TEXT", nullable: false),

@@ -4,8 +4,9 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using Microsoft.Maui.Graphics.Platform;
+    using QrSortable.Components.CoreFeatures.Cloud;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
@@ -28,6 +29,9 @@
         private readonly IToastService _toastService;
         private readonly IBackendCommunicationService _backendCommunicationService;
         private readonly IFirebaseStorageService _firebaseStorageService;
+        private readonly IBackendDatabaseManager _backendDatabaseManager;
+        private readonly IConnectivityService _connectivityService;
+        private readonly ISharedMethodService _sharedMethodService;
 
         private List<byte[]> _imageArrayDb = new List<byte[]>();
         private StorageEntry _storageData;
@@ -47,7 +51,8 @@
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
         public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, 
             IFilePickerService filePickerService, IToastService toastService, IBackendCommunicationService backendCommunicationService,
-            IFirebaseStorageService firebaseStorageService)
+            IFirebaseStorageService firebaseStorageService, IBackendDatabaseManager backendDatabaseManager, 
+            IConnectivityService connectivityService, ISharedMethodService sharedMethodService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
@@ -56,6 +61,9 @@
             _toastService = toastService;
             _backendCommunicationService = backendCommunicationService;
             _firebaseStorageService = firebaseStorageService;
+            _backendDatabaseManager = backendDatabaseManager;
+            _connectivityService = connectivityService;
+            _sharedMethodService = sharedMethodService;
 
             ImageArray = new ObservableCollection<Images>();
         }
@@ -279,13 +287,28 @@
                         var updatedItem = await _databaseManager.UpdateAsync(item);
                         if (updatedItem != null)
                         {
-                            try
+                            if(!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                            {
+                                var dto = new DtoStorageEntryModel
+                                {
+                                    IsUpdateData = "true",
+                                    StorageId = _sharedMethodService.ConvertToString(item.StorageId) ?? string.Empty,
+                                    Category = item.Category ?? string.Empty,
+                                    CreatedDate = _sharedMethodService.ConvertToString(item.CreatedDate) ?? string.Empty,
+                                    BarcodeValue = item.BarcodeValue ?? string.Empty,
+                                    BarcodeType = item.BarcodeType ?? string.Empty,
+                                    Location = item.Location ?? string.Empty,
+                                    SearchInfo = item.SearchInfo ?? string.Empty,
+                                    ItemName = item.ItemName ?? string.Empty,
+                                    Description = item.Description ?? string.Empty,
+                                    ImageList = item.ImageList ?? new List<byte[]>(),
+                                    BackgroundColorHex = item.BackgroundColorHex ?? string.Empty
+                                };
+                                await _backendDatabaseManager.UpdateAsync(dto);
+                            }
+                            else
                             {
                                 await _backendCommunicationService.UpdateAsync(item);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"ItemDetailViewModel: Backend enqueue failed during update: {ex}");
                             }
 
                             await _toastService.DisplayToast("Successfully updated.");
@@ -350,11 +373,43 @@
                     {
                         _databaseManager.CommitTransaction();
 
-                        // send to backend (DtoStorageEntryModel)
-                        await _backendCommunicationService.InsertAsync(_storageData);
+                        if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                        {
+                            var dto = new DtoStorageEntryModel
+                            {
+                                IsUpdateData = "false",
+                                StorageId = _sharedMethodService.ConvertToString(addedItem.StorageId) ?? string.Empty,
+                                Category = addedItem.Category ?? string.Empty,
+                                CreatedDate = _sharedMethodService.ConvertToString(addedItem.CreatedDate) ?? string.Empty,
+                                BarcodeValue = addedItem.BarcodeValue ?? string.Empty,
+                                BarcodeType = addedItem.BarcodeType ?? string.Empty,
+                                Location = addedItem.Location ?? string.Empty,
+                                SearchInfo = addedItem.SearchInfo ?? string.Empty,
+                                ItemName = addedItem.ItemName ?? string.Empty,
+                                Description = addedItem.Description ?? string.Empty,
+                                ImageList = addedItem.ImageList ?? new List<byte[]>(),
+                                BackgroundColorHex = addedItem.BackgroundColorHex ?? string.Empty
+                            };
 
+                            _backendDatabaseManager.BeginTransaction();
+                            var success = await _backendDatabaseManager.AddAsync(dto);
+                            if (success != null)
+                            {
+                                _backendDatabaseManager.CommitTransaction();
+                            }
+                            else
+                            {
+                                _backendDatabaseManager.Rollback();
+                            }
+                        }
+                        else
+                        {
+                            // send to backend (DtoStorageEntryModel)
+                            await _backendCommunicationService.InsertAsync(_storageData);
+                        }
                         await _toastService.DisplayToast("Successfully saved.");
                         await NavigationService.Close();
+
                     }
                     else
                     {
@@ -365,14 +420,6 @@
                 }
                 catch (Exception ex)
                 {
-                    try
-                    {
-                        _databaseManager.Rollback();
-                    }
-                    catch
-                    {
-                        Console.WriteLine("SaveCommand: Rollback failed after add exception.");
-                    }
 
                     Console.WriteLine($"SaveCommand: Exception during add: {ex}");
                     await DialogService.ShowAlertDialog(

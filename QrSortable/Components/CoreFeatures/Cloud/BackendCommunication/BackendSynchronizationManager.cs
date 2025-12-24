@@ -56,7 +56,7 @@
                     {
                         foreach (var dto in dbStoreEntries)
                         {
-                            if(dto.IsUpdateData)
+                            if(dto.IsUpdateData == "true")
                             { 
                                 var result = await _backendCommunicationService.UpdateAsync(dto, true);
 
@@ -65,9 +65,18 @@
                                     await _backendDatabaseManager.DeleteAsync(dto);
                                 }
                             }
-                            else
+                            else if (dto.IsUpdateData == "false")
                             {
                                 var result = await _backendCommunicationService.InsertAsync(dto, true);
+                                if (result)
+                                {
+                                    await _backendDatabaseManager.DeleteAsync(dto);
+                                }
+                            }
+                            else if (dto.IsUpdateData == "delete")
+                            {
+                                var result = await _backendCommunicationService.DeleteAsync(dto, true);
+
                                 if (result)
                                 {
                                     await _backendDatabaseManager.DeleteAsync(dto);
@@ -86,7 +95,7 @@
                 {
                     foreach (var dto in orderedEntries)
                     {
-                        if (dto.IsUpdateData)
+                        if (dto.IsUpdateData == "true")
                         {
                             var result = await _backendCommunicationService.UpdateAsync(dto, true);
                             if (result)
@@ -94,7 +103,7 @@
                                 await _backendDatabaseManager.DeleteAsync(dto);
                             }
                         }
-                        else
+                        else if (dto.IsUpdateData == "false")
                         {
                             var result = await _backendCommunicationService.InsertAsync(dto, true);
                             if (result)

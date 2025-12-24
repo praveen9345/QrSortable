@@ -1,7 +1,6 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
 {
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
-    using QrSortable.Components.CoreFeatures.DataManagement.Models;
 
     public interface IBackendCommunicationService
     {
@@ -12,7 +11,7 @@
 
         Task<T?> GetAsync<T>(string id) where T : FirestoreData, new();
 
-        Task DeleteAsync<T>(string id, string collectionName);
+        Task<bool> DeleteAsync<T>(T data, bool isFrombackendSync = false);
 
         Task<List<T>> GetAllAsync<T>() where T : FirestoreData, new();
 

@@ -2,17 +2,20 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
-    using Microsoft.Maui.Graphics.Platform;
+    using QrSortable.Components.CoreFeatures.Cloud;
+    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
+    using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
     using System.Collections.ObjectModel;
-    using System.Net;
-    using System.Security.Cryptography;
 
     /// <summary>
     ///     The view model of the box view screen.
@@ -21,6 +24,10 @@
     {
         private readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
+        private readonly IBackendCommunicationService _backendCommunicationService;
+        private readonly IConnectivityService _connectivityService;
+        private readonly ISharedMethodService _sharedMethodService;
+        private readonly IBackendDatabaseManager _backendDatabaseManager;
 
         private string _colorCodeHex;
 
@@ -36,13 +43,19 @@
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
-        public BoxDetailViewModel(IDatabaseManager databaseManager, IToastService toastService)
+        public BoxDetailViewModel(IDatabaseManager databaseManager, IToastService toastService,
+            IBackendCommunicationService backendCommunicationService, IConnectivityService connectivityService, 
+            ISharedMethodService sharedMethodService, IBackendDatabaseManager backendDatabaseManager)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
             _toastService = toastService;
+            _backendCommunicationService = backendCommunicationService;
+            _connectivityService = connectivityService;
 
             Items = new ObservableCollection<ItemInfo>();
+            _sharedMethodService = sharedMethodService;
+            _backendDatabaseManager = backendDatabaseManager;
         }
 
         /// <summary>
@@ -237,7 +250,34 @@
 
                 if (entryToDelete != null)
                 {
-                    await _databaseManager.DeleteAsync(entryToDelete);
+                    var deleteItem = await _databaseManager.DeleteAsync(entryToDelete);
+                    if (deleteItem)
+                    {
+                        if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                        {
+                            var dto = new DtoStorageEntryModel
+                            {
+                                IsUpdateData = "delete",
+                                StorageId = _sharedMethodService.ConvertToString(entryToDelete.StorageId) ?? string.Empty,
+                                Category = entryToDelete.Category ?? string.Empty,
+                                CreatedDate = _sharedMethodService.ConvertToString(entryToDelete.CreatedDate) ?? string.Empty,
+                                BarcodeValue = entryToDelete.BarcodeValue ?? string.Empty,
+                                BarcodeType = entryToDelete.BarcodeType ?? string.Empty,
+                                Location = entryToDelete.Location ?? string.Empty,
+                                SearchInfo = entryToDelete.SearchInfo ?? string.Empty,
+                                ItemName = entryToDelete.ItemName ?? string.Empty,
+                                Description = entryToDelete.Description ?? string.Empty,
+                                ImageList = entryToDelete.ImageList ?? new List<byte[]>(),
+                                BackgroundColorHex = entryToDelete.BackgroundColorHex ?? string.Empty
+                            };
+
+                            await _backendDatabaseManager.AddAsync(dto);
+                        }
+                        else 
+                        {
+                            await _backendCommunicationService.DeleteAsync(entryToDelete);
+                        }
+                    }
                     await _toastService.DisplayToast("Successfully deleted.");
                     MainThread.BeginInvokeOnMainThread(() => Items.Remove(item));
                 }
@@ -293,12 +333,12 @@
                             }
 
 
-                            var outcomeObj = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+                            var outcomeObj = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Moving...",
                             async () =>
                             {
-                                var createdDate = DateTime.UtcNow;
-
                                 _databaseManager.BeginTransaction();
+
+                                var createdDate = DateTime.UtcNow;
 
                                 var newEntry = new StorageEntry
                                 {
@@ -313,25 +353,79 @@
                                     ImageList = entryTomove.ImageList != null ? new List<byte[]>(entryTomove.ImageList) : null,
                                     BackgroundColorHex = targetToMove.BackgroundColorHex
                                 };
+
                                 // Add new entry
                                 var added = await _databaseManager.AddAsync(newEntry);
-                                if (added == null)
+                                if (added != null)
+                                {
+                                    _databaseManager.CommitTransaction();
+
+                                    // send to backend (DtoStorageEntryModel)
+                                    if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                                    {
+                                        var dto = new DtoStorageEntryModel
+                                        {
+                                            IsUpdateData = "false",
+                                            StorageId = _sharedMethodService.ConvertToString(newEntry.StorageId) ?? string.Empty,
+                                            Category = newEntry.Category ?? string.Empty,
+                                            CreatedDate = _sharedMethodService.ConvertToString(newEntry.CreatedDate) ?? string.Empty,
+                                            BarcodeValue = newEntry.BarcodeValue ?? string.Empty,
+                                            BarcodeType = newEntry.BarcodeType ?? string.Empty,
+                                            Location = newEntry.Location ?? string.Empty,
+                                            SearchInfo = newEntry.SearchInfo ?? string.Empty,
+                                            ItemName = newEntry.ItemName ?? string.Empty,
+                                            Description = newEntry.Description ?? string.Empty,
+                                            ImageList = newEntry.ImageList ?? new List<byte[]>(),
+                                            BackgroundColorHex = newEntry.BackgroundColorHex ?? string.Empty
+                                        };
+
+                                        SaveToTheBackendAsync(dto);
+                                    }
+                                    else
+                                    {
+                                        await _backendCommunicationService.InsertAsync(newEntry);
+                                    }
+                                }
+                                else
                                 {
                                     _databaseManager.Rollback();
                                     return false;
                                 }
+                               
 
                                 // Delete the original entry
-                                var deleted = await _databaseManager.DeleteAsync(entryTomove);
-                                if (!deleted)
+                                var delete = await _databaseManager.DeleteAsync(entryTomove);
+                                if(delete)
                                 {
-                                    _databaseManager.Rollback();
-                                    return false;
+
+                                    if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                                    {
+                                        var dto = new DtoStorageEntryModel
+                                        {
+                                            IsUpdateData = "delete",
+                                            StorageId = _sharedMethodService.ConvertToString(entryTomove.StorageId) ?? string.Empty,
+                                            Category = entryTomove.Category ?? string.Empty,
+                                            CreatedDate = _sharedMethodService.ConvertToString(entryTomove.CreatedDate) ?? string.Empty,
+                                            BarcodeValue = entryTomove.BarcodeValue ?? string.Empty,
+                                            BarcodeType = entryTomove.BarcodeType ?? string.Empty,
+                                            Location = entryTomove.Location ?? string.Empty,
+                                            SearchInfo = entryTomove.SearchInfo ?? string.Empty,
+                                            ItemName = entryTomove.ItemName ?? string.Empty,
+                                            Description = entryTomove.Description ?? string.Empty,
+                                            ImageList = entryTomove.ImageList ?? new List<byte[]>(),
+                                            BackgroundColorHex = entryTomove.BackgroundColorHex ?? string.Empty
+                                        };
+                                        SaveToTheBackendAsync(dto);
+                                    }
+                                    else
+                                    {
+                                        // send to backend (DtoStorageEntryModel)
+                                        await _backendCommunicationService.DeleteAsync(entryTomove);
+                                    }
+                                    return true;
                                 }
 
-                                // Commit on success
-                                _databaseManager.CommitTransaction();
-                                return true;
+                                return false;
                             });
 
                             if (!outcomeObj)
@@ -349,14 +443,6 @@
                         }
                         catch (Exception ex)
                         {
-                            try 
-                            { 
-                                _databaseManager.Rollback(); 
-                            } 
-                            catch (Exception rollbackEx)
-                            {
-                                Console.WriteLine($"Rollback failed: {rollbackEx}");
-                            }
                             Console.WriteLine($"BoxDetailViewModel.MoveItemCommand: Exception: {ex}");
                             await DialogService.ShowAlertDialog("An unexpected error occurred while moving the item.", AppResources.Dialog_OK_Text);
                         }
@@ -391,6 +477,24 @@
                 stream.Position = 0;
 
             return ImageSource.FromStream(() => stream );
+        }
+
+        private async void SaveToTheBackendAsync(DatabaseEntry backendData)
+        {
+            _backendDatabaseManager.BeginTransaction();
+            var addedItem = await _backendDatabaseManager.AddAsync(backendData);
+            if (addedItem != null)
+            {
+                _backendDatabaseManager.CommitTransaction();
+                Console.WriteLine("BackendCommunicationService.InsertAsync: Successfully add to backend.");
+                return;
+            }
+            else
+            {
+                _backendDatabaseManager.Rollback();
+                Console.WriteLine("BackendCommunicationService.InsertAsync: AddAsync returned null - rollback performed.");
+                return;
+            }
         }
     }
 }

@@ -50,8 +50,9 @@ namespace QrSortable.Migrations.Backend
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsUpdateData")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("IsUpdateData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -140,8 +141,9 @@ namespace QrSortable.Migrations.Backend
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsUpdateData")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("IsUpdateData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ItemName")
                         .IsRequired()

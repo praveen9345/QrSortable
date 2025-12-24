@@ -10,7 +10,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.Backend;
 namespace QrSortable.Migrations.Backend
 {
     [DbContext(typeof(BackendDatabaseContext))]
-    [Migration("20251219082124_InitialBackend")]
+    [Migration("20251224061456_InitialBackend")]
     partial class InitialBackend
     {
         /// <inheritdoc />
@@ -53,8 +53,9 @@ namespace QrSortable.Migrations.Backend
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsUpdateData")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("IsUpdateData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -143,8 +144,9 @@ namespace QrSortable.Migrations.Backend
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsUpdateData")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("IsUpdateData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ItemName")
                         .IsRequired()

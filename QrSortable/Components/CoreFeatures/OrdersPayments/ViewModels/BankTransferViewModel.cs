@@ -2,10 +2,11 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
-    using Microsoft.Maui.Graphics.Platform;
     using QrSortable.Components.CoreFeatures.Cloud;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.PlatformUtils;
@@ -25,6 +26,7 @@
         private readonly ISharedMethodService _sharedMethodService;
         private readonly IBackendCommunicationService _backendCommunicationService;
         private readonly IConnectivityService _connectivityService;
+        private readonly IBackendDatabaseManager _backendDatabaseManager;
 
         private Product _product;
 
@@ -36,7 +38,7 @@
         /// used for managing database operations.</param>
         public BankTransferViewModel(IToastService toastService, IDatabaseManager databaseManager, 
             ISharedMethodService sharedMethodService, IBackendCommunicationService backendCommunicationService,
-            IConnectivityService connectivityService)
+            IConnectivityService connectivityService, IBackendDatabaseManager backendDatabaseManager)
         {
             IsBackNavigationEnabled = true;
             _toastService = toastService;
@@ -44,6 +46,7 @@
             _sharedMethodService = sharedMethodService;
             _backendCommunicationService = backendCommunicationService;
             _connectivityService = connectivityService;
+            _backendDatabaseManager = backendDatabaseManager;
 
             ReferenceCode = GenerateReferenceCode();
         }
@@ -189,14 +192,40 @@
                 if (addedItem != null)
                 {
                     _databaseManager.CommitTransaction();
-                    try
+                   
+                    if(!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                    {
+                        var dto = new DtoOrdersModel
+                        {
+                            IsUpdateData = "false",
+                            OrderId = orderedItem.OrderId ?? string.Empty,
+                            Title = orderedItem.Title ?? string.Empty,
+                            Description = orderedItem.Description ?? string.Empty,
+                            CodeType = orderedItem.CodeType ?? string.Empty,
+                            PageType = orderedItem.PageType ?? string.Empty,
+                            ProductQuantity = _sharedMethodService.ConvertToString(orderedItem.ProductQuantity) ?? string.Empty,
+                            DateTime = _sharedMethodService.ConvertToString(orderedItem.DateTime) ?? string.Empty,
+                            TotalPrice = orderedItem.TotalPrice ?? string.Empty,
+                            Name = orderedItem.Name ?? string.Empty,
+                            Street = orderedItem.Street ?? string.Empty,
+                            HouseNo = orderedItem.HouseNo ?? string.Empty,
+                            ZipCode = orderedItem.ZipCode ?? string.Empty,
+                            City = orderedItem.City ?? string.Empty,
+                            Country = orderedItem.Country ?? string.Empty,
+                            Email = orderedItem.Email ?? string.Empty,
+                            ReferenceCode = orderedItem.ReferenceCode ?? string.Empty,
+                            ShipmentTracking = orderedItem.ShipmentTracking ?? string.Empty,
+                            StatusOfOrder = orderedItem.StatusOfOrder ?? string.Empty,
+                            PdfFiles = orderedItem.PdfFiles ?? new List<byte[]>()
+                        };
+
+                        await _backendDatabaseManager.AddAsync(dto);
+                    }
+                    else
                     {
                         await _backendCommunicationService.InsertAsync(orderedItem);
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"BankTransferViewModel: DatabaseAndBackendStoringAsync::Exception during backend save: {ex}");
-                    }
+                       
                     Console.WriteLine("Successfully placed an ordered.");
                     return true;
                 }
