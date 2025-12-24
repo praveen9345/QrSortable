@@ -217,13 +217,6 @@
                 return;
             }
 
-            if(!await _connectivityService.CheckInternetConnectionAvailableAsync())
-            {
-                await DialogService.ShowAlertDialog("No Internet Connection",
-                    "To place an order, an internet connection is required. Please check your connection and try again.", "OK");
-                return;
-            }
-
             // Add info to product
             AddInformationToProducts();
 
@@ -253,6 +246,13 @@
             {
                 await DialogService.ShowAlertDialog("Invalid Email",
                     "Please enter a valid email address.", "OK");
+                return;
+            }
+
+            if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+            {
+                await DialogService.ShowAlertDialog("No Internet Connection",
+                    "To place an order, an internet connection is required. Please check your connection and try again.", "OK");
                 return;
             }
 
