@@ -234,11 +234,8 @@
 
             try
             {
-                var confirm = await DialogService.ShowRequestDialog(
-                    AppResources.Dialog_ConfirmationMessage_Text,
-                    AppResources.BoxDetailViewModel_DeletItemText,
-                    AppResources.Dialog_Cancel_Text,
-                    AppResources.Dialog_OK_Text);
+                var confirm = await DialogService.ShowRequestDialog( AppResources.Dialog_ConfirmationMessage_Text,AppResources.BoxDetailViewModel_DeletItemText,
+                    AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
 
                 if (!confirm)
                     return;
@@ -265,8 +262,14 @@
                             await _backendCommunicationService.DeleteAsync(entryToDelete);
                         }
                     }
-                    await _toastService.DisplayToast("Successfully deleted.");
-                    MainThread.BeginInvokeOnMainThread(() => Items.Remove(item));
+
+                    var itemInCollection = Items.FirstOrDefault(i => i.ItemName == item.ItemName);
+                    if (itemInCollection != null)
+                    {
+                        MainThread.BeginInvokeOnMainThread(() => Items.Remove(itemInCollection));
+                        await _toastService.DisplayToast("Successfully deleted.");
+                    }
+                        
                 }
                 else
                 {
@@ -395,10 +398,11 @@
                             // Perform UI updates on main thread after dialog closed
                             var itemInCollection = Items.FirstOrDefault(i => i.ItemName == item.ItemName);
                             if (itemInCollection != null)
+                            {
                                 MainThread.BeginInvokeOnMainThread(() => Items.Remove(itemInCollection));
-
-                            await _toastService.DisplayToast("Successfully moved.");
-
+                                await _toastService.DisplayToast("Successfully moved.");
+                            }
+                               
                         }
                         catch (Exception ex)
                         {
