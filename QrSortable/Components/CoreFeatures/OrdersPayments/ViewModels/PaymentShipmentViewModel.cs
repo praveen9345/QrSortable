@@ -7,6 +7,8 @@
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.CodeGenerator;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Helper;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
@@ -30,6 +32,8 @@
         private readonly IPdfGeneratorService _pdfService;
         private readonly IBackendCommunicationService _backendCommunicationService;
         private readonly IConnectivityService _connectivityService;
+        private readonly IBackendDatabaseHelper _backendDatabaseHelper;
+        private readonly IBackendDatabaseManager _backendDatabaseManager;
 
         private Product _product;
         private string _paymentId;
@@ -54,7 +58,8 @@
         /// used for managing database operations.</param>
         public PaymentShipmentViewModel(IMollieService mollieService, ITimerService timerService, IDatabaseManager databaseManager,
             ISharedMethodService sharedMethodService, ICodeGeneratorService codeService, IPdfGeneratorService pdfGeneratorService,
-            IBackendCommunicationService backendCommunicationService, IConnectivityService connectivityService)
+            IBackendCommunicationService backendCommunicationService, IConnectivityService connectivityService,
+            IBackendDatabaseManager backendDatabaseManager, IBackendDatabaseHelper backendDatabaseHelper)
         {
             IsBackNavigationEnabled = true;
 
@@ -66,6 +71,8 @@
             _pdfService = pdfGeneratorService;
             _backendCommunicationService = backendCommunicationService;
             _connectivityService = connectivityService;
+            _backendDatabaseHelper = backendDatabaseHelper;
+            _backendDatabaseManager = backendDatabaseManager;
 
             SelectedCurrencyItem = CurrencyItem[0];
         }
@@ -405,13 +412,15 @@
                 {
                     _databaseManager.CommitTransaction();
 
-                    try
+
+                    if(!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                    {
+                        var dto = _backendDatabaseHelper.CreateDtoOrdersBackendData(orderedItem, "false");
+                        _backendDatabaseHelper.SaveToTheBackendAsync(dto);
+                    }
+                    else
                     {
                         await _backendCommunicationService.InsertAsync(orderedItem);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"DatabaseAndBackendStoringAsync::Exception during backend save: {ex}");
                     }
 
                     Console.WriteLine("Successfully placed an ordered.");

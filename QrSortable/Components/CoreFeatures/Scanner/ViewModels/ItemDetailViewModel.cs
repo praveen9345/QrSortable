@@ -7,7 +7,7 @@
     using QrSortable.Components.CoreFeatures.Cloud;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
-    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Helper;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.PlatformUtils;
@@ -16,7 +16,6 @@
     using QrSortable.Components.UiFunctionality.Notification;
     using QrSortable.Components.UiFunctionality.Notification.Models;
     using System.Collections.ObjectModel;
-    using System.Reflection;
 
     /// <summary>
     ///     The view model of the ItemDetailView screen.
@@ -32,6 +31,7 @@
         private readonly IBackendDatabaseManager _backendDatabaseManager;
         private readonly IConnectivityService _connectivityService;
         private readonly ISharedMethodService _sharedMethodService;
+        private readonly IBackendDatabaseHelper _backendDatabaseHelper;
 
         private List<byte[]> _imageArrayDb = new List<byte[]>();
         private StorageEntry _storageData;
@@ -52,7 +52,8 @@
         public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, 
             IFilePickerService filePickerService, IToastService toastService, IBackendCommunicationService backendCommunicationService,
             IFirebaseStorageService firebaseStorageService, IBackendDatabaseManager backendDatabaseManager, 
-            IConnectivityService connectivityService, ISharedMethodService sharedMethodService)
+            IConnectivityService connectivityService, ISharedMethodService sharedMethodService, 
+            IBackendDatabaseHelper backendDatabaseHelper)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
@@ -64,6 +65,7 @@
             _backendDatabaseManager = backendDatabaseManager;
             _connectivityService = connectivityService;
             _sharedMethodService = sharedMethodService;
+            _backendDatabaseHelper = backendDatabaseHelper;
 
             ImageArray = new ObservableCollection<Images>();
         }
@@ -289,21 +291,7 @@
                         {
                             if(!await _connectivityService.CheckInternetConnectionAvailableAsync())
                             {
-                                var dto = new DtoStorageEntryModel
-                                {
-                                    IsUpdateData = "true",
-                                    StorageId = _sharedMethodService.ConvertToString(item.StorageId) ?? string.Empty,
-                                    Category = item.Category ?? string.Empty,
-                                    CreatedDate = _sharedMethodService.ConvertToString(item.CreatedDate) ?? string.Empty,
-                                    BarcodeValue = item.BarcodeValue ?? string.Empty,
-                                    BarcodeType = item.BarcodeType ?? string.Empty,
-                                    Location = item.Location ?? string.Empty,
-                                    SearchInfo = item.SearchInfo ?? string.Empty,
-                                    ItemName = item.ItemName ?? string.Empty,
-                                    Description = item.Description ?? string.Empty,
-                                    ImageList = item.ImageList ?? new List<byte[]>(),
-                                    BackgroundColorHex = item.BackgroundColorHex ?? string.Empty
-                                };
+                                var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(item, "true");
                                 await _backendDatabaseManager.UpdateAsync(dto);
                             }
                             else
@@ -375,32 +363,8 @@
 
                         if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
                         {
-                            var dto = new DtoStorageEntryModel
-                            {
-                                IsUpdateData = "false",
-                                StorageId = _sharedMethodService.ConvertToString(addedItem.StorageId) ?? string.Empty,
-                                Category = addedItem.Category ?? string.Empty,
-                                CreatedDate = _sharedMethodService.ConvertToString(addedItem.CreatedDate) ?? string.Empty,
-                                BarcodeValue = addedItem.BarcodeValue ?? string.Empty,
-                                BarcodeType = addedItem.BarcodeType ?? string.Empty,
-                                Location = addedItem.Location ?? string.Empty,
-                                SearchInfo = addedItem.SearchInfo ?? string.Empty,
-                                ItemName = addedItem.ItemName ?? string.Empty,
-                                Description = addedItem.Description ?? string.Empty,
-                                ImageList = addedItem.ImageList ?? new List<byte[]>(),
-                                BackgroundColorHex = addedItem.BackgroundColorHex ?? string.Empty
-                            };
-
-                            _backendDatabaseManager.BeginTransaction();
-                            var success = await _backendDatabaseManager.AddAsync(dto);
-                            if (success != null)
-                            {
-                                _backendDatabaseManager.CommitTransaction();
-                            }
-                            else
-                            {
-                                _backendDatabaseManager.Rollback();
-                            }
+                            var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(addedItem, "false");
+                            _backendDatabaseHelper.SaveToTheBackendAsync(dto);
                         }
                         else
                         {

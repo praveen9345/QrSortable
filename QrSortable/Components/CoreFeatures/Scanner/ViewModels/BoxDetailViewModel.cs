@@ -5,10 +5,9 @@
     using QrSortable.Components.CoreFeatures.Cloud;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
-    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Helper;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
-    using QrSortable.Components.CoreFeatures.DataManagement.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.PlatformUtils;
@@ -28,6 +27,7 @@
         private readonly IConnectivityService _connectivityService;
         private readonly ISharedMethodService _sharedMethodService;
         private readonly IBackendDatabaseManager _backendDatabaseManager;
+        private readonly IBackendDatabaseHelper _backendDatabaseHelper;
 
         private string _colorCodeHex;
 
@@ -45,7 +45,8 @@
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
         public BoxDetailViewModel(IDatabaseManager databaseManager, IToastService toastService,
             IBackendCommunicationService backendCommunicationService, IConnectivityService connectivityService, 
-            ISharedMethodService sharedMethodService, IBackendDatabaseManager backendDatabaseManager)
+            ISharedMethodService sharedMethodService, IBackendDatabaseManager backendDatabaseManager,
+            IBackendDatabaseHelper backendDatabaseHelper)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
@@ -56,6 +57,7 @@
             Items = new ObservableCollection<ItemInfo>();
             _sharedMethodService = sharedMethodService;
             _backendDatabaseManager = backendDatabaseManager;
+            _backendDatabaseHelper = backendDatabaseHelper;
         }
 
         /// <summary>
@@ -255,22 +257,7 @@
                     {
                         if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
                         {
-                            var dto = new DtoStorageEntryModel
-                            {
-                                IsUpdateData = "delete",
-                                StorageId = _sharedMethodService.ConvertToString(entryToDelete.StorageId) ?? string.Empty,
-                                Category = entryToDelete.Category ?? string.Empty,
-                                CreatedDate = _sharedMethodService.ConvertToString(entryToDelete.CreatedDate) ?? string.Empty,
-                                BarcodeValue = entryToDelete.BarcodeValue ?? string.Empty,
-                                BarcodeType = entryToDelete.BarcodeType ?? string.Empty,
-                                Location = entryToDelete.Location ?? string.Empty,
-                                SearchInfo = entryToDelete.SearchInfo ?? string.Empty,
-                                ItemName = entryToDelete.ItemName ?? string.Empty,
-                                Description = entryToDelete.Description ?? string.Empty,
-                                ImageList = entryToDelete.ImageList ?? new List<byte[]>(),
-                                BackgroundColorHex = entryToDelete.BackgroundColorHex ?? string.Empty
-                            };
-
+                            var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(entryToDelete, "delete");
                             await _backendDatabaseManager.AddAsync(dto);
                         }
                         else 
@@ -363,23 +350,9 @@
                                     // send to backend (DtoStorageEntryModel)
                                     if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
                                     {
-                                        var dto = new DtoStorageEntryModel
-                                        {
-                                            IsUpdateData = "false",
-                                            StorageId = _sharedMethodService.ConvertToString(newEntry.StorageId) ?? string.Empty,
-                                            Category = newEntry.Category ?? string.Empty,
-                                            CreatedDate = _sharedMethodService.ConvertToString(newEntry.CreatedDate) ?? string.Empty,
-                                            BarcodeValue = newEntry.BarcodeValue ?? string.Empty,
-                                            BarcodeType = newEntry.BarcodeType ?? string.Empty,
-                                            Location = newEntry.Location ?? string.Empty,
-                                            SearchInfo = newEntry.SearchInfo ?? string.Empty,
-                                            ItemName = newEntry.ItemName ?? string.Empty,
-                                            Description = newEntry.Description ?? string.Empty,
-                                            ImageList = newEntry.ImageList ?? new List<byte[]>(),
-                                            BackgroundColorHex = newEntry.BackgroundColorHex ?? string.Empty
-                                        };
+                                        var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(newEntry, "false");
 
-                                        SaveToTheBackendAsync(dto);
+                                        _backendDatabaseHelper.SaveToTheBackendAsync(dto);
                                     }
                                     else
                                     {
@@ -400,22 +373,8 @@
 
                                     if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
                                     {
-                                        var dto = new DtoStorageEntryModel
-                                        {
-                                            IsUpdateData = "delete",
-                                            StorageId = _sharedMethodService.ConvertToString(entryTomove.StorageId) ?? string.Empty,
-                                            Category = entryTomove.Category ?? string.Empty,
-                                            CreatedDate = _sharedMethodService.ConvertToString(entryTomove.CreatedDate) ?? string.Empty,
-                                            BarcodeValue = entryTomove.BarcodeValue ?? string.Empty,
-                                            BarcodeType = entryTomove.BarcodeType ?? string.Empty,
-                                            Location = entryTomove.Location ?? string.Empty,
-                                            SearchInfo = entryTomove.SearchInfo ?? string.Empty,
-                                            ItemName = entryTomove.ItemName ?? string.Empty,
-                                            Description = entryTomove.Description ?? string.Empty,
-                                            ImageList = entryTomove.ImageList ?? new List<byte[]>(),
-                                            BackgroundColorHex = entryTomove.BackgroundColorHex ?? string.Empty
-                                        };
-                                        SaveToTheBackendAsync(dto);
+                                        var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(entryTomove, "delete");
+                                        _backendDatabaseHelper.SaveToTheBackendAsync(dto);
                                     }
                                     else
                                     {
@@ -479,22 +438,5 @@
             return ImageSource.FromStream(() => stream );
         }
 
-        private async void SaveToTheBackendAsync(DatabaseEntry backendData)
-        {
-            _backendDatabaseManager.BeginTransaction();
-            var addedItem = await _backendDatabaseManager.AddAsync(backendData);
-            if (addedItem != null)
-            {
-                _backendDatabaseManager.CommitTransaction();
-                Console.WriteLine("BackendCommunicationService.InsertAsync: Successfully add to backend.");
-                return;
-            }
-            else
-            {
-                _backendDatabaseManager.Rollback();
-                Console.WriteLine("BackendCommunicationService.InsertAsync: AddAsync returned null - rollback performed.");
-                return;
-            }
-        }
     }
 }

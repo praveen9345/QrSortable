@@ -4,9 +4,8 @@
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Helper;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
-    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Helper;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
-    using QrSortable.Components.CoreFeatures.DataManagement.Models;
     using QrSortable.Components.PlatformUtils;
     using System;
     using System.Collections.Generic;
@@ -20,13 +19,14 @@
         private readonly IGeneralInformationManager _generalInformationManager;
         private readonly ISharedMethodService _sharedMethodService;
         private readonly IBackendDatabaseManager _backendDatabaseManager;
+        private readonly IBackendDatabaseHelper _backendDatabaseHelper;
         private FirestoreDb Db { get; set; }
 
         private string _multiUserId = string.Empty;
 
         public BackendCommunicationService(IAesHelper aesHelper, IFirebaseStorageService firebaseStorageService,
             IGeneralInformationManager generalInformationManager, ISharedMethodService sharedMethodService,
-            IBackendDatabaseManager backendDatabaseManager)
+            IBackendDatabaseManager backendDatabaseManager, IBackendDatabaseHelper backendDatabaseHelper)
         {
             Db = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
             _aesHelper = aesHelper;
@@ -34,6 +34,7 @@
             _generalInformationManager = generalInformationManager;
             _sharedMethodService = sharedMethodService;
             _backendDatabaseManager = backendDatabaseManager;
+            _backendDatabaseHelper = backendDatabaseHelper;
 
             _multiUserId = _generalInformationManager.GetGeneralInformationAsync()
                 .GetAwaiter().GetResult().MultiUserId;
@@ -82,8 +83,8 @@
                         Console.WriteLine($"BackendCommunicationService.InsertAsync (DtoStorageEntryModel append) failed: {ex}");
                         if (!isFrombackendSync)
                         {
-                            var  dto = CreateDtoStorageEntryBackendData(dataDec, "false");
-                            SaveToTheBackendAsync(dto);
+                            var  dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(dataDec, "false");
+                            _backendDatabaseHelper.SaveToTheBackendAsync(dto);
                         }
                         return false;
                     }
@@ -126,8 +127,8 @@
 
                         if (!isFrombackendSync)
                         {
-                            var dto = CreateDtoOrdersBackendData(dataDec, "false");
-                            SaveToTheBackendAsync(dto);
+                            var dto = _backendDatabaseHelper.CreateDtoOrdersBackendData(dataDec, "false");
+                            _backendDatabaseHelper.SaveToTheBackendAsync(dto);
                         }
                         return false;
                     }
@@ -229,7 +230,7 @@
                         Console.WriteLine($"Failed to update document {targetDoc.Id}: {ex}");
                         if (!isFrombackendSync)
                         {
-                            var dto = CreateDtoStorageEntryBackendData(dataDec, "true");
+                            var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(dataDec, "true");
                             await _backendDatabaseManager.UpdateAsync(dto);
                         }
                         return false;
@@ -284,7 +285,7 @@
                         Console.WriteLine($"BackendCommunicationService.UpdateAsync (Orders) failed: {ex}");
                         if (!isFrombackendSync)
                         {
-                            var dto = CreateDtoOrdersBackendData(dataDec, "true");
+                            var dto = _backendDatabaseHelper.CreateDtoOrdersBackendData(dataDec, "true");
                             await _backendDatabaseManager.UpdateAsync(dto);
                         }
 
@@ -367,8 +368,8 @@
                         Console.WriteLine($"Failed to update document {targetDoc.Id}: {ex}");
                         if (!isFrombackendSync)
                         {
-                            var dto = CreateDtoStorageEntryBackendData(dataDec, "delete");
-                            SaveToTheBackendAsync(dto);
+                            var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(dataDec, "delete");
+                            _backendDatabaseHelper.SaveToTheBackendAsync(dto);
                         }
                     }
                 }
@@ -377,14 +378,6 @@
             catch (Exception ex)
             {
                 Console.WriteLine($"BackendCommunicationService.UpdateAsync: validation failed: {ex}");
-                if (storageEntry != null)
-                {
-                    if (!isFrombackendSync)
-                    {
-                        var dto = CreateDtoStorageEntryBackendData(dataDec, "delete");
-                        await _backendDatabaseManager.AddAsync(dto);
-                    }
-                }
                 return false;
             }
         }
@@ -450,72 +443,6 @@
 
 
         #region Helpers
-
-        private DtoStorageEntryModel CreateDtoStorageEntryBackendData(dynamic dataDec, string isUpdateData)
-        {
-            return new DtoStorageEntryModel
-            {
-                IsUpdateData = isUpdateData,
-                StorageId = _sharedMethodService.ConvertToString(dataDec.StorageId) ?? string.Empty,
-                Category = dataDec.Category ?? string.Empty,
-                CreatedDate = _sharedMethodService.ConvertToString(dataDec.CreatedDate) ?? string.Empty,
-                BarcodeValue = dataDec.BarcodeValue ?? string.Empty,
-                BarcodeType = dataDec.BarcodeType ?? string.Empty,
-                Location = dataDec.Location ?? string.Empty,
-                SearchInfo = dataDec.SearchInfo ?? string.Empty,
-                ItemName = dataDec.ItemName ?? string.Empty,
-                Description = dataDec.Description ?? string.Empty,
-                ImageList = dataDec.ImageList ?? new List<byte[]>(),
-                BackgroundColorHex = dataDec.BackgroundColorHex ?? string.Empty
-            };
-
-        }
-
-        private DtoOrdersModel CreateDtoOrdersBackendData(dynamic dataDec, string isUpdateData)
-        {
-            return new DtoOrdersModel
-            {
-                IsUpdateData = isUpdateData,
-                OrderId = dataDec.OrderId ?? string.Empty,
-                Title = dataDec.Title ?? string.Empty,
-                Description = dataDec.Description ?? string.Empty,
-                CodeType = dataDec.CodeType ?? string.Empty,
-                PageType = dataDec.PageType ?? string.Empty,
-                ProductQuantity = _sharedMethodService.ConvertToString(dataDec.ProductQuantity) ?? string.Empty,
-                DateTime = _sharedMethodService.ConvertToString(dataDec.DateTime) ?? string.Empty,
-                TotalPrice = dataDec.TotalPrice ?? string.Empty,
-                Name = dataDec.Name ?? string.Empty,
-                Street = dataDec.Street ?? string.Empty,
-                HouseNo = dataDec.HouseNo ?? string.Empty,
-                ZipCode = dataDec.ZipCode ?? string.Empty,
-                City = dataDec.City ?? string.Empty,
-                Country = dataDec.Country ?? string.Empty,
-                Email = dataDec.Email ?? string.Empty,
-                ReferenceCode = dataDec.ReferenceCode ?? string.Empty,
-                ShipmentTracking = dataDec.ShipmentTracking ?? string.Empty,
-                StatusOfOrder = dataDec.StatusOfOrder ?? string.Empty,
-                PdfFiles = dataDec.PdfFiles ?? new List<byte[]>()
-            };
-
-        }
-
-        private async void SaveToTheBackendAsync(DatabaseEntry backendData)
-        {
-            _backendDatabaseManager.BeginTransaction();
-            var addedItem = await _backendDatabaseManager.AddAsync(backendData);
-            if (addedItem != null)
-            {
-                _backendDatabaseManager.CommitTransaction();
-                Console.WriteLine("BackendCommunicationService.InsertAsync: Successfully add to backend.");
-                return;
-            }
-            else
-            {
-                _backendDatabaseManager.Rollback();
-                Console.WriteLine("BackendCommunicationService.InsertAsync: AddAsync returned null - rollback performed.");
-                return;
-            }
-        }
 
         protected static string EncryptData<T>(T data, Func<string, string>? encryptor = null)
         {
