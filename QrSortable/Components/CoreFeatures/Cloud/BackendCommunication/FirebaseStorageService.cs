@@ -97,6 +97,23 @@
             await Task.WhenAll(deleteTasks);
         }
 
+        public async Task<byte[]> DownloadImageAsync(string url)
+        {
+            using var httpClient = new HttpClient();
+            return await httpClient.GetByteArrayAsync(url);
+        }
+
+        public async Task<IList<byte[]>> DownloadImagesAsync(List<string> urls)
+        {
+            if (urls == null || urls.Count == 0)
+                return new List<byte[]>();
+
+            // Download images in parallel
+            var downloadTasks = urls.Select(DownloadImageAsync);
+            var results = await Task.WhenAll(downloadTasks);
+            return results.ToList();
+        }
+
         private async Task<string> GetIdTokenAsync()
         {
             var token = await SecureStorage.GetAsync("firebase_id_token");

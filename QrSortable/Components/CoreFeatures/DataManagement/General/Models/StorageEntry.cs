@@ -5,7 +5,7 @@
 
     public class StorageEntry : DatabaseEntry
     {
-        public Guid StorageId { get; private set; }
+        public Guid StorageId { get; set; }
         public string Category { get; set; }
         public DateTime CreatedDate { get; set; }
         public string BarcodeValue { get; set; }

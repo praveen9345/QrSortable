@@ -9,5 +9,9 @@
         Task DeleteAsync(string imageUrl);
 
         Task DeleteImagesAsync(IList<string> imageUrls);
+
+        Task<byte[]> DownloadImageAsync(string url);
+
+        Task<IList<byte[]>> DownloadImagesAsync(List<string> urls);
     }
 }

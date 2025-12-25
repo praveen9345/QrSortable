@@ -54,17 +54,12 @@
             
             _multiUserId = generalInformation.MultiUserId;
 
-            if (!generalInformation.IsBackendUsed)
+            if (generalInformation.IsBackendUsed)
             {
                 return false;
             }
 
-            var dbStorage = await _databaseManager.GetListAsync<StorageEntry>();
-
-            if (dbStorage is null || !dbStorage.Any())
-            {
-                return false;
-            }
+            var dbStorage = await _databaseManager.GetListAsync<StorageEntry>() ?? new List<StorageEntry>();
 
             var Db = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
             var collection = Db.Collection("StorageEntries");
@@ -73,6 +68,11 @@
             var querySnapshot = await collection
                 .WhereEqualTo("MultiuserId", _multiUserId)
                 .GetSnapshotAsync();
+
+            if (dbStorage is null || !dbStorage.Any() && querySnapshot.Count==0)
+            {
+                return false;
+            }
 
             // Convert Firestore documents into lookup dictionary
             var backendEntries = querySnapshot.Documents
@@ -162,6 +162,75 @@
                 }
             }
 
+            //TODO: looks backend data and now add new data, update data, delete data to general database accordingly 
+            var localByStorageId = dbStorage.ToDictionary(
+                 e => _sharedMethodService.ConvertToString(e.StorageId));
+
+            foreach (var backend in backendEntries)
+            {
+                var storageId = backend.Key;
+                var doc = backend.Value;
+
+                var imageUrls = doc.ContainsField("ImageUrls")
+                    ? doc.GetValue<List<string>>("ImageUrls")
+                    : new List<string>();
+
+                var images = await _firebaseStorageService.DownloadImagesAsync(imageUrls);
+
+                if (localByStorageId.TryGetValue(storageId, out var local))
+                {
+                    // Update existing local entry
+                    local.Category = doc.GetValue<string>("Category");
+                    local.CreatedDate = DateTime.Parse(doc.GetValue<string>("CreatedDate"));
+                    local.BarcodeValue = doc.GetValue<string>("BarcodeValue");
+                    local.BarcodeType = doc.GetValue<string>("BarcodeType");
+                    local.Location = doc.GetValue<string>("Location");
+                    local.SearchInfo = doc.GetValue<string>("SearchInfo");
+                    local.ItemName = doc.GetValue<string>("ItemName");
+                    local.Description = doc.GetValue<string>("Description");
+                    local.BackgroundColorHex = doc.GetValue<string>("BackgroundColorHex");
+                    local.ImageList = images;
+
+                    await _databaseManager.UpdateAsync(local);
+                }
+                else
+                {
+                    // Add new local entry
+                    var newEntry = new StorageEntry
+                    {
+                        StorageId = Guid.Parse(storageId),
+                        Category = doc.GetValue<string>("Category"),
+                        CreatedDate = DateTime.Parse(doc.GetValue<string>("CreatedDate")),
+                        BarcodeValue = doc.GetValue<string>("BarcodeValue"),
+                        BarcodeType = doc.GetValue<string>("BarcodeType"),
+                        Location = doc.GetValue<string>("Location"),
+                        SearchInfo = doc.GetValue<string>("SearchInfo"),
+                        ItemName = doc.GetValue<string>("ItemName"),
+                        Description = doc.GetValue<string>("Description"),
+                        BackgroundColorHex = doc.GetValue<string>("BackgroundColorHex"),
+                        ImageList = images
+                    };
+
+                    _databaseManager.BeginTransaction();
+                    var addedItem = await _databaseManager.AddAsync(newEntry);
+                    if (addedItem != null)
+                    {
+                        _databaseManager.CommitTransaction();
+                    }
+                    else
+                    {
+                        _databaseManager.Rollback();
+                    }
+                }
+            }
+
+            // Delete local entries removed from backend
+            foreach (var local in dbStorage)
+            {
+                var storageId = _sharedMethodService.ConvertToString(local.StorageId);
+                if (!backendEntries.ContainsKey(storageId))
+                    await _databaseManager.DeleteAsync(local);
+            }
             return true;
         }
     }
