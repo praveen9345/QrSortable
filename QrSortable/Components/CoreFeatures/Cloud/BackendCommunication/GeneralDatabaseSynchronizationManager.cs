@@ -22,6 +22,7 @@
         private readonly ISharedMethodService _sharedMethodService;
 
         private string _multiUserId = string.Empty;
+        private bool _isBackendUsed = false;
 
         public GeneralDatabaseSynchronizationManager(IDatabaseManager databaseManager,IGeneralInformationManager generalInfoManager,
             IToastService toast, IConnectivityService connectivityService,IFirebaseStorageService firebaseStorageService,
@@ -33,8 +34,12 @@
             _connectivityService = connectivityService;
             _firebaseStorageService = firebaseStorageService;
             _sharedMethodService = sharedMethodService;
-        }
 
+            var gn = _generalInfoManager.GetGeneralInformationAsync().GetAwaiter().GetResult();
+            
+            _multiUserId = gn.MultiUserId;
+            _isBackendUsed = gn.IsBackendUsed;
+        }
 
         /// <summary>
         ///     Transfers all relevant data that was collected within the app to the backend.
@@ -44,24 +49,21 @@
         /// </returns>
         public async Task<bool> SynchronizeAppDataAsync()
         {
-            // Step 0: Check internet connection
+            // Check internet connection
             var isInternetConnectionAvailable = await _connectivityService.CheckInternetConnectionAvailableAsync();
             if (!isInternetConnectionAvailable)
                 return false;
 
-            // Step 1: Get general information
-            var generalInformation = await _generalInfoManager.GetGeneralInformationAsync();
-            _multiUserId = generalInformation.MultiUserId;
-
-            if (generalInformation.IsBackendUsed)
+            // Get general information
+            if (!_isBackendUsed)
                 return false;
 
-            // Step 2: Get local storage entries
+            // Get local storage entries
             var dbStorage = await _databaseManager.GetListAsync<StorageEntry>() ?? new List<StorageEntry>();
 
-            // Step 3: Get backend Firestore entries
-            var Db = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
-            var collection = Db.Collection("StorageEntries");
+            // Get backend Firestore entries
+            var db = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var collection = db.Collection("StorageEntries");
 
             var querySnapshot = await collection
                 .WhereEqualTo("MultiuserId", _multiUserId)
@@ -79,7 +81,7 @@
             // Convert local to dictionary
             var localEntries = dbStorage.ToDictionary(e => _sharedMethodService.ConvertToString(e.StorageId));
 
-            // Step 4: Early return if data is identical
+            // Early return if data is identical
             if(backendEntries.Count == localEntries.Count) 
             {
                 bool allSame = true;
@@ -127,7 +129,7 @@
                 }
             }
             
-            // Step 5: No backend → upload all
+            // No backend → upload all
             if (querySnapshot.Count == 0)
             {
                 foreach (var entry in dbStorage)
@@ -155,7 +157,7 @@
                 return true;
             }
 
-            // Step 6: Backend exists → sync new & existing
+            // Backend exists → sync new & existing
             foreach (var entry in dbStorage)
             {
                 var storageId = _sharedMethodService.ConvertToString(entry.StorageId) ?? string.Empty;
@@ -177,20 +179,20 @@
                 var imageUrls = await _firebaseStorageService.UploadImagesAsync(entry.ImageList);
 
                 var document = new Dictionary<string, object>
-        {
-            { "MultiuserId", _multiUserId ?? string.Empty },
-            { "StorageId", storageId },
-            { "Category", entry.Category ?? string.Empty },
-            { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },
-            { "BarcodeValue", entry.BarcodeValue ?? string.Empty },
-            { "BarcodeType", entry.BarcodeType ?? string.Empty },
-            { "Location", entry.Location ?? string.Empty },
-            { "SearchInfo", entry.SearchInfo ?? string.Empty },
-            { "ItemName", entry.ItemName ?? string.Empty },
-            { "Description", entry.Description ?? string.Empty },
-            { "ImageUrls", imageUrls ?? new List<string>() },
-            { "BackgroundColorHex", entry.BackgroundColorHex ?? string.Empty }
-        };
+                {
+                    { "MultiuserId", _multiUserId ?? string.Empty },
+                    { "StorageId", storageId },
+                    { "Category", entry.Category ?? string.Empty },
+                    { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },
+                    { "BarcodeValue", entry.BarcodeValue ?? string.Empty },
+                    { "BarcodeType", entry.BarcodeType ?? string.Empty },
+                    { "Location", entry.Location ?? string.Empty },
+                    { "SearchInfo", entry.SearchInfo ?? string.Empty },
+                    { "ItemName", entry.ItemName ?? string.Empty },
+                    { "Description", entry.Description ?? string.Empty },
+                    { "ImageUrls", imageUrls ?? new List<string>() },
+                    { "BackgroundColorHex", entry.BackgroundColorHex ?? string.Empty }
+                };
 
                 if (backendDoc == null)
                     await collection.AddAsync(document);
@@ -198,7 +200,7 @@
                     await backendDoc.Reference.SetAsync(document, SetOptions.Overwrite);
             }
 
-            // Step 7: Sync backend → local database
+            // Sync backend → local database
             foreach (var backend in backendEntries)
             {
                 var storageId = backend.Key;
@@ -250,7 +252,7 @@
                 }
             }
 
-            // Step 8: Delete local entries removed from backend
+            // Delete local entries removed from backend
             foreach (var local in dbStorage)
             {
                 var storageId = _sharedMethodService.ConvertToString(local.StorageId);
@@ -260,6 +262,107 @@
 
             return true;
         }
+
+        public async Task<bool> ClearBackendAndSyncLocalDataAsync()
+        {
+            // Check internet connection
+            if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                return false;
+
+            // Reset only allowed when backend is NOT used
+            if (!_isBackendUsed)
+                return false;
+
+            try
+            {
+                // Create Firestore once
+                var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+                var collection = firestoreDb.Collection("StorageEntries");
+
+                //Get backend entries
+                var querySnapshot = await collection
+                    .WhereEqualTo("MultiuserId", _multiUserId)
+                    .GetSnapshotAsync();
+
+                if (querySnapshot.Count != 0)
+                {
+                    //Delete backend entries (batch-safe)
+                    const int batchSize = 500;
+                    var documents = querySnapshot.Documents;
+                    int deletedCount = 0;
+
+                    while (deletedCount < documents.Count)
+                    {
+                        var batch = firestoreDb.StartBatch();
+
+                        foreach (var document in documents.Skip(deletedCount).Take(batchSize))
+                        {
+                            // Delete images from Firebase Storage
+                            if (document.TryGetValue<IList<object>>("ImageUrls", out var imageUrlsObj) &&
+                                imageUrlsObj != null)
+                            {
+                                var urls = imageUrlsObj
+                                    .Select(x => x?.ToString())
+                                    .Where(x => !string.IsNullOrEmpty(x))
+                                    .ToList();
+
+                                if (urls.Any())
+                                {
+                                    await _firebaseStorageService.DeleteImagesAsync(urls);
+                                }
+                            }
+
+                            // Delete Firestore document
+                            batch.Delete(document.Reference);
+                        }
+
+                        await batch.CommitAsync();
+                        deletedCount += batchSize;
+                    }
+
+                }
+
+                //Upload all local entries
+                var dbStorage = await _databaseManager.GetListAsync<StorageEntry>();
+                if (dbStorage == null || !dbStorage.Any())
+                    return false;
+
+                foreach (var entry in dbStorage)
+                {
+                    var imageUrls = await _firebaseStorageService.UploadImagesAsync(entry.ImageList);
+
+                    var document = new Dictionary<string, object>
+                    {
+                        { "MultiuserId", _multiUserId ?? string.Empty },
+                        { "StorageId", _sharedMethodService.ConvertToString(entry.StorageId) ?? string.Empty },
+                        { "Category", entry.Category ?? string.Empty },
+                        { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },
+                        { "BarcodeValue", entry.BarcodeValue ?? string.Empty },
+                        { "BarcodeType", entry.BarcodeType ?? string.Empty },
+                        { "Location", entry.Location ?? string.Empty },
+                        { "SearchInfo", entry.SearchInfo ?? string.Empty },
+                        { "ItemName", entry.ItemName ?? string.Empty },
+                        { "Description", entry.Description ?? string.Empty },
+                        { "ImageUrls", imageUrls ?? new List<string>() },
+                        { "BackgroundColorHex", entry.BackgroundColorHex ?? string.Empty }
+                    };
+
+                    await collection.AddAsync(document);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Centralized error handling
+                Console.WriteLine(
+                    $"SynchronizeAppByResetBackendAsync failed for MultiUserId : {ex}");
+
+                return false;
+            }
+        }
+
+
 
         private bool CompareImageLists(IList<byte[]> localImages, IList<byte[]> backendImages)
         {

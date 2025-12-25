@@ -14,5 +14,7 @@
         ///     True, if the last backup synchronization was updated successfully or if backend is not used. False, otherwise.
         /// </returns>
         Task<bool> SynchronizeAppDataAsync();
+
+        Task<bool> ClearBackendAndSyncLocalDataAsync();
     }
 }

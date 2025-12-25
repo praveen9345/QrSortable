@@ -46,7 +46,7 @@
                 var generalInformation = await _generalInformationManager.GetGeneralInformationAsync();
 
                 //only sync storage entries if backend is used
-                if (!generalInformation.IsBackendUsed)
+                if (generalInformation.IsBackendUsed)
                 {
                     var dbStoreEntries = await (await _backendDatabaseManager
                     .GetAllAsync<DtoStorageEntryModel>()).OrderBy(dto => dto.ID)

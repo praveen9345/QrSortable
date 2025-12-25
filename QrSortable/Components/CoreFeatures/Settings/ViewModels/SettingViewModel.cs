@@ -85,8 +85,9 @@
 
             await DialogService.ShowActivityIndicatorAndReturnResult("Uploading...", async () =>
             {
-                var result = await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
-                
+                // var result = await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
+                var result = await _generalDatabaseSynchronizationManager.ClearBackendAndSyncLocalDataAsync();
+
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
                     if (result)
