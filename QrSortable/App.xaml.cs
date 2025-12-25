@@ -48,14 +48,5 @@
             await _appService.OnStartAsync();
         }
 
-        protected override void OnResume()
-        {
-            base.OnResume();
-            // Add using to the sync manager namespace
-
-			//TODO:1
-            var sync = ServiceHelper.GetService<IBackendSynchronizationManager>();
-            //_ = sync?.ForceProcessQueueAsync();
-        }
     }
 }

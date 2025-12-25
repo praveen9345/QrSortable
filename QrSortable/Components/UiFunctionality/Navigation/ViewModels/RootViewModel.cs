@@ -1,17 +1,12 @@
 ﻿namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
 {
-    using BarcodeScanning;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
-    using Google.Cloud.Firestore;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Views;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
-    using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
-    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
     using QrSortable.Components.UiFunctionality.Notification;
     using System.Collections.ObjectModel;
@@ -21,9 +16,9 @@
     /// </summary>
     public partial class RootViewModel : BaseViewModel
     {
-        private readonly IBackendCommunicationService _backendCommunicationService;
         private readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
+        private readonly IBackendSynchronizationManager _backendSynchronizationManager;
 
         private bool _isInitializeVisible = false;
 
@@ -38,12 +33,12 @@
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
-        public RootViewModel(IBackendCommunicationService backendCommunicationService, IDatabaseManager databaseManager, IToastService toastService)
+        public RootViewModel(IDatabaseManager databaseManager, IToastService toastService, IBackendSynchronizationManager backendSynchronizationManager)
         {
             IsBackNavigationEnabled = true;
-            _backendCommunicationService = backendCommunicationService;
             _databaseManager = databaseManager;
             _toastService = toastService;
+            _backendSynchronizationManager = backendSynchronizationManager;
 
             Categories = new ObservableCollection<StorageGroup>();
         }
@@ -56,7 +51,10 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-           
+
+            //ensure backend sync
+            await _backendSynchronizationManager.SynchronizeStoredObjectsAsync();
+
             _isInitializeVisible = true;
 
             bool outcome = false;
