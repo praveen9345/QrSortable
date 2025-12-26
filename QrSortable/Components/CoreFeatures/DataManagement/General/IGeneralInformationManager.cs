@@ -34,12 +34,12 @@
         /// <returns> True, if the setting was successful. False, otherwise. </returns>
         Task<bool> UpdateOnboardingProgressAsync(OnboardingProgress progress);
 
-        /// <summary>
-        /// Asynchronously determines whether a multiuser identifier is available for the current context.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if a multiuser
-        /// identifier is available; otherwise, <see langword="false"/>.</returns>
-        Task<bool> GenerateTheMultiuserIdAsync();
+      /// <summary>
+      /// ..................
+      /// </summary>
+      /// <param name="multiuserId">..........................</param>
+      /// <returns></returns>
+        Task<bool> UpdateTheMultiuserIdAsync(string multiuserId);
 
         /// <summary>
         ///     Updates whether the backend is used or not.

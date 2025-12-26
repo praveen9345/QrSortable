@@ -2,6 +2,7 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using QrSortable.Components.CoreFeatures.Onboarding.Views;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.CoreFeatures.Settings.Views;
     using QrSortable.Components.UiFunctionality.Navigation.Models;
@@ -15,14 +16,13 @@
     {
         public ObservableCollection<MenuItem> MenuItems { get; set; }
 
-        private const string ProfileTitle = "Profile";
+        private const string MultiuserTitle = "Multiuser";
         private const string SubscribeTitle ="Subscribe";
         private const string ShareTitle = "Share";
         private const string AddToBasketTitle = "AddToBasket";
         private const string YourOrdersTitle = "YourOrders";
         private const string SettingsTitle = "Settings";
         private const string FeedbackTitle = "Feedback";
-        private const string LogOutTitle = "LogOut";
         private const string ProfileDeleteTitle = "ProfileDelete";
         
 
@@ -35,14 +35,13 @@
             
             MenuItems = new ObservableCollection<MenuItem>
             {
-                new MenuItem { Icon=IconNames.Profile, Title= ProfileTitle },
-                new MenuItem { Icon=IconNames.Subscribe, Title=SubscribeTitle },
-                new MenuItem { Icon=IconNames.Share, Title=ShareTitle },
+                new MenuItem { Icon=IconNames.Multiuser, Title= MultiuserTitle },
                 new MenuItem { Icon=IconNames.AddToBasket, Title= AddToBasketTitle },
                 new MenuItem { Icon=IconNames.YourOrders, Title=YourOrdersTitle },
+                new MenuItem { Icon=IconNames.Subscribe, Title=SubscribeTitle , HasBadge=true, Badge="Coming Soon"},
+                new MenuItem { Icon=IconNames.Share, Title=ShareTitle },
                 new MenuItem { Icon=IconNames.Settings, Title=SettingsTitle },
                 new MenuItem { Icon=IconNames.Feedback, Title=FeedbackTitle },
-                new MenuItem { Icon=IconNames.LogOut, Title=LogOutTitle , HasBadge=true, Badge="Coming Soon"},
                 new MenuItem { Icon=IconNames.ProfileDelete, Title=ProfileDeleteTitle }
             };
 
@@ -72,6 +71,9 @@
 
                 switch (selected.Title)
                 {
+                    case MultiuserTitle:
+                         await NavigationService.Navigate<OnboardingView>();
+                        break;
                     case AddToBasketTitle:
                         await NavigationService.Navigate<AddToBasketView>();
                         break;

@@ -93,12 +93,8 @@
             return await UpdateGeneralInformationAsync(generalInformation);
         }
 
-        /// <summary>
-        /// Asynchronously determines whether a multiuser identifier is available for the current context.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if a multiuser
-        /// identifier is available; otherwise, <see langword="false"/>.</returns>
-        public async Task<bool> GenerateTheMultiuserIdAsync()
+        
+        public async Task<bool> UpdateTheMultiuserIdAsync(string multiuserId)
         {
             var generalInformation = await GetGeneralInformationAsync();
            
@@ -108,8 +104,13 @@
                 return true; 
             }
 
+            if(generalInformation.MultiUserId == multiuserId)
+            {
+                return true;
+            }
+
             Console.WriteLine($"Generating {nameof(GeneralInformation.MultiUserId)}");
-            generalInformation.MultiUserId = GenereatedMultiuserId();
+            generalInformation.MultiUserId = multiuserId;
 
             return await UpdateGeneralInformationAsync(generalInformation);
 
@@ -143,20 +144,5 @@
             return false;
         }
 
-        private string GenereatedMultiuserId()
-        {
-            string seg1 = GenerateNumber(4);
-            string seg2 = GenerateNumber(5);
-
-            return $"QS-{seg1}-{seg2}";
-        }
-        
-        private static string GenerateNumber(int digits)
-        {
-            Random random = new Random();
-            int max = (int)Math.Pow(10, digits);
-            int min = max / 10;
-            return random.Next(min, max).ToString();
-        }
     }
 }

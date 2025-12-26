@@ -2,35 +2,81 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
-    using PdfSharpCore.Drawing.BarCodes;
+    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
+    using QrSortable.Components.CoreFeatures.DataManagement.Backend;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
+    using System.Threading.Tasks;
 
 
     /// <summary>
     ///     The view model of the OnboardingViewModel screen.
     /// </summary>
-    public partial class SettingViewModel : BaseViewModel
+    public partial class OnboardingViewModel : BaseViewModel
     {
         private readonly IGeneralInformationManager _generalInformationManager;
         private readonly IToastService _toastService;
+        private readonly IBackendCommunicationService _backendCommunicationService;
+        private readonly IGeneralDatabaseSynchronizationManager _generalDatabaseSynchronizationManager;
+        private readonly IDatabaseManager _databaseManager;
+        private readonly IBackendDatabaseManager _backendDatabaseManager;
+       
+        private bool _displayOnce;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SettingViewModel" />.
+        ///     Initializes a new instance of the <see cref="OnboardingViewModel" />.
         /// </summary>
-        public SettingViewModel(IGeneralInformationManager generalInformationManager, IToastService toastService)
+        public OnboardingViewModel(IGeneralInformationManager generalInformationManager,
+            IToastService toastService, IBackendCommunicationService backendCommunicationService,
+            IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager,
+            IDatabaseManager databaseManager, IBackendDatabaseManager backendDatabaseManager)
         {
             IsBackNavigationEnabled = true;
             _toastService = toastService;
             _generalInformationManager = generalInformationManager;
+            _backendCommunicationService = backendCommunicationService;
+            _generalDatabaseSynchronizationManager  = generalDatabaseSynchronizationManager;
+            _databaseManager = databaseManager;
+            _backendDatabaseManager = backendDatabaseManager;
+
         }
+
+        public async override Task InitializeAsync()
+        {
+            await base.InitializeAsync();
+            _displayOnce = true;
+        }
+
+        /// <summary>
+        /// Represents the currently multiuser identification in the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _multiuserId;
+
+        /// <summary>
+        /// Represents the currently multiuser id input in the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _multiuserIdInput;
+
+        /// <summary>
+        /// Represents the to set the visibility of the component in the application.
+        /// </summary>
+        [ObservableProperty]
+        private bool _isMultiuserFunctionalityEnabled;
 
         public async override void ViewAppearing()
         {
             base.ViewAppearing();
 
             MultiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
+            
+            if ((await _generalInformationManager.GetGeneralInformationAsync()).IsBackendUsed)
+            {
+                IsMultiuserFunctionalityEnabled = true;
+            }
         }
 
         public AsyncRelayCommand CopyMultiuserCodeCommand => new AsyncRelayCommand(async () =>
@@ -40,11 +86,100 @@
 
         });
 
-        /// <summary>
-        /// Represents the currently multiuser identification in the application.
-        /// </summary>
-        [ObservableProperty]
-        private string _multiuserId;
+        public AsyncRelayCommand MultiuserFunctionalityToggledCommand => new AsyncRelayCommand(async () =>
+        {
+            if (IsMultiuserFunctionalityEnabled)
+            {
+                await _generalInformationManager.UpdateIsBackendUsedAsync(true);
+
+                if(!_displayOnce)
+                {
+                    await DialogService.ShowAlertDialog("Information",
+                   "Use the displayed multi-user ID on another QRSortable App device to connect.", AppResources.Dialog_OK_Text);
+                }
+                _displayOnce = false;
+            }
+            else
+            {
+                var confirm = await DialogService.ShowRequestDialog("Disabling multi-user functionality will stop synchronization with other devices.",
+                    AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
+
+                if (!confirm) 
+                {
+                    IsMultiuserFunctionalityEnabled = true;
+                    return; 
+                }
+
+                await _generalInformationManager.UpdateIsBackendUsedAsync(false);
+                IsMultiuserFunctionalityEnabled = false;
+            }
+           
+        });
+
+        public AsyncRelayCommand DoneCommand => new AsyncRelayCommand(async () =>
+        {
+            if(string.IsNullOrWhiteSpace(MultiuserIdInput))
+            {
+                await DialogService.ShowAlertDialog("Error",
+               "Please enter a valid multi-user ID to proceed.", AppResources.Dialog_OK_Text);
+                return;
+            }
+            if(!await _backendCommunicationService.ValidateMultiuserIdAsync(MultiuserIdInput))
+            {
+                await DialogService.ShowAlertDialog("Error",
+               "The entered multi-user ID is invalid or at least you need one have one saved data in given multi-user ID QRSortable App. Please check and try again.", 
+               AppResources.Dialog_OK_Text);
+                return;
+            }
+
+            if(MultiuserIdInput == MultiuserId)
+            {
+                var confirm = await DialogService.ShowRequestDialog("The multi-user ID you entered is the same as the one already used on this device.If you press OK, all data saved on this device will be deleted and re-downloaded from the server.",
+                AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
+
+                if(!confirm) return;
+            }
+            else
+            {
+                var confirm = await DialogService.ShowRequestDialog("Are you sure you want to clear the data saved on this device?",
+                 AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
+
+                if (!confirm) { return; }
+            }
+
+            var success = await _generalInformationManager.UpdateTheMultiuserIdAsync(MultiuserIdInput);
+            if(!success)
+            {
+                await _toastService.DisplayToast("An error occurred while setting the multi-user ID. Please try again.");
+                return;
+            }
+           
+            MultiuserId = MultiuserIdInput;
+
+            await DialogService.ShowActivityIndicatorAndReturnResult("Downloading data...May take time...", async () =>
+            {
+                await _databaseManager.ClearDatabaseAsync();
+                await _backendDatabaseManager.ClearDatabaseAsync();
+
+                var result = await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
+
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    if (result)
+                    {
+                        await _toastService.DisplayToast("Data synchronized successfully.");
+                    
+                    }
+                    else
+                    {
+                        await _toastService.DisplayToast("Data synchronization failed or no internet connection. Try again later.");
+                    }
+                });
+
+                return result;
+            });
+
+        });
 
     }
 }

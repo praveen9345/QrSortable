@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    xmlns:xct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     BackgroundImageSource="background_layout.webp">
     <views:BaseView.Content>
         <Grid>
@@ -63,14 +64,18 @@
                         FontSize="22"
                         LineBreakMode="WordWrap"
                         MaxLines="20"
-                        Text="To ensure maximum security, all data sent to the backend is fully encrypted. To enable this protection and support multi-user functionality, encryption must be activated."
+                        Text="To support multiple users, we need a backend to securely store data. For your protection, all data sent to the backend is fully encrypted. To keep your information safe and enable multi-user features, encryption must be turned on."
                         TextColor="White"
                         VerticalOptions="Center" />
 
                     <Switch
                         Grid.Column="1"
                         IsToggled="{Binding IsMultiuserFunctionalityEnabled}"
-                        VerticalOptions="Center" />
+                        VerticalOptions="Center">
+                        <Switch.Behaviors>
+                            <xct:EventToCommandBehavior Command="{Binding MultiuserFunctionalityToggledCommand}" EventName="Toggled" />
+                        </Switch.Behaviors>
+                    </Switch>
 
                 </Grid>
 
@@ -113,6 +118,18 @@
                     </Button>
                 </Grid>
 
+                <Label
+                    Grid.Column="0"
+                    Margin="10,30,10,0"
+                    FontAttributes="Bold"
+                    FontFamily="ItimRegular"
+                    FontSize="20"
+                    LineBreakMode="WordWrap"
+                    MaxLines="10"
+                    Text="* Please provide the Multi-User ID for the other QRSortable app you wish to connect."
+                    TextColor="Red"
+                    VerticalOptions="Center" />
+
                 <StackLayout
                     Grid.Row="0"
                     Margin="10,15,5,0"
@@ -130,7 +147,7 @@
 
                     <!--  Placeholder for item name input field  -->
                     <Border
-                        Margin="10,0,10,0"
+                        Margin="10,0,10,15"
                         Background="{StaticResource DarkGrey}"
                         HorizontalOptions="FillAndExpand"
                         StrokeShape="RoundRectangle 10">
@@ -148,27 +165,15 @@
                                 Placeholder="Enter code.."
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
-                                Text="{Binding MultiusetIdInput}" />
+                                Text="{Binding MultiuserIdInput}" />
                         </Grid>
                     </Border>
                 </StackLayout>
 
-                <Label
-                    Grid.Column="0"
-                    Margin="10"
-                    FontAttributes="Bold"
-                    FontFamily="ItimRegular"
-                    FontSize="20"
-                    LineBreakMode="WordWrap"
-                    MaxLines="10"
-                    Text="* Please provide the Multi-User ID for the other QRSortable app you wish to connect."
-                    TextColor="Red"
-                    VerticalOptions="Center" />
-
                 <Button
-                    Margin="10,50,10,0"
+                    Margin="10,5,10,0"
                     BackgroundColor="{StaticResource Primary}"
-                    Command="{Binding GetStartCommand}"
+                    Command="{Binding DoneCommand}"
                     CornerRadius="10"
                     FontAttributes="Bold"
                     FontFamily="ItimRegular"

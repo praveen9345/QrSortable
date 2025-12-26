@@ -189,5 +189,10 @@ namespace QrSortable.Resources
         ///     The name of the your orders.
         /// </summary>
         public const string YourOrders = "\uF336";
+
+        /// <summary>
+        ///     The name of the multiuser.
+        /// </summary>
+        public const string Multiuser = "\uF5b3";
     }
 }

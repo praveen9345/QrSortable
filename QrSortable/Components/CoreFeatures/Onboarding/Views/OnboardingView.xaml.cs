@@ -12,7 +12,7 @@
         ///  Initializes a new instance of the OnboardingViewModel class with the specified view model.
         /// </summary>
         /// <param name="viewModel">The OnboardingViewModel associated with this view.</param>
-        public OnboardingView(SettingViewModel viewModel) : base(viewModel)
+        public OnboardingView(OnboardingViewModel viewModel) : base(viewModel)
         {
             InitializeComponent();
             BindingContext = viewModel;

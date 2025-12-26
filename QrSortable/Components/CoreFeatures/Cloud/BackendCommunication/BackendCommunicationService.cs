@@ -41,6 +41,18 @@
             
         }
 
+
+        public async Task<bool> ValidateMultiuserIdAsync(string multiuserId)
+        {
+            var collection = Db.Collection("StorageEntries");
+
+            var querySnapshot = await collection.WhereEqualTo("MultiuserId", 
+                multiuserId).GetSnapshotAsync();
+
+            if (querySnapshot.Count == 0) return false;
+            return true;
+        }
+
         /// <summary>
         /// Inserts a DTO into Firestore by appending a new document (auto-generated id).
         /// </summary>
@@ -489,6 +501,7 @@
             if (string.IsNullOrWhiteSpace(data.CollectionName))
                 throw new ArgumentException("CollectionName is required.");
         }
+
 
         #endregion
     }

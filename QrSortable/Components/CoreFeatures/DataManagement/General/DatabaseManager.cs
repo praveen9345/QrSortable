@@ -202,6 +202,12 @@
             var UserInfos = await GetAllAsync<UserInfos>();
             await DeleteRangeWithOptionalSaveChangesAsync(UserInfos, false);
 
+            var basket = await GetAllAsync<AddToBasketData>();
+            await DeleteRangeWithOptionalSaveChangesAsync(basket, false);
+
+            var ordered = await GetAllAsync<YoursOrderData>();
+            await DeleteRangeWithOptionalSaveChangesAsync(ordered, false);
+
             var storage = await GetAllAsync<StorageEntry>();
             await DeleteRangeWithOptionalSaveChangesAsync(storage, false);
 

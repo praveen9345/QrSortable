@@ -362,8 +362,6 @@
             }
         }
 
-
-
         private bool CompareImageLists(IList<byte[]> localImages, IList<byte[]> backendImages)
         {
             if (localImages.Count != backendImages.Count)

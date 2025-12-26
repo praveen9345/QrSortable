@@ -4,7 +4,7 @@
 
     public interface IBackendCommunicationService
     {
-
+        Task<bool> ValidateMultiuserIdAsync(string multiuserId);
         Task<bool> InsertAsync<T>(T data, bool isFrombackendSync = false);
 
         Task<bool> UpdateAsync<T>(T data, bool isFrombackendSync = false);
