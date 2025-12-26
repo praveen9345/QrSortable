@@ -60,7 +60,7 @@
                 FontFamily="ItimRegular"
                 FontSize="20"
                 HorizontalOptions="Fill"
-                Text="Synchronize Data"
+                Text="Clear Backend and Sync"
                 TextColor="Black"
                 VerticalOptions="Center">
                 <Button.Shadow>
