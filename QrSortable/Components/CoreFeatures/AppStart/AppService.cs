@@ -62,9 +62,6 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             //TODO:1
             //if (backendSync != null) await backendSync.InitializeAsync();
             await NavigateToFirstViewModelAsync();
-
-           
-        
         }
 
         /// <summary>

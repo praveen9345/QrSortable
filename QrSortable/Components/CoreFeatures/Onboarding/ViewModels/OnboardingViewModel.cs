@@ -48,6 +48,8 @@
         public async override Task InitializeAsync()
         {
             await base.InitializeAsync();
+           
+           
             _displayOnce = true;
         }
 
@@ -69,9 +71,27 @@
         [ObservableProperty]
         private bool _isMultiuserFunctionalityEnabled;
 
+        /// <summary>
+        /// Represents the to set the visibility of the back in the application.
+        /// </summary>
+        [ObservableProperty]
+        private bool _isBackVisible;
+
         public async override void ViewAppearing()
         {
             base.ViewAppearing();
+            var onboarding = (await _generalInformationManager.GetGeneralInformationAsync()).OnboardingProgress;
+
+            if(onboarding == OnboardingProgress.SignUp ||
+               onboarding == OnboardingProgress.NotStarted)
+            {
+                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.SignUp);
+                IsBackVisible =false;
+            }
+            else
+            {
+                IsBackVisible = true;
+            }
 
             MultiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
             
@@ -125,7 +145,6 @@
                "Create One", "Done");
             if (!confirmMessage)
             {
-                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.SignUp);
                 await NavigationService.Navigate<RootView>();
                 return;
             }
@@ -176,25 +195,27 @@
             "Downloading your data. This may take a few moments…",
             async () =>
             {
+                await _databaseManager.ClearStorageBasketOrderedAsync();
+                await _backendDatabaseManager.ClearDatabaseAsync();
                 await _generalInformationManager.UpdateIsBackendUsedAsync(true);
-                await _databaseManager.ClearDatabaseAsync();
-                 await _backendDatabaseManager.ClearDatabaseAsync();
 
-                 return await _generalDatabaseSynchronizationManager
+                return await _generalDatabaseSynchronizationManager
                      .SynchronizeAppDataAsync();
             });
 
-            if (result is bool successResult && successResult)
+            await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-
-                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.SignUp);
-                await NavigationService.Navigate<RootView>();
-            }
-            else
-            {
-                await _toastService.DisplayToast(
-                    "Download failed. Please check your internet connection and try again.");
-            }
+                if (result is bool successResult && successResult)
+                {
+                    await NavigationService.Navigate<RootView>();
+                }
+                else
+                {
+                    await _toastService.DisplayToast(
+                        "Download failed. Please check your internet connection and try again.");
+                }
+            });
+           
 
         });
 

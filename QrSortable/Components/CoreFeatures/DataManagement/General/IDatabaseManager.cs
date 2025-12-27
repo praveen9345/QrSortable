@@ -20,6 +20,8 @@
         /// </summary>
         Task ClearDatabaseAsync();
 
+        Task ClearStorageBasketOrderedAsync();
+
         /// <summary>
         ///     Gets all database entries of the given type and returns them as a list.
         /// </summary>

@@ -8,6 +8,7 @@
     /// </summary>
     public partial class OnboardingView : BaseView
     {
+        private readonly OnboardingViewModel _viewModel;
         /// <summary>
         ///  Initializes a new instance of the OnboardingViewModel class with the specified view model.
         /// </summary>
@@ -15,8 +16,17 @@
         public OnboardingView(OnboardingViewModel viewModel) : base(viewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel;
+            BindingContext = _viewModel = viewModel;
 
+        }
+        protected override bool OnBackButtonPressed()
+        {
+            if (!_viewModel.IsBackVisible)
+            {
+                Application.Current.Quit();
+                
+            }
+            return base.OnBackButtonPressed();
         }
     }
 }

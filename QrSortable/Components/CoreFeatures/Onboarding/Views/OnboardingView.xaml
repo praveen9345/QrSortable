@@ -25,6 +25,7 @@
                 Command="{Binding BackNavigationCommand}"
                 CornerRadius="5"
                 HorizontalOptions="Start"
+                IsVisible="{Binding IsBackVisible}"
                 VerticalOptions="Start">
                 <Button.Shadow>
                     <Shadow
