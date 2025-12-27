@@ -19,11 +19,11 @@
         private const string MultiuserTitle = "Multiuser";
         private const string SubscribeTitle ="Subscribe";
         private const string ShareTitle = "Share";
-        private const string AddToBasketTitle = "AddToBasket";
-        private const string YourOrdersTitle = "YourOrders";
+        private const string AddToBasketTitle = "Basket";
+        private const string YourOrdersTitle = "Your Orders";
         private const string SettingsTitle = "Settings";
         private const string FeedbackTitle = "Feedback";
-        private const string ProfileDeleteTitle = "ProfileDelete";
+        private const string ProfileDeleteTitle = "Profile Delete";
         
 
         /// <summary>

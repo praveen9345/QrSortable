@@ -5,8 +5,10 @@
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
+    using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using QrSortable.Components.UiFunctionality.Navigation.Views;
     using QrSortable.Components.UiFunctionality.Notification;
     using System.Threading.Tasks;
 
@@ -118,12 +120,26 @@
 
         public AsyncRelayCommand DoneCommand => new AsyncRelayCommand(async () =>
         {
-            if(string.IsNullOrWhiteSpace(MultiuserIdInput))
+
+            var confirmMessage = await DialogService.ShowRequestDialog("To use multi-user features, enter a valid multi-user ID. If you don’t have one, we’ll create a new account for you.",
+               "Create One", "Done");
+            if (!confirmMessage)
             {
-                await DialogService.ShowAlertDialog("Error",
-               "Please enter a valid multi-user ID to proceed.", AppResources.Dialog_OK_Text);
+                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.SignUp);
+                await NavigationService.Navigate<RootView>();
                 return;
             }
+            else 
+            {
+                if (string.IsNullOrWhiteSpace(MultiuserIdInput))
+                {
+                    await DialogService.ShowAlertDialog("Error",
+                   "Please enter a valid multi-user ID to proceed.", AppResources.Dialog_OK_Text);
+                    return;
+                }
+
+            }
+
             if(!await _backendCommunicationService.ValidateMultiuserIdAsync(MultiuserIdInput))
             {
                 await DialogService.ShowAlertDialog("Error",
@@ -156,28 +172,29 @@
            
             MultiuserId = MultiuserIdInput;
 
-            await DialogService.ShowActivityIndicatorAndReturnResult("Downloading data...May take time...", async () =>
+            var result = await DialogService.ShowActivityIndicatorAndReturnResult(
+            "Downloading your data. This may take a few moments…",
+            async () =>
             {
+                await _generalInformationManager.UpdateIsBackendUsedAsync(true);
                 await _databaseManager.ClearDatabaseAsync();
-                await _backendDatabaseManager.ClearDatabaseAsync();
+                 await _backendDatabaseManager.ClearDatabaseAsync();
 
-                var result = await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
-
-                await MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    if (result)
-                    {
-                        await _toastService.DisplayToast("Data synchronized successfully.");
-                    
-                    }
-                    else
-                    {
-                        await _toastService.DisplayToast("Data synchronization failed or no internet connection. Try again later.");
-                    }
-                });
-
-                return result;
+                 return await _generalDatabaseSynchronizationManager
+                     .SynchronizeAppDataAsync();
             });
+
+            if (result is bool successResult && successResult)
+            {
+
+                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.SignUp);
+                await NavigationService.Navigate<RootView>();
+            }
+            else
+            {
+                await _toastService.DisplayToast(
+                    "Download failed. Please check your internet connection and try again.");
+            }
 
         });
 

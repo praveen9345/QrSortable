@@ -19,6 +19,7 @@
         private readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
         private readonly IBackendSynchronizationManager _backendSynchronizationManager;
+        private readonly IGeneralInformationManager _generalInformationManager;
 
         private bool _isInitializeVisible = false;
 
@@ -33,7 +34,8 @@
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
-        public RootViewModel(IDatabaseManager databaseManager, IToastService toastService, IBackendSynchronizationManager backendSynchronizationManager)
+        public RootViewModel(IDatabaseManager databaseManager, IToastService toastService, 
+            IBackendSynchronizationManager backendSynchronizationManager, IGeneralInformationManager generalInformationManager)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
@@ -41,6 +43,7 @@
             _backendSynchronizationManager = backendSynchronizationManager;
 
             Categories = new ObservableCollection<StorageGroup>();
+            _generalInformationManager = generalInformationManager;
         }
 
         /// <summary>
@@ -51,6 +54,8 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
+
+            await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingCompleted);
 
             //ensure backend sync
             await _backendSynchronizationManager.SynchronizeStoredObjectsAsync();

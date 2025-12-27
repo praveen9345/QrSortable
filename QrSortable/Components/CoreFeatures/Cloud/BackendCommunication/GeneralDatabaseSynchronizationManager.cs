@@ -21,9 +21,6 @@
         private readonly IFirebaseStorageService _firebaseStorageService;
         private readonly ISharedMethodService _sharedMethodService;
 
-        private string _multiUserId = string.Empty;
-        private bool _isBackendUsed = false;
-
         public GeneralDatabaseSynchronizationManager(IDatabaseManager databaseManager,IGeneralInformationManager generalInfoManager,
             IToastService toast, IConnectivityService connectivityService,IFirebaseStorageService firebaseStorageService,
             ISharedMethodService sharedMethodService)
@@ -34,11 +31,6 @@
             _connectivityService = connectivityService;
             _firebaseStorageService = firebaseStorageService;
             _sharedMethodService = sharedMethodService;
-
-            var gn = _generalInfoManager.GetGeneralInformationAsync().GetAwaiter().GetResult();
-            
-            _multiUserId = gn.MultiUserId;
-            _isBackendUsed = gn.IsBackendUsed;
         }
 
         /// <summary>
@@ -55,7 +47,7 @@
                 return false;
 
             // Get general information
-            if (!_isBackendUsed)
+            if (!(await _generalInfoManager.GetGeneralInformationAsync()).IsBackendUsed)
                 return false;
 
             // Get local storage entries
@@ -65,8 +57,10 @@
             var db = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
             var collection = db.Collection("StorageEntries");
 
+            var multiuserId = (await _generalInfoManager.GetGeneralInformationAsync()).MultiUserId;
+
             var querySnapshot = await collection
-                .WhereEqualTo("MultiuserId", _multiUserId)
+                .WhereEqualTo("MultiuserId", multiuserId)
                 .GetSnapshotAsync();
 
             // Early return if both local and backend are empty
@@ -138,7 +132,7 @@
 
                     var document = new Dictionary<string, object>
                     {
-                        { "MultiuserId", _multiUserId ?? string.Empty },
+                        { "MultiuserId",  multiuserId ?? string.Empty },
                         { "StorageId", _sharedMethodService.ConvertToString(entry.StorageId) ?? string.Empty },
                         { "Category", entry.Category ?? string.Empty },
                         { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },
@@ -180,7 +174,7 @@
 
                 var document = new Dictionary<string, object>
                 {
-                    { "MultiuserId", _multiUserId ?? string.Empty },
+                    { "MultiuserId",  multiuserId ?? string.Empty },
                     { "StorageId", storageId },
                     { "Category", entry.Category ?? string.Empty },
                     { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },
@@ -270,7 +264,7 @@
                 return false;
 
             // Reset only allowed when backend is NOT used
-            if (!_isBackendUsed)
+            if (!(await _generalInfoManager.GetGeneralInformationAsync()).IsBackendUsed)
                 return false;
 
             try
@@ -279,9 +273,11 @@
                 var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
                 var collection = firestoreDb.Collection("StorageEntries");
 
+                var multiuserId = (await _generalInfoManager.GetGeneralInformationAsync()).MultiUserId;
+
                 //Get backend entries
                 var querySnapshot = await collection
-                    .WhereEqualTo("MultiuserId", _multiUserId)
+                    .WhereEqualTo("MultiuserId", multiuserId)
                     .GetSnapshotAsync();
 
                 if (querySnapshot.Count != 0)
@@ -333,7 +329,7 @@
 
                     var document = new Dictionary<string, object>
                     {
-                        { "MultiuserId", _multiUserId ?? string.Empty },
+                        { "MultiuserId", multiuserId ?? string.Empty },
                         { "StorageId", _sharedMethodService.ConvertToString(entry.StorageId) ?? string.Empty },
                         { "Category", entry.Category ?? string.Empty },
                         { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },

@@ -22,8 +22,6 @@
         private readonly IBackendDatabaseHelper _backendDatabaseHelper;
         private FirestoreDb Db { get; set; }
 
-        private string _multiUserId = string.Empty;
-
         public BackendCommunicationService(IAesHelper aesHelper, IFirebaseStorageService firebaseStorageService,
             IGeneralInformationManager generalInformationManager, ISharedMethodService sharedMethodService,
             IBackendDatabaseManager backendDatabaseManager, IBackendDatabaseHelper backendDatabaseHelper)
@@ -35,9 +33,6 @@
             _sharedMethodService = sharedMethodService;
             _backendDatabaseManager = backendDatabaseManager;
             _backendDatabaseHelper = backendDatabaseHelper;
-
-            _multiUserId = _generalInformationManager.GetGeneralInformationAsync()
-                .GetAwaiter().GetResult().MultiUserId;
             
         }
 
@@ -62,7 +57,9 @@
             var type = data.GetType();
             var storageEntry = type.GetProperty("Category");
             var orderEntry = type.GetProperty("Title");
-            
+
+            var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
+
             try
             {
                 if (storageEntry != null) 
@@ -71,7 +68,7 @@
                     
                     var document = new Dictionary<string, object>
                     {
-                        { "MultiuserId", _multiUserId ?? string.Empty },
+                        { "MultiuserId", multiuserId ?? string.Empty },
                         { "StorageId", _sharedMethodService.ConvertToString(dataDec.StorageId) ?? string.Empty},
                         { "Category", dataDec.Category ?? string.Empty},
                         { "CreatedDate", _sharedMethodService.ConvertToString(dataDec.CreatedDate) ?? string.Empty},
@@ -106,7 +103,7 @@
                 {
                     var document = new Dictionary<string, object>
                     {
-                        { "MultiuserId", _multiUserId ?? string.Empty },
+                        { "MultiuserId", multiuserId ?? string.Empty },
                         { "OrderId", dataDec.OrderId ?? string.Empty},
                         { "Title", dataDec.Title ?? string.Empty},
                         { "Description", dataDec.Description ?? string.Empty},
@@ -161,7 +158,8 @@
             var type = data.GetType();
             var storageEntry = type.GetProperty("Category");
             var orderEntry = type.GetProperty("Title");
-            
+
+            var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
             try
             {
                 if (storageEntry != null)
@@ -170,12 +168,12 @@
                     
                     // Step 1: Get all documents matching MultiuserId
                     var querySnapshot = await collection
-                        .WhereEqualTo("MultiuserId", _multiUserId)
+                        .WhereEqualTo("MultiuserId", multiuserId)
                         .GetSnapshotAsync();
 
                     if (querySnapshot.Count == 0)
                     {
-                        Console.WriteLine($"No documents found with MultiuserId={_multiUserId}");
+                        Console.WriteLine($"No documents found with MultiuserId");
                         return false;
                     }
 
@@ -209,7 +207,7 @@
 
                     if (targetDoc == null)
                     {
-                        Console.WriteLine($"No document found with MultiuserId={_multiUserId} and CreatedDate={dataDec.CreatedDate}");
+                        Console.WriteLine($"No document found with MultiuserId and CreatedDate={dataDec.CreatedDate}");
                         return false;
                     }
 
@@ -218,7 +216,7 @@
 
                     var document = new Dictionary<string, object>
                     {
-                       { "MultiuserId", _multiUserId ?? string.Empty },
+                       { "MultiuserId", multiuserId ?? string.Empty },
                        { "StorageId", _sharedMethodService.ConvertToString(dataDec.StorageId) ?? string.Empty},
                        { "Category", dataDec.Category ?? string.Empty},
                        { "CreatedDate", _sharedMethodService.ConvertToString(dataDec.CreatedDate) ?? string.Empty},
@@ -253,7 +251,7 @@
 
                     var document = new Dictionary<string, object>
                     {
-                       { "MultiuserId", _multiUserId ?? string.Empty },
+                       { "MultiuserId", multiuserId ?? string.Empty },
                        { "OrderId", dataDec.OrderId ?? string.Empty},
                        { "Title", dataDec.Title ?? string.Empty},
                        { "Description", dataDec.Description ?? string.Empty},
@@ -319,7 +317,7 @@
             dynamic dataDec = data;
             var type = data.GetType();
             var storageEntry = type.GetProperty("Category");
-           
+            var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
             try
             {
                 if (storageEntry != null)
@@ -328,12 +326,12 @@
 
                     // Step 1: Get all documents matching MultiuserId
                     var querySnapshot = await collection
-                        .WhereEqualTo("MultiuserId", _multiUserId)
+                        .WhereEqualTo("MultiuserId", multiuserId)
                         .GetSnapshotAsync();
 
                     if (querySnapshot.Count == 0)
                     {
-                        Console.WriteLine($"No documents found with MultiuserId={_multiUserId}");
+                        Console.WriteLine($"No documents found with MultiuserId");
                         return false;
                     }
 
@@ -367,7 +365,7 @@
 
                     if (targetDoc == null)
                     {
-                        Console.WriteLine($"No document found with MultiuserId={_multiUserId} and CreatedDate={dataDec.CreatedDate}");
+                        Console.WriteLine($"No document found with MultiuserId and CreatedDate={dataDec.CreatedDate}");
                         return false;
                     }
                     try
@@ -501,7 +499,6 @@
             if (string.IsNullOrWhiteSpace(data.CollectionName))
                 throw new ArgumentException("CollectionName is required.");
         }
-
 
         #endregion
     }

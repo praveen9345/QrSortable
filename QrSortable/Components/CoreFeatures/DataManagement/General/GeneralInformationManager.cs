@@ -97,14 +97,8 @@
         public async Task<bool> UpdateTheMultiuserIdAsync(string multiuserId)
         {
             var generalInformation = await GetGeneralInformationAsync();
-           
-            // Only generate if MultiUserId is null/empty/whitespace
-            if (!string.IsNullOrWhiteSpace(generalInformation.MultiUserId))
-            {
-                return true; 
-            }
 
-            if(generalInformation.MultiUserId == multiuserId)
+            if (generalInformation.MultiUserId == multiuserId)
             {
                 return true;
             }
