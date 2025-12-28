@@ -20,6 +20,7 @@
         private readonly IToastService _toastService;
         private readonly IBackendSynchronizationManager _backendSynchronizationManager;
         private readonly IGeneralInformationManager _generalInformationManager;
+        private readonly IGeneralDatabaseSynchronizationManager _generalDatabaseSynchronizationManager;
 
         private bool _isInitializeVisible = false;
 
@@ -35,12 +36,14 @@
         /// used for managing database operations.</param>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
         public RootViewModel(IDatabaseManager databaseManager, IToastService toastService, 
-            IBackendSynchronizationManager backendSynchronizationManager, IGeneralInformationManager generalInformationManager)
+            IBackendSynchronizationManager backendSynchronizationManager, IGeneralInformationManager generalInformationManager,
+            IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
             _toastService = toastService;
             _backendSynchronizationManager = backendSynchronizationManager;
+            _generalDatabaseSynchronizationManager = generalDatabaseSynchronizationManager;
 
             Categories = new ObservableCollection<StorageGroup>();
             _generalInformationManager = generalInformationManager;
@@ -68,7 +71,13 @@
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 outcome = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
-                    async () => await LoadCategoryAsync());
+                   async () =>
+                   {
+                        //ensure all data sync
+                        await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
+                        return await LoadCategoryAsync();
+                   }
+                );
             });
 
             if (!outcome)
@@ -83,9 +92,19 @@
         [ObservableProperty]
         private string _basketCount;
 
+        /// <summary>
+        /// Represents the currently visible of the refresh button in the application.
+        /// </summary>
+        [ObservableProperty]
+        private bool _refreshBtnVisible;
+
         public override async void ViewAppearing()
         {
             base.ViewAppearing();
+
+            var backendUsed = (await _generalInformationManager.GetGeneralInformationAsync()).IsBackendUsed;
+            if (backendUsed) { RefreshBtnVisible = true; } else { RefreshBtnVisible = false; }
+            
             if (!_isInitializeVisible)
             {
                 var success = await LoadCategoryAsync();
@@ -158,6 +177,27 @@
             _isInitializeVisible = false;
             await NavigationService.Navigate<SelectProductView>();
 
+        });
+
+        public AsyncRelayCommand RefreshCommand => new AsyncRelayCommand(async () =>
+        {
+            await DialogService.ShowActivityIndicatorAndReturnResult("Synchronizing...", async () =>
+            {
+                var result = await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    if (result)
+                    {
+                        await _toastService.DisplayToast("Data synchronized successfully.");
+                    }
+                    else
+                    {
+                        await _toastService.DisplayToast("Data synchronization failed or no internet connection. Try again later.");
+                    }
+                });
+
+                return result;
+            });
         });
 
         public AsyncRelayCommand MenuCommand => new AsyncRelayCommand(async () =>

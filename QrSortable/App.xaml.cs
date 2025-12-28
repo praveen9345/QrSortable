@@ -1,8 +1,6 @@
 ﻿namespace QrSortable
 {
 	using QrSortable.Components.CoreFeatures.AppStart;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
-    using QrSortable.Components.PlatformUtils;
 
     /// <summary>
     ///     Class representing the cross-platform application.

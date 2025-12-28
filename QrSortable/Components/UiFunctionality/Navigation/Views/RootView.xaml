@@ -25,7 +25,6 @@
                 <!--  Botton main button  -->
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-
             <!--  Placeholder for serch and others  -->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
@@ -268,7 +267,9 @@
                                                                     Text="{Binding CreatedDate, StringFormat='{0:dd MMM yyyy, HH:mm}'}"
                                                                     TextColor="{StaticResource Black}"
                                                                     VerticalTextAlignment="Center" />
+
                                                             </StackLayout>
+
                                                         </Grid>
                                                     </Grid>
                                                 </StackLayout>
@@ -297,6 +298,32 @@
                 </CarouselView.ItemTemplate>
             </CarouselView>
 
+            <!--  Refrace  -->
+            <Button
+                Grid.Row="2"
+                Margin="0,100,20,20"
+                Padding="10"
+                BackgroundColor="{StaticResource DarkGrey}"
+                Command="{Binding RefreshCommand}"
+                CornerRadius="50"
+                HorizontalOptions="End"
+                IsVisible="{Binding RefreshBtnVisible}"
+                VerticalOptions="End">
+                <Button.Shadow>
+                    <Shadow
+                        Brush="Black"
+                        Opacity="0.5"
+                        Radius="10"
+                        Offset="0,0" />
+                </Button.Shadow>
+                <Button.ImageSource>
+                    <FontImageSource
+                        FontFamily="FluentIcons"
+                        Glyph="{x:Static local:IconNames.Refrace}"
+                        Color="{StaticResource Primary}" />
+                </Button.ImageSource>
+            </Button>
+            
             <!--  Indicator  -->
             <IndicatorView
                 x:Name="indicatorView"

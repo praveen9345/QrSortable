@@ -58,9 +58,6 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         public async Task OnStartAsync()
         {
             await ConfigureAndInitializeFirebaseAsync();
-            var backendSync = ServiceHelper.GetService<IBackendSynchronizationManager>();
-            //TODO:1
-            //if (backendSync != null) await backendSync.InitializeAsync();
             await NavigateToFirstViewModelAsync();
         }
 

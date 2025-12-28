@@ -194,5 +194,10 @@ namespace QrSortable.Resources
         ///     The name of the multiuser.
         /// </summary>
         public const string Multiuser = "\uF5b3";
+
+        /// <summary>
+        ///     The name of the refrace.
+        /// </summary>
+        public const string Refrace = "\uF140";
     }
 }
