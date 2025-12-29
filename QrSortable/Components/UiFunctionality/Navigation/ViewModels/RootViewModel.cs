@@ -189,11 +189,7 @@
                     if (result)
                     {
                         await _toastService.DisplayToast("Data synchronized successfully.");
-                    }
-                    else
-                    {
-                        await _toastService.DisplayToast("Data synchronization failed or no internet connection. Try again later.");
-                    }
+                    }   
                 });
 
                 return result;
