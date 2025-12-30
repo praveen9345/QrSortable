@@ -11,6 +11,7 @@
     <views:BaseView.Resources>
         <ResourceDictionary>
             <localhex:HexToColorConverter x:Key="HexToColorConverter" />
+            <toolkit:InvertedBoolConverter x:Key="BoolInverter" />
         </ResourceDictionary>
     </views:BaseView.Resources>
     <views:BaseView.Content>
@@ -62,19 +63,21 @@
                             Grid.Column="1"
                             Placeholder="Find ..."
                             PlaceholderColor="{StaticResource PlaceholderColor}"
-                            Style="{StaticResource NormalText}" />
+                            Style="{StaticResource NormalText}"
+                            Text="{Binding SearchText}" />
 
-                        <!--  microphone button  -->
+                        <!--  search button  -->
                         <Button
                             Grid.Column="2"
                             Padding="0"
                             BackgroundColor="Transparent"
+                            Command="{Binding SearchCommand}"
                             CornerRadius="100"
                             HeightRequest="30">
                             <Button.ImageSource>
                                 <FontImageSource
                                     FontFamily="FluentIcons"
-                                    Glyph="{x:Static local:IconNames.Gift}"
+                                    Glyph="{x:Static local:IconNames.Send}"
                                     Color="{StaticResource Yellow}" />
                             </Button.ImageSource>
                         </Button>
@@ -132,7 +135,7 @@
                 Grid.Row="2"
                 BackgroundColor="Transparent"
                 IndicatorView="indicatorView"
-                IsVisible="True"
+                IsVisible="{Binding SearchVisible, Converter={StaticResource BoolInverter}}"
                 ItemsSource="{Binding Categories}"
                 Loop="False">
                 <CarouselView.ItemTemplate>
@@ -323,7 +326,7 @@
                         Color="{StaticResource Primary}" />
                 </Button.ImageSource>
             </Button>
-            
+
             <!--  Indicator  -->
             <IndicatorView
                 x:Name="indicatorView"
@@ -337,9 +340,12 @@
                 VerticalOptions="End" />
 
             <!--  Search layout  -->
-            <Grid Grid.Row="2" IsVisible="False">
+            <Grid Grid.Row="2" IsVisible="{Binding SearchVisible}">
                 <!--  collection view  -->
-                <CollectionView SelectionMode="None" VerticalOptions="Fill">
+                <CollectionView
+                    ItemsSource="{Binding SearchCategories}"
+                    SelectionMode="None"
+                    VerticalOptions="Fill">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Grid Padding="10">
@@ -366,120 +372,96 @@
                                             FontFamily="ItimRegular"
                                             FontSize="Large"
                                             HorizontalTextAlignment="Center"
-                                            Text="{Binding .}"
+                                            Text="{Binding Category}"
                                             TextColor="{StaticResource Yellow}" />
 
                                         <Grid>
-                                            <CollectionView SelectionMode="Single" VerticalOptions="Fill">
+                                            <CollectionView
+                                                ItemsSource="{Binding VisibleItems}"
+                                                RemainingItemsThreshold="5"
+                                                RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
+                                                SelectionChanged="OnSearchSelectionChanged"
+                                                SelectionMode="Single"
+                                                VerticalOptions="Fill">
                                                 <CollectionView.ItemTemplate>
                                                     <DataTemplate>
                                                         <Grid Padding="5">
                                                             <!--  Box view  -->
                                                             <Border
                                                                 Padding="5"
-                                                                Background="{StaticResource White}"
+                                                                Background="{Binding BackgroundColorHex, Converter={StaticResource HexToColorConverter}}"
                                                                 HorizontalOptions="Fill"
                                                                 StrokeShape="RoundRectangle 10"
                                                                 VerticalOptions="Fill">
                                                                 <StackLayout>
+                                                                    <!--  box detail view  -->
                                                                     <Grid>
-                                                                        <Grid.RowDefinitions>
-                                                                            <!--  box detail view  -->
-                                                                            <RowDefinition Height="5*" />
-                                                                            <!--  box contain view  -->
-                                                                            <RowDefinition Height="5*" />
-                                                                        </Grid.RowDefinitions>
-                                                                        <!--  box detail view  -->
-                                                                        <Grid Grid.Row="0">
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition Width="3*" />
-                                                                                <ColumnDefinition Width="7*" />
-                                                                                <ColumnDefinition Width="3*" />
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Image
-                                                                                Grid.Column="0"
-                                                                                Aspect="AspectFit"
-                                                                                Source="box" />
-                                                                            <StackLayout Grid.Column="1">
-                                                                                <Label
-                                                                                    BackgroundColor="Transparent"
-                                                                                    FontAttributes="Bold"
-                                                                                    FontFamily="ItimRegular"
-                                                                                    FontSize="Large"
-                                                                                    HorizontalTextAlignment="Start"
-                                                                                    Text="{Binding .}"
-                                                                                    TextColor="{StaticResource Black}"
-                                                                                    VerticalTextAlignment="Center" />
-                                                                                <StackLayout Orientation="Horizontal">
-                                                                                    <Image
-                                                                                        Aspect="AspectFit"
-                                                                                        HeightRequest="20"
-                                                                                        Source="location"
-                                                                                        WidthRequest="20" />
-                                                                                    <Label
-                                                                                        BackgroundColor="Transparent"
-                                                                                        FontAttributes="Bold"
-                                                                                        FontFamily="ItimRegular"
-                                                                                        FontSize="Medium"
-                                                                                        HorizontalTextAlignment="Start"
-                                                                                        Text="Blue color closet"
-                                                                                        TextColor="{StaticResource Black}"
-                                                                                        VerticalTextAlignment="Center" />
-                                                                                </StackLayout>
-                                                                                <Label
-                                                                                    BackgroundColor="Transparent"
-                                                                                    FontAttributes="Bold"
-                                                                                    FontFamily="ItimRegular"
-                                                                                    FontSize="Medium"
-                                                                                    HorizontalTextAlignment="Start"
-                                                                                    Text="16 Dec 2022, 9:30 pm"
-                                                                                    TextColor="{StaticResource Black}"
-                                                                                    VerticalTextAlignment="Center" />
-                                                                            </StackLayout>
-                                                                        </Grid>
-
-                                                                        <StackLayout Grid.Row="1" Margin="5,0,0,5">
-                                                                            <!--  separator  -->
-                                                                            <BoxView
-                                                                                HeightRequest="2"
-                                                                                HorizontalOptions="Fill"
-                                                                                VerticalOptions="Center"
-                                                                                Color="{StaticResource Black}" />
-
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="3*" />
+                                                                            <ColumnDefinition Width="7*" />
+                                                                            <ColumnDefinition Width="3*" />
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Image
+                                                                            Grid.Column="0"
+                                                                            Aspect="AspectFit"
+                                                                            Source="box" />
+                                                                        <StackLayout Grid.Column="1">
                                                                             <Label
                                                                                 BackgroundColor="Transparent"
                                                                                 FontAttributes="Bold"
                                                                                 FontFamily="ItimRegular"
                                                                                 FontSize="Large"
                                                                                 HorizontalTextAlignment="Start"
-                                                                                Text="Ski Gear"
+                                                                                Text="{Binding BarcodeValue}"
                                                                                 TextColor="{StaticResource Black}"
-                                                                                VerticalTextAlignment="Start" />
+                                                                                VerticalTextAlignment="Center" />
+                                                                            <StackLayout Orientation="Horizontal">
+                                                                                <Image
+                                                                                    Aspect="AspectFit"
+                                                                                    HeightRequest="20"
+                                                                                    Source="location"
+                                                                                    WidthRequest="20" />
+                                                                                <Label
+                                                                                    BackgroundColor="Transparent"
+                                                                                    FontAttributes="Bold"
+                                                                                    FontFamily="ItimRegular"
+                                                                                    FontSize="Medium"
+                                                                                    HorizontalTextAlignment="Start"
+                                                                                    Text="{Binding Location}"
+                                                                                    TextColor="{StaticResource Black}"
+                                                                                    VerticalTextAlignment="Center" />
+                                                                            </StackLayout>
                                                                             <Label
                                                                                 BackgroundColor="Transparent"
                                                                                 FontAttributes="Bold"
                                                                                 FontFamily="ItimRegular"
                                                                                 FontSize="Medium"
                                                                                 HorizontalTextAlignment="Start"
-                                                                                Text="Paper,powder pants, jacket, gloves, and more.vvvvvvvvvvvvvvvhhhhhhhhhhhhhhhhhhgggggggggggggggggggggggh"
+                                                                                Text="{Binding CreatedDate, StringFormat='{0:dd MMM yyyy, HH:mm}'}"
                                                                                 TextColor="{StaticResource Black}"
-                                                                                VerticalTextAlignment="Start" />
+                                                                                VerticalTextAlignment="Center" />
                                                                         </StackLayout>
                                                                     </Grid>
                                                                 </StackLayout>
                                                             </Border>
+                                                            <!--  Transparent item click  -->
+                                                            <VisualStateManager.VisualStateGroups>
+                                                                <VisualStateGroup Name="CommonStates">
+                                                                    <VisualState Name="Normal">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="BackgroundColor" Value="Transparent" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                    <VisualState Name="Selected">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="BackgroundColor" Value="Transparent" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                </VisualStateGroup>
+                                                            </VisualStateManager.VisualStateGroups>
                                                         </Grid>
                                                     </DataTemplate>
                                                 </CollectionView.ItemTemplate>
-                                                <CollectionView.ItemsSource>
-                                                    <x:Array Type="{x:Type x:String}">
-                                                        <x:String>Item 1</x:String>
-                                                        <x:String>Item 2</x:String>
-                                                        <x:String>Item 3</x:String>
-                                                        <x:String>Item 4</x:String>
-                                                        <x:String>Item 5</x:String>
-                                                    </x:Array>
-                                                </CollectionView.ItemsSource>
                                             </CollectionView>
                                         </Grid>
                                     </StackLayout>
@@ -487,16 +469,33 @@
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                    <CollectionView.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Storage room</x:String>
-                            <x:String>Bed room</x:String>
-                            <x:String>Living room</x:String>
-                            <x:String>Office room</x:String>
-                            <x:String>Bath room</x:String>
-                        </x:Array>
-                    </CollectionView.ItemsSource>
                 </CollectionView>
+
+                <!--  close search  -->
+                <Button
+                    Grid.Row="2"
+                    Margin="0,10,15,20"
+                    Padding="5"
+                    BackgroundColor="{StaticResource DarkGrey}"
+                    Command="{Binding SearchCloseCommand}"
+                    CornerRadius="50"
+                    HorizontalOptions="End"
+                    IsVisible="{Binding SearchVisible}"
+                    VerticalOptions="Start">
+                    <Button.Shadow>
+                        <Shadow
+                            Brush="Black"
+                            Opacity="0.5"
+                            Radius="10"
+                            Offset="0,0" />
+                    </Button.Shadow>
+                    <Button.ImageSource>
+                        <FontImageSource
+                            FontFamily="FluentIcons"
+                            Glyph="{x:Static local:IconNames.Close}"
+                            Color="{StaticResource Primary}" />
+                    </Button.ImageSource>
+                </Button>
             </Grid>
 
             <!--  Bottom Butoon layout  -->

@@ -61,5 +61,41 @@
                 }
             }
         }
+
+        private async void OnSearchSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var collectionView = (CollectionView)sender;
+            var selectedItem = collectionView.SelectedItem;
+
+            if (selectedItem != null)
+            {
+                try
+                {
+                    // Handle selection
+                    var selected = selectedItem as StorageEntry;
+
+                    if (selected != null)
+                    {
+                        string displayValue = selected.BarcodeValue + selected.BackgroundColorHex + "," + selected.BarcodeType;
+                        await _viewModel.NavigationService.Navigate<BoxDetailView>(displayValue);
+                    }
+                    else
+                    {
+                        await _viewModel.DialogService.ShowAlertDialog("The selected item could not be found.", AppResources.Dialog_OK_Text);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"RootView.cs.OnSelectionChanged: Exception: {ex}");
+                }
+                finally
+                {
+                    // Reset selection immediately after processing
+                    collectionView.SelectedItem = null;
+                }
+            }
+        }
+
+
     }
 }

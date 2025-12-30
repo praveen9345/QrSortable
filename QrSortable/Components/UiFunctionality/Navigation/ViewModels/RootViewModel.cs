@@ -2,11 +2,13 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using QrSortable.Components.CoreFeatures.Assistant;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Views;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
     using QrSortable.Components.UiFunctionality.Notification;
     using System.Collections.ObjectModel;
@@ -21,13 +23,22 @@
         private readonly IBackendSynchronizationManager _backendSynchronizationManager;
         private readonly IGeneralInformationManager _generalInformationManager;
         private readonly IGeneralDatabaseSynchronizationManager _generalDatabaseSynchronizationManager;
+        private readonly IStorageVoiceAssistantService _voiceAssistantService;
+        private readonly IStorageFinderService _storageFinderService;
+
 
         private bool _isInitializeVisible = false;
+        private CancellationTokenSource _searchCts;
 
         /// <summary>
         ///     Gets or sets the collection of categories available in the system.
         /// </summary>
         public ObservableCollection<StorageGroup> Categories { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the collection of search categories available in the system.
+        /// </summary>
+        public ObservableCollection<StorageGroup> SearchCategories { get; set; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RootViewModel" />.
@@ -37,15 +48,19 @@
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
         public RootViewModel(IDatabaseManager databaseManager, IToastService toastService, 
             IBackendSynchronizationManager backendSynchronizationManager, IGeneralInformationManager generalInformationManager,
-            IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager)
+            IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager, 
+            IStorageVoiceAssistantService voiceAssistantService, IStorageFinderService storageFinderService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
             _toastService = toastService;
             _backendSynchronizationManager = backendSynchronizationManager;
             _generalDatabaseSynchronizationManager = generalDatabaseSynchronizationManager;
+            _voiceAssistantService = voiceAssistantService;
+            _storageFinderService = storageFinderService;
 
             Categories = new ObservableCollection<StorageGroup>();
+            SearchCategories = new ObservableCollection<StorageGroup>();
             _generalInformationManager = generalInformationManager;
         }
 
@@ -63,6 +78,9 @@
             //ensure backend sync
             await _backendSynchronizationManager.SynchronizeStoredObjectsAsync();
 
+            //ensure all data sync
+            await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
+
             _isInitializeVisible = true;
 
             bool outcome = false;
@@ -73,8 +91,6 @@
                 outcome = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
                    async () =>
                    {
-                        //ensure all data sync
-                        await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
                         return await LoadCategoryAsync();
                    }
                 );
@@ -135,41 +151,6 @@
         {
             _isInitializeVisible = false;
             await NavigationService.Navigate<QrBrScannerView>();
-
-            //await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
-            // async () =>
-            //    {
-            //      await Task.Delay(1000);
-            //      return true;
-            //    });
-
-            //var wasCodeSuccessfullyUpdated = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
-            //   async () =>
-            //       {
-            //           await Task.Delay(1000);
-            //           return true;
-            //       });
-
-            //await DialogService.ShowAlertDialog("error",
-            //        "Something went wrong", "lökjyajflj");
-
-            //var isDialogConfirmed = await DialogService.ShowRequestDialog(
-            //   "lksajdlk",
-            //   "ökdsf",
-            //   "Cancel",
-            //  "OK");
-
-            //await NavigationService.Navigate<BoxDetailView>();
-
-            //var sample = new SampleModel
-            //{
-            //    Name = "kumar",
-            //    Description = "Sample Description"
-            //};
-
-            //await _backendCommunicationService.InsertSampleModel(sample);
-
-            //var userId = await _backendCommunicationService.GetUserUIDByName("Sample");
         });
 
         public AsyncRelayCommand CodeGeneratorCommand => new AsyncRelayCommand(async () =>
@@ -252,5 +233,86 @@
                 return false;
             }
         }
+
+
+        //--------------------------------------------------Search View---------------------------------------
+
+        /// <summary>
+        /// Represents the currently search text the application.
+        /// </summary>
+        [ObservableProperty]
+        private string _searchText;
+
+        /// <summary>
+        /// Represents the currently visible of the search button in the application.
+        /// </summary>
+        [ObservableProperty]
+        private bool _searchVisible;
+
+        public AsyncRelayCommand SearchCommand => new AsyncRelayCommand(async () =>
+        {
+            _searchCts?.Cancel(); // Stop the previous search task immediately
+
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                await DialogService.ShowAlertDialog("Missing Information",
+                    "Please fill in all fields before proceeding.", AppResources.Dialog_OK_Text);
+                return;
+            }
+            
+            SearchVisible = true;
+
+            _searchCts = new CancellationTokenSource();
+            try
+            {
+                // Debounce: Wait 300ms so we don't calculate on every letter 
+                await Task.Delay(300, _searchCts.Token);
+
+                var results = await _storageFinderService.FindGenericAsync(SearchText.Trim(), _searchCts.Token);
+
+                if (results == null || !results.Any())
+                {
+                    await MainThread.InvokeOnMainThreadAsync(() => SearchCategories.Clear());
+                    return;
+                }
+                var grouped = results
+                .GroupBy(x => string.IsNullOrEmpty(x.Category) ? "Uncategorized" : x.Category)
+                .Select(g =>
+                {
+                    var uniqueItems = g.GroupBy(x => x.BarcodeValue).Select(x => x.First()).ToList();
+                    var group = new StorageGroup
+                    {
+                        Category = g.Key,
+                        Items = new ObservableCollection<StorageEntry>(uniqueItems)
+                    };
+                    // Load first batch
+                    const int pageSize = 20;
+                    foreach (var item in uniqueItems.Take(pageSize))
+                        group.VisibleItems.Add(item);
+                    group.LoadedItemCount = group.VisibleItems.Count;
+                    return group;
+                });
+
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    SearchCategories.Clear();
+                    foreach (var group in grouped)
+                    {
+                        SearchCategories.Add(group);
+                    }
+                });
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Rootview:SearchCommand: error message {ex.Message}");
+            }
+        });
+
+        public AsyncRelayCommand SearchCloseCommand => new AsyncRelayCommand(async () =>
+        {
+            SearchText = string.Empty;
+            SearchVisible = false;
+        });
     }  
 }

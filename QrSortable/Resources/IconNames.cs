@@ -199,5 +199,10 @@ namespace QrSortable.Resources
         ///     The name of the refrace.
         /// </summary>
         public const string Refrace = "\uF140";
+
+        /// <summary>
+        ///     The name of the send.
+        /// </summary>
+        public const string Send = "\uF6a3";
     }
 }
