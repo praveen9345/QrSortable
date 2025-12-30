@@ -28,7 +28,6 @@
 
 
         private bool _isInitializeVisible = false;
-        private CancellationTokenSource _searchCts;
 
         /// <summary>
         ///     Gets or sets the collection of categories available in the system.
@@ -210,7 +209,9 @@
                         // Load first batch
                         const int pageSize = 20;
                         foreach (var item in uniqueItems.Take(pageSize))
+                        {
                             group.VisibleItems.Add(item);
+                        }
                         group.LoadedItemCount = group.VisibleItems.Count;
                         return group;
                     });
@@ -251,7 +252,6 @@
 
         public AsyncRelayCommand SearchCommand => new AsyncRelayCommand(async () =>
         {
-            _searchCts?.Cancel(); // Stop the previous search task immediately
 
             if (string.IsNullOrWhiteSpace(SearchText))
             {
@@ -262,46 +262,51 @@
             
             SearchVisible = true;
 
-            _searchCts = new CancellationTokenSource();
             try
             {
-                // Debounce: Wait 300ms so we don't calculate on every letter 
-                await Task.Delay(300, _searchCts.Token);
-
-                var results = await _storageFinderService.FindGenericAsync(SearchText.Trim(), _searchCts.Token);
+                var results = await _storageFinderService.FindGenericAsync(SearchText.Trim());
 
                 if (results == null || !results.Any())
                 {
                     await MainThread.InvokeOnMainThreadAsync(() => SearchCategories.Clear());
                     return;
                 }
-                var grouped = results
-                .GroupBy(x => string.IsNullOrEmpty(x.Category) ? "Uncategorized" : x.Category)
-                .Select(g =>
-                {
-                    var uniqueItems = g.GroupBy(x => x.BarcodeValue).Select(x => x.First()).ToList();
-                    var group = new StorageGroup
-                    {
-                        Category = g.Key,
-                        Items = new ObservableCollection<StorageEntry>(uniqueItems)
-                    };
-                    // Load first batch
-                    const int pageSize = 20;
-                    foreach (var item in uniqueItems.Take(pageSize))
-                        group.VisibleItems.Add(item);
-                    group.LoadedItemCount = group.VisibleItems.Count;
-                    return group;
-                });
 
-                await MainThread.InvokeOnMainThreadAsync(() =>
+                await DialogService.ShowActivityIndicatorAndReturnResult("Loading...", async () =>
                 {
-                    SearchCategories.Clear();
-                    foreach (var group in grouped)
-                    {
-                        SearchCategories.Add(group);
-                    }
-                });
 
+                   var grouped = results
+                    .GroupBy(x => string.IsNullOrEmpty(x.Category) ? "Uncategorized" : x.Category)
+                     .Select(g =>
+                     {
+                         var uniqueItems = g.GroupBy(x => x.BarcodeValue).Select(x => x.First()).ToList();
+                         var group = new StorageGroup
+                          {
+                                    Category = g.Key,
+                                    Items = new ObservableCollection<StorageEntry>(uniqueItems)
+                         };
+                         // Load first batch
+                         const int pageSize = 20;
+                         foreach (var item in uniqueItems.Take(pageSize))
+                         { 
+                             group.VisibleItems.Add(item); 
+                         }
+                         group.LoadedItemCount = group.VisibleItems.Count;
+                         return group;
+                     });
+
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        SearchCategories.Clear();
+                        foreach (var group in grouped)
+                        { 
+                            SearchCategories.Add(group); 
+                        }
+                    });
+
+                    return true;
+                });
+               
             }
             catch (Exception ex)
             {

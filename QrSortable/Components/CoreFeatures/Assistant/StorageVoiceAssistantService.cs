@@ -22,7 +22,6 @@
         {
             //TODO: pre-select the language
             _searchCts?.Cancel();
-            _searchCts?.Dispose();
 
             var spokenText = await RecognizeSpeechAsync();
 
