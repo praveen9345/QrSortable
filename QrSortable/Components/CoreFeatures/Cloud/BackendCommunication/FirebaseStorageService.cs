@@ -2,6 +2,7 @@
 {
     using QrSortable.Components.Configuration;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
+    using System.Net;
     using System.Net.Http.Headers;
 
     public class FirebaseStorageService : IFirebaseStorageService
@@ -30,15 +31,26 @@
                     $"?uploadType=media&name={Uri.EscapeDataString(fileName)}";
 
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
-                request.Headers.Authorization =
-                    new AuthenticationHeaderValue("Bearer", await GetIdTokenAsync());
+                
+                var token = await GetIdTokenAsync();
+                
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 request.Content = new ByteArrayContent(imageBytes);
                 request.Content.Headers.ContentType =
                     new MediaTypeHeaderValue("image/jpeg");
 
                 var response = await _client.SendAsync(request);
-                response.EnsureSuccessStatusCode();
+                // Ignore if file does not exist
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    return string.Empty;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var body = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Failed to upload image to Firebase Storage. ({response.StatusCode}): {body}");
+                    return string.Empty;
+                }
 
                 return
                     $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/" +
@@ -46,7 +58,8 @@
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to upload image to Firebase Storage.", ex);
+                Console.WriteLine($"Failed to upload image to Firebase Storage."+ ex);
+                return string.Empty;
             }
            
         }
@@ -68,7 +81,7 @@
                 // Extract the file path from the URL
                 var baseUrl = $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/";
                 if (!imageUrl.StartsWith(baseUrl))
-                    throw new Exception("Invalid Firebase Storage URL.");
+                    return;
 
                 // Get the encoded path
                 var encodedPath = imageUrl.Substring(baseUrl.Length);
@@ -79,15 +92,24 @@
                 var url = $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/{encodedPath}";
 
                 var request = new HttpRequestMessage(HttpMethod.Delete, url);
-                request.Headers.Authorization =
-                    new AuthenticationHeaderValue("Bearer", await GetIdTokenAsync());
+
+                var token = await GetIdTokenAsync();
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 var response = await _client.SendAsync(request);
-                response.EnsureSuccessStatusCode();
+                // Ignore if file does not exist
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    return;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var body = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Delete failed ({response.StatusCode}): {body}");
+                }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to delete image: {imageUrl}", ex);
+                Console.WriteLine($"Failed to delete image: {imageUrl}", ex);
             }
         }
 

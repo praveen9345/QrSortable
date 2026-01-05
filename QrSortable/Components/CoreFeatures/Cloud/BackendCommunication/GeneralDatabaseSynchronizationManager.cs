@@ -162,11 +162,13 @@
                 if (backendDoc != null && backendDoc.ContainsField("ImageUrls"))
                 {
                     var oldImageUrls = backendDoc.GetValue<List<string>>("ImageUrls")
-                        ?.Where(u => !string.IsNullOrWhiteSpace(u))
-                        .ToList();
+                        ?.Where(u => !string.IsNullOrWhiteSpace(u)).ToList();
 
                     if (oldImageUrls != null && oldImageUrls.Count > 0)
+                    {
                         await _firebaseStorageService.DeleteImagesAsync(oldImageUrls);
+                    }
+
                 }
 
                 // Upload new images

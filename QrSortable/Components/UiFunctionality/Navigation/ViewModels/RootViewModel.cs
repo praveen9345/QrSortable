@@ -268,7 +268,13 @@
 
                 if (results == null || !results.Any())
                 {
-                    await MainThread.InvokeOnMainThreadAsync(() => SearchCategories.Clear());
+                    await MainThread.InvokeOnMainThreadAsync(() => 
+                    {
+                        SearchCategories.Clear();
+                        SearchText = string.Empty;
+                        SearchVisible = false;
+                        _toastService.DisplayToast("No results found for your search.");
+                    });
                     return;
                 }
 
