@@ -12,105 +12,66 @@
 
         private readonly HttpClient _client = new();
 
-        // Retry configuration
-        private const int MaxRetryAttempts = 3;
-        private const int BaseDelayMilliseconds = 500;
-
-        public FirebaseStorageService(IFirebaseAuthService firebaseAuthService, IGeneralInformationManager generalInformationManager)
+        public FirebaseStorageService(IFirebaseAuthService firebaseAuthService, IGeneralInformationManager generalInformationManager) 
         {
             _firebaseAuthService = firebaseAuthService;
             _generalInformationManager = generalInformationManager;
         }
 
+
         public async Task<string> UploadAsync(byte[] imageBytes)
         {
-            try
-            {
+            try { 
                 var folderName = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
+                
                 var fileName = $"{folderName}/{Guid.NewGuid()}.jpg";
 
-                var endpointBase =
-                    $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o";
                 var url =
-                    $"{endpointBase}?uploadType=media&name={Uri.EscapeDataString(fileName)}";
+                    $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o" +
+                    $"?uploadType=media&name={Uri.EscapeDataString(fileName)}";
 
-                for (var attempt = 1; attempt <= MaxRetryAttempts; attempt++)
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                
+                var token = await GetIdTokenAsync();
+                
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                request.Content = new ByteArrayContent(imageBytes);
+                request.Content.Headers.ContentType =
+                    new MediaTypeHeaderValue("image/jpeg");
+
+                var response = await _client.SendAsync(request);
+                // Ignore if file does not exist
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    return string.Empty;
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    try
-                    {
-                        var request = new HttpRequestMessage(HttpMethod.Post, url);
-
-                        var token = await GetIdTokenAsync();
-                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-                        // Create fresh content for each attempt
-                        request.Content = new ByteArrayContent(imageBytes);
-                        request.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-
-                        var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-
-                        // Ignore if file does not exist (unexpected for upload, but preserve existing behavior)
-                        if (response.StatusCode == HttpStatusCode.NotFound)
-                            return string.Empty;
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            return
-                                $"{endpointBase}/" +
-                                $"{Uri.EscapeDataString(fileName)}?alt=media";
-                        }
-
-                        // If unauthorized, refresh token once and retry immediately
-                        if (response.StatusCode == HttpStatusCode.Unauthorized)
-                        {
-                            await SecureStorage.SetAsync("firebase_id_token", string.Empty);
-                            // log and continue to next attempt which will request new token
-                            Console.WriteLine($"Upload attempt {attempt} unauthorized; refreshing token and retrying.");
-                        }
-                        else
-                        {
-                            var body = await response.Content.ReadAsStringAsync();
-                            Console.WriteLine($"Upload attempt {attempt} failed ({response.StatusCode}): {body}");
-                        }
-
-                        // Decide whether to retry based on status code
-                        if (attempt == MaxRetryAttempts || !IsTransientStatusCode(response.StatusCode))
-                            return string.Empty;
-                    }
-                    catch (HttpRequestException hre)
-                    {
-                        Console.WriteLine($"Upload attempt {attempt} encountered network error: {hre.Message}");
-                        if (attempt == MaxRetryAttempts)
-                            return string.Empty;
-                    }
-                    catch (TaskCanceledException tce)
-                    {
-                        Console.WriteLine($"Upload attempt {attempt} timed out or canceled: {tce.Message}");
-                        if (attempt == MaxRetryAttempts)
-                            return string.Empty;
-                    }
-
-                    // Backoff before next attempt
-                    await DelayWithJitterAsync(attempt);
+                    var body = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Failed to upload image to Firebase Storage. ({response.StatusCode}): {body}");
+                    return string.Empty;
                 }
 
-                return string.Empty;
+                return
+                    $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/" +
+                    $"{Uri.EscapeDataString(fileName)}?alt=media";
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to upload image to Firebase Storage. {ex}");
+                Console.WriteLine($"Failed to upload image to Firebase Storage."+ ex);
                 return string.Empty;
             }
+           
         }
 
         public async Task<IList<string>> UploadImagesAsync(IList<byte[]> imageList)
-        {
-            var uploadTasks = imageList
-                .Select(image => UploadAsync(image))
-                .ToList();
+            {
+                var uploadTasks = imageList
+                    .Select(image => UploadAsync(image))
+                    .ToList();
 
-            var urls = await Task.WhenAll(uploadTasks);
-            return urls.ToList();
+                var urls = await Task.WhenAll(uploadTasks);
+                return urls.ToList();
         }
 
         public async Task DeleteAsync(string imageUrl)
@@ -130,57 +91,25 @@
 
                 var url = $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/{encodedPath}";
 
-                for (var attempt = 1; attempt <= MaxRetryAttempts; attempt++)
+                var request = new HttpRequestMessage(HttpMethod.Delete, url);
+
+                var token = await GetIdTokenAsync();
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var response = await _client.SendAsync(request);
+                // Ignore if file does not exist
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    return;
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    try
-                    {
-                        var request = new HttpRequestMessage(HttpMethod.Delete, url);
-
-                        var token = await GetIdTokenAsync();
-                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-                        var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-
-                        // Ignore if file does not exist
-                        if (response.StatusCode == HttpStatusCode.NotFound)
-                            return;
-
-                        if (response.IsSuccessStatusCode)
-                            return;
-
-                        if (response.StatusCode == HttpStatusCode.Unauthorized)
-                        {
-                            await SecureStorage.SetAsync("firebase_id_token", string.Empty);
-                            Console.WriteLine($"Delete attempt {attempt} unauthorized; refreshing token and retrying.");
-                        }
-                        else
-                        {
-                            var body = await response.Content.ReadAsStringAsync();
-                            Console.WriteLine($"Delete attempt {attempt} failed ({response.StatusCode}): {body}");
-                        }
-
-                        if (attempt == MaxRetryAttempts || !IsTransientStatusCode(response.StatusCode))
-                            return;
-                    }
-                    catch (HttpRequestException hre)
-                    {
-                        Console.WriteLine($"Delete attempt {attempt} encountered network error: {hre.Message}");
-                        if (attempt == MaxRetryAttempts)
-                            return;
-                    }
-                    catch (TaskCanceledException tce)
-                    {
-                        Console.WriteLine($"Delete attempt {attempt} timed out or canceled: {tce.Message}");
-                        if (attempt == MaxRetryAttempts)
-                            return;
-                    }
-
-                    await DelayWithJitterAsync(attempt);
+                    var body = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Delete failed ({response.StatusCode}): {body}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to delete image: {imageUrl}. {ex}");
+                Console.WriteLine($"Failed to delete image: {imageUrl}", ex);
             }
         }
 
@@ -205,26 +134,6 @@
             var downloadTasks = urls.Select(DownloadImageAsync);
             var results = await Task.WhenAll(downloadTasks);
             return results.ToList();
-        }
-
-        private static bool IsTransientStatusCode(HttpStatusCode statusCode)
-        {
-            return statusCode == HttpStatusCode.RequestTimeout || // 408
-                   statusCode == (HttpStatusCode)429 || // Too Many Requests
-                   statusCode == HttpStatusCode.InternalServerError || // 500
-                   statusCode == HttpStatusCode.BadGateway || // 502
-                   statusCode == HttpStatusCode.ServiceUnavailable || // 503
-                   statusCode == HttpStatusCode.GatewayTimeout; // 504
-        }
-
-        private static Task DelayWithJitterAsync(int attempt)
-        {
-            // exponential backoff with jitter
-            var rand = Random.Shared;
-            var exponential = BaseDelayMilliseconds * Math.Pow(2, attempt - 1);
-            var jitter = rand.Next(0, 250);
-            var delay = TimeSpan.FromMilliseconds(exponential + jitter);
-            return Task.Delay(delay);
         }
 
         private async Task<string> GetIdTokenAsync()
