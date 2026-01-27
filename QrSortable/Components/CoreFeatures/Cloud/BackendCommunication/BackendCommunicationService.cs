@@ -20,13 +20,11 @@
         private readonly ISharedMethodService _sharedMethodService;
         private readonly IBackendDatabaseManager _backendDatabaseManager;
         private readonly IBackendDatabaseHelper _backendDatabaseHelper;
-        private FirestoreDb Db { get; set; }
 
         public BackendCommunicationService(IAesHelper aesHelper, IFirebaseStorageService firebaseStorageService,
             IGeneralInformationManager generalInformationManager, ISharedMethodService sharedMethodService,
             IBackendDatabaseManager backendDatabaseManager, IBackendDatabaseHelper backendDatabaseHelper)
         {
-            Db = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
             _aesHelper = aesHelper;
             _firebaseStorageService = firebaseStorageService;
             _generalInformationManager = generalInformationManager;
@@ -39,7 +37,9 @@
 
         public async Task<bool> ValidateMultiuserIdAsync(string multiuserId)
         {
-            var collection = Db.Collection("StorageEntries");
+            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+
+            var collection = firestoreDb.Collection("StorageEntries");
 
             var querySnapshot = await collection.WhereEqualTo("MultiuserId", 
                 multiuserId).GetSnapshotAsync();
@@ -57,6 +57,8 @@
             var type = data.GetType();
             var storageEntry = type.GetProperty("Category");
             var orderEntry = type.GetProperty("Title");
+
+            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
 
             var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
 
@@ -84,7 +86,7 @@
                     try
                     {
                         // Append new document (auto id) instead of using MultiuserId as document id
-                        await Db.Collection("StorageEntries").AddAsync(document);
+                        await firestoreDb.Collection("StorageEntries").AddAsync(document);
                         return true;
                     }
                     catch (Exception ex)
@@ -127,7 +129,7 @@
                     try
                     {
                         // Append new document (auto id) instead of using MultiuserId as document id
-                        await Db.Collection("Orders").AddAsync(document);
+                        await firestoreDb.Collection("Orders").AddAsync(document);
                         return true;
                     }
                     catch (Exception ex)
@@ -158,13 +160,14 @@
             var type = data.GetType();
             var storageEntry = type.GetProperty("Category");
             var orderEntry = type.GetProperty("Title");
+            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
 
             var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
             try
             {
                 if (storageEntry != null)
                 {
-                    var collection = Db.Collection("StorageEntries");
+                    var collection = firestoreDb.Collection("StorageEntries");
                     
                     // Step 1: Get all documents matching MultiuserId
                     var querySnapshot = await collection
@@ -275,7 +278,7 @@
 
                     try
                     {
-                        Query query = Db.Collection("Orders").WhereEqualTo("OrderId", dataDec.OrderId)
+                        Query query = firestoreDb.Collection("Orders").WhereEqualTo("OrderId", dataDec.OrderId)
                         .Limit(1); // OrderId should be unique
 
                         QuerySnapshot snapshot = await query.GetSnapshotAsync();
@@ -285,7 +288,7 @@
                             return false; // Not found
                         }
  
-                        await Db.Collection("Orders").Document(snapshot.Documents[0].Id).
+                        await firestoreDb.Collection("Orders").Document(snapshot.Documents[0].Id).
                             SetAsync(document, SetOptions.Overwrite);
 
                         return true;
@@ -318,11 +321,12 @@
             var type = data.GetType();
             var storageEntry = type.GetProperty("Category");
             var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
+            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
             try
             {
                 if (storageEntry != null)
                 {
-                    var collection = Db.Collection("StorageEntries");
+                    var collection = firestoreDb.Collection("StorageEntries");
 
                     // Step 1: Get all documents matching MultiuserId
                     var querySnapshot = await collection
@@ -395,7 +399,8 @@
         public async Task<List<T>> GetAllAsync<T>() where T : FirestoreData, new()
         {
             var temp = new T();
-            var snapshot = await Db.Collection(temp.CollectionName).GetSnapshotAsync();
+            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var snapshot = await firestoreDb.Collection(temp.CollectionName).GetSnapshotAsync();
 
             var result = new List<T>();
             foreach (var doc in snapshot.Documents)
@@ -409,7 +414,8 @@
         public async Task<T?> GetAsync<T>(string id) where T : FirestoreData, new()
         {
             var temp = new T();
-            var docRef = Db.Collection(temp.CollectionName).Document(id);
+            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var docRef = firestoreDb.Collection(temp.CollectionName).Document(id);
             var snapshot = await docRef.GetSnapshotAsync();
 
             if (!snapshot.Exists) return null;
@@ -437,8 +443,9 @@
         {
             if (string.IsNullOrWhiteSpace(multiuserId)) throw new ArgumentException(nameof(multiuserId));
 
+            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
             var temp = new T();
-            var snapshot = await Db.Collection(temp.CollectionName)
+            var snapshot = await firestoreDb.Collection(temp.CollectionName)
                                     .WhereEqualTo("MultiuserId", multiuserId)
                                     .GetSnapshotAsync();
 
