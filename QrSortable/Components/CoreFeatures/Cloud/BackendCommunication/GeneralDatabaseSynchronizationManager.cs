@@ -21,8 +21,8 @@
         private readonly IFirebaseStorageService _firebaseStorageService;
         private readonly ISharedMethodService _sharedMethodService;
 
-        public GeneralDatabaseSynchronizationManager(IDatabaseManager databaseManager,IGeneralInformationManager generalInfoManager,
-            IToastService toast, IConnectivityService connectivityService,IFirebaseStorageService firebaseStorageService,
+        public GeneralDatabaseSynchronizationManager(IDatabaseManager databaseManager, IGeneralInformationManager generalInfoManager,
+            IToastService toast, IConnectivityService connectivityService, IFirebaseStorageService firebaseStorageService,
             ISharedMethodService sharedMethodService)
         {
             _databaseManager = databaseManager;
@@ -76,7 +76,7 @@
             var localEntries = dbStorage.ToDictionary(e => _sharedMethodService.ConvertToString(e.StorageId));
 
             // Early return if data is identical
-            if(backendEntries.Count == localEntries.Count) 
+            if (backendEntries.Count == localEntries.Count)
             {
                 bool allSame = true;
 
@@ -93,7 +93,7 @@
 
                     // Download backend images
                     var backendImageUrls = backendDoc.ContainsField("ImageUrls")
-                        ? backendDoc.GetValue<List<string>>("ImageUrls"): new List<string>();
+                        ? backendDoc.GetValue<List<string>>("ImageUrls") : new List<string>();
 
                     var backendImages = await _firebaseStorageService.DownloadImagesAsync(backendImageUrls);
 
@@ -122,7 +122,7 @@
                     return true; // All data matches → skip sync
                 }
             }
-            
+
             // No backend → upload all
             if (querySnapshot.Count == 0)
             {
@@ -130,23 +130,32 @@
                 {
                     var imageUrls = await _firebaseStorageService.UploadImagesAsync(entry.ImageList);
 
-                    var document = new Dictionary<string, object>
+                    if (imageUrls[0] == "error")
                     {
-                        { "MultiuserId",  multiuserId ?? string.Empty },
-                        { "StorageId", _sharedMethodService.ConvertToString(entry.StorageId) ?? string.Empty },
-                        { "Category", entry.Category ?? string.Empty },
-                        { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },
-                        { "BarcodeValue", entry.BarcodeValue ?? string.Empty },
-                        { "BarcodeType", entry.BarcodeType ?? string.Empty },
-                        { "Location", entry.Location ?? string.Empty },
-                        { "SearchInfo", entry.SearchInfo ?? string.Empty },
-                        { "ItemName", entry.ItemName ?? string.Empty },
-                        { "Description", entry.Description ?? string.Empty },
-                        { "ImageUrls", imageUrls ?? new List<string>() },
-                        { "BackgroundColorHex", entry.BackgroundColorHex ?? string.Empty }
-                    };
+                        await _toast.DisplayToast("Something went wrong. please try again.");
+                        return false;
+                    }
+                    else
+                    {
+                        var document = new Dictionary<string, object>
+                        {
+                            { "MultiuserId",  multiuserId ?? string.Empty },
+                            { "StorageId", _sharedMethodService.ConvertToString(entry.StorageId) ?? string.Empty },
+                            { "Category", entry.Category ?? string.Empty },
+                            { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },
+                            { "BarcodeValue", entry.BarcodeValue ?? string.Empty },
+                            { "BarcodeType", entry.BarcodeType ?? string.Empty },
+                            { "Location", entry.Location ?? string.Empty },
+                            { "SearchInfo", entry.SearchInfo ?? string.Empty },
+                            { "ItemName", entry.ItemName ?? string.Empty },
+                            { "Description", entry.Description ?? string.Empty },
+                            { "ImageUrls", imageUrls ?? new List<string>() },
+                            { "BackgroundColorHex", entry.BackgroundColorHex ?? string.Empty }
+                        };
 
-                    await collection.AddAsync(document);
+                        await collection.AddAsync(document);
+                    }
+
                 }
                 return true;
             }
@@ -166,13 +175,24 @@
 
                     if (oldImageUrls != null && oldImageUrls.Count > 0)
                     {
-                        await _firebaseStorageService.DeleteImagesAsync(oldImageUrls);
+                        var isSuccess = await _firebaseStorageService.DeleteImagesAsync(oldImageUrls);
+                        if (!isSuccess)
+                        {
+                            await _toast.DisplayToast("Something went wrong. please try again.");
+                            return false;
+                        }
                     }
 
                 }
 
                 // Upload new images
                 var imageUrls = await _firebaseStorageService.UploadImagesAsync(entry.ImageList);
+
+                if (imageUrls[0] == "error")
+                {
+                    await _toast.DisplayToast("Something went wrong. please try again.");
+                    return false;
+                }
 
                 var document = new Dictionary<string, object>
                 {
@@ -204,6 +224,12 @@
 
                 var imageUrls = doc.ContainsField("ImageUrls") ? doc.GetValue<List<string>>("ImageUrls") : new List<string>();
                 var images = await _firebaseStorageService.DownloadImagesAsync(imageUrls);
+                
+                if (images == null || images.Count == 0)
+                {
+                    await _toast.DisplayToast("Something went wrong. please try again.");
+                    return false;
+                }
 
                 if (localEntries.TryGetValue(storageId, out var local))
                 {
@@ -253,7 +279,10 @@
             {
                 var storageId = _sharedMethodService.ConvertToString(local.StorageId);
                 if (!backendEntries.ContainsKey(storageId))
+                {
                     await _databaseManager.DeleteAsync(local);
+                }
+                    
             }
 
             return true;
@@ -328,6 +357,11 @@
                 foreach (var entry in dbStorage)
                 {
                     var imageUrls = await _firebaseStorageService.UploadImagesAsync(entry.ImageList);
+
+                    if (imageUrls[0] == "error")
+                    {
+                        return false;
+                    }
 
                     var document = new Dictionary<string, object>
                     {

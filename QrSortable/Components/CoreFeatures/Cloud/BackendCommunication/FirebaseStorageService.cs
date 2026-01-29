@@ -4,6 +4,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using System.Net;
     using System.Net.Http.Headers;
+    using System.Text.Json;
 
     public class FirebaseStorageService : IFirebaseStorageService, IDisposable
     {
@@ -12,20 +13,28 @@
         private readonly HttpClient _client;
         private bool _disposed;
 
+        private const string Error = "error";
+        private const string TokenKey = "firebase_id_token";
+
         public FirebaseStorageService(
             IFirebaseAuthService firebaseAuthService,
             IGeneralInformationManager generalInformationManager)
         {
             _firebaseAuthService = firebaseAuthService;
             _generalInformationManager = generalInformationManager;
-            _client = new HttpClient();
-            _client.Timeout = TimeSpan.FromSeconds(30);
+
+            _client = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(30)
+            };
         }
+
+        // -------------------- UPLOAD --------------------
 
         public async Task<string> UploadAsync(byte[] imageBytes)
         {
             if (imageBytes == null || imageBytes.Length == 0)
-                return string.Empty;
+                return Error;
 
             try
             {
@@ -33,31 +42,27 @@
                 var folderName = generalInfo?.MultiUserId ?? "default";
                 var fileName = $"{folderName}/{Guid.NewGuid()}.jpg";
 
-                var url = $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o" +
-                         $"?uploadType=media&name={Uri.EscapeDataString(fileName)}";
+                var uploadUrl =
+                    $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o" +
+                    $"?uploadType=media&name={Uri.EscapeDataString(fileName)}";
 
-                var token = await GetIdTokenAsync();
-                if (string.IsNullOrEmpty(token))
-                    return string.Empty;
-
-                var request = new HttpRequestMessage(HttpMethod.Post, url);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                request.Content = new ByteArrayContent(imageBytes);
-                request.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-
-                var response = await _client.SendAsync(request);
+                var response = await SendAuthorizedAsync(
+                    HttpMethod.Post,
+                    uploadUrl,
+                    imageBytes,
+                    "image/jpeg");
 
                 if (!response.IsSuccessStatusCode)
-                {
-                    return string.Empty;
-                }
+                    return Error;
 
-                return $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/" +
-                       $"{Uri.EscapeDataString(fileName)}?alt=media";
+                // Public download URL
+                return
+                    $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/" +
+                    $"{Uri.EscapeDataString(fileName)}?alt=media";
             }
             catch
             {
-                return string.Empty;
+                return Error;
             }
         }
 
@@ -66,62 +71,72 @@
             if (imageList == null || imageList.Count == 0)
                 return new List<string>();
 
-            var tasks = imageList.Select(image => UploadAsync(image));
+            var tasks = imageList.Select(UploadAsync);
             var results = await Task.WhenAll(tasks);
-            return results.Where(url => !string.IsNullOrEmpty(url)).ToList();
+
+            return results.Where(r => r != Error).ToList();
         }
 
-        public async Task DeleteAsync(string imageUrl)
+        // -------------------- DELETE --------------------
+
+        public async Task<bool> DeleteAsync(string imageUrl)
         {
-            if (string.IsNullOrEmpty(imageUrl))
-                return;
+            if (string.IsNullOrWhiteSpace(imageUrl))
+                return false;
 
             try
             {
-                // Extract file path from URL
-                var baseUrl = $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/";
-                if (!imageUrl.StartsWith(baseUrl))
-                    return;
+                var uri = new Uri(imageUrl);
 
-                var encodedPath = imageUrl.Substring(baseUrl.Length);
-                var questionMarkIndex = encodedPath.IndexOf("?");
-                if (questionMarkIndex >= 0)
-                    encodedPath = encodedPath.Substring(0, questionMarkIndex);
+                // Extract object path after `/o/`
+                var objectName = Uri.UnescapeDataString(
+                    uri.AbsolutePath.Split("/o/")[1]
+                );
 
-                var url = $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/{encodedPath}";
-                var token = await GetIdTokenAsync();
+                var deleteUrl =
+                    $"https://firebasestorage.googleapis.com/v0/b/{FirebaseConfig.BUCKET}/o/{Uri.EscapeDataString(objectName)}";
 
-                if (string.IsNullOrEmpty(token))
-                    return;
+                var response = await SendAuthorizedAsync(HttpMethod.Delete, deleteUrl);
 
-                var request = new HttpRequestMessage(HttpMethod.Delete, url);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                // 404 = already deleted → treat as success
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    return true;
 
-                await _client.SendAsync(request);
+                return response.IsSuccessStatusCode;
             }
             catch
             {
-                // Ignore delete errors
+                return false;
             }
         }
 
-        public async Task DeleteImagesAsync(IList<string> imageUrls)
+        public async Task<bool> DeleteImagesAsync(IList<string> imageUrls)
         {
             if (imageUrls == null || imageUrls.Count == 0)
-                return;
+                return false;
 
-            var tasks = imageUrls.Select(url => DeleteAsync(url));
-            await Task.WhenAll(tasks);
+            var tasks = imageUrls.Select(DeleteAsync);
+            var results = await Task.WhenAll(tasks);
+
+            return results.All(r => r);
         }
+
+        // -------------------- DOWNLOAD --------------------
+        // ⚠️ Public URLs should NOT be authorized
 
         public async Task<byte[]> DownloadImageAsync(string url)
         {
-            if (string.IsNullOrEmpty(url))
+            if (string.IsNullOrWhiteSpace(url))
                 return Array.Empty<byte>();
 
             try
             {
-                return await _client.GetByteArrayAsync(url);
+                var response = await _client.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                    return Array.Empty<byte>();
+
+                return await response.Content.ReadAsByteArrayAsync();
             }
             catch
             {
@@ -136,37 +151,93 @@
 
             var tasks = urls.Select(DownloadImageAsync);
             var results = await Task.WhenAll(tasks);
-            return results.Where(img => img.Length > 0).ToList();
+
+            return results.Where(r => r.Length > 0).ToList();
         }
 
-        private async Task<string> GetIdTokenAsync()
+        // -------------------- AUTH CORE --------------------
+
+        private async Task<HttpResponseMessage> SendAuthorizedAsync(
+            HttpMethod method,
+            string url,
+            byte[]? contentBytes = null,
+            string? contentType = null)
+        {
+            var token = await GetIdTokenAsync();
+
+            var request = CreateRequest(method, url, token, contentBytes, contentType);
+            var response = await _client.SendAsync(request);
+
+            // Token invalid → refresh once
+            if (response.StatusCode == HttpStatusCode.Forbidden ||
+                response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                SecureStorage.Remove(TokenKey);
+
+                token = await GetIdTokenAsync(forceRefresh: true);
+                request = CreateRequest(method, url, token, contentBytes, contentType);
+
+                response = await _client.SendAsync(request);
+            }
+
+            return response;
+        }
+
+        private static HttpRequestMessage CreateRequest(
+            HttpMethod method,
+            string url,
+            string token,
+            byte[]? contentBytes,
+            string? contentType)
+        {
+            var request = new HttpRequestMessage(method, url);
+            request.Headers.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            if (contentBytes != null)
+            {
+                request.Content = new ByteArrayContent(contentBytes);
+                request.Content.Headers.ContentType =
+                    new MediaTypeHeaderValue(contentType);
+            }
+
+            return request;
+        }
+
+        private async Task<string> GetIdTokenAsync(bool forceRefresh = false)
         {
             try
             {
-                var token = await SecureStorage.GetAsync("firebase_id_token");
+                if (forceRefresh)
+                    SecureStorage.Remove(TokenKey);
+
+                var token = await SecureStorage.GetAsync(TokenKey);
+
                 if (string.IsNullOrEmpty(token))
                 {
                     token = await _firebaseAuthService.SignInAnonymouslyAsync();
                     if (!string.IsNullOrEmpty(token))
-                    {
-                        await SecureStorage.SetAsync("firebase_id_token", token);
-                    }
+                        await SecureStorage.SetAsync(TokenKey, token);
                 }
+
                 return token ?? string.Empty;
             }
             catch
             {
+                SecureStorage.Remove(TokenKey);
                 return string.Empty;
             }
         }
 
+        // -------------------- DISPOSE --------------------
+
         public void Dispose()
         {
-            if (!_disposed)
-            {
-                _client?.Dispose();
-                _disposed = true;
-            }
+            if (_disposed)
+                return;
+
+            _client.Dispose();
+            _disposed = true;
         }
     }
 }

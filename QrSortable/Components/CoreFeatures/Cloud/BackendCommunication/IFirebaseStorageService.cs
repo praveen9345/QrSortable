@@ -6,9 +6,9 @@
 
         Task<IList<string>> UploadImagesAsync(IList<byte[]> imageList);
 
-        Task DeleteAsync(string imageUrl);
+        Task<bool> DeleteAsync(string imageUrl);
 
-        Task DeleteImagesAsync(IList<string> imageUrls);
+        Task<bool> DeleteImagesAsync(IList<string> imageUrls);
 
         Task<byte[]> DownloadImageAsync(string url);
 

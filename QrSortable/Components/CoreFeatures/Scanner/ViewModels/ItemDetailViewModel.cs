@@ -192,6 +192,16 @@
 
         public AsyncRelayCommand AddItemImagesCommand => new AsyncRelayCommand(async () =>
         {
+
+            if (_imageArrayDb != null && _imageArrayDb.Count >= 4)
+            {
+                await DialogService.ShowAlertDialog(
+                    "You can add a maximum of 4 images only.",
+                    AppResources.Dialog_OK_Text
+                );
+                return;
+            }
+
             var picture = (int)await DialogService.ShowPhotoSelectionDialog();
 
             if(picture == (int)PhotoSelectionResponse.Camera)
@@ -239,6 +249,16 @@
             {
                 await DialogService.ShowAlertDialog(
                     "ItemName and ItemDescription fields are required and cannot be left empty.",
+                    AppResources.Dialog_OK_Text
+                );
+                return;
+            }
+
+            // Require at least 1 image
+            if (_imageArrayDb == null || _imageArrayDb.Count < 1)
+            {
+                await DialogService.ShowAlertDialog(
+                    "Please add at least one image before saving the item.",
                     AppResources.Dialog_OK_Text
                 );
                 return;

@@ -7,6 +7,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.Backend.Helper;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.PlatformUtils;
+    using QrSortable.Components.UiFunctionality.Notification;
     using System;
     using System.Collections.Generic;
     using System.Text.Json;
@@ -20,10 +21,11 @@
         private readonly ISharedMethodService _sharedMethodService;
         private readonly IBackendDatabaseManager _backendDatabaseManager;
         private readonly IBackendDatabaseHelper _backendDatabaseHelper;
+        private readonly IToastService _toastService;
 
         public BackendCommunicationService(IAesHelper aesHelper, IFirebaseStorageService firebaseStorageService,
             IGeneralInformationManager generalInformationManager, ISharedMethodService sharedMethodService,
-            IBackendDatabaseManager backendDatabaseManager, IBackendDatabaseHelper backendDatabaseHelper)
+            IBackendDatabaseManager backendDatabaseManager, IBackendDatabaseHelper backendDatabaseHelper, IToastService toastService)
         {
             _aesHelper = aesHelper;
             _firebaseStorageService = firebaseStorageService;
@@ -31,7 +33,8 @@
             _sharedMethodService = sharedMethodService;
             _backendDatabaseManager = backendDatabaseManager;
             _backendDatabaseHelper = backendDatabaseHelper;
-            
+            _toastService = toastService;
+
         }
 
 
@@ -41,7 +44,7 @@
 
             var collection = firestoreDb.Collection("StorageEntries");
 
-            var querySnapshot = await collection.WhereEqualTo("MultiuserId", 
+            var querySnapshot = await collection.WhereEqualTo("MultiuserId",
                 multiuserId).GetSnapshotAsync();
 
             if (querySnapshot.Count == 0) return false;
@@ -51,7 +54,7 @@
         /// <summary>
         /// Inserts a DTO into Firestore by appending a new document (auto-generated id).
         /// </summary>
-        public async Task<bool> InsertAsync<T>(T data, bool isFrombackendSync = false) 
+        public async Task<bool> InsertAsync<T>(T data, bool isFrombackendSync = false)
         {
             dynamic dataDec = data;
             var type = data.GetType();
@@ -64,44 +67,52 @@
 
             try
             {
-                if (storageEntry != null) 
+                if (storageEntry != null)
                 {
-                    var imageUrls = await _firebaseStorageService.UploadImagesAsync(dataDec.ImageList);
-                    
-                    var document = new Dictionary<string, object>
-                    {
-                        { "MultiuserId", multiuserId ?? string.Empty },
-                        { "StorageId", _sharedMethodService.ConvertToString(dataDec.StorageId) ?? string.Empty},
-                        { "Category", dataDec.Category ?? string.Empty},
-                        { "CreatedDate", _sharedMethodService.ConvertToString(dataDec.CreatedDate) ?? string.Empty},
-                        { "BarcodeValue", dataDec.BarcodeValue ?? string.Empty},
-                        { "BarcodeType", dataDec.BarcodeType ?? string.Empty},
-                        { "Location", dataDec.Location ?? string.Empty},
-                        { "SearchInfo", dataDec.SearchInfo ?? string.Empty},
-                        { "ItemName", dataDec.ItemName ?? string.Empty},
-                        { "Description", dataDec.Description ?? string.Empty},
-                        { "ImageUrls", imageUrls ?? new List<string>()},
-                        { "BackgroundColorHex", dataDec.BackgroundColorHex ?? string.Empty}
-                    };
                     try
                     {
-                        // Append new document (auto id) instead of using MultiuserId as document id
-                        await firestoreDb.Collection("StorageEntries").AddAsync(document);
-                        return true;
+                        var imageUrls = await _firebaseStorageService.UploadImagesAsync(dataDec.ImageList);
+
+                        if (imageUrls[0] == "error")
+                        {
+                            throw new Exception("Image upload failed");
+                        }
+                        else
+                        {
+                            var document = new Dictionary<string, object>
+                            {
+                                { "MultiuserId", multiuserId ?? string.Empty },
+                                { "StorageId", _sharedMethodService.ConvertToString(dataDec.StorageId) ?? string.Empty},
+                                { "Category", dataDec.Category ?? string.Empty},
+                                { "CreatedDate", _sharedMethodService.ConvertToString(dataDec.CreatedDate) ?? string.Empty},
+                                { "BarcodeValue", dataDec.BarcodeValue ?? string.Empty},
+                                { "BarcodeType", dataDec.BarcodeType ?? string.Empty},
+                                { "Location", dataDec.Location ?? string.Empty},
+                                { "SearchInfo", dataDec.SearchInfo ?? string.Empty},
+                                { "ItemName", dataDec.ItemName ?? string.Empty},
+                                { "Description", dataDec.Description ?? string.Empty},
+                                { "ImageUrls", imageUrls ?? new List<string>()},
+                                { "BackgroundColorHex", dataDec.BackgroundColorHex ?? string.Empty}
+                            };
+
+                            // Append new document (auto id) instead of using MultiuserId as document id
+                            await firestoreDb.Collection("StorageEntries").AddAsync(document);
+                            return true;
+                        }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"BackendCommunicationService.InsertAsync (DtoStorageEntryModel append) failed: {ex}");
                         if (!isFrombackendSync)
                         {
-                            var  dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(dataDec, "false");
+                            var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(dataDec, "false");
                             _backendDatabaseHelper.SaveToTheBackendAsync(dto);
                         }
                         return false;
                     }
 
                 }
-                else if(orderEntry != null) 
+                else if (orderEntry != null)
                 {
                     var document = new Dictionary<string, object>
                     {
@@ -143,7 +154,7 @@
                         }
                         return false;
                     }
-                    
+
                 }
                 return false;
             }
@@ -151,7 +162,7 @@
             {
                 Console.WriteLine($"BackendCommunicationService.InsertAsync: validation failed: {ex}");
                 return false;
-            }  
+            }
         }
 
         public async Task<bool> UpdateAsync<T>(T data, bool isFrombackendSync = false)
@@ -167,80 +178,93 @@
             {
                 if (storageEntry != null)
                 {
-                    var collection = firestoreDb.Collection("StorageEntries");
-                    
-                    // Step 1: Get all documents matching MultiuserId
-                    var querySnapshot = await collection
-                        .WhereEqualTo("MultiuserId", multiuserId)
-                        .GetSnapshotAsync();
-
-                    if (querySnapshot.Count == 0)
-                    {
-                        Console.WriteLine($"No documents found with MultiuserId");
-                        return false;
-                    }
-
-                    // Step 2: Find the document that matches 
-                    DocumentSnapshot? targetDoc = null;
-                    foreach (var doc in querySnapshot.Documents)
-                    {
-
-                        if (doc.ContainsField("CreatedDate") &&
-                               doc.ContainsField("BarcodeValue") &&
-                               doc.ContainsField("ItemName") &&
-                               doc.GetValue<string>("CreatedDate") == _sharedMethodService.ConvertToString(dataDec.CreatedDate) &&
-                               doc.GetValue<string>("BarcodeValue") == dataDec.BarcodeValue &&
-                               doc.GetValue<string>("ItemName") == dataDec.ItemName)
-                        {
-                            targetDoc = doc;
-
-                            //Delete old images from Firebase Storage
-                            var imageUrlsFb = doc.GetValue<List<string>>("ImageUrls")?
-                                               .Where(u => !string.IsNullOrWhiteSpace(u))
-                                               .ToList();
-
-                            if (imageUrlsFb != null && imageUrlsFb.Count > 0)
-                            {
-                                await _firebaseStorageService.DeleteImagesAsync(imageUrlsFb);
-                            }
-
-                            break;
-                        }
-                    }
-
-                    if (targetDoc == null)
-                    {
-                        Console.WriteLine($"No document found with MultiuserId and CreatedDate={dataDec.CreatedDate}");
-                        return false;
-                    }
-
-                    // Step 3: Update the document
-                    var imageUrls = await _firebaseStorageService.UploadImagesAsync(dataDec.ImageList);
-
-                    var document = new Dictionary<string, object>
-                    {
-                       { "MultiuserId", multiuserId ?? string.Empty },
-                       { "StorageId", _sharedMethodService.ConvertToString(dataDec.StorageId) ?? string.Empty},
-                       { "Category", dataDec.Category ?? string.Empty},
-                       { "CreatedDate", _sharedMethodService.ConvertToString(dataDec.CreatedDate) ?? string.Empty},
-                       { "BarcodeValue", dataDec.BarcodeValue ?? string.Empty},
-                       { "BarcodeType", dataDec.BarcodeType ?? string.Empty},
-                       { "Location", dataDec.Location ?? string.Empty},
-                       { "SearchInfo", dataDec.SearchInfo ?? string.Empty},
-                       { "ItemName", dataDec.ItemName ?? string.Empty},
-                       { "Description", dataDec.Description ?? string.Empty},
-                       { "ImageUrls", imageUrls ?? new List<string>()},
-                       { "BackgroundColorHex", dataDec.BackgroundColorHex ?? string.Empty}
-                    };
 
                     try
                     {
-                        await collection.Document(targetDoc.Id).SetAsync(document, SetOptions.Overwrite);
-                        return true;
+                        var collection = firestoreDb.Collection("StorageEntries");
+
+                        // Step 1: Get all documents matching MultiuserId
+                        var querySnapshot = await collection
+                            .WhereEqualTo("MultiuserId", multiuserId)
+                            .GetSnapshotAsync();
+
+                        if (querySnapshot.Count == 0)
+                        {
+                            Console.WriteLine($"No documents found with MultiuserId");
+                            return false;
+                        }
+
+                        // Step 2: Find the document that matches 
+                        DocumentSnapshot? targetDoc = null;
+                        foreach (var doc in querySnapshot.Documents)
+                        {
+
+                            if (doc.ContainsField("CreatedDate") &&
+                                   doc.ContainsField("BarcodeValue") &&
+                                   doc.ContainsField("ItemName") &&
+                                   doc.GetValue<string>("CreatedDate") == _sharedMethodService.ConvertToString(dataDec.CreatedDate) &&
+                                   doc.GetValue<string>("BarcodeValue") == dataDec.BarcodeValue &&
+                                   doc.GetValue<string>("ItemName") == dataDec.ItemName)
+                            {
+                                targetDoc = doc;
+
+                                //Delete old images from Firebase Storage
+                                var imageUrlsFb = doc.GetValue<List<string>>("ImageUrls")?
+                                                   .Where(u => !string.IsNullOrWhiteSpace(u))
+                                                   .ToList();
+
+                                if (imageUrlsFb != null && imageUrlsFb.Count > 0)
+                                {
+                                    var isSuccess = await _firebaseStorageService.DeleteImagesAsync(imageUrlsFb);
+
+                                    if (!isSuccess)
+                                    {
+                                        throw new Exception("Image deletion failed");
+                                    }
+                                }
+
+                                break;
+                            }
+                        }
+
+                        if (targetDoc == null)
+                        {
+                            Console.WriteLine($"No document found with MultiuserId and CreatedDate={dataDec.CreatedDate}");
+                            return false;
+                        }
+
+                        // Step 3: Update the document
+                        var imageUrls = await _firebaseStorageService.UploadImagesAsync(dataDec.ImageList);
+
+                        if (imageUrls[0] == "error")
+                        {
+                            throw new Exception("Image upload failed");
+                        }
+                        else
+                        {
+                            var document = new Dictionary<string, object>
+                            {
+                               { "MultiuserId", multiuserId ?? string.Empty },
+                               { "StorageId", _sharedMethodService.ConvertToString(dataDec.StorageId) ?? string.Empty},
+                               { "Category", dataDec.Category ?? string.Empty},
+                               { "CreatedDate", _sharedMethodService.ConvertToString(dataDec.CreatedDate) ?? string.Empty},
+                               { "BarcodeValue", dataDec.BarcodeValue ?? string.Empty},
+                               { "BarcodeType", dataDec.BarcodeType ?? string.Empty},
+                               { "Location", dataDec.Location ?? string.Empty},
+                               { "SearchInfo", dataDec.SearchInfo ?? string.Empty},
+                               { "ItemName", dataDec.ItemName ?? string.Empty},
+                               { "Description", dataDec.Description ?? string.Empty},
+                               { "ImageUrls", imageUrls ?? new List<string>()},
+                               { "BackgroundColorHex", dataDec.BackgroundColorHex ?? string.Empty}
+                            };
+
+                            await collection.Document(targetDoc.Id).SetAsync(document, SetOptions.Overwrite);
+                            return true;
+                        }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to update document {targetDoc.Id}: {ex}");
+                        Console.WriteLine($"Failed to update document: {ex}");
                         if (!isFrombackendSync)
                         {
                             var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(dataDec, "true");
@@ -287,7 +311,7 @@
                         {
                             return false; // Not found
                         }
- 
+
                         await firestoreDb.Collection("Orders").Document(snapshot.Documents[0].Id).
                             SetAsync(document, SetOptions.Overwrite);
 
@@ -326,60 +350,65 @@
             {
                 if (storageEntry != null)
                 {
-                    var collection = firestoreDb.Collection("StorageEntries");
-
-                    // Step 1: Get all documents matching MultiuserId
-                    var querySnapshot = await collection
-                        .WhereEqualTo("MultiuserId", multiuserId)
-                        .GetSnapshotAsync();
-
-                    if (querySnapshot.Count == 0)
-                    {
-                        Console.WriteLine($"No documents found with MultiuserId");
-                        return false;
-                    }
-
-                    // Step 2: Find the document that matches 
-                    DocumentSnapshot? targetDoc = null;
-                    foreach (var doc in querySnapshot.Documents)
-                    {
-
-                        if (doc.ContainsField("CreatedDate") &&
-                               doc.ContainsField("BarcodeValue") &&
-                               doc.ContainsField("ItemName") &&
-                               doc.GetValue<string>("CreatedDate") == _sharedMethodService.ConvertToString(dataDec.CreatedDate) &&
-                               doc.GetValue<string>("BarcodeValue") == dataDec.BarcodeValue &&
-                               doc.GetValue<string>("ItemName") == dataDec.ItemName)
-                        {
-                            targetDoc = doc;
-
-                            //Delete old images from Firebase Storage
-                            var imageUrlsFb = doc.GetValue<List<string>>("ImageUrls")?
-                                               .Where(u => !string.IsNullOrWhiteSpace(u))
-                                               .ToList();
-
-                            if (imageUrlsFb != null && imageUrlsFb.Count > 0)
-                            {
-                                await _firebaseStorageService.DeleteImagesAsync(imageUrlsFb);
-                            }
-
-                            break;
-                        }
-                    }
-
-                    if (targetDoc == null)
-                    {
-                        Console.WriteLine($"No document found with MultiuserId and CreatedDate={dataDec.CreatedDate}");
-                        return false;
-                    }
                     try
                     {
+                        var collection = firestoreDb.Collection("StorageEntries");
+
+                        // Step 1: Get all documents matching MultiuserId
+                        var querySnapshot = await collection
+                            .WhereEqualTo("MultiuserId", multiuserId)
+                            .GetSnapshotAsync();
+
+                        if (querySnapshot.Count == 0)
+                        {
+                            Console.WriteLine($"No documents found with MultiuserId");
+                            return false;
+                        }
+
+                        // Step 2: Find the document that matches 
+                        DocumentSnapshot? targetDoc = null;
+                        foreach (var doc in querySnapshot.Documents)
+                        {
+
+                            if (doc.ContainsField("CreatedDate") &&
+                                   doc.ContainsField("BarcodeValue") &&
+                                   doc.ContainsField("ItemName") &&
+                                   doc.GetValue<string>("CreatedDate") == _sharedMethodService.ConvertToString(dataDec.CreatedDate) &&
+                                   doc.GetValue<string>("BarcodeValue") == dataDec.BarcodeValue &&
+                                   doc.GetValue<string>("ItemName") == dataDec.ItemName)
+                            {
+                                targetDoc = doc;
+
+                                //Delete old images from Firebase Storage
+                                var imageUrlsFb = doc.GetValue<List<string>>("ImageUrls")?
+                                                   .Where(u => !string.IsNullOrWhiteSpace(u))
+                                                   .ToList();
+
+                                if (imageUrlsFb != null && imageUrlsFb.Count > 0)
+                                {
+                                    var isSuccess = await _firebaseStorageService.DeleteImagesAsync(imageUrlsFb);
+                                    if (!isSuccess)
+                                    {
+                                        throw new Exception("Image deletion failed");
+                                    }
+                                }
+
+                                break;
+                            }
+                        }
+
+                        if (targetDoc == null)
+                        {
+                            Console.WriteLine($"No document found with MultiuserId and CreatedDate={dataDec.CreatedDate}");
+                            return false;
+                        }
+
                         await collection.Document(targetDoc.Id).DeleteAsync();
                         return true;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to update document {targetDoc.Id}: {ex}");
+                        Console.WriteLine($"Failed to update document: {ex}");
                         if (!isFrombackendSync)
                         {
                             var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(dataDec, "delete");
