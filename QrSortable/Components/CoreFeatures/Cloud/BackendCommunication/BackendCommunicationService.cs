@@ -16,19 +16,17 @@
     public class BackendCommunicationService : IBackendCommunicationService
     {
         private readonly IAesHelper _aesHelper;
-        private readonly IFirebaseStorageService _firebaseStorageService;
         private readonly IGeneralInformationManager _generalInformationManager;
         private readonly ISharedMethodService _sharedMethodService;
         private readonly IBackendDatabaseManager _backendDatabaseManager;
         private readonly IBackendDatabaseHelper _backendDatabaseHelper;
         private readonly IToastService _toastService;
 
-        public BackendCommunicationService(IAesHelper aesHelper, IFirebaseStorageService firebaseStorageService,
+        public BackendCommunicationService(IAesHelper aesHelper,
             IGeneralInformationManager generalInformationManager, ISharedMethodService sharedMethodService,
             IBackendDatabaseManager backendDatabaseManager, IBackendDatabaseHelper backendDatabaseHelper, IToastService toastService)
         {
             _aesHelper = aesHelper;
-            _firebaseStorageService = firebaseStorageService;
             _generalInformationManager = generalInformationManager;
             _sharedMethodService = sharedMethodService;
             _backendDatabaseManager = backendDatabaseManager;
@@ -71,15 +69,7 @@
                 {
                     try
                     {
-                        var imageUrls = await _firebaseStorageService.UploadImagesAsync(dataDec.ImageList);
-
-                        if (imageUrls[0] == "error")
-                        {
-                            throw new Exception("Image upload failed");
-                        }
-                        else
-                        {
-                            var document = new Dictionary<string, object>
+                        var document = new Dictionary<string, object>
                             {
                                 { "MultiuserId", multiuserId ?? string.Empty },
                                 { "StorageId", _sharedMethodService.ConvertToString(dataDec.StorageId) ?? string.Empty},
@@ -91,14 +81,14 @@
                                 { "SearchInfo", dataDec.SearchInfo ?? string.Empty},
                                 { "ItemName", dataDec.ItemName ?? string.Empty},
                                 { "Description", dataDec.Description ?? string.Empty},
-                                { "ImageUrls", imageUrls ?? new List<string>()},
+                                { "ImageUrls", dataDec.ImageList ?? new List<string>()},
                                 { "BackgroundColorHex", dataDec.BackgroundColorHex ?? string.Empty}
                             };
 
-                            // Append new document (auto id) instead of using MultiuserId as document id
-                            await firestoreDb.Collection("StorageEntries").AddAsync(document);
-                            return true;
-                        }
+                        // Append new document (auto id) instead of using MultiuserId as document id
+                        await firestoreDb.Collection("StorageEntries").AddAsync(document);
+                        return true;
+
                     }
                     catch (Exception ex)
                     {
@@ -207,22 +197,6 @@
                                    doc.GetValue<string>("ItemName") == dataDec.ItemName)
                             {
                                 targetDoc = doc;
-
-                                //Delete old images from Firebase Storage
-                                var imageUrlsFb = doc.GetValue<List<string>>("ImageUrls")?
-                                                   .Where(u => !string.IsNullOrWhiteSpace(u))
-                                                   .ToList();
-
-                                if (imageUrlsFb != null && imageUrlsFb.Count > 0)
-                                {
-                                    var isSuccess = await _firebaseStorageService.DeleteImagesAsync(imageUrlsFb);
-
-                                    if (!isSuccess)
-                                    {
-                                        throw new Exception("Image deletion failed");
-                                    }
-                                }
-
                                 break;
                             }
                         }
@@ -234,15 +208,7 @@
                         }
 
                         // Step 3: Update the document
-                        var imageUrls = await _firebaseStorageService.UploadImagesAsync(dataDec.ImageList);
-
-                        if (imageUrls[0] == "error")
-                        {
-                            throw new Exception("Image upload failed");
-                        }
-                        else
-                        {
-                            var document = new Dictionary<string, object>
+                        var document = new Dictionary<string, object>
                             {
                                { "MultiuserId", multiuserId ?? string.Empty },
                                { "StorageId", _sharedMethodService.ConvertToString(dataDec.StorageId) ?? string.Empty},
@@ -254,13 +220,12 @@
                                { "SearchInfo", dataDec.SearchInfo ?? string.Empty},
                                { "ItemName", dataDec.ItemName ?? string.Empty},
                                { "Description", dataDec.Description ?? string.Empty},
-                               { "ImageUrls", imageUrls ?? new List<string>()},
+                               { "ImageUrls", dataDec.ImageList ?? new List<string>()},
                                { "BackgroundColorHex", dataDec.BackgroundColorHex ?? string.Empty}
                             };
 
-                            await collection.Document(targetDoc.Id).SetAsync(document, SetOptions.Overwrite);
-                            return true;
-                        }
+                        await collection.Document(targetDoc.Id).SetAsync(document, SetOptions.Overwrite);
+                        return true;
                     }
                     catch (Exception ex)
                     {
@@ -378,21 +343,6 @@
                                    doc.GetValue<string>("ItemName") == dataDec.ItemName)
                             {
                                 targetDoc = doc;
-
-                                //Delete old images from Firebase Storage
-                                var imageUrlsFb = doc.GetValue<List<string>>("ImageUrls")?
-                                                   .Where(u => !string.IsNullOrWhiteSpace(u))
-                                                   .ToList();
-
-                                if (imageUrlsFb != null && imageUrlsFb.Count > 0)
-                                {
-                                    var isSuccess = await _firebaseStorageService.DeleteImagesAsync(imageUrlsFb);
-                                    if (!isSuccess)
-                                    {
-                                        throw new Exception("Image deletion failed");
-                                    }
-                                }
-
                                 break;
                             }
                         }

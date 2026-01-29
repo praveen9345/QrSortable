@@ -27,7 +27,6 @@
         private readonly IImageService _imageService;
         private readonly IToastService _toastService;
         private readonly IBackendCommunicationService _backendCommunicationService;
-        private readonly IFirebaseStorageService _firebaseStorageService;
         private readonly IBackendDatabaseManager _backendDatabaseManager;
         private readonly IConnectivityService _connectivityService;
         private readonly ISharedMethodService _sharedMethodService;
@@ -51,8 +50,7 @@
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
         public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, 
             IFilePickerService filePickerService, IToastService toastService, IBackendCommunicationService backendCommunicationService,
-            IFirebaseStorageService firebaseStorageService, IBackendDatabaseManager backendDatabaseManager, 
-            IConnectivityService connectivityService, ISharedMethodService sharedMethodService, 
+            IBackendDatabaseManager backendDatabaseManager, IConnectivityService connectivityService, ISharedMethodService sharedMethodService, 
             IBackendDatabaseHelper backendDatabaseHelper)
         {
             IsBackNavigationEnabled = true;
@@ -61,7 +59,6 @@
             _filePickerService = filePickerService;
             _toastService = toastService;
             _backendCommunicationService = backendCommunicationService;
-            _firebaseStorageService = firebaseStorageService;
             _backendDatabaseManager = backendDatabaseManager;
             _connectivityService = connectivityService;
             _sharedMethodService = sharedMethodService;

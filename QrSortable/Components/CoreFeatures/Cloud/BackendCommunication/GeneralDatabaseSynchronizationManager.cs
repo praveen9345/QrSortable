@@ -18,18 +18,17 @@
         private readonly IGeneralInformationManager _generalInfoManager;
         private readonly IToastService _toast;
         private readonly IConnectivityService _connectivityService;
-        private readonly IFirebaseStorageService _firebaseStorageService;
         private readonly ISharedMethodService _sharedMethodService;
 
         public GeneralDatabaseSynchronizationManager(IDatabaseManager databaseManager, IGeneralInformationManager generalInfoManager,
-            IToastService toast, IConnectivityService connectivityService, IFirebaseStorageService firebaseStorageService,
+            IToastService toast, IConnectivityService connectivityService,
             ISharedMethodService sharedMethodService)
         {
             _databaseManager = databaseManager;
             _generalInfoManager = generalInfoManager;
             _toast = toast;
             _connectivityService = connectivityService;
-            _firebaseStorageService = firebaseStorageService;
+
             _sharedMethodService = sharedMethodService;
         }
 
@@ -92,10 +91,7 @@
                     }
 
                     // Download backend images
-                    var backendImageUrls = backendDoc.ContainsField("ImageUrls")
-                        ? backendDoc.GetValue<List<string>>("ImageUrls") : new List<string>();
-
-                    var backendImages = await _firebaseStorageService.DownloadImagesAsync(backendImageUrls);
+                    var backendImages = ReadImagesFromFirestore(backendDoc);
 
                     var backendCategory = backendDoc.GetValue<string>("Category");
                     var backendBarcodeValue = backendDoc.GetValue<string>("BarcodeValue");
@@ -128,33 +124,24 @@
             {
                 foreach (var entry in dbStorage)
                 {
-                    var imageUrls = await _firebaseStorageService.UploadImagesAsync(entry.ImageList);
+                    dynamic dataDec = entry;
+                    var document = new Dictionary<string, object>
+                     {
+                        { "MultiuserId",  multiuserId ?? string.Empty },
+                        { "StorageId", _sharedMethodService.ConvertToString(dataDec.StorageId) ?? string.Empty },
+                        { "Category", dataDec.Category ?? string.Empty },
+                        { "CreatedDate", _sharedMethodService.ConvertToString(dataDec.CreatedDate) ?? string.Empty },
+                        { "BarcodeValue", dataDec.BarcodeValue ?? string.Empty },
+                        { "BarcodeType", dataDec.BarcodeType ?? string.Empty },
+                        { "Location", dataDec.Location ?? string.Empty },
+                        { "SearchInfo", dataDec.SearchInfo ?? string.Empty },
+                        { "ItemName", dataDec.ItemName ?? string.Empty },
+                        { "Description", dataDec.Description ?? string.Empty },
+                        { "ImageUrls",  dataDec.ImageList ??  new List<string>()},
+                        { "BackgroundColorHex", dataDec.BackgroundColorHex ?? string.Empty }
+                    };
 
-                    if (imageUrls[0] == "error")
-                    {
-                        await _toast.DisplayToast("Something went wrong. please try again.");
-                        return false;
-                    }
-                    else
-                    {
-                        var document = new Dictionary<string, object>
-                        {
-                            { "MultiuserId",  multiuserId ?? string.Empty },
-                            { "StorageId", _sharedMethodService.ConvertToString(entry.StorageId) ?? string.Empty },
-                            { "Category", entry.Category ?? string.Empty },
-                            { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },
-                            { "BarcodeValue", entry.BarcodeValue ?? string.Empty },
-                            { "BarcodeType", entry.BarcodeType ?? string.Empty },
-                            { "Location", entry.Location ?? string.Empty },
-                            { "SearchInfo", entry.SearchInfo ?? string.Empty },
-                            { "ItemName", entry.ItemName ?? string.Empty },
-                            { "Description", entry.Description ?? string.Empty },
-                            { "ImageUrls", imageUrls ?? new List<string>() },
-                            { "BackgroundColorHex", entry.BackgroundColorHex ?? string.Empty }
-                        };
-
-                        await collection.AddAsync(document);
-                    }
+                    await collection.AddAsync(document);
 
                 }
                 return true;
@@ -167,46 +154,22 @@
 
                 backendEntries.TryGetValue(storageId, out var backendDoc);
 
-                // Delete old images if entry exists
-                if (backendDoc != null && backendDoc.ContainsField("ImageUrls"))
-                {
-                    var oldImageUrls = backendDoc.GetValue<List<string>>("ImageUrls")
-                        ?.Where(u => !string.IsNullOrWhiteSpace(u)).ToList();
-
-                    if (oldImageUrls != null && oldImageUrls.Count > 0)
-                    {
-                        var isSuccess = await _firebaseStorageService.DeleteImagesAsync(oldImageUrls);
-                        if (!isSuccess)
-                        {
-                            await _toast.DisplayToast("Something went wrong. please try again.");
-                            return false;
-                        }
-                    }
-
-                }
+                dynamic dataDec = entry;
 
                 // Upload new images
-                var imageUrls = await _firebaseStorageService.UploadImagesAsync(entry.ImageList);
-
-                if (imageUrls[0] == "error")
-                {
-                    await _toast.DisplayToast("Something went wrong. please try again.");
-                    return false;
-                }
-
                 var document = new Dictionary<string, object>
                 {
                     { "MultiuserId",  multiuserId ?? string.Empty },
                     { "StorageId", storageId },
-                    { "Category", entry.Category ?? string.Empty },
-                    { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },
-                    { "BarcodeValue", entry.BarcodeValue ?? string.Empty },
-                    { "BarcodeType", entry.BarcodeType ?? string.Empty },
-                    { "Location", entry.Location ?? string.Empty },
-                    { "SearchInfo", entry.SearchInfo ?? string.Empty },
-                    { "ItemName", entry.ItemName ?? string.Empty },
-                    { "Description", entry.Description ?? string.Empty },
-                    { "ImageUrls", imageUrls ?? new List<string>() },
+                    { "Category", dataDec.Category ?? string.Empty },
+                    { "CreatedDate", _sharedMethodService.ConvertToString(dataDec.CreatedDate) ?? string.Empty },
+                    { "BarcodeValue", dataDec.BarcodeValue ?? string.Empty },
+                    { "BarcodeType", dataDec.BarcodeType ?? string.Empty },
+                    { "Location", dataDec.Location ?? string.Empty },
+                    { "SearchInfo", dataDec.SearchInfo ?? string.Empty },
+                    { "ItemName", dataDec.ItemName ?? string.Empty },
+                    { "Description", dataDec.Description ?? string.Empty },
+                    { "ImageUrls",  dataDec.ImageList??  new List<string>()},
                     { "BackgroundColorHex", entry.BackgroundColorHex ?? string.Empty }
                 };
 
@@ -222,9 +185,8 @@
                 var storageId = backend.Key;
                 var doc = backend.Value;
 
-                var imageUrls = doc.ContainsField("ImageUrls") ? doc.GetValue<List<string>>("ImageUrls") : new List<string>();
-                var images = await _firebaseStorageService.DownloadImagesAsync(imageUrls);
-                
+                var images = ReadImagesFromFirestore(doc);
+
                 if (images == null || images.Count == 0)
                 {
                     await _toast.DisplayToast("Something went wrong. please try again.");
@@ -282,7 +244,7 @@
                 {
                     await _databaseManager.DeleteAsync(local);
                 }
-                    
+
             }
 
             return true;
@@ -324,20 +286,6 @@
 
                         foreach (var document in documents.Skip(deletedCount).Take(batchSize))
                         {
-                            // Delete images from Firebase Storage
-                            if (document.TryGetValue<IList<object>>("ImageUrls", out var imageUrlsObj) &&
-                                imageUrlsObj != null)
-                            {
-                                var urls = imageUrlsObj
-                                    .Select(x => x?.ToString())
-                                    .Where(x => !string.IsNullOrEmpty(x))
-                                    .ToList();
-
-                                if (urls.Any())
-                                {
-                                    await _firebaseStorageService.DeleteImagesAsync(urls);
-                                }
-                            }
 
                             // Delete Firestore document
                             batch.Delete(document.Reference);
@@ -356,27 +304,21 @@
 
                 foreach (var entry in dbStorage)
                 {
-                    var imageUrls = await _firebaseStorageService.UploadImagesAsync(entry.ImageList);
-
-                    if (imageUrls[0] == "error")
-                    {
-                        return false;
-                    }
-
+                    dynamic dataDec = entry;
                     var document = new Dictionary<string, object>
                     {
                         { "MultiuserId", multiuserId ?? string.Empty },
-                        { "StorageId", _sharedMethodService.ConvertToString(entry.StorageId) ?? string.Empty },
-                        { "Category", entry.Category ?? string.Empty },
-                        { "CreatedDate", _sharedMethodService.ConvertToString(entry.CreatedDate) ?? string.Empty },
-                        { "BarcodeValue", entry.BarcodeValue ?? string.Empty },
-                        { "BarcodeType", entry.BarcodeType ?? string.Empty },
-                        { "Location", entry.Location ?? string.Empty },
-                        { "SearchInfo", entry.SearchInfo ?? string.Empty },
-                        { "ItemName", entry.ItemName ?? string.Empty },
-                        { "Description", entry.Description ?? string.Empty },
-                        { "ImageUrls", imageUrls ?? new List<string>() },
-                        { "BackgroundColorHex", entry.BackgroundColorHex ?? string.Empty }
+                        { "StorageId", _sharedMethodService.ConvertToString(dataDec.StorageId) ?? string.Empty },
+                        { "Category", dataDec.Category ?? string.Empty },
+                        { "CreatedDate", _sharedMethodService.ConvertToString(dataDec.CreatedDate) ?? string.Empty },
+                        { "BarcodeValue", dataDec.BarcodeValue ?? string.Empty },
+                        { "BarcodeType", dataDec.BarcodeType ?? string.Empty },
+                        { "Location", dataDec.Location ?? string.Empty },
+                        { "SearchInfo", dataDec.SearchInfo ?? string.Empty },
+                        { "ItemName", dataDec.ItemName ?? string.Empty },
+                        { "Description", dataDec.Description ?? string.Empty },
+                        { "ImageUrls",  dataDec.ImageList ?? new List<string>() },
+                        { "BackgroundColorHex", dataDec.BackgroundColorHex ?? string.Empty }
                     };
 
                     await collection.AddAsync(document);
@@ -406,6 +348,72 @@
             }
 
             return true;
+        }
+
+        private List<byte[]> ReadImagesFromFirestore(DocumentSnapshot doc)
+        {
+            var images = new List<byte[]>();
+
+            if (!doc.ContainsField("ImageUrls"))
+                return images;
+
+            var rawList = doc.GetValue<IList<object>>("ImageUrls");
+
+            foreach (var item in rawList)
+            {
+                switch (item)
+                {
+                    case string base64:
+                        images.Add(Convert.FromBase64String(base64));
+                        break;
+
+                    case byte[] bytes:
+                        images.Add(bytes);
+                        break;
+
+                    case Google.Cloud.Firestore.Blob blob:
+                        // Try these different approaches for different SDK versions
+                        byte[] blobBytes = null;
+
+                        // Approach 1: Check if ToByteArray() exists (older versions)
+                        var toByteArrayMethod = blob.GetType().GetMethod("ToByteArray");
+                        if (toByteArrayMethod != null)
+                        {
+                            blobBytes = (byte[])toByteArrayMethod.Invoke(blob, null);
+                        }
+                        // Approach 2: Check if ByteString property exists (some versions)
+                        else if (blob.GetType().GetProperty("ByteString") != null)
+                        {
+                            dynamic dynamicBlob = blob;
+                            var byteString = dynamicBlob.ByteString;
+                            blobBytes = byteString.ToByteArray();
+                        }
+                        // Approach 3: Check if Bytes property exists (some versions)
+                        else if (blob.GetType().GetProperty("Bytes") != null)
+                        {
+                            dynamic dynamicBlob = blob;
+                            var memory = (ReadOnlyMemory<byte>)dynamicBlob.Bytes;
+                            blobBytes = memory.ToArray();
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException(
+                                $"Unable to convert Blob to byte array. Available properties: " +
+                                string.Join(", ", blob.GetType().GetProperties().Select(p => p.Name))
+                            );
+                        }
+
+                        images.Add(blobBytes);
+                        break;
+
+                    default:
+                        throw new InvalidOperationException(
+                            $"Unsupported ImageUrls type: {item.GetType()}"
+                        );
+                }
+            }
+
+            return images;
         }
     }
 }
