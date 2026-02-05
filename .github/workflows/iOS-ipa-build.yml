@@ -12,6 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Ensure we use a stable Xcode 16 environment
       - name: Set Xcode version
         run: sudo xcode-select -s /Applications/Xcode_16.app
 
@@ -20,10 +21,8 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      # 4️⃣ Install and Restore Workloads
       - name: Install compatible MAUI workloads
         run: |
-          # Create global.json in the project directory
           echo '{
             "sdk": {
               "version": "9.0.100",
@@ -33,50 +32,48 @@ jobs:
             }
           }' > QrSortable/global.json
 
-          # Change to project directory so dotnet finds the global.json
           cd QrSortable
-          
-          # This forces the SDK to download the 9.0.100 manifest
           dotnet workload config --update-mode workload-set
           dotnet workload restore
-          
-          # Specifically install the iOS workload for this version
           dotnet workload install maui-ios maui-maccatalyst
-          
           dotnet workload list
 
-      # 5️⃣ Restore NuGet packages
       - name: Restore NuGet packages
         run: dotnet restore QrSortable.csproj
         working-directory: QrSortable
 
-      # 6️⃣ Build the unsigned iOS app
+      # 6️⃣ Build with specific flags to bypass actool/simulator errors
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
             -f net9.0-ios \
             -c Release \
             /p:BuildIpa=true \
-            /p:PublishTrimmed=true \
-            /p:PublishReadyToRun=false \
             /p:EnableCodeSigning=false \
             /p:CodesignKey="-" \
             /p:CodesignProvision="-" \
-            /p:IPhoneResourceSelection="None" \
-            /p:OptimizePNGs=true \
+            /p:ArchiveOnBuild=true \
+            /p:IsAppExtension=false \
+            /p:MtouchNoFastDev=true \
             /p:ForceSimulatorRuntimeSelection=false
         working-directory: QrSortable
 
-      # 7️⃣ Package unsigned IPA
+      # 7️⃣ Packaging Step
       - name: Package unsigned IPA
         run: |
+          # Robust way to find the .app even if paths shift
           APP_PATH=$(find QrSortable/bin/Release/net9.0-ios -name "QrSortable.app" -type d | head -n 1)
-          APP_DIR=$(dirname "$APP_PATH")
+          echo "App found at: $APP_PATH"
           
+          # Get the directory where the .app lives
+          APP_DIR=$(dirname "$APP_PATH")
           cd "$APP_DIR"
+          
           mkdir -p Payload
           cp -R "QrSortable.app" Payload/
           zip -qr QrSortable-Unsigned.ipa Payload
+          
+          # Move to the workspace root so the next step can find it
           mv QrSortable-Unsigned.ipa $GITHUB_WORKSPACE/
 
       - name: Upload IPA artifact
