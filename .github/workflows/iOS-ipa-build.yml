@@ -7,59 +7,50 @@ jobs:
   build-ios:
     name: 🎉 MAUI iOS Build (Unsigned)
     runs-on: macos-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-
+      
       - name: Set Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_16.app
-
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+      
       - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-
+      
       - name: Install MAUI workloads
         run: |
           # Create global.json in the project folder to fix the SDK version
-          echo '{
-            "sdk": {
-              "version": "9.0.100",
-              "workloadVersion": "9.0.100",
-              "allowPrerelease": false,
-              "rollForward": "latestFeature"
-            }
-          }' > QrSortable/global.json
-
+          echo '{ "sdk": { "version": "9.0.100", "workloadVersion": "9.0.100", "allowPrerelease": false, "rollForward": "latestFeature" } }' > QrSortable/global.json
           cd QrSortable
           dotnet workload config --update-mode workload-set
           dotnet workload restore
           dotnet workload install maui-ios
           dotnet workload list
-
+      
       - name: Restore NuGet packages
         run: dotnet restore QrSortable.csproj
         working-directory: QrSortable
-
-      # 6️⃣ Build with bypass flags for actool
+      
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
-            -f net9.0-ios \
-            -c Release \
-            /p:BuildIpa=true \
-            /p:EnableCodeSigning=false \
-            /p:CodesignKey="-" \
-            /p:CodesignProvision="-" \
-            /p:ArchiveOnBuild=true \
-            /p:OptimizePNGs=false \
-            /p:UseAccessorizer=false \
-            /p:MtouchNoFastDev=true
+          -f net9.0-ios \
+          -c Release \
+          /p:BuildIpa=true \
+          /p:EnableCodeSigning=false \
+          /p:CodesignKey="-" \
+          /p:CodesignProvision="-" \
+          /p:ArchiveOnBuild=true \
+          /p:OptimizePNGs=false \
+          /p:UseAccessorizer=false \
+          /p:MtouchNoFastDev=true \
+          /p:RuntimeIdentifier=ios-arm64 \
+          /p:ActoolComputeOnlySupportedPlatforms=true
         working-directory: QrSortable
-
-      # 7️⃣ Packaging Step
+      
       - name: Package unsigned IPA
         run: |
           # Use find to locate the .app safely
@@ -73,7 +64,7 @@ jobs:
           cp -R "QrSortable.app" Payload/
           zip -qr QrSortable-Unsigned.ipa Payload
           mv QrSortable-Unsigned.ipa ${{ github.workspace }}/
-
+      
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
