@@ -34,6 +34,7 @@ jobs:
             -f net9.0-ios \
             -c Release \
             /p:BuildIpa=true \
+            /p:MtouchLink=None \
             /p:CodesignKey="" \
             /p:CodesignProvision=""
         working-directory: QrSortable
