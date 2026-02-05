@@ -33,10 +33,10 @@
 		<RuntimeIdentifier Condition="'$(TargetFramework)' == 'net9.0-ios'">ios-arm64</RuntimeIdentifier>
 		<PublishTrimmed Condition="'$(TargetFramework)' == 'net9.0-ios'">true</PublishTrimmed>
 		<TrimMode Condition="'$(TargetFramework)' == 'net9.0-ios'">partial</TrimMode>
+
 		<ForceSimulatorRuntimeSelection Condition="'$(TargetFramework)' == 'net9.0-ios'">false</ForceSimulatorRuntimeSelection>
-		<IsAppExtension Condition="'$(TargetFramework)' == 'net9.0-ios'">false</IsAppExtension>
-		<MtouchExtraArgs Condition="'$(TargetFramework)' == 'net9.0-ios'">--nosim</MtouchExtraArgs>
-	
+		<OptimizePNGs Condition="'$(TargetFramework)' == 'net9.0-ios'">false</OptimizePNGs>
+		<UseAccessorizer Condition="'$(TargetFramework)' == 'net9.0-ios'">false</UseAccessorizer>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'DebugEmulator'">
