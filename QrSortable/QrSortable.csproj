@@ -34,6 +34,8 @@
 		<PublishTrimmed Condition="'$(TargetFramework)' == 'net9.0-ios'">true</PublishTrimmed>
 		<TrimMode Condition="'$(TargetFramework)' == 'net9.0-ios'">partial</TrimMode>
 		<ForceSimulatorRuntimeSelection Condition="'$(TargetFramework)' == 'net9.0-ios'">false</ForceSimulatorRuntimeSelection>
+		<IsAppExtension Condition="'$(TargetFramework)' == 'net9.0-ios'">false</IsAppExtension>
+		<MtouchExtraArgs Condition="'$(TargetFramework)' == 'net9.0-ios'">--nosim</MtouchExtraArgs>
 	
 	</PropertyGroup>
 
