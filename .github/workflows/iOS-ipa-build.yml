@@ -1,7 +1,12 @@
 name: MAUI iOS Unsigned IPA Build
-
 on:
   workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  PROJECT_PATH: 'QrSortable'
+  TARGET_FRAMEWORK: 'net9.0-ios'
+  CONFIGURATION: 'Release'
 
 jobs:
   build-ios:
@@ -33,17 +38,28 @@ jobs:
           fi
           echo "Selected Xcode path:"
           xcode-select -p
+          xcodebuild -version
       
       - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.nuget/packages
+            ~/Library/Caches/NuGet
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
       
       - name: Install MAUI workloads
         run: |
           # Create global.json in the project folder to fix the SDK version
-          echo '{ "sdk": { "version": "9.0.100", "workloadVersion": "9.0.100", "allowPrerelease": false, "rollForward": "latestFeature" } }' > QrSortable/global.json
-          cd QrSortable
+          echo '{ "sdk": { "version": "9.0.100", "workloadVersion": "9.0.100", "allowPrerelease": false, "rollForward": "latestFeature" } }' > ${{ env.PROJECT_PATH }}/global.json
+          cd ${{ env.PROJECT_PATH }}
           dotnet workload config --update-mode workload-set
           dotnet workload restore
           dotnet workload install maui-ios
@@ -51,13 +67,13 @@ jobs:
       
       - name: Restore NuGet packages
         run: dotnet restore QrSortable.csproj
-        working-directory: QrSortable
+        working-directory: ${{ env.PROJECT_PATH }}
       
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
-          -f net9.0-ios \
-          -c Release \
+          -f ${{ env.TARGET_FRAMEWORK }} \
+          -c ${{ env.CONFIGURATION }} \
           /p:BuildIpa=true \
           /p:EnableCodeSigning=false \
           /p:CodesignKey="-" \
@@ -68,24 +84,85 @@ jobs:
           /p:MtouchNoFastDev=true \
           /p:RuntimeIdentifier=ios-arm64 \
           /p:ActoolComputeOnlySupportedPlatforms=true
-        working-directory: QrSortable
+        working-directory: ${{ env.PROJECT_PATH }}
       
-      - name: Package unsigned IPA
+      - name: List build output
         run: |
-          # Use find to locate the .app safely
-          APP_PATH=$(find QrSortable/bin/Release/net9.0-ios/ios-arm64/publish -name "QrSortable.app" -type d | head -n 1)
+          echo "=== Build output structure ==="
+          echo "Searching for .app bundles:"
+          find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }} -type d -name "*.app" || echo "No .app bundles found"
+          echo ""
+          echo "Searching for existing .ipa files:"
+          find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }} -type f -name "*.ipa" || echo "No .ipa files found"
+          echo ""
+          echo "Full directory structure:"
+          ls -R ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }}/${{ env.TARGET_FRAMEWORK }}/
+      
+      - name: Check for auto-generated IPA
+        id: check_ipa
+        run: |
+          IPA_FILE=$(find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }} -type f -name "*.ipa" | head -n 1)
+          if [ -n "$IPA_FILE" ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+            echo "ipa_path=$IPA_FILE" >> $GITHUB_OUTPUT
+            echo "Found auto-generated IPA at: $IPA_FILE"
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+            echo "No auto-generated IPA found, will create manually"
+          fi
+      
+      - name: Package unsigned IPA (if needed)
+        if: steps.check_ipa.outputs.found == 'false'
+        run: |
+          # Search for the .app bundle
+          APP_PATH=$(find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }}/${{ env.TARGET_FRAMEWORK }} -name "QrSortable.app" -type d | head -n 1)
+          
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: Could not find QrSortable.app"
+            echo "Directory contents:"
+            find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }}/${{ env.TARGET_FRAMEWORK }} -type d
+            exit 1
+          fi
+          
           echo "Found app at: $APP_PATH"
           
-          APP_DIR=$(dirname "$APP_PATH")
-          cd "$APP_DIR"
+          # Create Payload directory in a temp location
+          WORK_DIR=$(mktemp -d)
+          echo "Working in temporary directory: $WORK_DIR"
           
-          mkdir -p Payload
-          cp -R "QrSortable.app" Payload/
+          mkdir -p "$WORK_DIR/Payload"
+          cp -R "$APP_PATH" "$WORK_DIR/Payload/"
+          
+          # Create IPA
+          cd "$WORK_DIR"
           zip -qr QrSortable-Unsigned.ipa Payload
+          
+          # Move to workspace
           mv QrSortable-Unsigned.ipa ${{ github.workspace }}/
+          echo "IPA created successfully at: ${{ github.workspace }}/QrSortable-Unsigned.ipa"
+      
+      - name: Copy auto-generated IPA (if exists)
+        if: steps.check_ipa.outputs.found == 'true'
+        run: |
+          cp "${{ steps.check_ipa.outputs.ipa_path }}" ${{ github.workspace }}/QrSortable-Unsigned.ipa
+          echo "Copied auto-generated IPA to workspace"
+      
+      - name: Verify IPA file
+        run: |
+          if [ -f "${{ github.workspace }}/QrSortable-Unsigned.ipa" ]; then
+            echo "IPA file verified:"
+            ls -lh ${{ github.workspace }}/QrSortable-Unsigned.ipa
+            echo ""
+            echo "IPA contents:"
+            unzip -l ${{ github.workspace }}/QrSortable-Unsigned.ipa | head -20
+          else
+            echo "Error: IPA file not found!"
+            exit 1
+          fi
       
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
           name: QrSortable-Unsigned-IPA
           path: QrSortable-Unsigned.ipa
+          if-no-files-found: error
