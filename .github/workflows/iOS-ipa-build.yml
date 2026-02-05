@@ -12,21 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-
-
-
-
-
       - name: Check available Xcode versions
-
-
-
         run: |
           ls -la /Applications/ | grep Xcode
-          
+
       - name: Set Xcode version (prefer 15.x)
         run: |
-          # Try Xcode 15 versions first
           if [ -d "/Applications/Xcode_15.4.app" ]; then
             sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
             echo "Using Xcode 15.4"
@@ -48,7 +39,6 @@ jobs:
 
       - name: Install MAUI workloads
         run: |
-          # Create global.json in the project folder to fix the SDK version
           echo '{
             "sdk": {
               "version": "9.0.100",
@@ -65,26 +55,17 @@ jobs:
       - name: Clean previous builds
         run: |
           rm -rf QrSortable/bin QrSortable/obj
-          
+
       - name: Restore NuGet packages
         run: dotnet restore QrSortable.csproj
         working-directory: QrSortable
 
-
-      - name: Build iOS app (unsigned)
-
+      - name: Publish iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
             -f net9.0-ios \
             -c Release \
             -r ios-arm64 \
-
-            /p:BuildIpa=true \
-            /p:EnableCodeSigning=false \
-            /p:CodesignKey="-" \
-            /p:CodesignProvision="-" \
-            /p:ArchiveOnBuild=true \
-
             /p:OptimizePNGs=false \
             /p:UseAccessorizer=false \
             /p:MtouchNoFastDev=true \
@@ -96,19 +77,10 @@ jobs:
 
       - name: Package unsigned IPA
         run: |
-          # Use find to locate the .app safely
           APP_PATH=$(find QrSortable/bin/Release/net9.0-ios/ios-arm64/publish -name "*.app" -type d | head -n 1)
-
-
-
-
-
-
           echo "Found app at: $APP_PATH"
-          
           APP_DIR=$(dirname "$APP_PATH")
           cd "$APP_DIR"
-          
           mkdir -p Payload
           cp -R *.app Payload/
           zip -qr QrSortable-Unsigned.ipa Payload
