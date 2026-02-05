@@ -1,7 +1,7 @@
 name: MAUI iOS Unsigned IPA Build
 
 on:
-  workflow_dispatch: # Manual trigger only
+  workflow_dispatch:
 
 jobs:
   build-ios:
@@ -9,24 +9,21 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # 1️⃣ Checkout the repository code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Select Xcode 16 (matches .NET 9 requirements)
+      # Force Xcode 16.1 or 16.0 to ensure compatibility with .NET 9
       - name: Set Xcode version
         run: sudo xcode-select -s /Applications/Xcode_16.app
 
-      # 3️⃣ Setup .NET 9
       - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      # 4️⃣ Install Compatible .NET 9 MAUI Workloads
       - name: Install MAUI workloads
         run: |
-          # Pinning to a stable workload set to avoid SDK version mismatches
+          # Create global.json in the project folder
           echo '{
             "sdk": {
               "version": "9.0.100",
@@ -42,13 +39,11 @@ jobs:
           dotnet workload install maui-ios
           dotnet workload list
 
-      # 5️⃣ Restore NuGet packages
       - name: Restore NuGet packages
         run: dotnet restore QrSortable.csproj
         working-directory: QrSortable
 
-      # 6️⃣ Build the unsigned iOS app
-      # We no longer need many /p: flags because they are in your .csproj
+      # 6️⃣ Build with "Emergency" flags to bypass actool/simulator runtime checks
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
@@ -57,25 +52,23 @@ jobs:
             /p:BuildIpa=true \
             /p:EnableCodeSigning=false \
             /p:CodesignKey="-" \
-            /p:CodesignProvision="-"
+            /p:CodesignProvision="-" \
+            /p:ArchiveOnBuild=true \
+            /p:ForceSimulatorRuntimeSelection=false \
+            /p:IsAppExtension=false \
+            /p:OptimizePNGs=false \
+            /p:MtouchLink=SdkOnly \
+            /p:MtouchNoFastDev=true
         working-directory: QrSortable
 
-      # 7️⃣ Package into IPA
-      # The path is now fixed to 'ios-arm64' thanks to the RuntimeIdentifier in .csproj
+      # 7️⃣ Packaging Step
       - name: Package unsigned IPA
         run: |
+          # Navigate to the output directory
           cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish/
           
           mkdir -p Payload
           cp -R QrSortable.app Payload/
           zip -qr QrSortable-Unsigned.ipa Payload
           
-          # Move result to the root workspace for the upload step
-          mv QrSortable-Unsigned.ipa ${{ github.workspace }}/
-
-      # 8️⃣ Upload the generated .ipa file
-      - name: Upload IPA artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: QrSortable-Unsigned-IPA
-          path: QrSortable-Unsigned.ipa
+          mv QrSort
