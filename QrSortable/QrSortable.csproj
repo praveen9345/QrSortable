@@ -29,14 +29,6 @@
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">$(AndroidSupportedOSVersion)</SupportedOSPlatformVersion>
-
-		<RuntimeIdentifier Condition="'$(TargetFramework)' == 'net9.0-ios'">ios-arm64</RuntimeIdentifier>
-		<PublishTrimmed Condition="'$(TargetFramework)' == 'net9.0-ios'">true</PublishTrimmed>
-		<TrimMode Condition="'$(TargetFramework)' == 'net9.0-ios'">partial</TrimMode>
-
-		<ForceSimulatorRuntimeSelection Condition="'$(TargetFramework)' == 'net9.0-ios'">false</ForceSimulatorRuntimeSelection>
-		<OptimizePNGs Condition="'$(TargetFramework)' == 'net9.0-ios'">false</OptimizePNGs>
-		<UseAccessorizer Condition="'$(TargetFramework)' == 'net9.0-ios'">false</UseAccessorizer>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'DebugEmulator'">
@@ -46,6 +38,28 @@
     <PropertyGroup Condition="'$(Configuration)' == 'DebugDevice'">
         <AndroidSupportedOSVersion>21.0</AndroidSupportedOSVersion>
     </PropertyGroup>
+
+	<!-- iOS Release Configuration -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Release'">
+		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+		<MtouchArch>ARM64</MtouchArch>
+		<PublishTrimmed>true</PublishTrimmed>
+		<TrimMode>partial</TrimMode>
+		<OptimizePNGs>false</OptimizePNGs>
+		<UseAccessorizer>false</UseAccessorizer>
+		<ActoolComputeOnlySupportedPlatforms>true</ActoolComputeOnlySupportedPlatforms>
+		<MtouchNoFastDev>true</MtouchNoFastDev>
+		<EnableCodeSigning>false</EnableCodeSigning>
+		<CodesignKey>-</CodesignKey>
+		<CodesignProvision>-</CodesignProvision>
+	</PropertyGroup>
+
+	<!-- iOS Debug Configuration -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Debug'">
+		<MtouchArch>x86_64</MtouchArch>
+		<OptimizePNGs>false</OptimizePNGs>
+	</PropertyGroup>
+	
 	<PropertyGroup>
 		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 		<RunAOTCompilation>False</RunAOTCompilation>
