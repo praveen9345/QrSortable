@@ -1,50 +1,49 @@
 name: MAUI iOS Unsigned IPA Build
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Manual trigger
 jobs:
   build-ios:
     name: 🎉 MAUI iOS Build (Unsigned)
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
+      # 1️⃣ Checkout repo
       - uses: actions/checkout@v4
-      
-      - name: Setup .NET 9
+      # 2️⃣ Setup .NET 9
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-      
+      # 3️⃣ Install MAUI workloads
       - name: Install MAUI workloads
-        run: |
-          dotnet workload install maui --version 9.0.0
-      
+        run: dotnet workload install maui
+      # 4️⃣ Restore NuGet packages
       - name: Restore NuGet packages
         run: dotnet restore QrSortable.csproj
         working-directory: QrSortable
-      
-      - name: Build iOS app with explicit SDK version
+      # 5️⃣ Build iOS app (unsigned)
+      - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
             -f net9.0-ios \
             -c Release \
-            -p:RuntimeIdentifier=ios-arm64 \
-            -p:BuildIpa=true \
-            -p:_XamarinSdkRoot=/Applications/Xcode_16.4.app \
-            -p:TargetPlatformVersion=17.5 \
-            -p:CodesignKey="" \
-            -p:CodesignProvision=""
+            /p:BuildIpa=true \
+            /p:PublishTrimmed=true \
+            /p:PublishReadyToRun=false \
+            /p:CodesignKey="" \
+            /p:CodesignProvision=""
         working-directory: QrSortable
-      
+      # 6️⃣ Prepare Payload folder for IPA
       - name: Prepare Payload folder
         run: |
           cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish
-          mkdir -p Payload
+          mkdir Payload
           mv QrSortable.app Payload/
-      
+      # 7️⃣ Zip the unsigned IPA
       - name: Zip unsigned IPA
         run: |
           cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish
           zip -qq -r -9 QrSortable-Unsigned.ipa Payload
-      
+      # 8️⃣ Upload IPA to GitHub Release
       - name: Upload IPA to GitHub Release
         uses: svenstaro/upload-release-action@v2
         with:
@@ -52,4 +51,4 @@ jobs:
           file: QrSortable/bin/Release/net9.0-ios/ios-arm64/publish/QrSortable-Unsigned.ipa
           tag: v1.0
           overwrite: true
-          body: "Unsigned MAUI IPA for testing only"
+          body: "Unsigned MAUI IPA for testing only"  
