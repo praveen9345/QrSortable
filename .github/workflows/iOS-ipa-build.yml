@@ -1,26 +1,58 @@
 name: MAUI iOS Unsigned IPA Build
+
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch: # Manual trigger only
+
 jobs:
   build-ios:
     name: 🎉 MAUI iOS Build (Unsigned)
     runs-on: macos-latest
+
     steps:
-      # 1️⃣ Checkout repo
-      - uses: actions/checkout@v4
-      # 2️⃣ Setup .NET 9
-      - name: Setup .NET
+      # 1️⃣ Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2️⃣ Install the specific Xcode version required by .NET 9 iOS
+      - name: Install Xcode 26.0.1
+        run: |
+          # Clean up any previous partial installs
+          sudo rm -rf /Applications/Xcode_26.app
+          sudo rm -f xcode.xip
+          
+          # **IMPORTANT:** The direct Apple link below may require authentication.
+          # If the download fails, manually download Xcode_26.0.1.xip from
+          # https://developer.apple.com/download/all/, host it, and replace the URL.
+          echo "Downloading Xcode 26.0.1 (this is a large file ~8GB)..."
+          curl -L -o xcode.xip "https://developer.apple.com/services-account/download?path=/Developer_Tools/Xcode_26.0.1/Xcode_26.0.1.xip"
+          
+          echo "Extracting Xcode. This will take 10-15 minutes..."
+          xip -x xcode.xip
+          
+          echo "Moving Xcode to Applications folder..."
+          sudo mv Xcode.app /Applications/Xcode_26.app
+          
+          # Set this Xcode as active and accept license
+          echo "Configuring Xcode..."
+          sudo xcode-select -s /Applications/Xcode_26.app/Contents/Developer
+          sudo xcodebuild -license accept
+
+      # 3️⃣ Setup .NET 9
+      - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-      # 3️⃣ Install MAUI workloads
+
+      # 4️⃣ Install MAUI workloads
       - name: Install MAUI workloads
         run: dotnet workload install maui
-      # 4️⃣ Restore NuGet packages
+
+      # 5️⃣ Restore NuGet packages
       - name: Restore NuGet packages
         run: dotnet restore QrSortable.csproj
-        working-directory: QrSortable
-      # 5️⃣ Build iOS app (unsigned)
+        working-directory: QrSortable  # Adjust if your project is in a different folder
+
+      # 6️⃣ Build the unsigned iOS app (IPA)
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
@@ -32,23 +64,18 @@ jobs:
             /p:CodesignKey="" \
             /p:CodesignProvision=""
         working-directory: QrSortable
-      # 6️⃣ Prepare Payload folder for IPA
-      - name: Prepare Payload folder
+
+      # 7️⃣ Prepare Payload folder and create the final .ipa file
+      - name: Package unsigned IPA
         run: |
           cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish
-          mkdir Payload
+          mkdir -p Payload
           mv QrSortable.app Payload/
-      # 7️⃣ Zip the unsigned IPA
-      - name: Zip unsigned IPA
-        run: |
-          cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish
-          zip -qq -r -9 QrSortable-Unsigned.ipa Payload
-      # 8️⃣ Upload IPA to GitHub Release
-      - name: Upload IPA to GitHub Release
-        uses: svenstaro/upload-release-action@v2
+          zip -qr QrSortable-Unsigned.ipa Payload
+
+      # 8️⃣ Upload the generated .ipa file as a workflow artifact
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: QrSortable/bin/Release/net9.0-ios/ios-arm64/publish/QrSortable-Unsigned.ipa
-          tag: v1.0
-          overwrite: true
-          body: "Unsigned MAUI IPA for testing only"  
+          name: QrSortable-Unsigned-IPA
+          path: QrSortable/bin/Release/net9.0-ios/ios-arm64/publish/QrSortable-Unsigned.ipa
