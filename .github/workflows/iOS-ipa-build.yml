@@ -20,16 +20,16 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      # 1. Install ONLY the iOS workload to save time and prevent Android errors
+      # 1. Install ONLY the iOS workload
       - name: Install iOS Workload
         run: dotnet workload install ios --ignore-failed-sources
 
-      # 2. Restore ONLY for the iOS target framework
+      # 2. Corrected Restore: Use /p:TargetFramework instead of -f to avoid MSB1008
       - name: Restore dependencies
-        run: dotnet restore QrSortable.csproj -f net9.0-ios
+        run: dotnet restore QrSortable.csproj /p:TargetFramework=net9.0-ios
         working-directory: QrSortable
 
-      # 3. Publish with the 'Nuclear' flags to bypass actool/signing checks
+      # 3. Publish with bypass flags for actool
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
@@ -42,12 +42,14 @@ jobs:
             /p:ArchiveOnBuild=true \
             /p:OptimizePNGs=false \
             /p:UseAccessorizer=false \
-            /p:RuntimeIdentifier=ios-arm64
+            /p:RuntimeIdentifier=ios-arm64 \
+            /p:ForceSimulatorRuntimeSelection=false
         working-directory: QrSortable
 
-      # 4. Create the IPA (Since it's unsigned, we package it manually)
+      # 4. Create the IPA manual package
       - name: Package Unsigned IPA
         run: |
+          # Ensuring we are in the correct output directory
           cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish/
           mkdir -p Payload
           cp -R QrSortable.app Payload/
