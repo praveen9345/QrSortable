@@ -15,21 +15,34 @@ jobs:
       - name: Set Xcode version
         run: sudo xcode-select -s /Applications/Xcode_16.app
 
-      - name: Setup .NET 9
+      # 1. Force .NET 9 SDK via global.json to stop the SDK 10 preview from asking for Tizen
+      - name: Setup .NET 9 and Pin Version
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      # 1. Install ONLY the iOS workload
-      - name: Install iOS Workload
-        run: dotnet workload install ios --ignore-failed-sources
+      - name: Create global.json
+        run: |
+          echo '{
+            "sdk": {
+              "version": "9.0.100",
+              "rollForward": "latestFeature"
+            }
+          }' > QrSortable/global.json
 
-      # 2. Corrected Restore: Use /p:TargetFramework instead of -f to avoid MSB1008
+      # 2. Install the specific workloads required
+      - name: Install Workloads
+        run: |
+          cd QrSortable
+          dotnet workload install maui-ios --ignore-failed-sources
+        working-directory: QrSortable
+
+      # 3. Restore with specific TargetFramework property
       - name: Restore dependencies
         run: dotnet restore QrSortable.csproj /p:TargetFramework=net9.0-ios
         working-directory: QrSortable
 
-      # 3. Publish with bypass flags for actool
+      # 4. Build with the bypass flags for actool
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
@@ -46,10 +59,9 @@ jobs:
             /p:ForceSimulatorRuntimeSelection=false
         working-directory: QrSortable
 
-      # 4. Create the IPA manual package
+      # 5. Create the IPA manual package
       - name: Package Unsigned IPA
         run: |
-          # Ensuring we are in the correct output directory
           cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish/
           mkdir -p Payload
           cp -R QrSortable.app Payload/
