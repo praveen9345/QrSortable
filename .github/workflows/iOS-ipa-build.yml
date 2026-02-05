@@ -9,7 +9,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # 1️⃣ Checkout repository
+      # 1️⃣ Checkout repo
       - uses: actions/checkout@v4
 
       # 2️⃣ Setup .NET 9
@@ -25,6 +25,7 @@ jobs:
       # 4️⃣ Restore NuGet packages
       - name: Restore NuGet packages
         run: dotnet restore QrSortable.csproj
+        working-directory: QrSortable
 
       # 5️⃣ Build iOS app (unsigned)
       - name: Build iOS app (unsigned)
@@ -35,18 +36,19 @@ jobs:
             /p:BuildIpa=true \
             /p:CodesignKey="" \
             /p:CodesignProvision=""
+        working-directory: QrSortable
 
       # 6️⃣ Prepare Payload folder for IPA
       - name: Prepare Payload folder
         run: |
-          cd bin/Release/net9.0-ios/ios-arm64/publish
+          cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish
           mkdir Payload
           mv QrSortable.app Payload/
 
       # 7️⃣ Zip the unsigned IPA
       - name: Zip unsigned IPA
         run: |
-          cd bin/Release/net9.0-ios/ios-arm64/publish
+          cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish
           zip -qq -r -9 QrSortable-Unsigned.ipa Payload
 
       # 8️⃣ Upload IPA to GitHub Release
@@ -54,7 +56,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: bin/Release/net9.0-ios/ios-arm64/publish/QrSortable-Unsigned.ipa
+          file: QrSortable/bin/Release/net9.0-ios/ios-arm64/publish/QrSortable-Unsigned.ipa
           tag: v1.0
           overwrite: true
           body: "Unsigned MAUI IPA for testing only"
