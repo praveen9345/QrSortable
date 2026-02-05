@@ -12,75 +12,103 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.100'
+
+
+
+
 
       - name: Check available Xcode versions
-        run: |
-          echo "=== xcodebuild -version ==="
-          xcodebuild -version || true
-          echo "=== /Applications listing ==="
-          ls -la /Applications | grep Xcode || true
 
-      - name: Create global.json (repo root) and restore MAUI workloads
+
+
         run: |
-          cat > global.json <<'JSON'
-          {
+          ls -la /Applications/ | grep Xcode
+          
+      - name: Set Xcode version (prefer 15.x)
+        run: |
+          # Try Xcode 15 versions first
+          if [ -d "/Applications/Xcode_15.4.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+            echo "Using Xcode 15.4"
+          elif [ -d "/Applications/Xcode_15.3.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_15.3.app/Contents/Developer
+            echo "Using Xcode 15.3"
+          elif [ -d "/Applications/Xcode_15.2.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
+            echo "Using Xcode 15.2"
+          else
+            sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+            echo "Using Xcode 16 (fallback)"
+          fi
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install MAUI workloads
+        run: |
+          # Create global.json in the project folder to fix the SDK version
+          echo '{
             "sdk": {
               "version": "9.0.100",
+              "workloadVersion": "9.0.100",
               "allowPrerelease": false,
               "rollForward": "latestFeature"
             }
-          }
-          JSON
+          }' > QrSortable/global.json
+
           cd QrSortable
           dotnet workload restore
           dotnet workload list
 
       - name: Clean previous builds
-        run: rm -rf QrSortable/bin QrSortable/obj
-
-      - name: Restore NuGet packages
-        working-directory: QrSortable
-        run: dotnet restore QrSortable.csproj
-
-      - name: Diagnostics: dotnet and workloads
-        working-directory: QrSortable
         run: |
-          echo "=== dotnet --info ==="
-          dotnet --info || true
-          echo "=== dotnet workload list (detailed) ==="
-          dotnet workload list || true
-
-      - name: Publish iOS app (unsigned)
+          rm -rf QrSortable/bin QrSortable/obj
+          
+      - name: Restore NuGet packages
+        run: dotnet restore QrSortable.csproj
         working-directory: QrSortable
+
+
+      - name: Build iOS app (unsigned)
+
         run: |
           dotnet publish QrSortable.csproj \
             -f net9.0-ios \
             -c Release \
             -r ios-arm64 \
-            -o bin/Release/net9.0-ios/ios-arm64/publish \
+
             /p:BuildIpa=true \
-            /p:ArchiveOnBuild=true \
             /p:EnableCodeSigning=false \
+            /p:CodesignKey="-" \
+            /p:CodesignProvision="-" \
+            /p:ArchiveOnBuild=true \
+
             /p:OptimizePNGs=false \
-            /p:UseAccessorizer=false
+            /p:UseAccessorizer=false \
+            /p:MtouchNoFastDev=true \
+            /p:MtouchTarget=device \
+            /p:TargetDevice=iPhone \
+            /p:Platform=iPhone \
+            /p:SuppressMtouchSimulatorWarnings=true
+        working-directory: QrSortable
 
       - name: Package unsigned IPA
         run: |
-          PUBLISH_DIR=QrSortable/bin/Release/net9.0-ios/ios-arm64/publish
-          echo "Looking for .app in $PUBLISH_DIR"
-          APP_PATH=$(find "$PUBLISH_DIR" -name "*.app" -type d | head -n 1)
-          if [ -z "$APP_PATH" ]; then
-            echo "ERROR: .app not found in $PUBLISH_DIR"
-            ls -la "$PUBLISH_DIR" || true
-            exit 1
-          fi
+          # Use find to locate the .app safely
+          APP_PATH=$(find QrSortable/bin/Release/net9.0-ios/ios-arm64/publish -name "*.app" -type d | head -n 1)
+
+
+
+
+
+
           echo "Found app at: $APP_PATH"
-          cd "$(dirname "$APP_PATH")"
-          rm -rf Payload
+          
+          APP_DIR=$(dirname "$APP_PATH")
+          cd "$APP_DIR"
+          
           mkdir -p Payload
           cp -R *.app Payload/
           zip -qr QrSortable-Unsigned.ipa Payload
