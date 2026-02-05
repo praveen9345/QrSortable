@@ -12,7 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Force Xcode 16.0/16.1 to align with .NET 9
       - name: Set Xcode version
         run: sudo xcode-select -s /Applications/Xcode_16.app
 
@@ -23,7 +22,7 @@ jobs:
 
       - name: Install MAUI workloads
         run: |
-          # Create global.json in the project folder
+          # Ensuring global.json is in the correct project subdirectory
           echo '{
             "sdk": {
               "version": "9.0.100",
@@ -43,7 +42,7 @@ jobs:
         run: dotnet restore QrSortable.csproj
         working-directory: QrSortable
 
-      # 6️⃣ Build with "actool" bypass flags
+      # 6️⃣ Build with the "Nuclear" asset bypass flags
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
@@ -55,15 +54,15 @@ jobs:
             /p:CodesignProvision="-" \
             /p:ArchiveOnBuild=true \
             /p:OptimizePNGs=false \
-            /p:IsAppExtension=false \
+            /p:UseAccessorizer=false \
             /p:ForceSimulatorRuntimeSelection=false \
-            /p:CollectBundleResources=true
+            /p:MtouchExtraArgs="--nosim"
         working-directory: QrSortable
 
       # 7️⃣ Packaging Step
       - name: Package unsigned IPA
         run: |
-          # Use a broad search to find the .app regardless of nested folders
+          # Search for the .app folder dynamically
           APP_PATH=$(find QrSortable/bin/Release/net9.0-ios/ios-arm64/publish -name "QrSortable.app" -type d | head -n 1)
           echo "Found app at: $APP_PATH"
           
