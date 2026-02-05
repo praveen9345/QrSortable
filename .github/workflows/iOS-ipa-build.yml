@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Force Xcode 16.1 or 16.0 to ensure compatibility with .NET 9
+      # Force Xcode 16.0/16.1 to align with .NET 9
       - name: Set Xcode version
         run: sudo xcode-select -s /Applications/Xcode_16.app
 
@@ -43,7 +43,7 @@ jobs:
         run: dotnet restore QrSortable.csproj
         working-directory: QrSortable
 
-      # 6️⃣ Build with "Emergency" flags to bypass actool/simulator runtime checks
+      # 6️⃣ Build with "actool" bypass flags
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
@@ -54,21 +54,30 @@ jobs:
             /p:CodesignKey="-" \
             /p:CodesignProvision="-" \
             /p:ArchiveOnBuild=true \
-            /p:ForceSimulatorRuntimeSelection=false \
-            /p:IsAppExtension=false \
             /p:OptimizePNGs=false \
-            /p:MtouchLink=SdkOnly \
-            /p:MtouchNoFastDev=true
+            /p:IsAppExtension=false \
+            /p:ForceSimulatorRuntimeSelection=false \
+            /p:CollectBundleResources=true
         working-directory: QrSortable
 
       # 7️⃣ Packaging Step
       - name: Package unsigned IPA
         run: |
-          # Navigate to the output directory
-          cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish/
+          # Use a broad search to find the .app regardless of nested folders
+          APP_PATH=$(find QrSortable/bin/Release/net9.0-ios/ios-arm64/publish -name "QrSortable.app" -type d | head -n 1)
+          echo "Found app at: $APP_PATH"
+          
+          APP_DIR=$(dirname "$APP_PATH")
+          cd "$APP_DIR"
           
           mkdir -p Payload
-          cp -R QrSortable.app Payload/
+          cp -R "QrSortable.app" Payload/
           zip -qr QrSortable-Unsigned.ipa Payload
           
-          mv QrSort
+          mv QrSortable-Unsigned.ipa ${{ github.workspace }}/
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: QrSortable-Unsigned-IPA
+          path: QrSortable-Unsigned.ipa
