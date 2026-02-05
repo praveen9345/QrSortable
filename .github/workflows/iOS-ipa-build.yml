@@ -13,29 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Install the specific Xcode version required by .NET 9 iOS
-      - name: Install Xcode 26.0.1
-        run: |
-          # Clean up any previous partial installs
-          sudo rm -rf /Applications/Xcode_26.app
-          sudo rm -f xcode.xip
-          
-          # **IMPORTANT:** The direct Apple link below may require authentication.
-          # If the download fails, manually download Xcode_26.0.1.xip from
-          # https://developer.apple.com/download/all/, host it, and replace the URL.
-          echo "Downloading Xcode 26.0.1 (this is a large file ~8GB)..."
-          curl -L -o xcode.xip "https://developer.apple.com/services-account/download?path=/Developer_Tools/Xcode_26.0.1/Xcode_26.0.1.xip"
-          
-          echo "Extracting Xcode. This will take 10-15 minutes..."
-          xip -x xcode.xip
-          
-          echo "Moving Xcode to Applications folder..."
-          sudo mv Xcode.app /Applications/Xcode_26.app
-          
-          # Set this Xcode as active and accept license
-          echo "Configuring Xcode..."
-          sudo xcode-select -s /Applications/Xcode_26.app/Contents/Developer
-          sudo xcodebuild -license accept
+      # 2️⃣ Check Xcode version (for debugging/verification)
+      - name: Check Xcode version
+        run: xcodebuild -version
 
       # 3️⃣ Setup .NET 9
       - name: Setup .NET 9
@@ -43,14 +23,31 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      # 4️⃣ Install MAUI workloads
-      - name: Install MAUI workloads
-        run: dotnet workload install maui
+      # 4️⃣ Install MAUI workloads with compatible iOS SDK
+      - name: Install compatible MAUI workloads
+        run: |
+          # First install MAUI workload
+          dotnet workload install maui
+          
+          # Check installed iOS SDK version
+          echo "Checking current iOS SDK version..."
+          dotnet workload list
+          
+          # The issue is that the latest .NET 9 iOS SDK requires Xcode 26.0
+          # Since we have Xcode 16.4, we need to use an older iOS SDK version
+          # that was validated against Xcode 16.4
+          
+          # Uninstall the problematic iOS SDK that requires Xcode 26.0
+          dotnet workload uninstall ios
+          
+          # Install a compatible iOS SDK version
+          # Version 26.0.0-preview.9 was the last preview before Xcode 26.0 requirement
+          dotnet workload install ios --version 26.0.0-preview.9
 
       # 5️⃣ Restore NuGet packages
       - name: Restore NuGet packages
         run: dotnet restore QrSortable.csproj
-        working-directory: QrSortable  # Adjust if your project is in a different folder
+        working-directory: QrSortable
 
       # 6️⃣ Build the unsigned iOS app (IPA)
       - name: Build iOS app (unsigned)
