@@ -12,26 +12,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 9 SDK (pin exact SDK)
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.100'
 
       - name: Check available Xcode versions
-        run: ls -la /Applications/ | grep Xcode || true
-
-      - name: Select Xcode (if multiple present)
         run: |
-          # Adjust these paths to one available on the runner; fall back to default
-          if [ -d "/Applications/Xcode_15.4.app" ]; then
-            sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
-            echo "Using Xcode 15.4"
-          elif [ -d "/Applications/Xcode_15.3.app" ]; then
-            sudo xcode-select -s /Applications/Xcode_15.3.app/Contents/Developer
-            echo "Using Xcode 15.3"
-          else
-            echo "Using system default Xcode"
-          fi
+          echo "=== xcodebuild -version ==="
+          xcodebuild -version || true
+          echo "=== /Applications listing ==="
+          ls -la /Applications | grep Xcode || true
 
       - name: Create global.json (repo root) and restore MAUI workloads
         run: |
@@ -54,6 +45,14 @@ jobs:
       - name: Restore NuGet packages
         working-directory: QrSortable
         run: dotnet restore QrSortable.csproj
+
+      - name: Diagnostics: dotnet and workloads
+        working-directory: QrSortable
+        run: |
+          echo "=== dotnet --info ==="
+          dotnet --info || true
+          echo "=== dotnet workload list (detailed) ==="
+          dotnet workload list || true
 
       - name: Publish iOS app (unsigned)
         working-directory: QrSortable
