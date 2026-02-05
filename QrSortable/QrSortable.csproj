@@ -42,7 +42,6 @@
 	<!-- iOS Release Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Release'">
 		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
-		<MtouchArch>ARM64</MtouchArch>
 		<PublishTrimmed>true</PublishTrimmed>
 		<TrimMode>partial</TrimMode>
 		<OptimizePNGs>false</OptimizePNGs>
@@ -56,7 +55,6 @@
 
 	<!-- iOS Debug Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Debug'">
-		<MtouchArch>x86_64</MtouchArch>
 		<OptimizePNGs>false</OptimizePNGs>
 	</PropertyGroup>
 	
