@@ -1,48 +1,49 @@
-name: MAUI iOS Unsigned Build
+name: MAUI iOS Unsigned IPA Build
 
 on:
   workflow_dispatch:
 
 jobs:
   build-ios:
-    name: 🎉 iOS Unsigned IPA
+    name: 🎉 MAUI iOS Build (Unsigned)
     runs-on: macos-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+
       - name: Set Xcode version
         run: sudo xcode-select -s /Applications/Xcode_16.app
 
-      # 1. Force .NET 9 SDK via global.json to stop the SDK 10 preview from asking for Tizen
-      - name: Setup .NET 9 and Pin Version
+      - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      - name: Create global.json
+      - name: Install MAUI workloads
         run: |
+          # Create global.json in the project folder to fix the SDK version
           echo '{
             "sdk": {
               "version": "9.0.100",
+              "workloadVersion": "9.0.100",
+              "allowPrerelease": false,
               "rollForward": "latestFeature"
             }
           }' > QrSortable/global.json
 
-      # 2. Install the specific workloads required
-      - name: Install Workloads
-        run: |
           cd QrSortable
-          dotnet workload install maui-ios --ignore-failed-sources
+          dotnet workload config --update-mode workload-set
+          dotnet workload restore
+          dotnet workload install maui-ios
+          dotnet workload list
+
+      - name: Restore NuGet packages
+        run: dotnet restore QrSortable.csproj
         working-directory: QrSortable
 
-      # 3. Restore with specific TargetFramework property
-      - name: Restore dependencies
-        run: dotnet restore QrSortable.csproj /p:TargetFramework=net9.0-ios
-        working-directory: QrSortable
-
-      # 4. Build with the bypass flags for actool
+      # 6️⃣ Build with bypass flags for actool
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
@@ -55,16 +56,21 @@ jobs:
             /p:ArchiveOnBuild=true \
             /p:OptimizePNGs=false \
             /p:UseAccessorizer=false \
-            /p:RuntimeIdentifier=ios-arm64 \
-            /p:ForceSimulatorRuntimeSelection=false
+            /p:MtouchNoFastDev=true
         working-directory: QrSortable
 
-      # 5. Create the IPA manual package
-      - name: Package Unsigned IPA
+      # 7️⃣ Packaging Step
+      - name: Package unsigned IPA
         run: |
-          cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish/
+          # Use find to locate the .app safely
+          APP_PATH=$(find QrSortable/bin/Release/net9.0-ios/ios-arm64/publish -name "QrSortable.app" -type d | head -n 1)
+          echo "Found app at: $APP_PATH"
+          
+          APP_DIR=$(dirname "$APP_PATH")
+          cd "$APP_DIR"
+          
           mkdir -p Payload
-          cp -R QrSortable.app Payload/
+          cp -R "QrSortable.app" Payload/
           zip -qr QrSortable-Unsigned.ipa Payload
           mv QrSortable-Unsigned.ipa ${{ github.workspace }}/
 
