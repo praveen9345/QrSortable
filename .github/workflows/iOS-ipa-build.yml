@@ -17,7 +17,7 @@ jobs:
       - name: Check Xcode version
         run: xcodebuild -version
 
-      # 3️⃣ Setup .NET 9 (without version pinning - will be pinned by global.json)
+      # 3️⃣ Setup .NET 9
       - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
@@ -30,8 +30,8 @@ jobs:
           # This forces the entire build to use a specific, compatible version
           echo '{
             "sdk": {
-              "version": "9.0.305",
-              "workloadVersion": "9.0.305",
+              "version": "9.0.310",
+              "workloadVersion": "9.0.310",
               "allowPrerelease": false,
               "rollForward": "disable"
             }
