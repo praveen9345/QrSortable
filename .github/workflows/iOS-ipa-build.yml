@@ -61,7 +61,10 @@ jobs:
             /p:PublishReadyToRun=false \
             /p:EnableCodeSigning=false \
             /p:CodesignKey="-" \
-            /p:CodesignProvision="-"
+            /p:CodesignProvision="-" \
+            /p:IPhoneResourceSelection="None" \
+            /p:OptimizePNGs=true \
+            /p:ForceSimulatorRuntimeSelection=false
         working-directory: QrSortable
 
       # 7️⃣ Package unsigned IPA
