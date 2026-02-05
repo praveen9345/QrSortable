@@ -14,7 +14,6 @@ jobs:
         uses: actions/checkout@v4
 
       # 2️⃣ Select specific Xcode version
-      # Sometimes "latest" defaults to a version slightly behind what the SDK expects
       - name: Set Xcode version
         run: sudo xcode-select -s /Applications/Xcode_16.app
 
@@ -30,7 +29,7 @@ jobs:
       # 4️⃣ Install Compatible .NET 9 MAUI Workloads
       - name: Install compatible MAUI workloads
         run: |
-          # Pining to 9.0.100 to avoid the "Xcode 26" metadata error in 9.0.3xx
+          # Create global.json inside the project folder to pin the version
           echo '{
             "sdk": {
               "version": "9.0.100",
@@ -38,10 +37,14 @@ jobs:
               "allowPrerelease": false,
               "rollForward": "latestFeature"
             }
-          }' > global.json
+          }' > QrSortable/global.json
 
+          # Set mode to workload-set
           dotnet workload config --update-mode workload-set
-          dotnet workload install maui-ios maui-maccatalyst --version 9.0.100
+
+          # Install workloads (CLI reads version from global.json automatically)
+          dotnet workload install maui-ios maui-maccatalyst
+          
           dotnet workload list
 
       # 5️⃣ Restore NuGet packages
@@ -50,7 +53,6 @@ jobs:
         working-directory: QrSortable
 
       # 6️⃣ Build the unsigned iOS app
-      # Using -p:EnableCodeSigning=false is the modern way to skip signing
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
@@ -64,21 +66,22 @@ jobs:
             /p:CodesignProvision="-"
         working-directory: QrSortable
 
-      # 7️⃣ Prepare Payload folder and create the final .ipa file
+      # 7️⃣ Package unsigned IPA
       - name: Package unsigned IPA
         run: |
-          # Navigate to the output directory
-          cd QrSortable/bin/Release/net9.0-ios/ios-arm64/publish/
+          # Find the .app bundle dynamically in case the path differs slightly
+          APP_PATH=$(find QrSortable/bin/Release/net9.0-ios -name "QrSortable.app" -type d | head -n 1)
+          APP_DIR=$(dirname "$APP_PATH")
           
-          # Create IPA structure
+          cd "$APP_DIR"
           mkdir -p Payload
-          cp -R QrSortable.app Payload/
+          cp -R "QrSortable.app" Payload/
           zip -qr QrSortable-Unsigned.ipa Payload
           
-          # Move to root for easier artifact upload
+          # Move to workspace root for upload
           mv QrSortable-Unsigned.ipa $GITHUB_WORKSPACE/
 
-      # 8️⃣ Upload the generated .ipa file as a workflow artifact
+      # 8️⃣ Upload the generated .ipa file
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
