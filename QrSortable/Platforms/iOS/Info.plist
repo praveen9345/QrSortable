@@ -28,7 +28,7 @@
 		</array>
 		<key>XSAppIconAssets</key>
 		<string>Assets.xcassets/appicon.appiconset</string>
-		<key>NsCameraUsageDescription</key>
+		<key>NSCameraUsageDescription</key>
 		<string>This app uses barcode scanning</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>We need access to the photo library to save pictures.</string>
