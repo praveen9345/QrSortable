@@ -17,32 +17,35 @@ jobs:
       - name: Check Xcode version
         run: xcodebuild -version
 
-      # 3️⃣ Setup .NET 9
+      # 3️⃣ Setup .NET 9 (without version pinning - will be pinned by global.json)
       - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      # 4️⃣ Install MAUI workloads with compatible iOS SDK
+      # 4️⃣ Install Compatible .NET 9 MAUI Workloads
       - name: Install compatible MAUI workloads
         run: |
-          # First install MAUI workload
-          dotnet workload install maui
-          
-          # Check installed iOS SDK version
-          echo "Checking current iOS SDK version..."
+          # Create a global.json file to pin the .NET 9 SDK and workload version
+          # This forces the entire build to use a specific, compatible version
+          echo '{
+            "sdk": {
+              "version": "9.0.305",
+              "workloadVersion": "9.0.305",
+              "allowPrerelease": false,
+              "rollForward": "disable"
+            }
+          }' > global.json
+
+          # Switch workload installation to use "workload sets" (pinned versions)
+          dotnet workload config --update-mode workload-set
+
+          # Install the specific MAUI workloads for iOS, Android, and Mac Catalyst
+          # These are the correct workload IDs for .NET 9
+          dotnet workload install maui-ios maui-android maui-maccatalyst
+
+          # Verify the installed workloads
           dotnet workload list
-          
-          # The issue is that the latest .NET 9 iOS SDK requires Xcode 26.0
-          # Since we have Xcode 16.4, we need to use an older iOS SDK version
-          # that was validated against Xcode 16.4
-          
-          # Uninstall the problematic iOS SDK that requires Xcode 26.0
-          dotnet workload uninstall ios
-          
-          # Install a compatible iOS SDK version
-          # Version 26.0.0-preview.9 was the last preview before Xcode 26.0 requirement
-          dotnet workload install ios --version 26.0.0-preview.9
 
       # 5️⃣ Restore NuGet packages
       - name: Restore NuGet packages
