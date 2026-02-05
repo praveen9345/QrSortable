@@ -1,0 +1,60 @@
+name: MAUI iOS Unsigned IPA Build
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  build-ios:
+    name: 🎉 MAUI iOS Build (Unsigned)
+    runs-on: macos-latest
+
+    steps:
+      # 1️⃣ Checkout repository
+      - uses: actions/checkout@v4
+
+      # 2️⃣ Setup .NET 9
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      # 3️⃣ Install MAUI workloads
+      - name: Install MAUI workloads
+        run: dotnet workload install maui
+
+      # 4️⃣ Restore NuGet packages
+      - name: Restore NuGet packages
+        run: dotnet restore QrSortable.csproj
+
+      # 5️⃣ Build iOS app (unsigned)
+      - name: Build iOS app (unsigned)
+        run: |
+          dotnet publish QrSortable.csproj \
+            -f net9.0-ios \
+            -c Release \
+            /p:BuildIpa=true \
+            /p:CodesignKey="" \
+            /p:CodesignProvision=""
+
+      # 6️⃣ Prepare Payload folder for IPA
+      - name: Prepare Payload folder
+        run: |
+          cd bin/Release/net9.0-ios/ios-arm64/publish
+          mkdir Payload
+          mv QrSortable.app Payload/
+
+      # 7️⃣ Zip the unsigned IPA
+      - name: Zip unsigned IPA
+        run: |
+          cd bin/Release/net9.0-ios/ios-arm64/publish
+          zip -qq -r -9 QrSortable-Unsigned.ipa Payload
+
+      # 8️⃣ Upload IPA to GitHub Release
+      - name: Upload IPA to GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: bin/Release/net9.0-ios/ios-arm64/publish/QrSortable-Unsigned.ipa
+          tag: v1.0
+          overwrite: true
+          body: "Unsigned MAUI IPA for testing only"
