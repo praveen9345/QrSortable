@@ -22,7 +22,7 @@ jobs:
 
       - name: Install MAUI workloads
         run: |
-          # Ensuring global.json is in the correct project subdirectory
+          # Create global.json in the project folder to fix the SDK version
           echo '{
             "sdk": {
               "version": "9.0.100",
@@ -42,7 +42,7 @@ jobs:
         run: dotnet restore QrSortable.csproj
         working-directory: QrSortable
 
-      # 6️⃣ Build with the "Nuclear" asset bypass flags
+      # 6️⃣ Build with bypass flags for actool
       - name: Build iOS app (unsigned)
         run: |
           dotnet publish QrSortable.csproj \
@@ -55,14 +55,13 @@ jobs:
             /p:ArchiveOnBuild=true \
             /p:OptimizePNGs=false \
             /p:UseAccessorizer=false \
-            /p:ForceSimulatorRuntimeSelection=false \
-            /p:MtouchExtraArgs="--nosim"
+            /p:MtouchNoFastDev=true
         working-directory: QrSortable
 
       # 7️⃣ Packaging Step
       - name: Package unsigned IPA
         run: |
-          # Search for the .app folder dynamically
+          # Use find to locate the .app safely
           APP_PATH=$(find QrSortable/bin/Release/net9.0-ios/ios-arm64/publish -name "QrSortable.app" -type d | head -n 1)
           echo "Found app at: $APP_PATH"
           
@@ -72,7 +71,6 @@ jobs:
           mkdir -p Payload
           cp -R "QrSortable.app" Payload/
           zip -qr QrSortable-Unsigned.ipa Payload
-          
           mv QrSortable-Unsigned.ipa ${{ github.workspace }}/
 
       - name: Upload IPA artifact
