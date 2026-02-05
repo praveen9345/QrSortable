@@ -1,7 +1,7 @@
 name: MAUI iOS Unsigned IPA Build
 
 on:
-  workflow_dispatch: # Manual trigger only
+  workflow_dispatch:
 
 jobs:
   build-ios:
@@ -9,27 +9,21 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # 1️⃣ Checkout the repository code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Select specific Xcode version
       - name: Set Xcode version
         run: sudo xcode-select -s /Applications/Xcode_16.app
 
-      - name: Check Xcode version
-        run: xcodebuild -version
-
-      # 3️⃣ Setup .NET 9
       - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      # 4️⃣ Install Compatible .NET 9 MAUI Workloads
+      # 4️⃣ Install and Restore Workloads
       - name: Install compatible MAUI workloads
         run: |
-          # Create global.json inside the project folder to pin the version
+          # Create global.json in the project directory
           echo '{
             "sdk": {
               "version": "9.0.100",
@@ -39,10 +33,14 @@ jobs:
             }
           }' > QrSortable/global.json
 
-          # Set mode to workload-set
+          # Change to project directory so dotnet finds the global.json
+          cd QrSortable
+          
+          # This forces the SDK to download the 9.0.100 manifest
           dotnet workload config --update-mode workload-set
-
-          # Install workloads (CLI reads version from global.json automatically)
+          dotnet workload restore
+          
+          # Specifically install the iOS workload for this version
           dotnet workload install maui-ios maui-maccatalyst
           
           dotnet workload list
@@ -69,7 +67,6 @@ jobs:
       # 7️⃣ Package unsigned IPA
       - name: Package unsigned IPA
         run: |
-          # Find the .app bundle dynamically in case the path differs slightly
           APP_PATH=$(find QrSortable/bin/Release/net9.0-ios -name "QrSortable.app" -type d | head -n 1)
           APP_DIR=$(dirname "$APP_PATH")
           
@@ -77,11 +74,8 @@ jobs:
           mkdir -p Payload
           cp -R "QrSortable.app" Payload/
           zip -qr QrSortable-Unsigned.ipa Payload
-          
-          # Move to workspace root for upload
           mv QrSortable-Unsigned.ipa $GITHUB_WORKSPACE/
 
-      # 8️⃣ Upload the generated .ipa file
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
