@@ -29,6 +29,12 @@
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">$(AndroidSupportedOSVersion)</SupportedOSPlatformVersion>
+
+		<RuntimeIdentifier Condition="'$(TargetFramework)' == 'net9.0-ios'">ios-arm64</RuntimeIdentifier>
+		<PublishTrimmed Condition="'$(TargetFramework)' == 'net9.0-ios'">true</PublishTrimmed>
+		<TrimMode Condition="'$(TargetFramework)' == 'net9.0-ios'">partial</TrimMode>
+		<ForceSimulatorRuntimeSelection Condition="'$(TargetFramework)' == 'net9.0-ios'">false</ForceSimulatorRuntimeSelection>
+	
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'DebugEmulator'">
@@ -41,7 +47,7 @@
 	<PropertyGroup>
 		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 		<RunAOTCompilation>False</RunAOTCompilation>
-		<PublishTrimmed>False</PublishTrimmed>
+		<PublishTrimmed Condition="'$(TargetFramework)' == 'net9.0-android'">False</PublishTrimmed>
 	</PropertyGroup>
 	<ItemGroup>
 		<!-- App Icon -->
