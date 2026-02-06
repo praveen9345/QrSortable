@@ -63,6 +63,7 @@
             #if IOS
 		            AppCenter.Start("ios=744f43a3-1c43-4dc2-bb92-d55acdb20fe6",typeof(Analytics),typeof(Crashes));
             #endif
+
             PdfSharpCore.Fonts.GlobalFontSettings.FontResolver = new PdfFontResolver();
             
             var app = builder.Build();
