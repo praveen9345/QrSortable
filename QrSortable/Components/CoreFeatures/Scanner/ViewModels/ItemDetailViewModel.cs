@@ -3,7 +3,9 @@
     using BarcodeScanning;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using Microsoft.Maui.Graphics;
     using Microsoft.Maui.Graphics.Platform;
+    using PdfSharpCore.Drawing;
     using QrSortable.Components.CoreFeatures.Cloud;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
@@ -17,6 +19,7 @@
     using QrSortable.Components.UiFunctionality.Notification.Models;
     using System.Collections.ObjectModel;
 
+
     /// <summary>
     ///     The view model of the ItemDetailView screen.
     /// </summary>
@@ -27,7 +30,6 @@
         private readonly IImageService _imageService;
         private readonly IToastService _toastService;
         private readonly IBackendCommunicationService _backendCommunicationService;
-        private readonly IFirebaseStorageService _firebaseStorageService;
         private readonly IBackendDatabaseManager _backendDatabaseManager;
         private readonly IConnectivityService _connectivityService;
         private readonly ISharedMethodService _sharedMethodService;
@@ -51,8 +53,7 @@
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
         public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, 
             IFilePickerService filePickerService, IToastService toastService, IBackendCommunicationService backendCommunicationService,
-            IFirebaseStorageService firebaseStorageService, IBackendDatabaseManager backendDatabaseManager, 
-            IConnectivityService connectivityService, ISharedMethodService sharedMethodService, 
+            IBackendDatabaseManager backendDatabaseManager, IConnectivityService connectivityService, ISharedMethodService sharedMethodService, 
             IBackendDatabaseHelper backendDatabaseHelper)
         {
             IsBackNavigationEnabled = true;
@@ -61,7 +62,6 @@
             _filePickerService = filePickerService;
             _toastService = toastService;
             _backendCommunicationService = backendCommunicationService;
-            _firebaseStorageService = firebaseStorageService;
             _backendDatabaseManager = backendDatabaseManager;
             _connectivityService = connectivityService;
             _sharedMethodService = sharedMethodService;
@@ -171,7 +171,11 @@
                 }
                 else
                 {
-                    if (jpegCaptureImages.Length != 0)
+                    // 1. Compress the camera capture first
+                    jpegCaptureImages = CompressAndResizeImage(jpegCaptureImages);
+
+                    // 2. Check total 1MB limit
+                    if (await IsWithinSizeLimit(jpegCaptureImages))
                     {
                         _imageArrayDb.Add(jpegCaptureImages);
                         ImageArray.Add(new Images()
@@ -229,12 +233,17 @@
 
                     if (byteImage != null && byteImage.Length > 0)
                     {
-                        _imageArrayDb.Add(byteImage);
-                        ImageArray.Add(new Images()
+                        byteImage = CompressAndResizeImage(byteImage);
+
+                        if (await IsWithinSizeLimit(byteImage))
                         {
-                            Image = ConvertToImageSource(byteImage),
-                            Rotate = 0
-                        });
+                            _imageArrayDb.Add(byteImage);
+                            ImageArray.Add(new Images()
+                            {
+                                Image = ConvertToImageSource(byteImage),
+                                Rotate = 0
+                            });
+                        }
                     }
                 }
             }
@@ -438,6 +447,58 @@
                 stream.Position = 0;
 
             return ImageSource.FromStream(() => stream ?? throw new InvalidOperationException("Stream cannot be null"));
+        }
+
+        public static byte[] CompressAndResizeImage(byte[] imageBytes)
+        {
+            int maxBytes = 524288; // 0.5 MB
+            if (imageBytes.Length <= maxBytes) return imageBytes;
+
+            // 1. Load the image using the platform-native engine
+            IImage image = PlatformImage.FromStream(new MemoryStream(imageBytes));
+
+            float quality = 0.9f;
+            byte[] result = imageBytes;
+            float scale = 0.9f;
+
+            // 2. Loop to reduce size (scaling and compression)
+            while (result.Length > maxBytes && (quality > 0.2f || scale > 0.1f))
+            {
+                // Resize the image natively
+                var newWidth = (int)(image.Width * scale);
+                var newHeight = (int)(image.Height * scale);
+
+                using var resizedImage = image.Resize(newWidth, newHeight, ResizeMode.Fit);
+
+                using (var ms = new MemoryStream())
+                {
+                    // Save as JPEG with the specified quality
+                    resizedImage.Save(ms, ImageFormat.Jpeg, quality);
+                    result = ms.ToArray();
+                }
+
+                // Gradually drop scale and quality
+                quality -= 0.1f;
+                scale -= 0.1f;
+            }
+
+            return result;
+        }
+
+        private async Task<bool> IsWithinSizeLimit(byte[] newImage)
+        {
+            long currentTotalSize = _imageArrayDb.Sum(x => (long)x.Length);
+            long maxAllowedSize = 1024 * 1024; // 1MB
+
+            if (currentTotalSize + newImage.Length > maxAllowedSize)
+            {
+                await DialogService.ShowAlertDialog(
+                    "Adding this image would exceed the 1MB total limit for this item.",
+                    "Ok"
+                );
+                return false;
+            }
+            return true;
         }
     }
 }
