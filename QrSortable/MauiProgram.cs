@@ -14,10 +14,12 @@
     using Microsoft.Maui.Controls.Handlers;
     using Android.Widget;
     using Platforms.Android.Components.PlatformUtils;
-    
+
 #elif IOS
     using UIKit;
     using QrSortable.Platforms.iOS.Components.PlatformUtils;
+    using Microsoft.AppCenter;
+    using Microsoft.AppCenter.Crashes;
 #endif
 
     public static class MauiProgram
@@ -41,17 +43,19 @@
                 .RegisterViewsAndViewModels()
                 .ConfigureMauiHandlers(handlers =>
                 {
-                #if ANDROID
-                    Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("Entry", (handler, _) =>
-                    {  
-                        handler.PlatformView.Background = null;
-                    });
-                #elif IOS
-                    Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("Entry", (handler, _) =>
-                    {  
-                        handler.PlatformView.BorderStyle = UITextBorderStyle.None;
-                    });
-                #endif
+                    #if ANDROID
+                        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("Entry", (handler, _) =>
+                        {  
+                            handler.PlatformView.Background = null;
+                        });
+                    #elif IOS
+                        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("Entry", (handler, _) =>
+                        {  
+                            handler.PlatformView.BorderStyle = UITextBorderStyle.None;
+                        });
+
+                        AppCenter.Start("ios={744f43a3-1c43-4dc2-bb92-d55acdb20fe6}", typeof(Crashes));
+                    #endif
 
                 });
 
