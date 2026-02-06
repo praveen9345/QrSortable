@@ -140,9 +140,11 @@
 
         public AsyncRelayCommand DoneCommand => new AsyncRelayCommand(async () =>
         {
+            var multiuserIdInput = MultiuserIdInput?.Trim().ToUpperInvariant();
 
             var confirmMessage = await DialogService.ShowRequestDialog("To use multi-user features, enter a valid multi-user ID. If you don’t have one, we’ll create a new account for you.",
                "Create One", "Done");
+
             if (!confirmMessage)
             {
                 await NavigationService.Navigate<RootView>();
@@ -150,7 +152,7 @@
             }
             else 
             {
-                if (string.IsNullOrWhiteSpace(MultiuserIdInput))
+                if (string.IsNullOrWhiteSpace(multiuserIdInput))
                 {
                     await DialogService.ShowAlertDialog("Error",
                    "Please enter a valid multi-user ID to proceed.", AppResources.Dialog_OK_Text);
@@ -159,7 +161,7 @@
 
             }
 
-            if(!await _backendCommunicationService.ValidateMultiuserIdAsync(MultiuserIdInput))
+            if(!await _backendCommunicationService.ValidateMultiuserIdAsync(multiuserIdInput))
             {
                 await DialogService.ShowAlertDialog("Error",
                "The entered multi-user ID is invalid or at least you need one have one saved data in given multi-user ID QRSortable App. Please check and try again.", 
@@ -167,7 +169,7 @@
                 return;
             }
 
-            if(MultiuserIdInput == MultiuserId)
+            if(multiuserIdInput == MultiuserId)
             {
                 var confirm = await DialogService.ShowRequestDialog("The multi-user ID you entered is the same as the one already used on this device.If you press OK, all data saved on this device will be deleted and re-downloaded from the server.",
                 AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
@@ -182,14 +184,14 @@
                 if (!confirm) { return; }
             }
 
-            var success = await _generalInformationManager.UpdateTheMultiuserIdAsync(MultiuserIdInput);
+            var success = await _generalInformationManager.UpdateTheMultiuserIdAsync(multiuserIdInput);
             if(!success)
             {
                 await _toastService.DisplayToast("An error occurred while setting the multi-user ID. Please try again.");
                 return;
             }
            
-            MultiuserId = MultiuserIdInput;
+            MultiuserId = multiuserIdInput;
 
             var result = await DialogService.ShowActivityIndicatorAndReturnResult(
             "Downloading your data. This may take a few moments…",

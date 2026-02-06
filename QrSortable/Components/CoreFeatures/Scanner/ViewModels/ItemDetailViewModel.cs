@@ -378,6 +378,7 @@
                     _databaseManager.BeginTransaction();
 
                     _storageData.CreatedDate = DateTime.Now;
+                    _storageData.Category = _storageData.Category.Trim().ToUpperInvariant();
                     _storageData.ItemName = ItemName;
                     _storageData.Description = ItemDescription;
                     _storageData.ImageList = _imageArrayDb.ToList();
