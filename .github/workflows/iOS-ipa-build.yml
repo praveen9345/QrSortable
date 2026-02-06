@@ -83,7 +83,11 @@ jobs:
           /p:UseAccessorizer=false \
           /p:MtouchNoFastDev=true \
           /p:RuntimeIdentifier=ios-arm64 \
-          /p:ActoolComputeOnlySupportedPlatforms=true
+          /p:ActoolComputeOnlySupportedPlatforms=true \
+          /p:SupportedOSPlatformVersion=15.0 \
+          /p:TargetPlatformMinVersion=15.0 \
+          /p:MtouchLink=SdkOnly \
+          /p:UseInterpreter=false
         working-directory: ${{ env.PROJECT_PATH }}
       
       - name: List build output

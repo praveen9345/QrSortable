@@ -39,6 +39,16 @@
         <AndroidSupportedOSVersion>21.0</AndroidSupportedOSVersion>
     </PropertyGroup>
 
+	<!-- iOS Platform Configuration - CRITICAL FOR iOS 16 COMPATIBILITY -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
+		<SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion>15.0</TargetPlatformMinVersion>
+		<!-- Use SdkOnly linking to avoid iOS 16 compatibility issues -->
+		<MtouchLink>SdkOnly</MtouchLink>
+		<!-- Disable interpreter for better compatibility -->
+		<UseInterpreter>false</UseInterpreter>
+	</PropertyGroup>
+
 	<!-- iOS Release Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Release'">
 		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
@@ -51,11 +61,16 @@
 		<EnableCodeSigning>false</EnableCodeSigning>
 		<CodesignKey>-</CodesignKey>
 		<CodesignProvision>-</CodesignProvision>
+		<!-- Reinforce minimum iOS version -->
+		<SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion>15.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
 	<!-- iOS Debug Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Debug'">
 		<OptimizePNGs>false</OptimizePNGs>
+		<!-- Use SdkOnly for debug too -->
+		<MtouchLink>SdkOnly</MtouchLink>
 	</PropertyGroup>
 	
 	<PropertyGroup>
