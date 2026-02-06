@@ -20,6 +20,7 @@
     using QrSortable.Platforms.iOS.Components.PlatformUtils;
     using Microsoft.AppCenter;
     using Microsoft.AppCenter.Crashes;
+    using Microsoft.AppCenter.Analytics;
 #endif
 
     public static class MauiProgram
@@ -54,12 +55,14 @@
                             handler.PlatformView.BorderStyle = UITextBorderStyle.None;
                         });
 
-                        AppCenter.Start("ios={744f43a3-1c43-4dc2-bb92-d55acdb20fe6}", typeof(Crashes));
                     #endif
 
                 });
 
-            
+            // Initialize App Center (outside of handlers configuration)
+            #if IOS
+		            AppCenter.Start("ios=744f43a3-1c43-4dc2-bb92-d55acdb20fe6",typeof(Analytics),typeof(Crashes));
+            #endif
             PdfSharpCore.Fonts.GlobalFontSettings.FontResolver = new PdfFontResolver();
             
             var app = builder.Build();

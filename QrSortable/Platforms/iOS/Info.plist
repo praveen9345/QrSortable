@@ -4,7 +4,7 @@
 	<dict>
 		<key>MinimumOSVersion</key>
 		<string>15.0</string>
-		
+
 		<key>LSRequiresIPhoneOS</key>
 		<true />
 		<key>UIDeviceFamily</key>
@@ -39,5 +39,36 @@
 		<string>Voice search for stored items</string>
 		<key>NSSpeechRecognitionUsageDescription</key>
 		<string>Speech recognition for searching items</string>
+
+		<!-- App Center Privacy Declaration (for iOS 17+) -->
+		<key>NSPrivacyTracking</key>
+		<false/>
+		<key>NSPrivacyCollectedDataTypes</key>
+		<array>
+			<dict>
+				<key>NSPrivacyCollectedDataType</key>
+				<string>NSPrivacyCollectedDataTypeCrashData</string>
+				<key>NSPrivacyCollectedDataTypeLinked</key>
+				<false/>
+				<key>NSPrivacyCollectedDataTypeTracking</key>
+				<false/>
+				<key>NSPrivacyCollectedDataTypePurposes</key>
+				<array>
+					<string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string>
+				</array>
+			</dict>
+			<dict>
+				<key>NSPrivacyCollectedDataType</key>
+				<string>NSPrivacyCollectedDataTypeProductInteraction</string>
+				<key>NSPrivacyCollectedDataTypeLinked</key>
+				<false/>
+				<key>NSPrivacyCollectedDataTypeTracking</key>
+				<false/>
+				<key>NSPrivacyCollectedDataTypePurposes</key>
+				<array>
+					<string>NSPrivacyCollectedDataTypePurposeAnalytics</string>
+				</array>
+			</dict>
+		</array>
 	</dict>
 </plist>
