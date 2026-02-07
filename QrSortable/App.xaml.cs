@@ -42,8 +42,24 @@
         protected override async void OnStart()
         {
             base.OnStart();
+
+			#if IOS
+	          // Give AppCenter 3 seconds to upload any previous crash reports
+	         await Task.Delay(3000);
+	        #endif
+
+			try
+            {
+                await _appService.OnStartAsync();
+			}
+			catch (Exception ex)
+			{
+				#if IOS
+				            // Track error in AppCenter
+				            Crashes.TrackError(ex);
+				#endif
 			
-            await _appService.OnStartAsync();
+			}
         }
 
     }
