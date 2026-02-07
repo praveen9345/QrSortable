@@ -3,7 +3,7 @@
 		<TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
 		<RootNamespace>QrSortable</RootNamespace>
 		<UseMaui>true</UseMaui>
-	    <MauiVersion>9.0.10</MauiVersion>
+	    <MauiVersion>9.0.40</MauiVersion>
 		<OutputType Condition="'$(TargetFramework)' == 'net9.0-ios'">Exe</OutputType>
 		<OutputType Condition="'$(TargetFramework)' == 'net9.0-android'">Exe</OutputType>
 		<OutputType Condition="'$(TargetFramework)' == 'net9.0'">Library</OutputType>
