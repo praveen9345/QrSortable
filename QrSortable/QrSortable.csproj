@@ -27,7 +27,7 @@
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">$(AndroidSupportedOSVersion)</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
@@ -41,36 +41,29 @@
 
 	<!-- iOS Platform Configuration - CRITICAL FOR iOS 16 COMPATIBILITY -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
-		<SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion>15.0</TargetPlatformMinVersion>
-		<!-- Use SdkOnly linking to avoid iOS 16 compatibility issues -->
-		<MtouchLink>SdkOnly</MtouchLink>
-		<!-- Disable interpreter for better compatibility -->
+		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+		<BuildIpa>true</BuildIpa>
+		<MtouchLink>None</MtouchLink>
 		<UseInterpreter>false</UseInterpreter>
+		<EnableCodeSigning>false</EnableCodeSigning>
+		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
+		<MtouchUseRegistrar>Static</MtouchUseRegistrar>
+		<ValidateXcodeVersion>false</ValidateXcodeVersion>
 	</PropertyGroup>
 
 	<!-- iOS Release Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Release'">
-		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
 		<PublishTrimmed>true</PublishTrimmed>
 		<TrimMode>partial</TrimMode>
-		<OptimizePNGs>false</OptimizePNGs>
-		<UseAccessorizer>false</UseAccessorizer>
-		<ActoolComputeOnlySupportedPlatforms>true</ActoolComputeOnlySupportedPlatforms>
+		<MtouchUseLlvm>false</MtouchUseLlvm>
+		<MtouchEnableBitcode>false</MtouchEnableBitcode>
 		<MtouchNoFastDev>true</MtouchNoFastDev>
-		<EnableCodeSigning>false</EnableCodeSigning>
-		<CodesignKey>-</CodesignKey>
-		<CodesignProvision>-</CodesignProvision>
-		<!-- Reinforce minimum iOS version -->
-		<SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion>15.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
 	<!-- iOS Debug Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Debug'">
 		<OptimizePNGs>false</OptimizePNGs>
-		<!-- Use SdkOnly for debug too -->
-		<MtouchLink>SdkOnly</MtouchLink>
+		<MtouchLink>None</MtouchLink>
 	</PropertyGroup>
 	
 	<PropertyGroup>
@@ -78,6 +71,13 @@
 		<RunAOTCompilation>False</RunAOTCompilation>
 		<PublishTrimmed Condition="'$(TargetFramework)' == 'net9.0-android'">False</PublishTrimmed>
 	</PropertyGroup>
+
+	<!-- iOS platform files -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
+		<BundleResource Include="Platforms\iOS\Info.plist" Link="Info.plist" />
+		<None Include="Platforms\iOS\Entitlements.plist" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#2B0B98" />
