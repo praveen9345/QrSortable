@@ -1,6 +1,7 @@
 ﻿namespace QrSortable
 {
 	using QrSortable.Components.CoreFeatures.AppStart;
+	 using Microsoft.AppCenter.Crashes;
 
     /// <summary>
     ///     Class representing the cross-platform application.
@@ -45,7 +46,7 @@
 
 			#if IOS
 	          // Give AppCenter 3 seconds to upload any previous crash reports
-	         await Task.Delay(3000);
+	          await Task.Delay(3000);
 	        #endif
 
 			try
@@ -55,8 +56,8 @@
 			catch (Exception ex)
 			{
 				#if IOS
-				            // Track error in AppCenter
-				            Crashes.TrackError(ex);
+				   // Track error in AppCenter
+				   Crashes.TrackError(ex);
 				#endif
 			
 			}
