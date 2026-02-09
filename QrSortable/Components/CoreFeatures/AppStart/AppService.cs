@@ -31,7 +31,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         private readonly IBackendDatabaseManager _backendDatabaseManager;
 
         private const string DatabaseName = "QrSortable.sqlite3";
-        private const string BackendDatabaseName = "QrSortable.sqlite3";
+        private const string BackendDatabaseName = "QrSortableBackend.sqlite3";
 
         /// <summary>
         ///     Initializes the application.
