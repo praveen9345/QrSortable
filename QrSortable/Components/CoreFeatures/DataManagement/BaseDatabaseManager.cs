@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -51,7 +52,19 @@
         {
             _createNewDatabaseContextFunc = contextCreationFunction;
             _databaseContext = contextCreationFunction.Invoke();
-            _databaseContext.Database.Migrate();
+
+            // Prevent runtime model-building on restricted runtimes (NativeAOT / no dynamic code).
+            // If dynamic code generation is available, run migrations as before. Otherwise, use EnsureCreated().
+            if (RuntimeFeature.IsDynamicCodeSupported)
+            {
+                _databaseContext.Database.Migrate();
+            }
+            else
+            {
+                // AOT / restricted runtime: avoid model building (EF Core compiled model should be used in production).
+                // EnsureCreated will create schema if missing without runtime model generation.
+                _databaseContext.Database.EnsureCreated();
+            }
         }
 
         /// <summary>
