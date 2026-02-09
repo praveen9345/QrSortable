@@ -60,9 +60,12 @@
                 });
 
             // Initialize App Center (outside of handlers configuration)
-            #if IOS
+#if IOS
 		            AppCenter.Start("ios=744f43a3-1c43-4dc2-bb92-d55acdb20fe6",typeof(Analytics),typeof(Crashes));
-            #endif
+                    
+                    // Enable verbose logging for debugging
+                    AppCenter.LogLevel = LogLevel.Verbose;
+#endif
 
             PdfSharpCore.Fonts.GlobalFontSettings.FontResolver = new PdfFontResolver();
             
