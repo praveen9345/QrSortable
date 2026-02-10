@@ -12,7 +12,7 @@ namespace QrSortable.Components.CoreFeatures.Cloud.AccessManagement
             try
             {
                 // Load the JSON file from the MAUI app package
-                using var stream = await FileSystem.OpenAppPackageFileAsync("firebase-storage-adminsdk.json");
+                using var stream = await FileSystem.OpenAppPackageFileAsync("admin-sdk.json");
                 using var reader = new StreamReader(stream);
                 string jsonCredentials = await reader.ReadToEndAsync();
 
