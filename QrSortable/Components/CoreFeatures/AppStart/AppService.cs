@@ -1,9 +1,5 @@
 namespace QrSortable.Components.CoreFeatures.AppStart
 {
-    using FirebaseAdmin;
-    using Google.Apis.Auth.OAuth2;
-    using Microsoft.Extensions.DependencyInjection;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
@@ -27,8 +23,6 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         private readonly IFileManager _fileManager;
         private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
         private readonly IGeneralInformationManager _generalInformationManager;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IBackendDatabaseManager _backendDatabaseManager;
 
         private const string DatabaseName = "QrSortable.sqlite3";
         private const string BackendDatabaseName = "QrSortableBackend.sqlite3";
@@ -36,16 +30,18 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// <summary>
         ///     Initializes the application.
         /// </summary>
-        public AppService(IServiceProvider serviceProvider)
+        public AppService()
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _navigationService = ServiceHelper.GetService<INavigationService>();
+            _mauiEssentialsWrapper = ServiceHelper.GetService<IMauiEssentialsWrapper>();
+            _databaseManager = ServiceHelper.GetService<IDatabaseManager>();
+            _fileManager = ServiceHelper.GetService<IFileManager>();
+            _generalInformationManager = ServiceHelper.GetService<IGeneralInformationManager>();
 
-            _navigationService = _serviceProvider.GetRequiredService<INavigationService>();
-            _mauiEssentialsWrapper = _serviceProvider.GetRequiredService<IMauiEssentialsWrapper>();
-            _databaseManager = _serviceProvider.GetRequiredService<IDatabaseManager>();
-            _fileManager = _serviceProvider.GetRequiredService<IFileManager>();
-            _generalInformationManager = _serviceProvider.GetRequiredService<IGeneralInformationManager>();
-            _backendDatabaseManager = _serviceProvider.GetRequiredService<IBackendDatabaseManager>();
+            var backendDatabaseManager = ServiceHelper.GetService<IBackendDatabaseManager>();
+            backendDatabaseManager.Initialize(CreateNewBackendDbContext);
+
+            ResetStorageAndDatabaseAfterReinstall();
 
         }
 
@@ -57,23 +53,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// </summary>
         public async Task OnStartAsync()
         {
-            await InitializeDatabasesAsync();
-
-            await ConfigureAndInitializeFirebaseAsync();
-
             await NavigateToFirstViewModelAsync();
-        }
-
-        private async Task InitializeDatabasesAsync()
-        {
-            // initialize backend DB
-            _backendDatabaseManager.Initialize(CreateNewBackendDbContext);
-
-            // start database for app usage
-            _databaseManager.Initialize(CreateNewDbContext);
-
-            // Reset storage/database after reinstall - perform asynchronously
-            await ResetStorageAndDatabaseAfterReinstallAsync();
         }
 
         /// <summary>
@@ -94,24 +74,6 @@ namespace QrSortable.Components.CoreFeatures.AppStart
                     await _navigationService.Navigate<RootView>();
                     break;
             }
-        }
-
-        private async Task ConfigureAndInitializeFirebaseAsync()
-        {
-            var localPath = Path.Combine(FileSystem.CacheDirectory, "admin-sdk.json");
-            if (File.Exists(localPath))
-                File.Delete(localPath);
-            using (var jsonStream = await FileSystem.OpenAppPackageFileAsync("admin-sdk.json"))
-            using (var destStream = File.Create(localPath))
-            {
-                await jsonStream.CopyToAsync(destStream);
-            }
-
-            FirebaseApp.Create(new AppOptions()
-            {
-                Credential = GoogleCredential.FromFile(localPath)
-            });
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", localPath);
         }
 
         private BaseDatabaseContext CreateNewDbContext()
@@ -143,24 +105,24 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             throw new NotImplementedException("The current platform is not supported");
         }
 
-        private async Task ResetStorageAndDatabaseAfterReinstallAsync()
+        private void ResetStorageAndDatabaseAfterReinstall()
         {
             // Workaround: for clearing the storage and database after reinstalling
             var fileTask = _fileManager.WriteFileToFileSystemAsync("QrSortable.txt", Encoding.UTF8.GetBytes("QrSortable"));
-            var file = await fileTask;
+            var file = fileTask.Result;
 
             if (file)
             {
                 _mauiEssentialsWrapper.ClearSecureStorage();
-                await _databaseManager.ClearDatabaseAsync();
+                _databaseManager.ClearDatabaseAsync();
             }
 
             _databaseManager.Initialize(CreateNewDbContext);
 
             if (file)
             {
-                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
-                await _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
+                _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
+                _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
             }
         }
 
