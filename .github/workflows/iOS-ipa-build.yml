@@ -79,11 +79,12 @@ jobs:
           /p:CodesignKey="-" \
           /p:CodesignProvision="-" \
           /p:ArchiveOnBuild=true \
-          /p:PublishTrimmed=false \
+          /p:PublishTrimmed=true \
+          /p:TrimMode=partial \
           /p:PublishAot=false \
           /p:RunAOTCompilation=false \
           /p:RuntimeIdentifier=ios-arm64 \
-          /p:MtouchLink=SdkOnly \
+          /p:MtouchLink=None \
           /p:MtouchExtraArgs="--interpreter" \
           /p:SupportedOSPlatformVersion=16.0 \
           /p:OptimizePNGs=false \
