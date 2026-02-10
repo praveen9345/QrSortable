@@ -1,9 +1,5 @@
 namespace QrSortable.Components.CoreFeatures.AppStart
 {
-    using FirebaseAdmin;
-    using Google.Apis.Auth.OAuth2;
-    using Microsoft.Extensions.DependencyInjection;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
@@ -29,7 +25,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         private readonly IGeneralInformationManager _generalInformationManager;
 
         private const string DatabaseName = "QrSortable.sqlite3";
-        private const string BackendDatabaseName = "QrSortable.sqlite3";
+        private const string BackendDatabaseName = "QrSortableBackend.sqlite3";
 
         /// <summary>
         ///     Initializes the application.
@@ -57,7 +53,6 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// </summary>
         public async Task OnStartAsync()
         {
-            await ConfigureAndInitializeFirebaseAsync();
             await NavigateToFirstViewModelAsync();
         }
 
@@ -79,24 +74,6 @@ namespace QrSortable.Components.CoreFeatures.AppStart
                     await _navigationService.Navigate<RootView>();
                     break;
             }
-        }
-
-        private async Task ConfigureAndInitializeFirebaseAsync()
-        {
-            var localPath = Path.Combine(FileSystem.CacheDirectory, "admin-sdk.json");
-            if (File.Exists(localPath))
-                File.Delete(localPath);
-            using (var jsonStream = await FileSystem.OpenAppPackageFileAsync("admin-sdk.json"))
-            using (var destStream = File.Create(localPath))
-            {
-                await jsonStream.CopyToAsync(destStream);
-            }
-
-            FirebaseApp.Create(new AppOptions()
-            {
-                Credential = GoogleCredential.FromFile(localPath)
-            });
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", localPath);
         }
 
         private BaseDatabaseContext CreateNewDbContext()
