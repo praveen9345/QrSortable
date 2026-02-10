@@ -30,9 +30,6 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">$(AndroidSupportedOSVersion)</SupportedOSPlatformVersion>
 	
-       <!-- DISABLE AOT AND AGGRESSIVE OPTIMIZATION -->
-		<!--<PublishAot>false</PublishAot>
-		<RunAOTCompilation>false</RunAOTCompilation>-->
 </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'DebugEmulator'">
@@ -62,8 +59,8 @@
 		<MtouchUseLlvm>false</MtouchUseLlvm>
 		<MtouchEnableBitcode>false</MtouchEnableBitcode>
 		<MtouchNoFastDev>true</MtouchNoFastDev>
-        <UseInterpreter>true</UseInterpreter>
-        <!--<PublishAot>false</PublishAot>-->
+        <UseInterpreter>false</UseInterpreter>
+        <PublishAot>true</PublishAot>
 	</PropertyGroup>
 
 	<!-- iOS Debug Configuration -->
@@ -71,12 +68,18 @@
 		<OptimizePNGs>false</OptimizePNGs>
 		<MtouchLink>None</MtouchLink>
 	</PropertyGroup>
-	
-	<PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+		<RunAOTCompilation>false</RunAOTCompilation>
+		<PublishTrimmed>false</PublishTrimmed>
 		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
-		<RunAOTCompilation>False</RunAOTCompilation>
-		<PublishTrimmed Condition="'$(TargetFramework)' == 'net9.0-android'">False</PublishTrimmed>
+		<AndroidEnableProfileGuidedOptimization>false</AndroidEnableProfileGuidedOptimization>
 	</PropertyGroup>
+
+	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+		<Compile Remove="**\CompiledModels\**\*.cs" />
+		<None Include="**\CompiledModels\**\*.cs" />
+	</ItemGroup>
 
 	<!-- iOS platform files -->
 	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
@@ -174,6 +177,10 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

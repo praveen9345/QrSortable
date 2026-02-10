@@ -10,7 +10,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.Backend;
 namespace QrSortable.Migrations.Backend
 {
     [DbContext(typeof(BackendDatabaseContext))]
-    [Migration("20251224061456_InitialBackend")]
+    [Migration("20260210134815_InitialBackend")]
     partial class InitialBackend
     {
         /// <inheritdoc />

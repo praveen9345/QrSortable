@@ -1,6 +1,7 @@
 ﻿namespace QrSortable.Components.CoreFeatures.DataManagement.General
 {
     using Microsoft.EntityFrameworkCore;
+    using System.Runtime.CompilerServices;
     using Models;
 
     /// <summary>
@@ -57,6 +58,21 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            // ONLY use compiled model on iOS in NativeAOT mode
+#if IOS
+                if (!RuntimeFeature.IsDynamicCodeSupported)
+                {
+                    optionsBuilder.UseModel(
+                        QrSortable.Components.CoreFeatures.DataManagement.General.CompiledModels.DatabaseContextModel.Instance
+                    );
+                }
+#endif
         }
     }
 }
