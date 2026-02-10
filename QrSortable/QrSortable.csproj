@@ -57,11 +57,13 @@
 
 	<!-- iOS Release Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Release'">
-		<PublishTrimmed>false</PublishTrimmed>
-		<PublishAot>false</PublishAot>
-		<MtouchExtraArgs>--interpreter</MtouchExtraArgs>
-		<MtouchLink>SdkOnly</MtouchLink>
-        <!--<PublishAot>false</PublishAot>-->
+		 <PublishTrimmed>true</PublishTrimmed>
+		  <TrimMode>partial</TrimMode>
+		  <PublishAot>false</PublishAot>
+		  <RunAOTCompilation>false</RunAOTCompilation>
+		  <MtouchLink>None</MtouchLink>
+		  <MtouchExtraArgs>--interpreter</MtouchExtraArgs>
+		  <UseInterpreter>true</UseInterpreter>
 	</PropertyGroup>
 
 	<!-- iOS Debug Configuration -->
