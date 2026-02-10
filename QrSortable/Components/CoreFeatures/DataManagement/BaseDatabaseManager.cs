@@ -53,18 +53,7 @@
             _createNewDatabaseContextFunc = contextCreationFunction;
             _databaseContext = contextCreationFunction.Invoke();
 
-            // Prevent runtime model-building on restricted runtimes (NativeAOT / no dynamic code).
-            // If dynamic code generation is available, run migrations as before. Otherwise, use EnsureCreated().
-            if (RuntimeFeature.IsDynamicCodeSupported)
-            {
-                _databaseContext.Database.Migrate();
-            }
-            else
-            {
-                // AOT / restricted runtime: avoid model building (EF Core compiled model should be used in production).
-                // EnsureCreated will create schema if missing without runtime model generation.
-                _databaseContext.Database.EnsureCreated();
-            }
+            _databaseContext.Database.Migrate();
         }
 
         /// <summary>

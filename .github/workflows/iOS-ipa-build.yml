@@ -86,7 +86,7 @@ jobs:
           /p:ActoolComputeOnlySupportedPlatforms=true \
           /p:SupportedOSPlatformVersion=16.0 \
           /p:TargetPlatformMinVersion=16.0 \
-          /p:MtouchLink=None \
+          /p:MtouchLink=SdkOnly \
           /p:UseInterpreter=false
         working-directory: ${{ env.PROJECT_PATH }}
       
