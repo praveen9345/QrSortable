@@ -31,8 +31,8 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">$(AndroidSupportedOSVersion)</SupportedOSPlatformVersion>
 	
        <!-- DISABLE AOT AND AGGRESSIVE OPTIMIZATION -->
-		<PublishAot>false</PublishAot>
-		<RunAOTCompilation>false</RunAOTCompilation>
+		<!--<PublishAot>false</PublishAot>
+		<RunAOTCompilation>false</RunAOTCompilation>-->
 </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'DebugEmulator'">
@@ -63,7 +63,7 @@
 		<MtouchEnableBitcode>false</MtouchEnableBitcode>
 		<MtouchNoFastDev>true</MtouchNoFastDev>
         <UseInterpreter>true</UseInterpreter>
-        <PublishAot>false</PublishAot>
+        <!--<PublishAot>false</PublishAot>-->
 	</PropertyGroup>
 
 	<!-- iOS Debug Configuration -->
