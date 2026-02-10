@@ -15,7 +15,6 @@
     using Android.Widget;
     using Platforms.Android.Components.PlatformUtils;
 
-
 #elif IOS
     using UIKit;
     using QrSortable.Platforms.iOS.Components.PlatformUtils;
@@ -28,8 +27,7 @@
 	{
 		public static MauiApp CreateMauiApp()
 		{
-
-            var builder = MauiApp.CreateBuilder();
+			var builder = MauiApp.CreateBuilder();
 			builder
 				.UseMauiApp<App>()
 				.UseMauiCommunityToolkit()

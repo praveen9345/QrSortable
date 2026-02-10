@@ -1,7 +1,6 @@
 ﻿namespace QrSortable.Components.CoreFeatures.DataManagement.Backend
 {
     using Microsoft.EntityFrameworkCore;
-    using System.Runtime.CompilerServices;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
 
     /// <summary>
@@ -35,21 +34,5 @@
         /// </summary>
         public DbSet<DtoOrdersModel> OrderedDto { get; set; }
 
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            // ONLY use compiled model on iOS in NativeAOT mode
-#if IOS
-                 if (!RuntimeFeature.IsDynamicCodeSupported)
-                     {
-                         optionsBuilder.UseModel(
-                                QrSortable.Components.CoreFeatures.DataManagement.Backend.CompiledModels.BackendDatabaseContextModel.Instance);
-                      }
-#endif
-        }
-
     }
-
 }
