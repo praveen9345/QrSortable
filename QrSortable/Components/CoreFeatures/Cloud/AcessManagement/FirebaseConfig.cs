@@ -1,4 +1,4 @@
-namespace QrSortable.Components.CoreFeatures.Cloud.AcessManagement
+namespace QrSortable.Components.CoreFeatures.Cloud.AccessManagement
 {
     public static class FirebaseConfig
     {
@@ -6,3 +6,4 @@ namespace QrSortable.Components.CoreFeatures.Cloud.AcessManagement
     }
 
 }
+
