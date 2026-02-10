@@ -1,6 +1,7 @@
-﻿namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
+namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
 {
     using Google.Cloud.Firestore;
+    using QrSortable.Components.CoreFeatures.Cloud.AccessManagement;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Helper;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
@@ -38,7 +39,7 @@
 
         public async Task<bool> ValidateMultiuserIdAsync(string multiuserId)
         {
-            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
 
             var collection = firestoreDb.Collection("StorageEntries");
 
@@ -59,7 +60,7 @@
             var storageEntry = type.GetProperty("Category");
             var orderEntry = type.GetProperty("Title");
 
-            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
 
             var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
 
@@ -161,7 +162,7 @@
             var type = data.GetType();
             var storageEntry = type.GetProperty("Category");
             var orderEntry = type.GetProperty("Title");
-            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
 
             var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
             try
@@ -310,7 +311,7 @@
             var type = data.GetType();
             var storageEntry = type.GetProperty("Category");
             var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
-            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
             try
             {
                 if (storageEntry != null)
@@ -378,7 +379,7 @@
         public async Task<List<T>> GetAllAsync<T>() where T : FirestoreData, new()
         {
             var temp = new T();
-            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
             var snapshot = await firestoreDb.Collection(temp.CollectionName).GetSnapshotAsync();
 
             var result = new List<T>();
@@ -393,7 +394,7 @@
         public async Task<T?> GetAsync<T>(string id) where T : FirestoreData, new()
         {
             var temp = new T();
-            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
             var docRef = firestoreDb.Collection(temp.CollectionName).Document(id);
             var snapshot = await docRef.GetSnapshotAsync();
 
@@ -422,7 +423,7 @@
         {
             if (string.IsNullOrWhiteSpace(multiuserId)) throw new ArgumentException(nameof(multiuserId));
 
-            var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
             var temp = new T();
             var snapshot = await firestoreDb.Collection(temp.CollectionName)
                                     .WhereEqualTo("MultiuserId", multiuserId)
