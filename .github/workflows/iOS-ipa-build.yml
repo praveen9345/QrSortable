@@ -79,15 +79,15 @@ jobs:
           /p:CodesignKey="-" \
           /p:CodesignProvision="-" \
           /p:ArchiveOnBuild=true \
-          /p:OptimizePNGs=false \
-          /p:UseAccessorizer=false \
-          /p:MtouchNoFastDev=true \
+          /p:PublishTrimmed=false \
+          /p:PublishAot=false \
+          /p:RunAOTCompilation=false \
           /p:RuntimeIdentifier=ios-arm64 \
-          /p:ActoolComputeOnlySupportedPlatforms=true \
+          /p:MtouchLink=SdkOnly \
+          /p:MtouchExtraArgs="--interpreter" \
           /p:SupportedOSPlatformVersion=16.0 \
-          /p:TargetPlatformMinVersion=16.0 \
-          /p:MtouchLink=None \
-          /p:UseInterpreter=false
+          /p:OptimizePNGs=false \
+          /p:UseInterpreter=true
         working-directory: ${{ env.PROJECT_PATH }}
       
       - name: List build output
