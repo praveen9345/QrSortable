@@ -1,6 +1,7 @@
-﻿namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
+namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
 {
     using Google.Cloud.Firestore;
+    using QrSortable.Components.CoreFeatures.Cloud.AccessManagement;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.PlatformUtils;
@@ -53,7 +54,7 @@
             var dbStorage = await _databaseManager.GetListAsync<StorageEntry>() ?? new List<StorageEntry>();
 
             // Get backend Firestore entries
-            var db = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+            var db = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
             var collection = db.Collection("StorageEntries");
 
             var multiuserId = (await _generalInfoManager.GetGeneralInformationAsync()).MultiUserId;
@@ -263,7 +264,7 @@
             try
             {
                 // Create Firestore once
-                var firestoreDb = FirestoreDb.Create(Configuration.FirebaseConfig.PROJECT_ID);
+                var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
                 var collection = firestoreDb.Collection("StorageEntries");
 
                 var multiuserId = (await _generalInfoManager.GetGeneralInformationAsync()).MultiUserId;
