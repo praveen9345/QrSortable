@@ -7,5 +7,11 @@ public partial class MainPage : ContentPage
 	{
 		InitializeComponent();
 	}
+
+	protected override bool OnBackButtonPressed()
+	{
+	    Application.Current.Quit();
+	    return base.OnBackButtonPressed();
+	}
 }
 
