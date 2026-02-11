@@ -1,9 +1,9 @@
-namespace QrSortable.Components.CoreFeatures.OrdersPayments
+﻿namespace QrSortable.Components.CoreFeatures.OrdersPayments
 {
     using Mollie.Api.Client;
     using Mollie.Api.Models.Payment.Request;
     using Mollie.Api.Models.Payment.Response;
-    using static System.Net.WebRequestMethods;
+    using System.Globalization;
 
     /// <summary>
     ///     Implementation of the service providing navigation functionality.
@@ -27,7 +27,7 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
             var pymentMethodType = GetMolliePaymentMethodType(pymentMethod);
             var paymentRequest = new PaymentRequest
             {
-                Amount = new Mollie.Api.Models.Amount(GetMollieCurrencyType(currency), amount),
+                Amount = new Mollie.Api.Models.Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
                 Description = description,
                 RedirectUrl = "https://sites.google.com/view/payment-completed123",
                 Method = GetMolliePaymentMethodType(pymentMethod)
@@ -64,7 +64,7 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
             var currencyType = "";
             switch (currency)
             {
-                case "Euro(�)":
+                case "Euro(€)":
                     currencyType = "EUR";
                     break;
                 case "USD($)":
@@ -84,6 +84,24 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
                     break;
             }
             return currencyType;
+        }
+
+        private string ToMollieAmount(decimal amount)
+        {
+            // Check how many decimal places the value has
+            int[] bits = decimal.GetBits(amount);
+            int decimalPlaces = (bits[3] >> 16) & 31;
+
+            if (decimalPlaces == 2)
+            {
+                // Already 2 decimals → just format safely for Mollie
+                return amount.ToString("0.00", CultureInfo.InvariantCulture);
+            }
+
+            // Not 2 decimals → round and format
+            amount = Math.Round(amount, 2, MidpointRounding.AwayFromZero);
+
+            return amount.ToString("0.00", CultureInfo.InvariantCulture);
         }
     }
 }
