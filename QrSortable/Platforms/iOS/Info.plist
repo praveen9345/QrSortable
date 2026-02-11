@@ -43,13 +43,15 @@
 		<key>CFBundleURLTypes</key>
 		<array>
 			<dict>
+				<key>CFBundleURLName</key>
+				<string>com.Danfe.QrSortable</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>myapp</string>
+				<string>myapp</string>
 				</array>
 			</dict>
 		</array>
-		
+				
 		<!-- Permissions -->
 		<key>NSCameraUsageDescription</key>
 		<string>This app uses barcode scanning</string>
