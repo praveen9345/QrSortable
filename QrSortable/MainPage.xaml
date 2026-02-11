@@ -6,17 +6,17 @@
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     BackgroundImageSource="{OnPlatform Android='background_layout',
-                                       iOS='{StaticResource StatusBarColor}'}">
+                                       iOS='#525252'}">
     <ContentPage.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="{StaticResource StatusBarColor}" />
+        <mct:StatusBarBehavior StatusBarColor="#525252" />
     </ContentPage.Behaviors>
     <VerticalStackLayout
-        BackgroundColor="{OnPlatform iOS='{StaticResource StatusBarColor}'}"
+        BackgroundColor="{OnPlatform iOS='#525252'}"
         HorizontalOptions="FillAndExpand"
         VerticalOptions="FillAndExpand">
 
         <Image
-            Background="{StaticResource StatusBarColor}"
+            Background="#525252"
             HeightRequest="80"
             HorizontalOptions="Center"
             Source="qr_barcode_icon"
