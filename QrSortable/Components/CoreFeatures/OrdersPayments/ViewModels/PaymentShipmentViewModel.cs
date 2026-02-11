@@ -262,13 +262,16 @@
             IsPaymentMessageVisible = true;
 
             var paymentResponse = await _mollieService.CreatePaymentAsync(
-              _product.TotalPrice, SelectedCurrencyItem,"Card","Payment");
+              _product.TotalPrice, SelectedCurrencyItem, "Card", "Payment");
 
             if (paymentResponse != null && paymentResponse.Links.Checkout != null)
             {
                 _paymentId = paymentResponse.Id;
 
-                _timer = _timeService.StartPeriodicTimer(CheckStatusAsync, TimeSpan.FromSeconds(15));
+                _timer = _timeService.StartPeriodicTimer(async _ =>
+                {
+                    await CheckPaymentStatusAsync();
+                }, TimeSpan.FromSeconds(15));
 
                 await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.SystemPreferred);
             }
@@ -279,7 +282,26 @@
 
         });
 
-        private async void CheckStatusAsync(object state)
+        public async Task HandleMollieRedirect(string paymentId)
+        {
+            if (string.IsNullOrEmpty(paymentId)) return;
+
+            _paymentId = paymentId;
+            StopTimer();
+            await CheckPaymentStatusAsync();
+        }
+        
+        private void StopTimer()
+        {
+            if (_timer != null)
+            {
+                _timeService.StopPeriodicTimer(_timer);
+                _timer.Dispose();
+                _timer = null;
+            }
+        }
+
+        private async Task CheckPaymentStatusAsync()
         {
             if (string.IsNullOrEmpty(_paymentId))
             {
@@ -288,12 +310,6 @@
             }
 
             var paymentResponse = await _mollieService.GetPaymentStatusAsync(_paymentId);
-
-            if (paymentResponse == null)
-            {
-                Console.WriteLine("PaymentShipmentViewModel:Error: Failed to retrieve payment status.");
-                return;
-            }
 
             PaymentStatusMessage = paymentResponse.Status switch
             {
@@ -315,8 +331,7 @@
                 _orderProcessed = true;  // Mark as processed
             }
 
-            _timeService.StopPeriodicTimer(_timer);
-            _timer.Dispose();
+            StopTimer();
 
             PaymentStatusMessage = "Order received! We'll send a confirmation email shortly.! 🎉";
 

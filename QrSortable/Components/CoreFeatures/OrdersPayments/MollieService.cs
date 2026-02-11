@@ -24,12 +24,11 @@
 
          public async Task<PaymentResponse> CreatePaymentAsync(decimal amount, string currency, string pymentMethod, string description)
         {
-            var pymentMethodType = GetMolliePaymentMethodType(pymentMethod);
             var paymentRequest = new PaymentRequest
             {
                 Amount = new Mollie.Api.Models.Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
                 Description = description,
-                RedirectUrl = "https://sites.google.com/view/payment-completed123",
+                RedirectUrl = $"myapp://payment-return?id={{paymentId}}",
                 Method = GetMolliePaymentMethodType(pymentMethod)
             };
 

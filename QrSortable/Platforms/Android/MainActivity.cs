@@ -3,10 +3,22 @@
     using Android.App;
     using Android.Content.PM;
     using Android.OS;
+    using Android.Content;
     using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
     using Microsoft.Maui.Embedding;
 
-    [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
+    [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, Exported = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
+
+    [IntentFilter(
+        new[] { Intent.ActionView },
+        Categories = new[]
+        {
+            Intent.CategoryDefault,
+            Intent.CategoryBrowsable
+        },
+        DataScheme = "myapp",
+        DataHost = "payment-return")
+    ]      
     public class MainActivity : MauiAppCompatActivity
     {
         private MauiContext _mauiContext;
