@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    BackgroundImageSource="background_layout">
+    BackgroundImageSource="{OnPlatform Android='background_layout',
+                                       iOS='{StaticResource StatusBarColor}'}">
     <ContentPage.Behaviors>
         <mct:StatusBarBehavior StatusBarColor="{StaticResource StatusBarColor}" />
     </ContentPage.Behaviors>
@@ -17,6 +18,29 @@
             Text="Loading ..."
             TextColor="{StaticResource Primary}"
             VerticalTextAlignment="Center" />
+
+        <Button
+            Margin="0,0,0,50"
+            BackgroundColor="{StaticResource Primary}"
+            Command="{Binding PlaceAnOrderCommand}"
+            CornerRadius="10"
+            FontAttributes="Bold"
+            FontFamily="ItimRegular"
+            FontSize="20"
+            HorizontalOptions="Center"
+            IsVisible="{OnPlatform iOS=true,
+                                   Android=false}"
+            Text="Home Page"
+            TextColor="Black"
+            VerticalOptions="End">
+            <Button.Shadow>
+                <Shadow
+                    Brush="Black"
+                    Opacity="0.3"
+                    Radius="10"
+                    Offset="5,5" />
+            </Button.Shadow>
+        </Button>
 
     </Grid>
 </ContentPage>
