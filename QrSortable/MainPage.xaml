@@ -3,6 +3,7 @@
     x:Class="QrSortable.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     BackgroundImageSource="{OnPlatform Android='background_layout',
                                        iOS='{StaticResource StatusBarColor}'}">
@@ -10,7 +11,16 @@
         <mct:StatusBarBehavior StatusBarColor="{StaticResource StatusBarColor}" />
     </ContentPage.Behaviors>
     <Grid>
+
+        <Image
+            HeightRequest="80"
+            HorizontalOptions="Center"
+            Source="qr_barcode_icon"
+            VerticalOptions="Center"
+            WidthRequest="80" />
+
         <Label
+            Margin="0,15,0,0"
             FontAttributes="Bold"
             FontFamily="ItimRegular"
             FontSize="Title"
@@ -20,19 +30,26 @@
             VerticalTextAlignment="Center" />
 
         <Button
-            Margin="0,0,0,50"
+            Margin="0,15,0,0"
             BackgroundColor="{StaticResource Primary}"
             Clicked="OnClicked"
+            ContentLayout="10,Right"
             CornerRadius="10"
             FontAttributes="Bold"
             FontFamily="ItimRegular"
-            FontSize="20"
+            FontSize="Title"
             HorizontalOptions="Center"
             IsVisible="{OnPlatform iOS=true,
                                    Android=false}"
             Text="Home Page"
             TextColor="Black"
-            VerticalOptions="End">
+            VerticalOptions="Center">
+            <Button.ImageSource>
+                <FontImageSource
+                    FontFamily="FluentIcons"
+                    Glyph="{x:Static local:IconNames.Send}"
+                    Color="Black" />
+            </Button.ImageSource>
             <Button.Shadow>
                 <Shadow
                     Brush="Black"
