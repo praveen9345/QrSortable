@@ -15,9 +15,9 @@
         HorizontalOptions="FillAndExpand"
         VerticalOptions="FillAndExpand">
         <Grid.RowDefinitions>
-            <!--  product detail view  -->
+            <!--  logo view  -->
             <RowDefinition Height="*" />
-            <!--  cart view  -->
+            <!--  home page  -->
             <RowDefinition Height="8*" />
         </Grid.RowDefinitions>
 
