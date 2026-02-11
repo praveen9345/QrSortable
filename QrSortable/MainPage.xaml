@@ -10,31 +10,21 @@
     <ContentPage.Behaviors>
         <mct:StatusBarBehavior StatusBarColor="#525252" />
     </ContentPage.Behaviors>
-    <VerticalStackLayout
+    <Grid
         BackgroundColor="{OnPlatform iOS='#525252'}"
         HorizontalOptions="FillAndExpand"
         VerticalOptions="FillAndExpand">
 
         <Image
             Background="#525252"
-            HeightRequest="80"
+            HeightRequest="100"
             HorizontalOptions="Center"
             Source="qr_barcode_icon"
             VerticalOptions="Center"
             WidthRequest="80" />
 
-        <Label
-            Margin="0,15,0,0"
-            FontAttributes="Bold"
-            FontFamily="ItimRegular"
-            FontSize="Title"
-            HorizontalTextAlignment="Center"
-            Text="Loading ..."
-            TextColor="{StaticResource Primary}"
-            VerticalTextAlignment="Center" />
-
         <Button
-            Margin="0,15,0,0"
+            Margin="0,0,0,100"
             BackgroundColor="{StaticResource Primary}"
             Clicked="OnClicked"
             ContentLayout="10,Right"
@@ -47,7 +37,7 @@
                                    Android=false}"
             Text="Home Page"
             TextColor="Black"
-            VerticalOptions="Center">
+            VerticalOptions="End">
             <Button.ImageSource>
                 <FontImageSource
                     FontFamily="FluentIcons"
@@ -62,6 +52,5 @@
                     Offset="5,5" />
             </Button.Shadow>
         </Button>
-
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>
