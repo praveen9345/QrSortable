@@ -10,9 +10,13 @@
     <ContentPage.Behaviors>
         <mct:StatusBarBehavior StatusBarColor="{StaticResource StatusBarColor}" />
     </ContentPage.Behaviors>
-    <Grid>
+    <VerticalStackLayout
+        BackgroundColor="{OnPlatform iOS='{StaticResource StatusBarColor}'}"
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
 
         <Image
+            Background="{StaticResource StatusBarColor}"
             HeightRequest="80"
             HorizontalOptions="Center"
             Source="qr_barcode_icon"
@@ -59,5 +63,5 @@
             </Button.Shadow>
         </Button>
 
-    </Grid>
+    </VerticalStackLayout>
 </ContentPage>
