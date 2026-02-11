@@ -23,8 +23,6 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         private readonly IFileManager _fileManager;
         private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
         private readonly IGeneralInformationManager _generalInformationManager;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IBackendDatabaseManager _backendDatabaseManager;
 
         private const string DatabaseName = "QrSortable.sqlite3";
         private const string BackendDatabaseName = "QrSortableBackend.sqlite3";
@@ -32,16 +30,19 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// <summary>
         ///     Initializes the application.
         /// </summary>
-        public AppService(IServiceProvider serviceProvider)
+        public AppService()
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _navigationService = ServiceHelper.GetService<INavigationService>();
+            _mauiEssentialsWrapper = ServiceHelper.GetService<IMauiEssentialsWrapper>();
+            _databaseManager = ServiceHelper.GetService<IDatabaseManager>();
+            _fileManager = ServiceHelper.GetService<IFileManager>();
+            _generalInformationManager = ServiceHelper.GetService<IGeneralInformationManager>();
 
-            _navigationService = _serviceProvider.GetRequiredService<INavigationService>();
-            _mauiEssentialsWrapper = _serviceProvider.GetRequiredService<IMauiEssentialsWrapper>();
-            _databaseManager = _serviceProvider.GetRequiredService<IDatabaseManager>();
-            _fileManager = _serviceProvider.GetRequiredService<IFileManager>();
-            _generalInformationManager = _serviceProvider.GetRequiredService<IGeneralInformationManager>();
-            _backendDatabaseManager = _serviceProvider.GetRequiredService<IBackendDatabaseManager>();
+            var backendDatabaseManager = ServiceHelper.GetService<IBackendDatabaseManager>();
+            backendDatabaseManager.Initialize(CreateNewBackendDbContext);
+
+            ResetStorageAndDatabaseAfterReinstall();
+
         }
 
         /// <summary>
@@ -52,19 +53,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// </summary>
         public async Task OnStartAsync()
         {
-            await InitializeDatabasesAsync();
-
             await NavigateToFirstViewModelAsync();
-        }
-
-        private async Task InitializeDatabasesAsync()
-        {
-            _databaseManager.Initialize(CreateNewDbContext);
-             
-            _backendDatabaseManager.Initialize(CreateNewBackendDbContext);
-
-            await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
-            await _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
         }
 
         /// <summary>
@@ -116,6 +105,26 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             throw new NotImplementedException("The current platform is not supported");
         }
 
+        private void ResetStorageAndDatabaseAfterReinstall()
+        {
+            // Workaround: for clearing the storage and database after reinstalling
+            var fileTask = _fileManager.WriteFileToFileSystemAsync("QrSortable.txt", Encoding.UTF8.GetBytes("QrSortable"));
+            var file = fileTask.Result;
+
+            if (file)
+            {
+                _mauiEssentialsWrapper.ClearSecureStorage();
+                _databaseManager.ClearDatabaseAsync();
+            }
+
+            _databaseManager.Initialize(CreateNewDbContext);
+
+            if (file)
+            {
+                _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
+                _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
+            }
+        }
 
         private string GenereatedMultiuserId()
         {
