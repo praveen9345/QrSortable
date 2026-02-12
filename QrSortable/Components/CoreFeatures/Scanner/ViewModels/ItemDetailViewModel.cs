@@ -213,33 +213,43 @@
 
             if(picture == (int)PhotoSelectionResponse.Camera)
             {
-                var cameraPermission =
-                await _permissionService.RequestPermissionAsync(Permission.Camera);
 
+                var cameraPermission = PermissionStatus.Unknown;
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    var cameraPermission =
+                    await _permissionService.RequestPermissionAsync(Permission.Camera);
+                });
+                
                 if (cameraPermission != PermissionStatus.Granted)
                 {
                     await DialogService.ShowAlertDialog(
-                        "Camera permission is required.",
-                        AppResources.Dialog_OK_Text);
+                            "Camera permission is required.",
+                            AppResources.Dialog_OK_Text);
                     return;
                 }
-
+                
                 IsCameraEnabled = IsCameraCaptureVisable = true;
             }
 
             if (picture == (int)PhotoSelectionResponse.Gallery)
             {
-                var photoPermission =
-                await _permissionService.RequestPermissionAsync(Permission.Photos);
 
-                if (photoPermission != PermissionStatus.Granted)
+                var photoPermission = PermissionStatus.Unknown;
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    var photoPermission =
+                    await _permissionService.RequestPermissionAsync(Permission.Photos);
+                });
+                
+                 if (photoPermission != PermissionStatus.Granted)
                 {
                     await DialogService.ShowAlertDialog(
-                        "Photo permission is required.",
-                        AppResources.Dialog_OK_Text);
+                            "Photo permission is required.",
+                            AppResources.Dialog_OK_Text);
                     return;
                 }
-
+                
                 Stream imageStream = null;
 
                 var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",

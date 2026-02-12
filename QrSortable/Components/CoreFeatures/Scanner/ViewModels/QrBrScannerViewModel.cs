@@ -7,7 +7,6 @@
     using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.PlatformUtils.Models;
-    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
 
@@ -68,16 +67,23 @@
         {
             try
             {
-                IsCameraEnabled = false; // IMPORTANT: disable first
+                IsCameraEnabled = false;
 
-                var status =
-                    await _permissionService.CheckPermissionStatusAsync(Permission.Camera);
+                var status = PermissionStatus.Unknown;
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    var status =
+                        await _permissionService.CheckPermissionStatusAsync(Permission.Camera);
+                });
 
                 if (status != PermissionStatus.Granted)
                 {
 
-                    status = await _permissionService
-                       .RequestPermissionAsync(Permission.Camera);
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        status = await _permissionService.RequestPermissionAsync(Permission.Camera);
+                    });
+
                 }
 
                 if (status == PermissionStatus.Granted)
@@ -89,10 +95,12 @@
                     MainThread.BeginInvokeOnMainThread(async () =>
                     {
                         await _toastService.DisplayToast("Camera permission is required.");
+                        await NavigationService.Close();
                     });
-                    
-                    await NavigationService.Close();
+
                 }
+
+               
             }
             catch (Exception ex)
             {
