@@ -53,12 +53,14 @@ public class AppDelegate : MauiUIApplicationDelegate
 
             if (!string.IsNullOrEmpty(paymentId))
             {
-                // Get MainPage's BindingContext (ViewModel)
-                if (Microsoft.Maui.Controls.Application.Current.MainPage?.BindingContext
-                    is PaymentShipmentViewModel vm)
+                Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    vm.HandleMollieRedirect(paymentId);
-                }
+                    if (Microsoft.Maui.Controls.Application.Current?.MainPage?.BindingContext
+                        is PaymentShipmentViewModel vm)
+                    {
+                        vm.HandleMollieRedirect(paymentId);
+                    }
+                });
             }
         }
 
