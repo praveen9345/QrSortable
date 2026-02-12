@@ -268,9 +268,12 @@
             {
                 _paymentId = paymentResponse.Id;
 
-                _timer = _timeService.StartPeriodicTimer(async _ =>
+                _timer = _timeService.StartPeriodicTimer(_ =>
                 {
-                    await CheckPaymentStatusAsync();
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        await CheckPaymentStatusAsync();
+                    });
                 }, TimeSpan.FromSeconds(15));
 
                 await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.SystemPreferred);
@@ -288,18 +291,13 @@
 
             _paymentId = paymentId;
             StopTimer();
-            await CheckPaymentStatusAsync();
+
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                await CheckPaymentStatusAsync();
+            });
         }
         
-        private void StopTimer()
-        {
-            if (_timer != null)
-            {
-                _timeService.StopPeriodicTimer(_timer);
-                _timer.Dispose();
-                _timer = null;
-            }
-        }
 
         private async Task CheckPaymentStatusAsync()
         {
@@ -453,6 +451,16 @@
             {
                 Console.WriteLine($"DatabaseAndBackendStoringAsync::Exception during add: {ex}");
                 return false;
+            }
+        }
+
+        private void StopTimer()
+        {
+            if (_timer != null)
+            {
+                _timeService.StopPeriodicTimer(_timer);
+                _timer.Dispose();
+                _timer = null;
             }
         }
 
