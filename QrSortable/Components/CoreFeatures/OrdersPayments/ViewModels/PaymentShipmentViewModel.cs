@@ -276,7 +276,7 @@
                     });
                 }, TimeSpan.FromSeconds(15));
 
-                await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.SystemPreferred);
+                await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.External);
             }
             else
             {
