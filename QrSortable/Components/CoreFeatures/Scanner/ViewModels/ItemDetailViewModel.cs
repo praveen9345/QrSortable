@@ -13,6 +13,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.PlatformUtils;
+    using QrSortable.Components.PlatformUtils.Models;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
@@ -34,6 +35,7 @@
         private readonly IConnectivityService _connectivityService;
         private readonly ISharedMethodService _sharedMethodService;
         private readonly IBackendDatabaseHelper _backendDatabaseHelper;
+        private readonly IPermissionService _permissionService;
 
         private List<byte[]> _imageArrayDb = new List<byte[]>();
         private StorageEntry _storageData;
@@ -54,7 +56,7 @@
         public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, 
             IFilePickerService filePickerService, IToastService toastService, IBackendCommunicationService backendCommunicationService,
             IBackendDatabaseManager backendDatabaseManager, IConnectivityService connectivityService, ISharedMethodService sharedMethodService, 
-            IBackendDatabaseHelper backendDatabaseHelper)
+            IBackendDatabaseHelper backendDatabaseHelper, IPermissionService permissionService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
@@ -66,6 +68,7 @@
             _connectivityService = connectivityService;
             _sharedMethodService = sharedMethodService;
             _backendDatabaseHelper = backendDatabaseHelper;
+            _permissionService = permissionService;
 
             ImageArray = new ObservableCollection<Images>();
         }
@@ -210,12 +213,35 @@
 
             if(picture == (int)PhotoSelectionResponse.Camera)
             {
+                var cameraPermission =
+                await _permissionService.RequestPermissionAsync(Permission.Camera);
+
+                if (cameraPermission != PermissionStatus.Granted)
+                {
+                    await DialogService.ShowAlertDialog(
+                        "Camera permission is required.",
+                        AppResources.Dialog_OK_Text);
+                    return;
+                }
+
                 IsCameraEnabled = IsCameraCaptureVisable = true;
             }
 
             if (picture == (int)PhotoSelectionResponse.Gallery)
             {
+                var photoPermission =
+                await _permissionService.RequestPermissionAsync(Permission.Photos);
+
+                if (photoPermission != PermissionStatus.Granted)
+                {
+                    await DialogService.ShowAlertDialog(
+                        "Photo permission is required.",
+                        AppResources.Dialog_OK_Text);
+                    return;
+                }
+
                 Stream imageStream = null;
+
                 var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
                 async () =>
                 {

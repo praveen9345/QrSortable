@@ -111,8 +111,10 @@
 
 #if ANDROID
             builder.Services.AddSingleton<IImageService, AndroidImageService>();   
+            builder.Services.AddSingleton<IPermissionService, AndroidPermissionService>();
 #elif IOS
             builder.Services.AddSingleton<IImageService, IosImageService>();
+            builder.Services.AddSingleton<IPermissionService, IosPermissionService>();
 #endif
 
             //External Services

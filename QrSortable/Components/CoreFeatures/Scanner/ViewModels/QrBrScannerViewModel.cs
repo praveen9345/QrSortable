@@ -5,7 +5,11 @@
     using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Helper;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
+    using QrSortable.Components.PlatformUtils;
+    using QrSortable.Components.PlatformUtils.Models;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using QrSortable.Components.UiFunctionality.Notification;
 
     /// <summary>
     ///     The view model of the root view screen.
@@ -13,6 +17,8 @@
     public partial class QrBrScannerViewModel : BaseViewModel
     {
         private readonly IAesHelper _aesHelper;
+        private readonly IPermissionService _permissionService;
+        private readonly IToastService _toastService;
 
         private bool _isBarcodeDetected = false;
         public string FlashOnGlyph => "\uF41a";
@@ -21,10 +27,12 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="QrBrScannerViewModel" />.
         /// </summary>
-        public QrBrScannerViewModel(IAesHelper aesHelper)
+        public QrBrScannerViewModel(IAesHelper aesHelper, IPermissionService permissionService, IToastService toastService)
         {
             IsBackNavigationEnabled = true;
            _aesHelper = aesHelper;
+            _permissionService = permissionService;
+            _toastService = toastService;
         }
 
         /// <summary>
@@ -36,7 +44,6 @@
         {
             await base.InitializeAsync();
             CurrentGlyph = FlashOffGlyph;
-            await Methods.AskForRequiredPermissionAsync();
         }
 
         [ObservableProperty]
@@ -54,8 +61,47 @@
         public override void ViewAppearing()
         {
             base.ViewAppearing();
-            IsCameraEnabled = true;
+            _ = InitializeCameraAsync();
         }
+
+        private async Task InitializeCameraAsync()
+        {
+            try
+            {
+                IsCameraEnabled = false; // IMPORTANT: disable first
+
+                var status =
+                    await _permissionService.CheckPermissionStatusAsync(Permission.Camera);
+
+                if (status != PermissionStatus.Granted)
+                {
+
+                    status = await _permissionService
+                       .RequestPermissionAsync(Permission.Camera);
+                }
+
+                if (status == PermissionStatus.Granted)
+                {
+                    IsCameraEnabled = true;
+                }
+                else
+                {
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        await _toastService.DisplayToast("Camera permission is required.");
+                    });
+                    
+                    await NavigationService.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Camera init error: {ex}");
+                IsCameraEnabled = false;
+            }
+        }
+
+      
 
         public override void ViewDisappearing()
         {

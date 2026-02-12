@@ -6,16 +6,34 @@
 
         public async Task<Stream> ImageAsync()
         {
-            var result = await FilePicker.PickAsync(new PickOptions
+            try
             {
-                PickerTitle = "Pick Image Please",
-                FileTypes = FilePickerFileType.Images
-            });
+                // Pick a photo from gallery
+                var photo = await MediaPicker.Default.PickPhotoAsync(new MediaPickerOptions
+                {
+                    Title = "Pick Image Please"
+                });
 
-            if (result == null) 
+                if (photo == null)
+                    return null;
+
+                return await photo.OpenReadAsync();
+            }
+            catch (FeatureNotSupportedException)
+            {
+                // Device does not support picking
                 return null;
-
-            return await result.OpenReadAsync();
+            }
+            catch (PermissionException)
+            {
+                // Permissions not granted
+                return null;
+            }
+            catch (Exception)
+            {
+                // Other errors
+                return null;
+            }
         }
     }
 }
