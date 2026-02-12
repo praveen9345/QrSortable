@@ -13,6 +13,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.PlatformUtils;
+    using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.TimeHandling;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
@@ -34,6 +35,7 @@
         private readonly IConnectivityService _connectivityService;
         private readonly IBackendDatabaseHelper _backendDatabaseHelper;
         private readonly IBackendDatabaseManager _backendDatabaseManager;
+        private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
 
         private Product _product;
         private string _paymentId;
@@ -59,7 +61,7 @@
         public PaymentShipmentViewModel(IMollieService mollieService, ITimerService timerService, IDatabaseManager databaseManager,
             ISharedMethodService sharedMethodService, ICodeGeneratorService codeService, IPdfGeneratorService pdfGeneratorService,
             IBackendCommunicationService backendCommunicationService, IConnectivityService connectivityService,
-            IBackendDatabaseManager backendDatabaseManager, IBackendDatabaseHelper backendDatabaseHelper)
+            IBackendDatabaseManager backendDatabaseManager, IBackendDatabaseHelper backendDatabaseHelper, IMauiEssentialsWrapper mauiEssentialsWrapper)
         {
             IsBackNavigationEnabled = true;
 
@@ -73,6 +75,7 @@
             _connectivityService = connectivityService;
             _backendDatabaseHelper = backendDatabaseHelper;
             _backendDatabaseManager = backendDatabaseManager;
+            _mauiEssentialsWrapper = mauiEssentialsWrapper;
 
             SelectedCurrencyItem = CurrencyItem[0];
         }
@@ -276,7 +279,15 @@
                     });
                 }, TimeSpan.FromSeconds(15));
 
-                await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.External);
+                if(_mauiEssentialsWrapper.GetDevicePlatform() == _mauiEssentialsWrapper.AndroidDevicePlatform)
+                {
+                    await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.SystemPreferred);
+                }
+                else
+                {
+                    await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.External);
+                }
+                   
             }
             else
             {
