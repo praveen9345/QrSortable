@@ -258,8 +258,13 @@
 
             if (picture == (int)PhotoSelectionResponse.Gallery)
             {
-                var photoPermission = await _permissionService.RequestPermissionAsync(Permission.Photos);
-                if (photoPermission != PermissionStatus.Granted)
+                var photoStatus = await _permissionService.CheckPermissionStatusAsync(Permission.Photos);
+                if (photoStatus == PermissionStatus.Unknown)
+                {
+                    photoStatus = await _permissionService.RequestPermissionAsync(Permission.Photos);
+                }
+
+                if (photoStatus != PermissionStatus.Granted)
                 {
                     await HandleDeniedPermission();
                     return;
@@ -267,27 +272,75 @@
 
                 var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...", async () =>
                 {
-                    var imageStream = await _filePickerService.ImageAsync();
-                    if (imageStream == null) return false;
+                    Stream imageStream = null;
+                    byte[] byteImage = null;
 
-                    var byteImage = await _imageService.ConvertToJpegBytes(imageStream);
-                    if (byteImage == null || byteImage.Length == 0) return false;
-
-                    byteImage = CompressAndResizeImage(byteImage);
-                    if (!await IsWithinSizeLimit(byteImage)) return false;
-
-                    _imageArrayDb.Add(byteImage);
-                    ImageArray.Add(new Images
+                    try
                     {
-                        Image = ConvertToImageSource(byteImage),
-                        Rotate = 0
-                    });
+                        // Step 1: Get the stream from file picker
+                        imageStream = await _filePickerService.ImageAsync();
+                        if (imageStream == null)
+                        {
+                            Console.WriteLine("ItemDetailViewModel: Image stream is null");
+                            return false;
+                        }
 
-                    return true;
+                        // Step 2: Copy to memory stream for iOS compatibility
+                        using var memoryStream = new MemoryStream();
+                        await imageStream.CopyToAsync(memoryStream);
+                        memoryStream.Position = 0;
+
+                        // Step 3: Convert to JPEG bytes
+                        byteImage = await _imageService.ConvertToJpegBytes(memoryStream);
+                        if (byteImage == null || byteImage.Length == 0)
+                        {
+                            Console.WriteLine("ItemDetailViewModel: Byte image conversion failed");
+                            return false;
+                        }
+
+                        // Step 4: Compress and resize
+                        byteImage = CompressAndResizeImage(byteImage);
+
+                        // Step 5: Check size limit
+                        if (!await IsWithinSizeLimit(byteImage))
+                        {
+                            return false;
+                        }
+
+                        // Step 6: Add to collection (this should be outside the dialog on main thread)
+                        _imageArrayDb.Add(byteImage);
+
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"ItemDetailViewModel Gallery Error: {ex.Message}");
+                        Console.WriteLine($"StackTrace: {ex.StackTrace}");
+                        return false;
+                    }
+                    finally
+                    {
+                        // CRITICAL: Dispose the stream
+                        imageStream?.Dispose();
+                    }
                 });
 
-                if (!result)
+                // Update UI on main thread AFTER dialog closes
+                if (result && _imageArrayDb.Count > 0)
+                {
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        ImageArray.Add(new Images
+                        {
+                            Image = ConvertToImageSource(_imageArrayDb.Last()),
+                            Rotate = 0
+                        });
+                    });
+                }
+                else if (!result)
+                {
                     await DialogService.ShowAlertDialog("Could not pick image.", AppResources.Dialog_OK_Text);
+                }
             }
         });
 
