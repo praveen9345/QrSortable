@@ -58,7 +58,10 @@
 		
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>We need access to the photo library to save pictures.</string>
-		
+
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>This app needs access to the photo gallery for picking photos and videos.</string>
+
 		<key>NSMicrophoneUsageDescription</key>
 		<string>Voice search for stored items</string>
 		

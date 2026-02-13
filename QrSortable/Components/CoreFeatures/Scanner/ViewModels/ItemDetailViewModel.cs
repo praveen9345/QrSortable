@@ -258,125 +258,32 @@
 
             if (picture == (int)PhotoSelectionResponse.Gallery)
             {
-                var photoStatus = await _permissionService.CheckPermissionStatusAsync(Permission.Photos);
-                if (photoStatus == PermissionStatus.Unknown)
+
+                Stream photo = await _filePickerService.ImageAsync();
+
+                if(photo != null)
                 {
-                    photoStatus = await _permissionService.RequestPermissionAsync(Permission.Photos);
-                }
+                    var byteImage = await _imageService.ConvertToJpegBytes(photo);
 
-                if (photoStatus != PermissionStatus.Granted)
-                {
-                    await HandleDeniedPermission();
-                    return;
-                }
-
-                string errorMessage = "";
-                byte[] capturedByteImage = null;
-
-                var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...", async () =>
-                {
-                    Stream imageStream = null;
-
-                    try
+                    if (byteImage != null && byteImage.Length > 0)
                     {
-                        // Step 1: Get stream
-                        imageStream = await _filePickerService.ImageAsync();
-                        if (imageStream == null)
-                        {
-                            errorMessage = "Error: File picker returned null stream";
-                            return false;
-                        }
+                        byteImage = CompressAndResizeImage(byteImage);
 
-                        // Step 2: Read stream to memory
-                        using var memoryStream = new MemoryStream();
-                        try
+                        if (await IsWithinSizeLimit(byteImage))
                         {
-                            await imageStream.CopyToAsync(memoryStream);
-                            memoryStream.Position = 0;
-                        }
-                        catch (Exception ex)
-                        {
-                            errorMessage = $"Error copying stream: {ex.Message}";
-                            return false;
-                        }
-
-                        // Step 3: Convert to bytes
-                        byte[] byteImage;
-                        try
-                        {
-                            byteImage = await _imageService.ConvertToJpegBytes(memoryStream);
-                            if (byteImage == null || byteImage.Length == 0)
+                            _imageArrayDb.Add(byteImage);
+                            ImageArray.Add(new Images()
                             {
-                                errorMessage = "Error: Image conversion returned empty bytes";
-                                return false;
-                            }
+                                Image = ConvertToImageSource(byteImage),
+                                Rotate = 0
+                            });
                         }
-                        catch (Exception ex)
-                        {
-                            errorMessage = $"Error converting to JPEG: {ex.Message}";
-                            return false;
-                        }
-
-                        // Step 4: Compress
-                        try
-                        {
-                            byteImage = CompressAndResizeImage(byteImage);
-                        }
-                        catch (Exception ex)
-                        {
-                            errorMessage = $"Error compressing image: {ex.Message}";
-                            return false;
-                        }
-
-                        // Step 5: Check size
-                        try
-                        {
-                            if (!await IsWithinSizeLimit(byteImage))
-                            {
-                                errorMessage = "Image exceeds size limit";
-                                return false;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            errorMessage = $"Error checking size: {ex.Message}";
-                            return false;
-                        }
-
-                        capturedByteImage = byteImage;
-                        return true;
                     }
-                    catch (Exception ex)
-                    {
-                        errorMessage = $"Unexpected error: {ex.Message}\nStack: {ex.StackTrace}";
-                        return false;
-                    }
-                    finally
-                    {
-                        imageStream?.Dispose();
-                    }
-                });
-
-                if (result && capturedByteImage != null)
-                {
-                    _imageArrayDb.Add(capturedByteImage);
-                    await MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        ImageArray.Add(new Images
-                        {
-                            Image = ConvertToImageSource(capturedByteImage),
-                            Rotate = 0
-                        });
-                    });
-                    await DialogService.ShowAlertDialog("Image added successfully!", AppResources.Dialog_OK_Text);
                 }
                 else
                 {
-                    await DialogService.ShowAlertDialog(
-                        $"Could not pick image.\n\n{errorMessage}",
-                        AppResources.Dialog_OK_Text
-                    );
-                }
+                    await DialogService.ShowAlertDialog("Could not able to pick the image", "Ok");
+                }    
             }
         });
 
