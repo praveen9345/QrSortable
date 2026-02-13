@@ -36,29 +36,45 @@
         /// <returns>The permission status after request.</returns>
         public async Task<PermissionStatus> RequestPermissionAsync(Permission permission)
         {
-            if (permission == Permission.Notification && Build.VERSION.SdkInt < BuildVersionCodes.Tiramisu)
+            // Already granted? Return immediately.
+            var currentStatus = await CheckPermissionStatusAsync(permission);
+            if (currentStatus == PermissionStatus.Granted)
                 return PermissionStatus.Granted;
+
+            // If a permission request is already running, reuse it
+            if (_taskCompletionSource != null && !_taskCompletionSource.Task.IsCompleted)
+            {
+                var runningResult = await _taskCompletionSource.Task;
+                return runningResult.ContainsKey(permission)
+                    ? runningResult[permission]
+                    : PermissionStatus.Unknown;
+            }
 
             var permissionNames = GetManifestNames(permission);
             if (permissionNames == null)
-            {
                 return PermissionStatus.Unknown;
-            }
 
             var currentActivity = Platform.CurrentActivity;
             if (currentActivity == null)
-            {
                 return PermissionStatus.Unknown;
-            }
+
+            // Create new task source (NO cancel anymore)
+            _taskCompletionSource =
+                new TaskCompletionSource<Dictionary<Permission, PermissionStatus>>();
 
             _mauiEssentialsWrapper.RunOnMainThread(() =>
             {
-                ActivityCompat.RequestPermissions(currentActivity, permissionNames.ToArray(), PermissionsCode);
+                ActivityCompat.RequestPermissions(
+                    currentActivity,
+                    permissionNames.ToArray(),
+                    PermissionsCode);
             });
-            CreateNewTaskCompletionSource();
 
             var result = await _taskCompletionSource.Task;
-            return result[permission];
+
+            return result.ContainsKey(permission)
+                ? result[permission]
+                : PermissionStatus.Unknown;
         }
 
         /// <summary>
@@ -66,35 +82,36 @@
         /// </summary>
         /// <param name="permission">The permission to check.</param>
         /// <returns>The current status of the given permission.</returns>
-        public async Task<PermissionStatus> CheckPermissionStatusAsync(Permission permission)
+        public Task<PermissionStatus> CheckPermissionStatusAsync(Permission permission)
         {
             var context = Platform.CurrentActivity?.Application?.ApplicationContext;
+
             if (permission == Permission.Notification)
             {
-                return NotificationManagerCompat.From(context).AreNotificationsEnabled()
+                if (Build.VERSION.SdkInt < BuildVersionCodes.Tiramisu)
+                    return Task.FromResult(PermissionStatus.Granted);
+
+                var enabled = AndroidX.Core.App.NotificationManagerCompat
+                    .From(context)
+                    .AreNotificationsEnabled();
+
+                return Task.FromResult(enabled
                     ? PermissionStatus.Granted
-                    : PermissionStatus.Denied;
+                    : PermissionStatus.Denied);
             }
 
             var permissionNames = GetManifestNames(permission);
-            if (permissionNames == null)
-            {
-                return PermissionStatus.Unknown;
-            }
-
-
-            if (context == null)
-            {
-                return PermissionStatus.Unknown;
-            }
+            if (permissionNames == null || context == null)
+                return Task.FromResult(PermissionStatus.Unknown);
 
             if (permissionNames.Any(name =>
-                ContextCompat.CheckSelfPermission(context, name) != global::Android.Content.PM.Permission.Granted))
+                ContextCompat.CheckSelfPermission(context, name)
+                != global::Android.Content.PM.Permission.Granted))
             {
-                return PermissionStatus.Denied;
+                return Task.FromResult(PermissionStatus.Denied);
             }
 
-            return PermissionStatus.Granted;
+            return Task.FromResult(PermissionStatus.Granted);
         }
 
         /// <summary>
@@ -107,35 +124,22 @@
             global::Android.Content.PM.Permission[] grantResults)
         {
             if (requestCode != PermissionsCode || _taskCompletionSource == null)
-            {
                 return;
-            }
 
             var results = new Dictionary<Permission, PermissionStatus>();
+
             for (var i = 0; i < permissions.Length; i++)
             {
-                if (_taskCompletionSource.Task.Status == TaskStatus.Canceled)
-                {
-                    return;
-                }
-
                 var permission = GetPermissionForManifestName(permissions[i]);
                 if (permission == Permission.Unknown)
-                {
                     continue;
-                }
 
-                var resultStatus = grantResults[i] == global::Android.Content.PM.Permission.Granted
-                    ? PermissionStatus.Granted
-                    : PermissionStatus.Denied;
-                if (!results.ContainsKey(permission))
-                {
-                    results.Add(permission, resultStatus);
-                }
-                else
-                {
-                    results[permission] = resultStatus;
-                }
+                var resultStatus =
+                    grantResults[i] == global::Android.Content.PM.Permission.Granted
+                        ? PermissionStatus.Granted
+                        : PermissionStatus.Denied;
+
+                results[permission] = resultStatus;
             }
 
             _taskCompletionSource.TrySetResult(results);
@@ -147,10 +151,13 @@
         /// <returns> True, if the location services are enabled, false otherwise. </returns>
         public bool CheckIfLocationIsEnabled()
         {
-            var manager = (global::Android.Locations.LocationManager)
-                global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.LocationService);
+            var manager =
+              (global::Android.Locations.LocationManager)
+              global::Android.App.Application.Context
+                  .GetSystemService(global::Android.Content.Context.LocationService);
 
-            return manager?.IsProviderEnabled(global::Android.Locations.LocationManager.GpsProvider) ?? false;
+            return manager?.IsProviderEnabled(
+                global::Android.Locations.LocationManager.GpsProvider) ?? false;
         }
 
         private Permission GetPermissionForManifestName(string permissionName)
@@ -159,24 +166,17 @@
             {
                 case Manifest.Permission.Camera:
                     return Permission.Camera;
+
                 case Manifest.Permission.PostNotifications:
                     return Permission.Notification;
+
                 case Manifest.Permission.ReadExternalStorage:
                 case Manifest.Permission.ReadMediaImages:
                     return Permission.Photos;
+
+                default:
+                    return Permission.Unknown;
             }
-
-            return Permission.Unknown;
-        }
-
-        private void CreateNewTaskCompletionSource()
-        {
-            if (_taskCompletionSource != null && !_taskCompletionSource.Task.IsCompleted)
-            {
-                _taskCompletionSource.SetCanceled();
-            }
-
-            _taskCompletionSource = new TaskCompletionSource<Dictionary<Permission, PermissionStatus>>();
         }
 
         private List<string> GetManifestNames(Permission permission)
@@ -190,7 +190,8 @@
                     break;
 
                 case Permission.Notification:
-                    permissionsNames.Add(Manifest.Permission.PostNotifications);
+                    if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+                        permissionsNames.Add(Manifest.Permission.PostNotifications);
                     break;
 
                 case Permission.Photos:

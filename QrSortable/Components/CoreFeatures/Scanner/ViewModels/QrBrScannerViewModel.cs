@@ -1,14 +1,16 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.ViewModels
 {
     using BarcodeScanning;
+    using Microsoft.Maui.ApplicationModel;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Helper;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.PlatformUtils;
-    using QrSortable.Components.PlatformUtils.Models;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
-    using QrSortable.Components.UiFunctionality.Notification;
+    using QrSortable.Components.PlatformUtils.Models;
+    using PermissionStatus = PlatformUtils.Models.PermissionStatus;
+
 
     /// <summary>
     ///     The view model of the root view screen.
@@ -17,7 +19,6 @@
     {
         private readonly IAesHelper _aesHelper;
         private readonly IPermissionService _permissionService;
-        private readonly IToastService _toastService;
 
         private bool _isBarcodeDetected = false;
         public string FlashOnGlyph => "\uF41a";
@@ -26,12 +27,11 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="QrBrScannerViewModel" />.
         /// </summary>
-        public QrBrScannerViewModel(IAesHelper aesHelper, IPermissionService permissionService, IToastService toastService)
+        public QrBrScannerViewModel(IAesHelper aesHelper, IPermissionService permissionService)
         {
             IsBackNavigationEnabled = true;
-           _aesHelper = aesHelper;
+            _aesHelper = aesHelper;
             _permissionService = permissionService;
-            _toastService = toastService;
         }
 
         /// <summary>
@@ -57,59 +57,35 @@
         [ObservableProperty]
         public string _currentGlyph;
 
-        public override void ViewAppearing()
+        public override async void ViewAppearing()
         {
             base.ViewAppearing();
-            _ = InitializeCameraAsync();
-        }
 
-        private async Task InitializeCameraAsync()
-        {
-            try
+            var status = await _permissionService
+                .RequestPermissionAsync(Permission.Camera);
+
+            switch (status)
             {
-                IsCameraEnabled = false;
-
-                var status = PermissionStatus.Unknown;
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    var status =
-                        await _permissionService.CheckPermissionStatusAsync(Permission.Camera);
-                });
-
-                if (status != PermissionStatus.Granted)
-                {
-
-                    MainThread.BeginInvokeOnMainThread(async () =>
-                    {
-                        status = await _permissionService.RequestPermissionAsync(Permission.Camera);
-                    });
-
-                }
-
-                if (status == PermissionStatus.Granted)
-                {
+                case PermissionStatus.Granted:
                     IsCameraEnabled = true;
-                }
-                else
-                {
-                    MainThread.BeginInvokeOnMainThread(async () =>
-                    {
-                        await _toastService.DisplayToast("Camera permission is required.");
-                        await NavigationService.Close();
-                    });
+                    break;
 
-                }
+                case PermissionStatus.Denied:
+                    await HandleDeniedPermission();
+                    break;
 
-               
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Camera init error: {ex}");
-                IsCameraEnabled = false;
+                case PermissionStatus.Restricted:
+                    await DialogService.ShowAlertDialog(
+                        "Camera access is restricted on this device.",
+                        "OK");
+                    await NavigationService.Close();
+                    break;
+
+                default:
+                    await NavigationService.Close();
+                    break;
             }
         }
-
-      
 
         public override void ViewDisappearing()
         {
@@ -135,7 +111,7 @@
                     // TODO: Handle decryption errors by displaying a message to the user.
                     decryptedValue = "Invalid";
                 }
-               
+
                 string displayValue = decryptedValue + "," + result.FirstOrDefault()?.BarcodeFormat.ToString();
                 Console.WriteLine("Found the BarcodeResult: " + result.Count + " ; " + $"{displayValue}");
                 if (!_isBarcodeDetected)
@@ -143,9 +119,24 @@
                     _isBarcodeDetected = true;
                     await NavigationService.Navigate<BoxDetailView>(displayValue);
                 }
-                
+
             }
         });
+
+        private async Task HandleDeniedPermission()
+        {
+            bool openSettings = await DialogService.ShowRequestDialog(
+                "Camera permission is required","Please enable it in Settings.",
+                "Cancel",
+                "Open Settings");
+
+            if (openSettings)
+            {
+                AppInfo.ShowSettingsUI();   // Opens app settings page
+            }
+
+            await NavigationService.Close();
+        }
 
     }
 }

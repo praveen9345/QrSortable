@@ -5,78 +5,82 @@
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.PlatformUtils.Models;
     using UserNotifications;
+    using Microsoft.Maui.Devices;
 
-    /// <summary>
-    /// The iOS specific implementation of the permission service.
-    /// </summary>
     public class IosPermissionService : IPermissionService
     {
-
-        /// <summary>
-        ///     Requests the given permission.
-        /// </summary>
-        /// <param name="permission">The permission to request.</param>
-        /// <returns>The permission status after request.</returns>
         public async Task<PermissionStatus> RequestPermissionAsync(Permission permission)
         {
             switch (permission)
             {
                 case Permission.Camera:
                     return await RequestCameraPermissionAsync();
+
                 case Permission.Notification:
                     return await RequestNotificationPermissionAsync();
+
                 case Permission.Photos:
                     return await RequestPhotoPermissionAsync();
+
                 default:
                     return PermissionStatus.Granted;
             }
         }
 
-        /// <summary>
-        ///     Checks the current status of the given permission.
-        /// </summary>
-        /// <param name="permission">The permission to check.</param>
-        /// <returns>The current status of the given permission.</returns>
         public async Task<PermissionStatus> CheckPermissionStatusAsync(Permission permission)
         {
             switch (permission)
             {
                 case Permission.Camera:
-                    return await CheckCameraPermissionAsync();
+                    return CheckCameraPermission();
+
                 case Permission.Notification:
                     return await CheckNotificationPermissionAsync();
+
                 case Permission.Photos:
-                    return await CheckPhotoPermissionAsync();
+                    return CheckPhotoPermission();
+
                 default:
                     return PermissionStatus.Granted;
             }
         }
 
-        /// <summary>
-        ///     Placeholder implementation for the interface.
-        /// </summary>
-        /// <returns> True. </returns>
         public bool CheckIfLocationIsEnabled()
         {
             return true;
         }
 
+        // =========================
+        // CAMERA
+        // =========================
+
         private async Task<PermissionStatus> RequestCameraPermissionAsync()
         {
+            var currentStatus = CheckCameraPermission();
+
+            if (currentStatus != PermissionStatus.Unknown)
+                return currentStatus;
+
             try
             {
-                var isAccessAuthorized = await AVCaptureDevice.RequestAccessForMediaTypeAsync(AVAuthorizationMediaType.Video);
-                return isAccessAuthorized ? PermissionStatus.Granted : PermissionStatus.Denied;
+                var granted = await AVCaptureDevice
+                    .RequestAccessForMediaTypeAsync(AVAuthorizationMediaType.Video);
+
+                return granted
+                    ? PermissionStatus.Granted
+                    : PermissionStatus.Denied;
             }
-            catch (Exception ex)
+            catch
             {
                 return PermissionStatus.Unknown;
             }
         }
 
-        private async Task<PermissionStatus> CheckCameraPermissionAsync()
+        private PermissionStatus CheckCameraPermission()
         {
-            var status = AVCaptureDevice.GetAuthorizationStatus(AVAuthorizationMediaType.Video);
+            var status =
+                AVCaptureDevice.GetAuthorizationStatus(AVAuthorizationMediaType.Video);
+
             return status switch
             {
                 AVAuthorizationStatus.Authorized => PermissionStatus.Granted,
@@ -87,43 +91,79 @@
             };
         }
 
+        // =========================
+        // NOTIFICATIONS
+        // =========================
+
         private async Task<PermissionStatus> RequestNotificationPermissionAsync()
         {
+            var current = await CheckNotificationPermissionAsync();
+            if (current != PermissionStatus.Unknown)
+                return current;
+
             try
             {
-                UNAuthorizationOptions options = UNAuthorizationOptions.Alert |
-                                                 UNAuthorizationOptions.Sound;
-                if (DeviceInfo.Version.Major >= 15)
-                {
-                    options |= UNAuthorizationOptions.TimeSensitive;
-                }
+                UNAuthorizationOptions options =
+                    UNAuthorizationOptions.Alert |
+                    UNAuthorizationOptions.Sound |
+                    UNAuthorizationOptions.Badge;
 
-                var isAccessAuthorized = await UNUserNotificationCenter.Current.RequestAuthorizationAsync(options);
-                return isAccessAuthorized.Item1 ? PermissionStatus.Granted : PermissionStatus.Denied;
+                if (DeviceInfo.Version.Major >= 15)
+                    options |= UNAuthorizationOptions.TimeSensitive;
+
+                var result = await UNUserNotificationCenter
+                    .Current
+                    .RequestAuthorizationAsync(options);
+
+                return result.Item1
+                    ? PermissionStatus.Granted
+                    : PermissionStatus.Denied;
             }
-            catch (Exception ex)
+            catch
             {
                 return PermissionStatus.Unknown;
             }
-
         }
 
         private async Task<PermissionStatus> CheckNotificationPermissionAsync()
         {
-            var settings = await UNUserNotificationCenter.Current.GetNotificationSettingsAsync();
+            var settings =
+                await UNUserNotificationCenter.Current.GetNotificationSettingsAsync();
+
             return settings.AuthorizationStatus switch
             {
                 UNAuthorizationStatus.Authorized => PermissionStatus.Granted,
                 UNAuthorizationStatus.Denied => PermissionStatus.Denied,
                 UNAuthorizationStatus.NotDetermined => PermissionStatus.Unknown,
+                UNAuthorizationStatus.Provisional => PermissionStatus.Granted,
                 _ => PermissionStatus.Unknown
             };
         }
 
+        // =========================
+        // PHOTOS
+        // =========================
+
         private async Task<PermissionStatus> RequestPhotoPermissionAsync()
         {
+            var current = CheckPhotoPermission();
+
+            if (current != PermissionStatus.Unknown)
+                return current;
+
             var status = await PHPhotoLibrary.RequestAuthorizationAsync();
 
+            return ConvertPhotoStatus(status);
+        }
+
+        private PermissionStatus CheckPhotoPermission()
+        {
+            var status = PHPhotoLibrary.AuthorizationStatus;
+            return ConvertPhotoStatus(status);
+        }
+
+        private PermissionStatus ConvertPhotoStatus(PHAuthorizationStatus status)
+        {
             return status switch
             {
                 PHAuthorizationStatus.Authorized => PermissionStatus.Granted,
@@ -134,21 +174,5 @@
                 _ => PermissionStatus.Unknown
             };
         }
-
-        private Task<PermissionStatus> CheckPhotoPermissionAsync()
-        {
-            var status = PHPhotoLibrary.AuthorizationStatus;
-
-            return Task.FromResult(status switch
-            {
-                PHAuthorizationStatus.Authorized => PermissionStatus.Granted,
-                PHAuthorizationStatus.Limited => PermissionStatus.Granted,
-                PHAuthorizationStatus.Denied => PermissionStatus.Denied,
-                PHAuthorizationStatus.Restricted => PermissionStatus.Restricted,
-                PHAuthorizationStatus.NotDetermined => PermissionStatus.Unknown,
-                _ => PermissionStatus.Unknown
-            });
-        }
-
     }
 }

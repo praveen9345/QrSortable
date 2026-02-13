@@ -1,11 +1,9 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.ViewModels
 {
-    using BarcodeScanning;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using Microsoft.Maui.Graphics;
     using Microsoft.Maui.Graphics.Platform;
-    using PdfSharpCore.Drawing;
     using QrSortable.Components.CoreFeatures.Cloud;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
@@ -14,6 +12,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.PlatformUtils.Models;
+    using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
@@ -36,6 +35,7 @@
         private readonly ISharedMethodService _sharedMethodService;
         private readonly IBackendDatabaseHelper _backendDatabaseHelper;
         private readonly IPermissionService _permissionService;
+        private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
 
         private List<byte[]> _imageArrayDb = new List<byte[]>();
         private StorageEntry _storageData;
@@ -56,7 +56,7 @@
         public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, 
             IFilePickerService filePickerService, IToastService toastService, IBackendCommunicationService backendCommunicationService,
             IBackendDatabaseManager backendDatabaseManager, IConnectivityService connectivityService, ISharedMethodService sharedMethodService, 
-            IBackendDatabaseHelper backendDatabaseHelper, IPermissionService permissionService)
+            IBackendDatabaseHelper backendDatabaseHelper, IPermissionService permissionService, IMauiEssentialsWrapper mauiEssentialsWrapper)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
@@ -69,6 +69,7 @@
             _sharedMethodService = sharedMethodService;
             _backendDatabaseHelper = backendDatabaseHelper;
             _permissionService = permissionService;
+            _mauiEssentialsWrapper = mauiEssentialsWrapper;
 
             ImageArray = new ObservableCollection<Images>();
         }
@@ -81,7 +82,27 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            await Methods.AskForRequiredPermissionAsync();
+            // CAMERA PERMISSION
+            var cameraStatus = await _permissionService.CheckPermissionStatusAsync(Permission.Camera);
+            if (cameraStatus != PermissionStatus.Granted)
+            {
+                cameraStatus = await _permissionService.RequestPermissionAsync(Permission.Camera);
+                if (cameraStatus == PermissionStatus.Denied || cameraStatus == PermissionStatus.Restricted)
+                {
+                    await HandleDeniedPermission();
+                    IsCameraEnabled = false;
+                    return;
+                }
+            }
+
+            // NOTIFICATION PERMISSION (optional)
+            //var notificationStatus = await _permissionService.CheckPermissionStatusAsync(Permission.Notification);
+            //if (notificationStatus != PermissionStatus.Granted)
+            //{
+            //    await _permissionService.RequestPermissionAsync(Permission.Notification);
+            //}
+
+            IsCameraEnabled = true;
         }
 
         [ObservableProperty]
@@ -152,11 +173,22 @@
 
         public AsyncRelayCommand CameraCommand => new AsyncRelayCommand(async () =>
         {
+            if (!IsCameraEnabled)
+            {
+                await DialogService.ShowAlertDialog(
+                    "Camera permission is required to capture images.",
+                    AppResources.Dialog_OK_Text
+                );
+                return;
+            }
+
             IsCameraCapture = true;
         });
 
         public AsyncRelayCommand<object> ImageCapturedCommand => new AsyncRelayCommand<object>(async (image) =>
         {
+            if (!IsCameraEnabled) return;
+
             if (image is PlatformImage platformImage)
             {
                 byte[] jpegCaptureImages= Array.Empty<byte>();
@@ -214,42 +246,41 @@
             if(picture == (int)PhotoSelectionResponse.Camera)
             {
 
-                var cameraPermission = PermissionStatus.Unknown;
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    var cameraPermission =
-                    await _permissionService.RequestPermissionAsync(Permission.Camera);
-                });
-                
+                var cameraPermission = await _permissionService.RequestPermissionAsync(Permission.Camera);
                 if (cameraPermission != PermissionStatus.Granted)
                 {
-                    await DialogService.ShowAlertDialog(
-                            "Camera permission is required.",
-                            AppResources.Dialog_OK_Text);
+                    await HandleDeniedPermission();
                     return;
                 }
-                
+
                 IsCameraEnabled = IsCameraCaptureVisable = true;
             }
 
             if (picture == (int)PhotoSelectionResponse.Gallery)
             {
+                PermissionStatus photoPermission;
 
-                var photoPermission = PermissionStatus.Unknown;
-                MainThread.BeginInvokeOnMainThread(async () =>
+                if (_mauiEssentialsWrapper.GetDevicePlatform() == DevicePlatform.Android)
                 {
-                    var photoPermission =
-                    await _permissionService.RequestPermissionAsync(Permission.Photos);
-                });
-                
-                 if (photoPermission != PermissionStatus.Granted)
+                    // Ensure we request the right permission depending on API
+                    photoPermission = await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        return await _permissionService.RequestPermissionAsync(Permission.Photos);
+                    });
+                }
+                else
                 {
-                    await DialogService.ShowAlertDialog(
-                            "Photo permission is required.",
-                            AppResources.Dialog_OK_Text);
+                    // iOS or other
+                    photoPermission = await _permissionService.RequestPermissionAsync(Permission.Photos);
+                }
+
+                if (photoPermission != PermissionStatus.Granted)
+                {
+                    await HandleDeniedPermission();
                     return;
                 }
-                
+
+
                 Stream imageStream = null;
 
                 var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
@@ -536,6 +567,20 @@
                 return false;
             }
             return true;
+        }
+
+        private async Task HandleDeniedPermission()
+        {
+            bool openSettings = await DialogService.ShowRequestDialog(
+                "Camera permission is required", "Please enable it in Settings.",
+                "Cancel",
+                "Open Settings");
+
+            if (openSettings)
+            {
+                AppInfo.ShowSettingsUI();   // Opens app settings page
+            }
+
         }
     }
 }
