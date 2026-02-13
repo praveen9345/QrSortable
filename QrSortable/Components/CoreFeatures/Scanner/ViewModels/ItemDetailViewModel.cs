@@ -270,76 +270,112 @@
                     return;
                 }
 
+                string errorMessage = "";
+                byte[] capturedByteImage = null;
+
                 var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...", async () =>
                 {
                     Stream imageStream = null;
-                    byte[] byteImage = null;
 
                     try
                     {
-                        // Step 1: Get the stream from file picker
+                        // Step 1: Get stream
                         imageStream = await _filePickerService.ImageAsync();
                         if (imageStream == null)
                         {
-                            Console.WriteLine("ItemDetailViewModel: Image stream is null");
+                            errorMessage = "Error: File picker returned null stream";
                             return false;
                         }
 
-                        // Step 2: Copy to memory stream for iOS compatibility
+                        // Step 2: Read stream to memory
                         using var memoryStream = new MemoryStream();
-                        await imageStream.CopyToAsync(memoryStream);
-                        memoryStream.Position = 0;
-
-                        // Step 3: Convert to JPEG bytes
-                        byteImage = await _imageService.ConvertToJpegBytes(memoryStream);
-                        if (byteImage == null || byteImage.Length == 0)
+                        try
                         {
-                            Console.WriteLine("ItemDetailViewModel: Byte image conversion failed");
+                            await imageStream.CopyToAsync(memoryStream);
+                            memoryStream.Position = 0;
+                        }
+                        catch (Exception ex)
+                        {
+                            errorMessage = $"Error copying stream: {ex.Message}";
                             return false;
                         }
 
-                        // Step 4: Compress and resize
-                        byteImage = CompressAndResizeImage(byteImage);
-
-                        // Step 5: Check size limit
-                        if (!await IsWithinSizeLimit(byteImage))
+                        // Step 3: Convert to bytes
+                        byte[] byteImage;
+                        try
                         {
+                            byteImage = await _imageService.ConvertToJpegBytes(memoryStream);
+                            if (byteImage == null || byteImage.Length == 0)
+                            {
+                                errorMessage = "Error: Image conversion returned empty bytes";
+                                return false;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            errorMessage = $"Error converting to JPEG: {ex.Message}";
                             return false;
                         }
 
-                        // Step 6: Add to collection (this should be outside the dialog on main thread)
-                        _imageArrayDb.Add(byteImage);
+                        // Step 4: Compress
+                        try
+                        {
+                            byteImage = CompressAndResizeImage(byteImage);
+                        }
+                        catch (Exception ex)
+                        {
+                            errorMessage = $"Error compressing image: {ex.Message}";
+                            return false;
+                        }
 
+                        // Step 5: Check size
+                        try
+                        {
+                            if (!await IsWithinSizeLimit(byteImage))
+                            {
+                                errorMessage = "Image exceeds size limit";
+                                return false;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            errorMessage = $"Error checking size: {ex.Message}";
+                            return false;
+                        }
+
+                        capturedByteImage = byteImage;
                         return true;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"ItemDetailViewModel Gallery Error: {ex.Message}");
-                        Console.WriteLine($"StackTrace: {ex.StackTrace}");
+                        errorMessage = $"Unexpected error: {ex.Message}\nStack: {ex.StackTrace}";
                         return false;
                     }
                     finally
                     {
-                        // CRITICAL: Dispose the stream
                         imageStream?.Dispose();
                     }
                 });
 
-                // Update UI on main thread AFTER dialog closes
-                if (result && _imageArrayDb.Count > 0)
+                if (result && capturedByteImage != null)
                 {
+                    _imageArrayDb.Add(capturedByteImage);
                     await MainThread.InvokeOnMainThreadAsync(() =>
                     {
                         ImageArray.Add(new Images
                         {
-                            Image = ConvertToImageSource(_imageArrayDb.Last()),
+                            Image = ConvertToImageSource(capturedByteImage),
                             Rotate = 0
                         });
                     });
+                    await DialogService.ShowAlertDialog("Image added successfully!", AppResources.Dialog_OK_Text);
                 }
-                else if (!result)
+                else
                 {
-                    await DialogService.ShowAlertDialog("Could not pick image.", AppResources.Dialog_OK_Text);
+                    await DialogService.ShowAlertDialog(
+                        $"Could not pick image.\n\n{errorMessage}",
+                        AppResources.Dialog_OK_Text
+                    );
                 }
             }
         });
