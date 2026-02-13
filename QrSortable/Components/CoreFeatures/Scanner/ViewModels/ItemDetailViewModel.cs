@@ -258,61 +258,36 @@
 
             if (picture == (int)PhotoSelectionResponse.Gallery)
             {
-                PermissionStatus photoPermission;
-
-                if (_mauiEssentialsWrapper.GetDevicePlatform() == DevicePlatform.Android)
-                {
-                    // Ensure we request the right permission depending on API
-                    photoPermission = await MainThread.InvokeOnMainThreadAsync(async () =>
-                    {
-                        return await _permissionService.RequestPermissionAsync(Permission.Photos);
-                    });
-                }
-                else
-                {
-                    // iOS or other
-                    photoPermission = await _permissionService.RequestPermissionAsync(Permission.Photos);
-                }
-
+                var photoPermission = await _permissionService.RequestPermissionAsync(Permission.Photos);
                 if (photoPermission != PermissionStatus.Granted)
                 {
                     await HandleDeniedPermission();
                     return;
                 }
 
-
-                Stream imageStream = null;
-
-                var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
-                async () =>
+                var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...", async () =>
                 {
-                    imageStream = await _filePickerService.ImageAsync();
+                    var imageStream = await _filePickerService.ImageAsync();
+                    if (imageStream == null) return false;
+
+                    var byteImage = await _imageService.ConvertToJpegBytes(imageStream);
+                    if (byteImage == null || byteImage.Length == 0) return false;
+
+                    byteImage = CompressAndResizeImage(byteImage);
+                    if (!await IsWithinSizeLimit(byteImage)) return false;
+
+                    _imageArrayDb.Add(byteImage);
+                    ImageArray.Add(new Images
+                    {
+                        Image = ConvertToImageSource(byteImage),
+                        Rotate = 0
+                    });
+
                     return true;
                 });
 
-                if (!result || imageStream == null)
-                {
-                    await DialogService.ShowAlertDialog("Could not able to pick the image", "Ok");
-                }
-                else
-                {
-                    var byteImage = await _imageService.ConvertToJpegBytes(imageStream);
-
-                    if (byteImage != null && byteImage.Length > 0)
-                    {
-                        byteImage = CompressAndResizeImage(byteImage);
-
-                        if (await IsWithinSizeLimit(byteImage))
-                        {
-                            _imageArrayDb.Add(byteImage);
-                            ImageArray.Add(new Images()
-                            {
-                                Image = ConvertToImageSource(byteImage),
-                                Rotate = 0
-                            });
-                        }
-                    }
-                }
+                if (!result)
+                    await DialogService.ShowAlertDialog("Could not pick image.", AppResources.Dialog_OK_Text);
             }
         });
 
