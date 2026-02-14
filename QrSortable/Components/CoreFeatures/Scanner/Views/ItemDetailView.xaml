@@ -35,6 +35,8 @@
 
             <BoxView
                 Grid.Row="0"
+                HeightRequest="500"
+                WidthRequest = "400"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand" 
                 IsVisible =" {OnPlatform Android=false,iOS={Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}}"
