@@ -42,8 +42,6 @@
         private bool _isUpdateItem;
         private Guid _storageUpdateItemId;
 
-        public Action ForceKillCameraAction { get; set; }
-
         /// <summary>
         /// A collection of images associated with the storage entry.
         /// </summary>
@@ -194,13 +192,10 @@
         {
             if (!IsCameraEnabled) return;
 
-            // 1. EXECUTE FORCE KILL: Call the direct UI method
-            ForceKillCameraAction?.Invoke();
-    
             IsCameraCapture = false;
             IsCameraCaptureVisable = false;
-            IsCameraEnabled = false;
-            await Task.Delay(300); // allow AVCaptureSession to close
+
+            await Task.Delay(200); // allow AVCaptureSession to close
 
             if (image is PlatformImage platformImage)
             {
