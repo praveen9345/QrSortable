@@ -8,7 +8,6 @@
     /// </summary>
     public partial class ItemDetailView : BaseView
     {
-        private readonly ItemDetailViewModel _viewModel;
         /// <summary>
         ///  Initializes a new instance of the ItemDetailView class with the specified view model.
         /// </summary>
@@ -16,10 +15,10 @@
         public ItemDetailView(ItemDetailViewModel viewModel) : base(viewModel)
         {
             InitializeComponent();
-            BindingContext = _viewModel = viewModel;
+            BindingContext = viewModel;
     
             // Link the force kill action
-            _viewModel.ForceKillCameraAction = () => ForceStopCamera();
+            viewModel.ForceKillCameraAction = () => ForceStopCamera();
         }
 
         public void ForceStopCamera()
