@@ -61,6 +61,8 @@
             Categories = new ObservableCollection<StorageGroup>();
             SearchCategories = new ObservableCollection<StorageGroup>();
             _generalInformationManager = generalInformationManager;
+
+            _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingCompleted);
         }
 
         /// <summary>
@@ -72,8 +74,6 @@
         {
             await base.InitializeAsync();
 
-            await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingCompleted);
-            
             //ensure backend sync
             await _backendSynchronizationManager.SynchronizeStoredObjectsAsync();
 
