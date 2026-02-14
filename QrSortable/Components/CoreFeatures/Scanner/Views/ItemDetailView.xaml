@@ -22,6 +22,14 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
+            <BoxView
+                Grid.Row="0"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand" 
+                IsVisible =" {OnPlatform Android=false,iOS={Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}}"
+                BackgroundColor="{StaticResource DarkGrey}"
+                Opacity="0.8" />
+
             <!--  Camera view  -->
             <scanner:CameraView
                 x:Name="cameraView"

@@ -185,18 +185,12 @@
             }
 
             IsCameraCapture = true;
-            IsCameraCaptureVisable = true;
         });
 
         public AsyncRelayCommand<object> ImageCapturedCommand => new AsyncRelayCommand<object>(async (image) =>
         {
             if (!IsCameraEnabled) return;
-
-            IsCameraCapture = false;
-            IsCameraCaptureVisable = false;
-
-            await Task.Delay(200); // allow AVCaptureSession to close
-
+             
             if (image is PlatformImage platformImage)
             {
                 byte[] jpegCaptureImages = Array.Empty<byte>();
@@ -221,14 +215,15 @@
                     if (await IsWithinSizeLimit(jpegCaptureImages))
                     {
                         _imageArrayDb.Add(jpegCaptureImages);
-                        MainThread.BeginInvokeOnMainThread(() => {
+                        MainThread.BeginInvokeOnMainThread(() =>
+                        {
                             ImageArray.Add(new Images()
                             {
                                 Image = ConvertToImageSource(jpegCaptureImages),
                                 Rotate = 90
                             });
                         });
-                       
+
                     }
                 }
 
@@ -237,6 +232,8 @@
             {
                 Console.WriteLine("ItemDetailViewModel: Invalid image data. Expected a PlatformImage.");
             }
+            
+            IsCameraCapture = IsCameraCaptureVisable = false;
         });
 
         public AsyncRelayCommand AddItemImagesCommand => new AsyncRelayCommand(async () =>
