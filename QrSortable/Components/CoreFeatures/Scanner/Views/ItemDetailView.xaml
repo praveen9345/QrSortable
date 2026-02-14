@@ -35,12 +35,10 @@
 
             <BoxView
                 Grid.Row="0"
-                HeightRequest="500"
-                WidthRequest = "400"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand" 
                 IsVisible =" {OnPlatform Android=false,iOS={Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}}"
-                BackgroundColor="{StaticResource DarkGrey}"/>
+                BackgroundColor="{StaticResource StatusBarColor}"/>
 
             <!--  Back button  -->
             <Button
@@ -103,7 +101,9 @@
                 </Button.ImageSource>
             </Button>
 
-            <Grid Grid.Row="1" IsVisible="{Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}">
+            <Grid Grid.Row="1" 
+                IsVisible="{Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}"
+                BackgroundColor="{OnPlatform Android=false,iOS={StaticResource StatusBarColor}}">
                 <Grid.RowDefinitions>
                     <!--  item name  -->
                     <RowDefinition Height="Auto" />
@@ -120,7 +120,7 @@
                 <StackLayout
                     Grid.Row="0"
                     Margin="10,0,5,0"
-                    Orientation="Horizontal">
+                    Orientation="Horizontal"> 
                     <!--  item name  -->
                     <Label
                         BackgroundColor="Transparent"
