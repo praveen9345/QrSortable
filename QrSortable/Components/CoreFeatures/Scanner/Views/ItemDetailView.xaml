@@ -38,8 +38,7 @@
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand" 
                 IsVisible =" {OnPlatform Android=false,iOS={Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}}"
-                BackgroundColor="{StaticResource DarkGrey}"
-                Opacity="0.8" />
+                BackgroundColor="{StaticResource DarkGrey}"/>
 
             <!--  Back button  -->
             <Button
