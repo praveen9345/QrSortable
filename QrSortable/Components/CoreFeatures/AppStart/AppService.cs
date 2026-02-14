@@ -119,11 +119,21 @@ namespace QrSortable.Components.CoreFeatures.AppStart
 
             _databaseManager.Initialize(CreateNewDbContext);
 
-            if (file)
+            var currentPlatform = _mauiEssentialsWrapper.GetDevicePlatform();
+            if (currentPlatform == _mauiEssentialsWrapper.AndroidDevicePlatform)
+            {
+                if (file)
+                {
+                    _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
+                    _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
+                }
+            }
+            else if (currentPlatform == _mauiEssentialsWrapper.IosDevicePlatform)
             {
                 _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
                 _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
             }
+            
         }
 
         private string GenereatedMultiuserId()
