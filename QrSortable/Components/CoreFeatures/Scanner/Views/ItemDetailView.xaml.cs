@@ -8,6 +8,8 @@
     /// </summary>
     public partial class ItemDetailView : BaseView
     {
+        private readonly ItemDetailViewModel _viewModel;
+
         /// <summary>
         ///  Initializes a new instance of the ItemDetailView class with the specified view model.
         /// </summary>
@@ -15,7 +17,7 @@
         public ItemDetailView(ItemDetailViewModel viewModel):base(viewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel;
+            BindingContext = _viewModel = viewModel;
             
         }
 
@@ -25,11 +27,25 @@
             cameraView.HeightRequest = height;
         }
 
-        private void cameraView_OnImageCaptured(object sender, BarcodeScanning.OnImageCapturedEventArg e)
-        {
-           
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
 
+        if (BindingContext is ItemDetailViewModel vm)
+        {
+            vm.IsCameraEnabled = false;
+            vm.IsCameraCapture = false;
+            vm.IsCameraCaptureVisable = false;
         }
+
+#if IOS
+        // 🔥 HARD STOP FOR iOS
+        if (cameraView?.Handler != null)
+        {
+            cameraView.Handler.DisconnectHandler();
+        }
+#endif
+    }
 
         private void Button_Clicked(object sender, EventArgs e)
         {

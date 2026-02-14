@@ -169,6 +169,8 @@
         {
             base.ViewDisappearing();
             IsCameraEnabled = false;
+            IsCameraCapture = false;
+            IsCameraCaptureVisable = false;
         }
 
         public AsyncRelayCommand CameraCommand => new AsyncRelayCommand(async () =>
@@ -189,19 +191,29 @@
         {
             if (!IsCameraEnabled) return;
 
+            // 🔴 STEP 1: STOP CAMERA FIRST (CRITICAL FOR iOS)
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                IsCameraEnabled = false;
+                IsCameraCapture = false;
+                IsCameraCaptureVisable = false;
+            });
+
+            await Task.Delay(200); // allow AVCaptureSession to close
+
             if (image is PlatformImage platformImage)
             {
-                byte[] jpegCaptureImages= Array.Empty<byte>();
-                var result = (bool) await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+                byte[] jpegCaptureImages = Array.Empty<byte>();
+                var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
                  async () =>
                  {
                      jpegCaptureImages = await _imageService.PlatformImageConvertAsync(platformImage);
-                     
+
                      return true;
                  });
 
-                if (!result || jpegCaptureImages.Length == 0) 
-                { 
+                if (!result || jpegCaptureImages.Length == 0)
+                {
                     await DialogService.ShowAlertDialog("Could not able to capture the image", AppResources.Dialog_OK_Text);
                 }
                 else
