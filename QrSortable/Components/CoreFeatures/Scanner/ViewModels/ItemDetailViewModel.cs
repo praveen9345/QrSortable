@@ -192,12 +192,8 @@
         {
             if (!IsCameraEnabled) return;
 
-            // 🔴 STEP 1: STOP CAMERA FIRST (CRITICAL FOR iOS)
-            await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                IsCameraCapture = false;
-                IsCameraCaptureVisable = false;
-            });
+            IsCameraCapture = false;
+            IsCameraCaptureVisable = false;
 
             await Task.Delay(200); // allow AVCaptureSession to close
 
@@ -225,11 +221,14 @@
                     if (await IsWithinSizeLimit(jpegCaptureImages))
                     {
                         _imageArrayDb.Add(jpegCaptureImages);
-                        ImageArray.Add(new Images()
-                        {
-                            Image = ConvertToImageSource(jpegCaptureImages),
-                            Rotate = 90
+                        MainThread.BeginInvokeOnMainThread(() => {
+                            ImageArray.Add(new Images()
+                            {
+                                Image = ConvertToImageSource(jpegCaptureImages),
+                                Rotate = 90
+                            });
                         });
+                       
                     }
                 }
 
