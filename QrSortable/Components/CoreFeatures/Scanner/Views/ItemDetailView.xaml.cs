@@ -30,13 +30,9 @@
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
-
-        if (BindingContext is ItemDetailViewModel vm)
-        {
-            vm.IsCameraEnabled = false;
-            vm.IsCameraCapture = false;
-            vm.IsCameraCaptureVisable = false;
-        }
+        _viewModel.IsCameraEnabled = false;
+        _viewModel.IsCameraCapture = false; 
+        _viewModel.IsCameraCaptureVisable = false;
 
 #if IOS
         // 🔥 HARD STOP FOR iOS
