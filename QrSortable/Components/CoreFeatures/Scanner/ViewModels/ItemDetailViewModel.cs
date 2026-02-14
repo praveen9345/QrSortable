@@ -185,6 +185,7 @@
             }
 
             IsCameraCapture = true;
+            IsCameraCaptureVisable = true;
         });
 
         public AsyncRelayCommand<object> ImageCapturedCommand => new AsyncRelayCommand<object>(async (image) =>
@@ -194,7 +195,6 @@
             // 🔴 STEP 1: STOP CAMERA FIRST (CRITICAL FOR iOS)
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                IsCameraEnabled = false;
                 IsCameraCapture = false;
                 IsCameraCaptureVisable = false;
             });
@@ -238,7 +238,6 @@
             {
                 Console.WriteLine("ItemDetailViewModel: Invalid image data. Expected a PlatformImage.");
             }
-            IsCameraCapture = IsCameraCaptureVisable = false;
         });
 
         public AsyncRelayCommand AddItemImagesCommand => new AsyncRelayCommand(async () =>
