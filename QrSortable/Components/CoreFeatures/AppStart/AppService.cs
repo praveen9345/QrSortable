@@ -41,7 +41,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             var backendDatabaseManager = ServiceHelper.GetService<IBackendDatabaseManager>();
             backendDatabaseManager.Initialize(CreateNewBackendDbContext);
 
-            ResetStorageAndDatabaseAfterReinstallAsync().Wait();
+            _=ResetStorageAndDatabaseAfterReinstallAsync();
 
         }
 
@@ -107,36 +107,44 @@ namespace QrSortable.Components.CoreFeatures.AppStart
 
         private async Task ResetStorageAndDatabaseAfterReinstallAsync()
         {
-            // Workaround: for clearing the storage and database after reinstalling
-            var fileTask = _fileManager.WriteFileToFileSystemAsync("QrSortable.txt", Encoding.UTF8.GetBytes("QrSortable"));
-            var file = fileTask.Result;
-
-            if (file)
-            {
-                _mauiEssentialsWrapper.ClearSecureStorage();
-                await _databaseManager.ClearDatabaseAsync();
-            }
-
+            // Initialize the database first
             _databaseManager.Initialize(CreateNewDbContext);
-
-            var currentPlatform = _mauiEssentialsWrapper.GetDevicePlatform();
-            if (currentPlatform == _mauiEssentialsWrapper.AndroidDevicePlatform)
+            
+            // Check if this is the first run using Preferences
+            bool isFirstRun = !Preferences.ContainsKey("AppInitialized");
+            
+            // Also check if multiuser ID exists in the database
+            var generalInfo = await _generalInformationManager.GetGeneralInformationAsync();
+            bool needsMultiuserId = string.IsNullOrWhiteSpace(generalInfo?.MultiUserId);
+            
+            if (isFirstRun || needsMultiuserId)
             {
-                if (file)
+                // Mark as initialized
+                Preferences.Set("AppInitialized", true);
+                
+                if (isFirstRun)
+                {
+                    // Only clear on true first run
+                    _mauiEssentialsWrapper.ClearSecureStorage();
+                    await _databaseManager.ClearDatabaseAsync();
+                }
+                
+                // Set initial onboarding state (only if not already set)
+                if (generalInfo == null || generalInfo.OnboardingProgress == OnboardingProgress.NotStarted || isFirstRun)
                 {
                     await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
-                    await _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
+                }
+                
+                // Generate multiuser ID if missing
+                if (needsMultiuserId)
+                {
+                    await _generalInformationManager.UpdateTheMultiuserIdAsync(GenerateMultiuserId());
                 }
             }
-            else if (currentPlatform == _mauiEssentialsWrapper.IosDevicePlatform)
-            {
-                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
-                await _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
-            }
-            
         }
 
-        private string GenereatedMultiuserId()
+        
+        private string GenerateMultiuserId()
         {
             string seg1 = GenerateNumber(4);
             string seg2 = GenerateNumber(5);
