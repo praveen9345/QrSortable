@@ -31,7 +31,9 @@
                 CaptureQuality="High"
                 IsVisible="{Binding IsCameraCaptureVisable}"
                 OnImageCapturedCommand="{Binding ImageCapturedCommand}"
-                TapToFocusEnabled="True" />
+                TapToFocusEnabled="True" 
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"/>
 
             <!--  Back button  -->
             <Button

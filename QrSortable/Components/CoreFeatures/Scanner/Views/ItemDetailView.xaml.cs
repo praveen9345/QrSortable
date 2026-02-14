@@ -12,11 +12,23 @@
         ///  Initializes a new instance of the ItemDetailView class with the specified view model.
         /// </summary>
         /// <param name="viewModel">The ItemDetailViewModel associated with this view.</param>
-        public ItemDetailView(ItemDetailViewModel viewModel):base(viewModel)
+        public ItemDetailView(ItemDetailViewModel viewModel) : base(viewModel)
         {
             InitializeComponent();
-            
+            BindingContext = viewModel;
+    
+            // Link the force kill action
+            viewModel.ForceKillCameraAction = () => ForceStopCamera();
         }
+
+        public void ForceStopCamera()
+    {
+        if (cameraView != null)
+        {
+            cameraView.CameraEnabled = false;
+            cameraView.IsVisible = false;
+        }
+    }
 
         protected override void OnSizeAllocated(double width, double height)
         {
