@@ -147,6 +147,7 @@
 
             if (!confirmMessage)
             {
+                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingCompleted);
                 await NavigationService.Navigate<RootView>();
                 return;
             }
@@ -209,6 +210,7 @@
             {
                 if (result is bool successResult && successResult)
                 {
+                    await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingCompleted);
                     await NavigationService.Navigate<RootView>();
                 }
                 else

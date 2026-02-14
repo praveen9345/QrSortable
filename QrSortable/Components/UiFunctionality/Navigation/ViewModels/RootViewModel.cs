@@ -71,8 +71,6 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-
-            await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingCompleted);
             
             //ensure backend sync
             await _backendSynchronizationManager.SynchronizeStoredObjectsAsync();

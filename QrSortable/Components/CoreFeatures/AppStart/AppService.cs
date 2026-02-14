@@ -41,7 +41,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             var backendDatabaseManager = ServiceHelper.GetService<IBackendDatabaseManager>();
             backendDatabaseManager.Initialize(CreateNewBackendDbContext);
 
-            ResetStorageAndDatabaseAfterReinstall();
+            ResetStorageAndDatabaseAfterReinstallAsync().Wait();
 
         }
 
@@ -105,7 +105,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             throw new NotImplementedException("The current platform is not supported");
         }
 
-        private void ResetStorageAndDatabaseAfterReinstall()
+        private async Task ResetStorageAndDatabaseAfterReinstallAsync()
         {
             // Workaround: for clearing the storage and database after reinstalling
             var fileTask = _fileManager.WriteFileToFileSystemAsync("QrSortable.txt", Encoding.UTF8.GetBytes("QrSortable"));
@@ -114,7 +114,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             if (file)
             {
                 _mauiEssentialsWrapper.ClearSecureStorage();
-                _databaseManager.ClearDatabaseAsync();
+                await _databaseManager.ClearDatabaseAsync();
             }
 
             _databaseManager.Initialize(CreateNewDbContext);
@@ -124,14 +124,14 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             {
                 if (file)
                 {
-                    _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
-                    _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
+                    await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
+                    await _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
                 }
             }
             else if (currentPlatform == _mauiEssentialsWrapper.IosDevicePlatform)
             {
-                _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
-                _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
+                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
+                await _generalInformationManager.UpdateTheMultiuserIdAsync(GenereatedMultiuserId());
             }
             
         }
