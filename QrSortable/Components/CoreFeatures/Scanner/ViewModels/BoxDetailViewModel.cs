@@ -142,19 +142,6 @@
         /// <param name="data">The string data.</param>
         public override async void Prepare(string data)
         {
-            //if(data == "itemView")
-            //{
-            //    IsNewBarcode = true;
-            //    CategoryText = Category;
-            //    LocationText = Location;
-            //}
-            //else
-            //{
-            //    string[] result = data.Split(',');
-            //    Barcode = _storageData.BarcodeValue = result[0].Trim();
-            //    BarcodeType = _storageData.BarcodeType = result[1].Trim();
-            //}
-
             string[] result = data.Split(',');
 
             string codeColorData = result[0].Trim();
@@ -162,6 +149,16 @@
 
             Barcode = parts[0];  // "QR345"
             _colorCodeHex = "#" + parts[1];  // "#F54927"
+
+            // Replace black with white and white with black to ensure visibility of text on the background color
+            if (_colorCodeHex.Equals("#000000", StringComparison.OrdinalIgnoreCase))
+            {
+                _colorCodeHex = "#FFFFFF";
+            }
+            else if (_colorCodeHex.Equals("#FFFFFF", StringComparison.OrdinalIgnoreCase))
+            {
+                _colorCodeHex = "#000000";
+            }
 
             BarcodeType = result[1].Trim();
         }
