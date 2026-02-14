@@ -37,7 +37,7 @@
                 Grid.Row="0"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand" 
-                IsVisible =" {OnPlatform Android=false,iOS={Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}}"
+                IsVisible =" {OnPlatform Android=false, iOS={Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}}"
                 BackgroundColor="{StaticResource StatusBarColor}"/>
 
             <!--  Back button  -->
@@ -103,7 +103,7 @@
 
             <Grid Grid.Row="1" 
                 IsVisible="{Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}"
-                BackgroundColor="{OnPlatform Android=false,iOS={StaticResource StatusBarColor}}">
+                BackgroundColor="{OnPlatform iOS={StaticResource StatusBarColor}}">
                 <Grid.RowDefinitions>
                     <!--  item name  -->
                     <RowDefinition Height="Auto" />
@@ -256,54 +256,60 @@
                 </Grid>
 
                 <!--  add image button  -->
-                <Button
-                    Grid.Row="3"
-                    Margin="0,15,80,15"
-                    Padding="10"
-                    BackgroundColor="{StaticResource Primary}"
-                    Command="{Binding AddItemImagesCommand}"
-                    CornerRadius="50"
-                    HorizontalOptions="End"
-                    VerticalOptions="End">
-                    <Button.Shadow>
-                        <Shadow
-                            Brush="{StaticResource Primary}"
-                            Opacity="0.5"
-                            Radius="10"
-                            Offset="0,0" />
-                    </Button.Shadow>
-                    <Button.ImageSource>
-                        <FontImageSource
-                            FontFamily="FluentIcons"
-                            Glyph="{x:Static local:IconNames.AddImage}"
-                            Color="{StaticResource Black}" />
-                    </Button.ImageSource>
-                </Button>
+                <Grid Grid.Row="3" BackgroundColor="{OnPlatform iOS={StaticResource StatusBarColor}}">
 
-                <!--  save button  -->
-                <Button
-                    Grid.Row="3"
-                    Margin="0,15,15,15"
-                    Padding="10"
-                    BackgroundColor="{StaticResource Primary}"
-                    Command="{Binding SaveCommand}"
-                    CornerRadius="50"
-                    HorizontalOptions="End"
-                    VerticalOptions="End">
-                    <Button.Shadow>
-                        <Shadow
-                            Brush="{StaticResource Primary}"
-                            Opacity="0.5"
-                            Radius="10"
-                            Offset="0,0" />
-                    </Button.Shadow>
-                    <Button.ImageSource>
-                        <FontImageSource
-                            FontFamily="FluentIcons"
-                            Glyph="{x:Static local:IconNames.Save}"
-                            Color="{StaticResource Black}" />
-                    </Button.ImageSource>
-                </Button>
+                    <!-- Add image button -->
+                    <Button
+                        Margin="0,15,80,15"
+                        Padding="10"
+                        BackgroundColor="{StaticResource Primary}"
+                        Command="{Binding AddItemImagesCommand}"
+                        CornerRadius="50"
+                        HorizontalOptions="End"
+                        VerticalOptions="End">
+
+                        <Button.Shadow>
+                            <Shadow
+                                Brush="{StaticResource Primary}"
+                                Opacity="0.5"
+                                Radius="10"
+                                Offset="0,0" />
+                        </Button.Shadow>
+
+                        <Button.ImageSource>
+                            <FontImageSource
+                                FontFamily="FluentIcons"
+                                Glyph="{x:Static local:IconNames.AddImage}"
+                                Color="{StaticResource Black}" />
+                        </Button.ImageSource>
+                    </Button>
+
+                    <!-- Save button -->
+                    <Button
+                        Margin="0,15,15,15"
+                        Padding="10"
+                        BackgroundColor="{StaticResource Primary}"
+                        Command="{Binding SaveCommand}"
+                        CornerRadius="50"
+                        HorizontalOptions="End"
+                        VerticalOptions="End">
+
+                        <Button.Shadow>
+                            <Shadow
+                                Brush="{StaticResource Primary}"
+                                Opacity="0.5"
+                                Radius="10"
+                                Offset="0,0" />
+                        </Button.Shadow>
+
+                        <Button.ImageSource>
+                            <FontImageSource
+                                FontFamily="FluentIcons"
+                                Glyph="{x:Static local:IconNames.Save}"
+                                Color="{StaticResource Black}" />
+                        </Button.ImageSource>
+                    </Button>
+                </Grid>
             </Grid>
         </Grid>
     </views:BaseView.Content>
