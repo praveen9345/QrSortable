@@ -189,11 +189,6 @@
         {
             if (!IsCameraEnabled) return;
 
-            // Immediately disable camera to stop hardware (especially important for iOS)
-            IsCameraEnabled = false;
-            IsCameraCapture = false;
-            IsCameraCaptureVisable = false;
-
             if (image is PlatformImage platformImage)
             {
                 byte[] jpegCaptureImages= Array.Empty<byte>();
@@ -231,7 +226,7 @@
             {
                 Console.WriteLine("ItemDetailViewModel: Invalid image data. Expected a PlatformImage.");
             }
-            IsCameraEnabled = true;
+            IsCameraCapture = IsCameraCaptureVisable = false;
         });
 
         public AsyncRelayCommand AddItemImagesCommand => new AsyncRelayCommand(async () =>
