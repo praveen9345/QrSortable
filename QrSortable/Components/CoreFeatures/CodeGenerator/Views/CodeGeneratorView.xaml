@@ -88,7 +88,7 @@
                                                 StrokeShape="RoundRectangle 25"
                                                 StrokeThickness="2"
                                                 HeightRequest="50"
-                                                MinimumWidthRequest="120"
+                                                WidthRequest="140"
                                                 StrokeLineJoin="Round"
                                                 VerticalOptions="Center"
                                                 HorizontalOptions="Center">
@@ -151,6 +151,7 @@
                                                 StrokeShape="RoundRectangle 25"
                                                 StrokeThickness="2"
                                                 HeightRequest="50"
+                                                WidthRequest="140"
                                                 MinimumWidthRequest="120"
                                                 StrokeLineJoin="Round"
                                                 VerticalOptions="Center"
