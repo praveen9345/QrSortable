@@ -69,7 +69,7 @@
                                         SelectedItem="{Binding SelectedCode, Mode=TwoWay}"
                                         SelectionChangedCommand="{Binding OnSelectionCodeChangedCommand}"
                                         SelectionMode="Single"
-                                        HeightRequest="55">
+                                        HeightRequest="60">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="15"
                                                    Orientation="Horizontal" />
@@ -82,18 +82,15 @@
                             </CollectionView.ItemsSource>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Margin="0"
-                                            Padding="25,15"
+                                    <Border Padding="20,12"
                                             BackgroundColor="Transparent"
                                             Stroke="{StaticResource Primary}"
+                                            StrokeShape="RoundRectangle 25"
                                             StrokeThickness="2"
                                             HeightRequest="50"
                                             WidthRequest="120"
                                             VerticalOptions="Center"
                                             HorizontalOptions="Start">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="25" />
-                                        </Border.StrokeShape>
                                         <Label FontAttributes="Bold"
                                                FontFamily="ItimRegular"
                                                FontSize="16"
@@ -150,25 +147,22 @@
                                         ItemsSource="{Binding PageSelected}"
                                         SelectedItem="{Binding SelectedPage, Mode=TwoWay}"
                                         SelectionMode="Single"
-                                        HeightRequest="55">
+                                        HeightRequest="60">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="15"
                                                    Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Margin="0"
-                                            Padding="25,15"
+                                    <Border Padding="20,12"
                                             BackgroundColor="Transparent"
                                             Stroke="{StaticResource Primary}"
+                                            StrokeShape="RoundRectangle 25"
                                             StrokeThickness="2"
                                             HeightRequest="50"
-                                            WidthRequest="135"
+                                            WidthRequest="130"
                                             VerticalOptions="Center"
                                             HorizontalOptions="Start">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="25" />
-                                        </Border.StrokeShape>
                                         <Label FontAttributes="Bold"
                                                FontFamily="ItimRegular"
                                                FontSize="16"
@@ -224,8 +218,10 @@
 
                         <!-- Placeholder for input field -->
                         <Border Margin="10,0,0,0"
+                                Padding="5,5"
                                 Background="{StaticResource DarkGrey}"
                                 HorizontalOptions="FillAndExpand"
+                                StrokeThickness="0"
                                 StrokeShape="RoundRectangle 10">
                             <Border.Shadow>
                                 <Shadow Brush="Black"
@@ -261,8 +257,10 @@
 
                         <!-- Placeholder for input field -->
                         <Border Margin="10,0,0,0"
+                                Padding="5,5"
                                 Background="{StaticResource DarkGrey}"
                                 HorizontalOptions="FillAndExpand"
+                                StrokeThickness="0"
                                 StrokeShape="RoundRectangle 10">
                             <Border.Shadow>
                                 <Shadow Brush="Black"
@@ -296,11 +294,9 @@
                         <Border Padding="0"
                                 Background="{StaticResource Primary}"
                                 HeightRequest="50"
+                                StrokeShape="RoundRectangle 25"
                                 VerticalOptions="Center"
                                 WidthRequest="180">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="25" />
-                            </Border.StrokeShape>
                             <Grid VerticalOptions="Center"
                                   HorizontalOptions="Center">
                                 <Grid.ColumnDefinitions>
