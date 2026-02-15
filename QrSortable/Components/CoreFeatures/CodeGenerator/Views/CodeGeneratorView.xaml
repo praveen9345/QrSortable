@@ -3,36 +3,76 @@
                 xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                 xmlns:local="clr-namespace:QrSortable.Resources"
+                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                 xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
                 BackgroundImageSource="background_layout.webp">
     <views:BaseView.Content>
         <Grid>
             <Grid.RowDefinitions>
+                <!-- back -->
                 <RowDefinition Height="Auto" />
+                <!-- demo code view -->
                 <RowDefinition Height="170" />
+                <!-- item view -->
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Button Grid.Row="0" Margin="15,15,0,0" Padding="2" BackgroundColor="{StaticResource DarkGrey}"
-                    Command="{Binding BackNavigationCommand}" CornerRadius="5" HorizontalOptions="Start">
+            <!-- Back button -->
+            <Button Grid.Row="0"
+                    Margin="15,15,0,0"
+                    Padding="2"
+                    BackgroundColor="{StaticResource DarkGrey}"
+                    Command="{Binding BackNavigationCommand}"
+                    CornerRadius="5"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start">
                 <Button.Shadow>
-                    <Shadow Brush="Black" Opacity="0.5" Radius="10" Offset="0,0" />
+                    <Shadow Brush="Black"
+                            Opacity="0.5"
+                            Radius="10"
+                            Offset="0,0" />
                 </Button.Shadow>
                 <Button.ImageSource>
-                    <FontImageSource FontFamily="FluentIcons" Glyph="{x:Static local:IconNames.Back}" Color="{StaticResource Primary}" />
+                    <FontImageSource FontFamily="FluentIcons"
+                                     Glyph="{x:Static local:IconNames.Back}"
+                                     Color="{StaticResource Primary}" />
                 </Button.ImageSource>
             </Button>
 
-            <Image Grid.Row="1" Margin="0,0,0,10" Aspect="AspectFit" HeightRequest="170" Source="{Binding DemoImage}" HorizontalOptions="Center" />
+            <!-- code demo image -->
+            <Image Grid.Row="1"
+                   Margin="0,0,0,10"
+                   Aspect="AspectFit"
+                   HeightRequest="170"
+                   HorizontalOptions="Center"
+                   Source="{Binding DemoImage}"
+                   VerticalOptions="Center" />
 
-            <ScrollView Grid.Row="2" Margin="0,10,0,0">
+            <ScrollView Grid.Row="2"
+                        Margin="0,10,0,0">
                 <VerticalStackLayout Spacing="15">
 
+                    <!-- selecting the code view -->
                     <VerticalStackLayout Spacing="5">
-                        <Label Margin="15,0" FontAttributes="Bold" FontFamily="ItimRegular" FontSize="18" Text="Code:" TextColor="White" />
-                        <CollectionView Margin="15,0" SelectedItem="{Binding SelectedCode, Mode=TwoWay}" SelectionMode="Single" HeightRequest="70">
+                        <Label Margin="15,0,15,0"
+                               BackgroundColor="Transparent"
+                               FontAttributes="Bold"
+                               FontFamily="ItimRegular"
+                               FontSize="18"
+                               HorizontalTextAlignment="Start"
+                               Text="Code:"
+                               TextColor="{StaticResource White}"
+                               VerticalTextAlignment="Center" />
+
+                        <!-- code collection view -->
+                        <CollectionView Margin="15,0,15,0"
+                                        SelectedItem="{Binding SelectedCode, Mode=TwoWay}"
+                                        SelectionChangedCommand="{Binding OnSelectionCodeChangedCommand}"
+                                        SelectionMode="Single"
+                                        HeightRequest="60">
                             <CollectionView.ItemsLayout>
-                                <LinearItemsLayout ItemSpacing="15" Orientation="Horizontal" />
+                                <LinearItemsLayout ItemSpacing="15"
+                                                   Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
                             <CollectionView.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
@@ -42,109 +82,312 @@
                             </CollectionView.ItemsSource>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Padding="25,12"
-                                            BackgroundColor="Transparent"
-                                            Stroke="{StaticResource Primary}"
-                                            StrokeThickness="2"
-                                            StrokeLineCap="Round"
-                                            StrokeShape="RoundRectangle 25"
-                                            VerticalOptions="Center">
-                                        <Label Text="{Binding .}" FontAttributes="Bold" FontFamily="ItimRegular" FontSize="16"
-                                               TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
-                                        <VisualStateManager.VisualStateGroups>
-                                            <VisualStateGroup Name="CommonStates">
-                                                <VisualState Name="Normal">
-                                                    <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="Transparent" />
-                                                    </VisualState.Setters>
-                                                </VisualState>
-                                                <VisualState Name="Selected">
-                                                    <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-                                                    </VisualState.Setters>
-                                                </VisualState>
-                                            </VisualStateGroup>
-                                        </VisualStateManager.VisualStateGroups>
-                                    </Border>
+                                        <Border Padding="20,12"
+                                                BackgroundColor="Transparent"
+                                                Stroke="{StaticResource Primary}"
+                                                StrokeShape="RoundRectangle 25"
+                                                StrokeThickness="2"
+                                                HeightRequest="50"
+                                                MinimumWidthRequest="120"
+                                                StrokeLineJoin="Round"
+                                                VerticalOptions="Center"
+                                                HorizontalOptions="Center">
+                                            <Label FontAttributes="Bold"
+                                                   FontFamily="ItimRegular"
+                                                   FontSize="16"
+                                                   HorizontalOptions="Center"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="{Binding .}"
+                                                   TextColor="White"
+                                                   VerticalOptions="Center"
+                                                   VerticalTextAlignment="Center" />
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup Name="CommonStates">
+                                                    <VisualState Name="Normal">
+                                                        <VisualState.Setters>
+                                                             <Setter Property="BackgroundColor" Value="Transparent" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                    <VisualState Name="Selected">
+                                                        <VisualState.Setters>
+                                                              <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+                                        </Border>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
                     </VerticalStackLayout>
 
+                    <!-- selecting the page view -->
                     <VerticalStackLayout Spacing="5">
-                        <Label Margin="15,0" FontAttributes="Bold" FontFamily="ItimRegular" FontSize="18" Text="Page:" TextColor="White" />
-                        <CollectionView Margin="15,0" ItemsSource="{Binding PageSelected}" SelectedItem="{Binding SelectedPage, Mode=TwoWay}" SelectionMode="Single" HeightRequest="70">
+                        <Label Margin="15,0,15,0"
+                               BackgroundColor="Transparent"
+                               FontAttributes="Bold"
+                               FontFamily="ItimRegular"
+                               FontSize="18"
+                               HorizontalTextAlignment="Start"
+                               Text="Page:"
+                               TextColor="{StaticResource White}"
+                               VerticalTextAlignment="Center" />
+
+                        <!-- page collection view -->
+                        <CollectionView Margin="15,0,15,0"
+                                        ItemsSource="{Binding PageSelected}"
+                                        SelectedItem="{Binding SelectedPage, Mode=TwoWay}"
+                                        SelectionMode="Single"
+                                        HeightRequest="60">
                             <CollectionView.ItemsLayout>
-                                <LinearItemsLayout ItemSpacing="15" Orientation="Horizontal" />
+                                <LinearItemsLayout ItemSpacing="15"
+                                                   Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Padding="25,12"
-                                            BackgroundColor="Transparent"
-                                            Stroke="{StaticResource Primary}"
-                                            StrokeThickness="2"
-                                            StrokeLineCap="Round"
-                                            StrokeShape="RoundRectangle 25"
-                                            VerticalOptions="Center">
-                                        <Label Text="{Binding .}" FontAttributes="Bold" FontFamily="ItimRegular" FontSize="16"
-                                               TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
-                                        <VisualStateManager.VisualStateGroups>
-                                            <VisualStateGroup Name="CommonStates">
-                                                <VisualState Name="Normal">
-                                                    <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="Transparent" />
-                                                    </VisualState.Setters>
-                                                </VisualState>
-                                                <VisualState Name="Selected">
-                                                    <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-                                                    </VisualState.Setters>
-                                                </VisualState>
-                                            </VisualStateGroup>
-                                        </VisualStateManager.VisualStateGroups>
-                                    </Border>
+                                        <Border Padding="20,12"
+                                                BackgroundColor="Transparent"
+                                                Stroke="{StaticResource Primary}"
+                                                StrokeShape="RoundRectangle 25"
+                                                StrokeThickness="2"
+                                                HeightRequest="50"
+                                                MinimumWidthRequest="120"
+                                                StrokeLineJoin="Round"
+                                                VerticalOptions="Center"
+                                                HorizontalOptions="Center">
+                                            <Label FontAttributes="Bold"
+                                                   FontFamily="ItimRegular"
+                                                   FontSize="16"
+                                                   HorizontalOptions="Center"
+                                                   HorizontalTextAlignment="Center"
+                                                   Text="{Binding .}"
+                                                   TextColor="White"
+                                                   VerticalOptions="Center"
+                                                   VerticalTextAlignment="Center" />
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup Name="CommonStates">
+                                                    <VisualState Name="Normal">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="BackgroundColor"
+                                                                    Value="Transparent" />
+                                                            <Setter Property="Stroke"
+                                                                    Value="{StaticResource Primary}" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                    <VisualState Name="Selected">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="BackgroundColor"
+                                                                    Value="{StaticResource Primary}" />
+                                                            <Setter Property="Stroke"
+                                                                    Value="{StaticResource Primary}" />
+                                                            <Setter Property="StrokeThickness"
+                                                                    Value="2" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+                                        </Border>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
                     </VerticalStackLayout>
 
-                    <StackLayout Margin="15,0" Orientation="Horizontal">
-                        <Label Text="Tag Name:" FontAttributes="Bold" FontFamily="ItimRegular" FontSize="18" TextColor="White" VerticalOptions="Center" />
-                        <Border Margin="10,0,0,0" Padding="5" BackgroundColor="{StaticResource DarkGrey}" HorizontalOptions="FillAndExpand" StrokeThickness="0" StrokeShape="RoundRectangle 10">
+                    <!-- tag name -->
+                    <StackLayout Grid.Row="0"
+                                 Margin="15,0,15,0"
+                                 Orientation="Horizontal">
+                        <!-- tag name -->
+                        <Label BackgroundColor="Transparent"
+                               FontAttributes="Bold"
+                               FontFamily="ItimRegular"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               Text="Tag Name:"
+                               TextColor="{StaticResource White}"
+                               VerticalTextAlignment="Center" />
+
+                        <!-- Placeholder for input field -->
+                        <Border Margin="10,0,0,0"
+                                Padding="5,5"
+                                Background="{StaticResource DarkGrey}"
+                                HorizontalOptions="FillAndExpand"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 10">
                             <Border.Shadow>
-                                <Shadow Brush="Black" Opacity="0.5" Radius="10" Offset="0,0" />
+                                <Shadow Brush="Black"
+                                        Opacity="0.5"
+                                        Radius="10"
+                                        Offset="0,0" />
                             </Border.Shadow>
-                            <Entry Placeholder="e.g. Kitchen" PlaceholderColor="{StaticResource PlaceholderColor}" Text="{Binding TagName}" TextColor="White" />
+                            <!-- input field -->
+                            <Grid>
+                                <Entry Margin="10,0,0,0"
+                                       Placeholder="e.g. Kitchen"
+                                       PlaceholderColor="{StaticResource PlaceholderColor}"
+                                       Style="{StaticResource NormalText}"
+                                       Text="{Binding TagName}" />
+                            </Grid>
                         </Border>
                     </StackLayout>
 
-                    <HorizontalStackLayout Spacing="10" Margin="15,0">
-                        <Label Text="No. of Pages:" FontAttributes="Bold" FontFamily="ItimRegular" FontSize="18" TextColor="White" VerticalOptions="Center" />
-                        <Border BackgroundColor="{StaticResource Primary}" StrokeShape="RoundRectangle 25" WidthRequest="180" HeightRequest="50">
-                            <Grid ColumnDefinitions="*, *, *">
-                                <Button Grid.Column="0" BackgroundColor="Transparent" Command="{Binding DecreaseQuantityCommand}">
+                    <!-- color name -->
+                    <StackLayout Grid.Row="0"
+                                 Margin="15,0,15,0"
+                                 IsVisible="{Binding ColorVisible}"
+                                 Orientation="Horizontal">
+                        <!-- color name -->
+                        <Label BackgroundColor="Transparent"
+                               FontAttributes="Bold"
+                               FontFamily="ItimRegular"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               Text="Color Hex:"
+                               TextColor="{StaticResource White}"
+                               VerticalTextAlignment="Center" />
+
+                        <!-- Placeholder for input field -->
+                        <Border Margin="10,0,0,0"
+                                Padding="5,5"
+                                Background="{StaticResource DarkGrey}"
+                                HorizontalOptions="FillAndExpand"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 10">
+                            <Border.Shadow>
+                                <Shadow Brush="Black"
+                                        Opacity="0.5"
+                                        Radius="10"
+                                        Offset="0,0" />
+                            </Border.Shadow>
+                            <!-- input field -->
+                            <Grid>
+                                <Entry Margin="10,0,0,0"
+                                       Placeholder="e.g. #000000"
+                                       PlaceholderColor="{StaticResource PlaceholderColor}"
+                                       Style="{StaticResource NormalText}"
+                                       Text="{Binding HexCode}" />
+                            </Grid>
+                        </Border>
+                    </StackLayout>
+
+                    <HorizontalStackLayout Spacing="10">
+                        <!-- nof of pages -->
+                        <Label Margin="15,0,0,0"
+                               BackgroundColor="Transparent"
+                               FontAttributes="Bold"
+                               FontFamily="ItimRegular"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               Text="No. of Pages:"
+                               TextColor="{StaticResource White}"
+                               VerticalTextAlignment="Center" />
+
+                        <Border Padding="0"
+                                Background="{StaticResource Primary}"
+                                HeightRequest="50"
+                                StrokeShape="RoundRectangle 25"
+                                VerticalOptions="Center"
+                                WidthRequest="180">
+                            <Grid VerticalOptions="Center"
+                                  HorizontalOptions="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="60" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Minus Button -->
+                                <Button Grid.Column="0"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding DecreaseQuantityCommand}"
+                                        CornerRadius="50"
+                                        HeightRequest="35"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        WidthRequest="35">
                                     <Button.ImageSource>
-                                        <FontImageSource FontFamily="FluentIcons" Glyph="{x:Static local:IconNames.Minus}" Color="Black" Size="22" />
+                                        <FontImageSource FontFamily="FluentIcons"
+                                                         Glyph="{x:Static local:IconNames.Minus}"
+                                                         Color="{StaticResource Black}"
+                                                         Size="22" />
                                     </Button.ImageSource>
                                 </Button>
-                                <Label Grid.Column="1" Text="{Binding PageCount}" FontAttributes="Bold" FontSize="26" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" />
-                                <Button Grid.Column="2" BackgroundColor="Transparent" Command="{Binding IncreaseQuantityCommand}">
+
+                                <!-- Quantity Label -->
+                                <Label Grid.Column="1"
+                                       FontAttributes="Bold"
+                                       FontSize="26"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"
+                                       Text="{Binding PageCount}"
+                                       TextColor="Black"
+                                       VerticalOptions="Center"
+                                       VerticalTextAlignment="Center" />
+
+                                <!-- Plus Button -->
+                                <Button Grid.Column="2"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding IncreaseQuantityCommand}"
+                                        CornerRadius="50"
+                                        HeightRequest="35"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        WidthRequest="35">
                                     <Button.ImageSource>
-                                        <FontImageSource FontFamily="FluentIcons" Glyph="{x:Static local:IconNames.Plus}" Color="Black" Size="22" />
+                                        <FontImageSource FontFamily="FluentIcons"
+                                                         Glyph="{x:Static local:IconNames.Plus}"
+                                                         Color="{StaticResource Black}"
+                                                         Size="22" />
                                     </Button.ImageSource>
                                 </Button>
                             </Grid>
                         </Border>
                     </HorizontalStackLayout>
 
-                    <StackLayout HorizontalOptions="Center" Orientation="Horizontal" Margin="0,10">
-                        <Label Text="Total:" FontAttributes="Bold" FontSize="24" TextColor="{StaticResource Primary}" />
-                        <Label Margin="10,0,0,0" Text="{Binding TotalAmount}" FontAttributes="Bold" FontSize="28" TextColor="{StaticResource Primary}" />
+                    <!-- amount view -->
+                    <StackLayout Grid.Row="0"
+                                 Margin="15,0,15,0"
+                                 HorizontalOptions="Center"
+                                 Orientation="Horizontal">
+                        <!-- total name -->
+                        <Label BackgroundColor="Transparent"
+                               FontAttributes="Bold"
+                               FontFamily="ItimRegular"
+                               FontSize="24"
+                               HorizontalTextAlignment="Center"
+                               Text="Total:"
+                               TextColor="{StaticResource Primary}"
+                               VerticalTextAlignment="Center" />
+
+                        <!-- total name -->
+                        <Label Margin="10,0,0,0"
+                               BackgroundColor="Transparent"
+                               FontAttributes="Bold"
+                               FontFamily="ItimRegular"
+                               FontSize="28"
+                               HorizontalTextAlignment="Center"
+                               Text="{Binding TotalAmount}"
+                               TextColor="{StaticResource Primary}"
+                               VerticalTextAlignment="Center" />
                     </StackLayout>
 
-                    <Button Margin="20,0,20,20" BackgroundColor="{StaticResource Primary}" Command="{Binding BuyNowCommand}" CornerRadius="10" FontAttributes="Bold" FontSize="20" Text="Buy Now" TextColor="Black">
+                    <Button Margin="20,0,20,0"
+                            BackgroundColor="{StaticResource Primary}"
+                            Command="{Binding BuyNowCommand}"
+                            CornerRadius="10"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="20"
+                            HorizontalOptions="FillAndExpand"
+                            Text="Buy Now"
+                            TextColor="Black"
+                            VerticalOptions="Center">
                         <Button.Shadow>
-                            <Shadow Brush="Black" Opacity="0.3" Radius="10" Offset="5,5" />
+                            <Shadow Brush="Black"
+                                    Opacity="0.3"
+                                    Radius="10"
+                                    Offset="5,5" />
                         </Button.Shadow>
                     </Button>
 
