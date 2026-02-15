@@ -82,49 +82,49 @@
                             </CollectionView.ItemsSource>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid HeightRequest="50"
-                                          WidthRequest="120"
-                                          VerticalOptions="Center">
-                                        <Border Padding="20,12"
-                                                Stroke="{StaticResource Primary}"
-                                                StrokeShape="RoundRectangle 25"
-                                                StrokeThickness="2"
-                                                HeightRequest="50"
-                                                VerticalOptions="Center"
-                                                HorizontalOptions="Center">
-                                            <Label FontAttributes="Bold"
-                                                   FontFamily="ItimRegular"
-                                                   FontSize="16"
-                                                   HorizontalOptions="Center"
-                                                   HorizontalTextAlignment="Center"
-                                                   Text="{Binding .}"
-                                                   TextColor="White"
-                                                   VerticalOptions="Center"
-                                                   VerticalTextAlignment="Center" />
-                                            <VisualStateManager.VisualStateGroups>
-                                                <VisualStateGroup Name="CommonStates">
-                                                    <VisualState Name="Normal">
-                                                        <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor"
-                                                                    Value="Transparent" />
-                                                            <Setter Property="Stroke"
-                                                                    Value="{StaticResource Primary}" />
-                                                        </VisualState.Setters>
-                                                    </VisualState>
-                                                    <VisualState Name="Selected">
-                                                        <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor"
-                                                                    Value="{StaticResource Primary}" />
-                                                            <Setter Property="Stroke"
-                                                                    Value="{StaticResource Primary}" />
-                                                            <Setter Property="StrokeThickness"
-                                                                    Value="2" />
-                                                        </VisualState.Setters>
-                                                    </VisualState>
-                                                </VisualStateGroup>
-                                            </VisualStateManager.VisualStateGroups>
-                                        </Border>
-                                    </Grid>
+                                    <Border Padding="20,12"
+                                            BackgroundColor="Transparent"
+                                            Stroke="{StaticResource Primary}"
+                                            StrokeShape="RoundRectangle 25"
+                                            StrokeThickness="2"
+                                            HeightRequest="50"
+                                            WidthRequest="120"
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="Start">
+                                        <Label FontAttributes="Bold"
+                                               FontFamily="ItimRegular"
+                                               FontSize="16"
+                                               HorizontalOptions="Center"
+                                               HorizontalTextAlignment="Center"
+                                               Text="{Binding .}"
+                                               TextColor="White"
+                                               VerticalOptions="Center"
+                                               VerticalTextAlignment="Center" />
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup Name="CommonStates">
+                                                <VisualState Name="Normal">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor"
+                                                                Value="Transparent" />
+                                                        <Setter Property="Stroke"
+                                                                Value="{StaticResource Primary}" />
+                                                        <Setter Property="StrokeThickness"
+                                                                Value="2" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                                <VisualState Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor"
+                                                                Value="{StaticResource Primary}" />
+                                                        <Setter Property="Stroke"
+                                                                Value="{StaticResource Primary}" />
+                                                        <Setter Property="StrokeThickness"
+                                                                Value="2" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                    </Border>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
@@ -154,49 +154,49 @@
                             </CollectionView.ItemsLayout>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid HeightRequest="50"
-                                          WidthRequest="130"
-                                          VerticalOptions="Center">
-                                        <Border Padding="20,12"
-                                                Stroke="{StaticResource Primary}"
-                                                StrokeShape="RoundRectangle 25"
-                                                StrokeThickness="2"
-                                                HeightRequest="50"
-                                                VerticalOptions="Center"
-                                                HorizontalOptions="Center">
-                                            <Label FontAttributes="Bold"
-                                                   FontFamily="ItimRegular"
-                                                   FontSize="16"
-                                                   HorizontalOptions="Center"
-                                                   HorizontalTextAlignment="Center"
-                                                   Text="{Binding .}"
-                                                   TextColor="White"
-                                                   VerticalOptions="Center"
-                                                   VerticalTextAlignment="Center" />
-                                            <VisualStateManager.VisualStateGroups>
-                                                <VisualStateGroup Name="CommonStates">
-                                                    <VisualState Name="Normal">
-                                                        <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor"
-                                                                    Value="Transparent" />
-                                                            <Setter Property="Stroke"
-                                                                    Value="{StaticResource Primary}" />
-                                                        </VisualState.Setters>
-                                                    </VisualState>
-                                                    <VisualState Name="Selected">
-                                                        <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor"
-                                                                    Value="{StaticResource Primary}" />
-                                                            <Setter Property="Stroke"
-                                                                    Value="{StaticResource Primary}" />
-                                                            <Setter Property="StrokeThickness"
-                                                                    Value="2" />
-                                                        </VisualState.Setters>
-                                                    </VisualState>
-                                                </VisualStateGroup>
-                                            </VisualStateManager.VisualStateGroups>
-                                        </Border>
-                                    </Grid>
+                                    <Border Padding="20,12"
+                                            BackgroundColor="Transparent"
+                                            Stroke="{StaticResource Primary}"
+                                            StrokeShape="RoundRectangle 25"
+                                            StrokeThickness="2"
+                                            HeightRequest="50"
+                                            WidthRequest="130"
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="Start">
+                                        <Label FontAttributes="Bold"
+                                               FontFamily="ItimRegular"
+                                               FontSize="16"
+                                               HorizontalOptions="Center"
+                                               HorizontalTextAlignment="Center"
+                                               Text="{Binding .}"
+                                               TextColor="White"
+                                               VerticalOptions="Center"
+                                               VerticalTextAlignment="Center" />
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup Name="CommonStates">
+                                                <VisualState Name="Normal">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor"
+                                                                Value="Transparent" />
+                                                        <Setter Property="Stroke"
+                                                                Value="{StaticResource Primary}" />
+                                                        <Setter Property="StrokeThickness"
+                                                                Value="2" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                                <VisualState Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor"
+                                                                Value="{StaticResource Primary}" />
+                                                        <Setter Property="Stroke"
+                                                                Value="{StaticResource Primary}" />
+                                                        <Setter Property="StrokeThickness"
+                                                                Value="2" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                    </Border>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
