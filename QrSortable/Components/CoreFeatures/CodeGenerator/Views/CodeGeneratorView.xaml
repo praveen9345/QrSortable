@@ -75,7 +75,7 @@
                             SelectedItem="{Binding SelectedCode, Mode=TwoWay}"
                             SelectionChangedCommand="{Binding OnSelectionCodeChangedCommand}"
                             SelectionMode="Single"
-                            HeightRequest="60">
+                            HeightRequest="100">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
@@ -88,7 +88,7 @@
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Border
-                                        Padding="20,12"
+                                        Padding="5"
                                         Stroke="{StaticResource Primary}"
                                         StrokeShape="RoundRectangle 30"
                                         StrokeThickness="2"
