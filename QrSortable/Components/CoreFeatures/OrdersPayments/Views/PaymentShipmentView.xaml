@@ -466,6 +466,7 @@
                                         SelectedItem="{Binding SelectedCurrencyItem, Mode=TwoWay}"
                                         SelectionMode="Single"
                                         HeightRequest="50"
+                                        WidthRequest="200"
                                         IsVisible="{OnPlatform iOS='true', Android = 'false'}">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="8"
@@ -473,11 +474,11 @@
                             </CollectionView.ItemsLayout>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Frame Padding="0"
+                                    <Frame Padding="2"
                                             HasShadow="False"
                                             CornerRadius="18"
                                             HeightRequest="40"
-                                            WidthRequest="55"
+                                            WidthRequest="80"
                                             BorderColor="{StaticResource Primary}">
                                         <Label Text="{Binding .}"
                                                 FontAttributes="Bold"
