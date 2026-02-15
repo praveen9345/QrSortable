@@ -76,7 +76,7 @@
                             SelectionChangedCommand="{Binding OnSelectionCodeChangedCommand}"
                             SelectionMode="Single"
                             HeightRequest="60"
-                            WidthRequest="60">
+                            WidthRequest="200">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
