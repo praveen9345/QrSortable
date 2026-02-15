@@ -10,9 +10,9 @@
         <Grid>
             <Grid.RowDefinitions>
                 <!--  back  -->
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto"/>
                 <!--  item view  -->
-                <RowDefinition Height="*" />
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!--  Back button  -->
@@ -30,13 +30,13 @@
                         Brush="Black"
                         Opacity="0.5"
                         Radius="10"
-                        Offset="0,0" />
+                        Offset="0,0"/>
                 </Button.Shadow>
                 <Button.ImageSource>
                     <FontImageSource
                         FontFamily="FluentIcons"
                         Glyph="{x:Static local:IconNames.Back}"
-                        Color="{StaticResource Primary}" />
+                        Color="{StaticResource Primary}"/>
                 </Button.ImageSource>
             </Button>
 
@@ -48,7 +48,7 @@
                 HeightRequest="110"
                 HorizontalOptions="Center"
                 Source="payment"
-                VerticalOptions="Center" />
+                VerticalOptions="Center"/>
 
             <ScrollView Grid.Row="1">
                 <StackLayout Margin="10,0,0,10">
@@ -62,7 +62,7 @@
                         HorizontalTextAlignment="Center"
                         Text="{Binding ProductTitle}"
                         TextColor="{StaticResource White}"
-                        VerticalTextAlignment="Center" />
+                        VerticalTextAlignment="Center"/>
                     <!--  Shipping and Billing Address view  -->
                     <Label
                         BackgroundColor="Transparent"
@@ -72,7 +72,7 @@
                         HorizontalTextAlignment="Start"
                         Text="Shipping and Billing Address:"
                         TextColor="{StaticResource Primary}"
-                        VerticalTextAlignment="Center" />
+                        VerticalTextAlignment="Center"/>
 
                     <!--  Person name view  -->
                     <StackLayout
@@ -88,11 +88,13 @@
                             HorizontalTextAlignment="Center"
                             Text="Name:"
                             TextColor="{StaticResource White}"
-                            VerticalTextAlignment="Center" />
+                            VerticalTextAlignment="Center"/>
 
                         <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
+                            Padding="5,5"
+                            StrokeThickness="0"
                             Background="{StaticResource DarkGrey}"
                             HorizontalOptions="FillAndExpand"
                             StrokeShape="RoundRectangle 10">
@@ -101,7 +103,7 @@
                                     Brush="Black"
                                     Opacity="0.5"
                                     Radius="10"
-                                    Offset="0,0" />
+                                    Offset="0,0"/>
                             </Border.Shadow>
                             <!--  input field  -->
                             <Grid>
@@ -110,7 +112,7 @@
                                     Placeholder="e.g. enter name.."
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
-                                    Text="{Binding Name}" />
+                                    Text="{Binding Name}"/>
                             </Grid>
                         </Border>
                     </StackLayout>
@@ -129,11 +131,13 @@
                             HorizontalTextAlignment="Center"
                             Text="Street:"
                             TextColor="{StaticResource White}"
-                            VerticalTextAlignment="Center" />
+                            VerticalTextAlignment="Center"/>
 
                         <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
+                            Padding="5,5"
+                            StrokeThickness="0"
                             Background="{StaticResource DarkGrey}"
                             HorizontalOptions="FillAndExpand"
                             StrokeShape="RoundRectangle 10">
@@ -142,7 +146,7 @@
                                     Brush="Black"
                                     Opacity="0.5"
                                     Radius="10"
-                                    Offset="0,0" />
+                                    Offset="0,0"/>
                             </Border.Shadow>
                             <!--  input field  -->
                             <Grid>
@@ -151,7 +155,7 @@
                                     Placeholder="e.g. enter street name.."
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
-                                    Text="{Binding StreetName}" />
+                                    Text="{Binding StreetName}"/>
                             </Grid>
                         </Border>
                     </StackLayout>
@@ -170,11 +174,13 @@
                             HorizontalTextAlignment="Center"
                             Text="House No.:"
                             TextColor="{StaticResource White}"
-                            VerticalTextAlignment="Center" />
+                            VerticalTextAlignment="Center"/>
 
                         <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
+                            Padding="5,5"
+                            StrokeThickness="0"
                             Background="{StaticResource DarkGrey}"
                             HorizontalOptions="FillAndExpand"
                             StrokeShape="RoundRectangle 10">
@@ -183,7 +189,7 @@
                                     Brush="Black"
                                     Opacity="0.5"
                                     Radius="10"
-                                    Offset="0,0" />
+                                    Offset="0,0"/>
                             </Border.Shadow>
                             <!--  input field  -->
                             <Grid>
@@ -193,7 +199,7 @@
                                     Placeholder="e.g. enter house number.."
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
-                                    Text="{Binding HouseNumber}" />
+                                    Text="{Binding HouseNumber}"/>
                             </Grid>
                         </Border>
                     </StackLayout>
@@ -212,11 +218,13 @@
                             HorizontalTextAlignment="Center"
                             Text="ZIP code:"
                             TextColor="{StaticResource White}"
-                            VerticalTextAlignment="Center" />
+                            VerticalTextAlignment="Center"/>
 
                         <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
+                            Padding="5,5"
+                            StrokeThickness="0"
                             Background="{StaticResource DarkGrey}"
                             HorizontalOptions="FillAndExpand"
                             StrokeShape="RoundRectangle 10">
@@ -225,7 +233,7 @@
                                     Brush="Black"
                                     Opacity="0.5"
                                     Radius="10"
-                                    Offset="0,0" />
+                                    Offset="0,0"/>
                             </Border.Shadow>
                             <!--  input field  -->
                             <Grid>
@@ -234,7 +242,7 @@
                                     Placeholder="e.g. enter ZIP/Postal code.."
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
-                                    Text="{Binding ZipCode}" />
+                                    Text="{Binding ZipCode}"/>
                             </Grid>
                         </Border>
                     </StackLayout>
@@ -253,11 +261,13 @@
                             HorizontalTextAlignment="Center"
                             Text="City:"
                             TextColor="{StaticResource White}"
-                            VerticalTextAlignment="Center" />
+                            VerticalTextAlignment="Center"/>
 
                         <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
+                            Padding="5,5"
+                            StrokeThickness="0"
                             Background="{StaticResource DarkGrey}"
                             HorizontalOptions="FillAndExpand"
                             StrokeShape="RoundRectangle 10">
@@ -266,7 +276,7 @@
                                     Brush="Black"
                                     Opacity="0.5"
                                     Radius="10"
-                                    Offset="0,0" />
+                                    Offset="0,0"/>
                             </Border.Shadow>
                             <!--  input field  -->
                             <Grid>
@@ -275,7 +285,7 @@
                                     Placeholder="e.g. enter city.."
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
-                                    Text="{Binding CityName}" />
+                                    Text="{Binding CityName}"/>
                             </Grid>
                         </Border>
                     </StackLayout>
@@ -294,11 +304,13 @@
                             HorizontalTextAlignment="Center"
                             Text="Country:"
                             TextColor="{StaticResource White}"
-                            VerticalTextAlignment="Center" />
+                            VerticalTextAlignment="Center"/>
 
                         <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
+                            Padding="5,5"
+                            StrokeThickness="0"
                             Background="{StaticResource DarkGrey}"
                             HorizontalOptions="FillAndExpand"
                             StrokeShape="RoundRectangle 10">
@@ -307,7 +319,7 @@
                                     Brush="Black"
                                     Opacity="0.5"
                                     Radius="10"
-                                    Offset="0,0" />
+                                    Offset="0,0"/>
                             </Border.Shadow>
                             <!--  input field  -->
                             <Grid>
@@ -316,7 +328,7 @@
                                     Placeholder="e.g. enter country.."
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
-                                    Text="{Binding CountryName}" />
+                                    Text="{Binding CountryName}"/>
                             </Grid>
                         </Border>
                     </StackLayout>
@@ -335,11 +347,13 @@
                             HorizontalTextAlignment="Center"
                             Text="Email:"
                             TextColor="{StaticResource White}"
-                            VerticalTextAlignment="Center" />
+                            VerticalTextAlignment="Center"/>
 
                         <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
+                            Padding="5,5"
+                            StrokeThickness="0"
                             Background="{StaticResource DarkGrey}"
                             HorizontalOptions="FillAndExpand"
                             StrokeShape="RoundRectangle 10">
@@ -348,7 +362,7 @@
                                     Brush="Black"
                                     Opacity="0.5"
                                     Radius="10"
-                                    Offset="0,0" />
+                                    Offset="0,0"/>
                             </Border.Shadow>
                             <!--  input field  -->
                             <Grid>
@@ -358,7 +372,7 @@
                                     Placeholder="e.g. yourname@example.com"
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
-                                    Text="{Binding Email}" />
+                                    Text="{Binding Email}"/>
                             </Grid>
                         </Border>
                     </StackLayout>
@@ -378,7 +392,7 @@
                             HorizontalTextAlignment="Center"
                             Text="Total:"
                             TextColor="{StaticResource Primary}"
-                            VerticalTextAlignment="Center" />
+                            VerticalTextAlignment="Center"/>
 
                         <!--  total name  -->
                         <Label
@@ -390,15 +404,18 @@
                             HorizontalTextAlignment="Center"
                             Text="{Binding TotalAmount}"
                             TextColor="{StaticResource Primary}"
-                            VerticalTextAlignment="Center" />
-
+                            VerticalTextAlignment="Center"/>
+                        
+                         <!--  for Android  -->
                         <CollectionView
+                             IsVisible="{OnPlatform iOS='false', Android = 'true'}"
                             ItemsSource="{Binding CurrencyItem}"
                             SelectedItem="{Binding SelectedCurrencyItem, Mode=TwoWay}"
                             SelectionChangedCommand="{Binding OnSelectionChangedCommand}"
                             SelectionMode="Single">
                             <CollectionView.ItemsLayout>
-                                <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                                <LinearItemsLayout ItemSpacing="10"
+                                        Orientation="Horizontal"/>
                             </CollectionView.ItemsLayout>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
@@ -415,25 +432,75 @@
                                             HorizontalTextAlignment="Center"
                                             Text="{Binding .}"
                                             TextColor="White"
-                                            VerticalOptions="Center" />
+                                            VerticalOptions="Center"/>
                                         <VisualStateManager.VisualStateGroups>
                                             <VisualStateGroup Name="CommonStates">
                                                 <VisualState Name="Normal">
                                                     <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="Transparent" />
-                                                        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                                                        <Setter Property="BackgroundColor"
+                                                                Value="Transparent"/>
+                                                        <Setter Property="Stroke"
+                                                                Value="{StaticResource Primary}"/>
                                                     </VisualState.Setters>
                                                 </VisualState>
                                                 <VisualState Name="Selected">
                                                     <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-                                                        <Setter Property="Stroke" Value="{StaticResource Primary}" />
-                                                        <Setter Property="StrokeThickness" Value="2" />
+                                                        <Setter Property="BackgroundColor"
+                                                                Value="{StaticResource Primary}"/>
+                                                        <Setter Property="Stroke"
+                                                                Value="{StaticResource Primary}"/>
+                                                        <Setter Property="StrokeThickness"
+                                                                Value="2"/>
                                                     </VisualState.Setters>
                                                 </VisualState>
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
                                     </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <!-- for iOS -->
+                        <CollectionView Margin="15,0,15,0"
+                                        ItemsSource="{Binding CurrencyItem}"
+                                        SelectedItem="{Binding SelectedCurrencyItem, Mode=TwoWay}"
+                                        SelectionMode="Single"
+                                        HeightRequest="50"
+                                        IsVisible="{OnPlatform iOS='true', Android = 'false'}">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout ItemSpacing="8"
+                                        Orientation="Horizontal"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Padding="0"
+                                            HasShadow="False"
+                                            CornerRadius="18"
+                                            HeightRequest="40"
+                                            WidthRequest="55"
+                                            BorderColor="{StaticResource Primary}">
+                                        <Label Text="{Binding .}"
+                                                FontAttributes="Bold"
+                                                TextColor="White"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"/>
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup Name="CommonStates">
+                                                <VisualState Name="Normal">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor"
+                                                                Value="Transparent"/>
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                                <VisualState Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor"
+                                                                Value="{StaticResource Primary}"/>
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                    </Frame>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
@@ -449,10 +516,10 @@
                         IsVisible="{Binding IsPaymentMessageVisible}"
                         Text="{Binding PaymentStatusMessage}"
                         TextColor="{StaticResource Red}"
-                        VerticalTextAlignment="Center" />
+                        VerticalTextAlignment="Center"/>
 
                     <Button
-                        Margin="10,10,20,0"
+                        Margin="10,20,20,0"
                         BackgroundColor="{StaticResource Primary}"
                         Command="{Binding PaymentByCardCommand}"
                         CornerRadius="10"
@@ -468,7 +535,7 @@
                                 Brush="Black"
                                 Opacity="0.3"
                                 Radius="10"
-                                Offset="5,5" />
+                                Offset="5,5"/>
                         </Button.Shadow>
                     </Button>
 
@@ -490,7 +557,7 @@
                                 Brush="Black"
                                 Opacity="0.3"
                                 Radius="10"
-                                Offset="5,5" />
+                                Offset="5,5"/>
                         </Button.Shadow>
                     </Button>
 
