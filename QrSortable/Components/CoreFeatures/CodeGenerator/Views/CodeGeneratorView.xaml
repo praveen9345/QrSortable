@@ -78,7 +78,7 @@
                                            HasShadow="False"
                                            CornerRadius="25"
                                            HeightRequest="50"
-                                           WidthRequest="80"
+                                           WidthRequest="120"
                                            BorderColor="{StaticResource Primary}"
                                            VerticalOptions="Center"
                                            HorizontalOptions="Center">
@@ -203,7 +203,7 @@
                                            HasShadow="False"
                                            CornerRadius="25"
                                            HeightRequest="50"
-                                           WidthRequest="80"
+                                           WidthRequest="120"
                                            BorderColor="{StaticResource Primary}"
                                            VerticalOptions="Center"
                                            HorizontalOptions="Center">
