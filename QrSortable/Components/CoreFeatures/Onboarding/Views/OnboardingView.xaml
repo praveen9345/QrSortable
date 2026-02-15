@@ -98,14 +98,15 @@
 
                     <Button
                         Grid.Column="1"
-                        Margin="10,0,0,0"
+                        Margin="12,0,0,0"
+                        HeightRequest="40"
+                        Padding="16,6"
                         BackgroundColor="{StaticResource Primary}"
                         Command="{Binding CopyMultiuserCodeCommand}"
-                        CornerRadius="20"
+                        CornerRadius="15"
                         FontAttributes="Bold"
                         FontFamily="ItimRegular"
                         FontSize="16"
-                        HorizontalOptions="Fill"
                         Text="Copy"
                         TextColor="Black"
                         VerticalOptions="Center">
@@ -117,6 +118,7 @@
                                 Offset="5,5" />
                         </Button.Shadow>
                     </Button>
+                
                 </Grid>
 
                 <Label
@@ -133,10 +135,11 @@
 
                 <StackLayout
                     Grid.Row="0"
-                    Margin="10,15,5,0"
+                    Margin="10,10,5,0"
                     Orientation="Horizontal">
                     <!--  item name  -->
                     <Label
+                        Margin="0,-15,0,0"
                         BackgroundColor="Transparent"
                         FontAttributes="Bold"
                         FontFamily="ItimRegular"
@@ -149,9 +152,11 @@
                     <!--  Placeholder for item name input field  -->
                     <Border
                         Margin="10,0,10,15"
+                        Padding="5,5"
                         Background="{StaticResource DarkGrey}"
                         HorizontalOptions="FillAndExpand"
-                        StrokeShape="RoundRectangle 10">
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12">
                         <Border.Shadow>
                             <Shadow
                                 Brush="Black"
@@ -164,6 +169,9 @@
                             <Entry
                                 Margin="10,0,0,0"
                                 Placeholder="Enter code.."
+                                BackgroundColor="Transparent"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Fill"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding MultiuserIdInput}" />

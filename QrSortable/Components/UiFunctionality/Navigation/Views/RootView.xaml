@@ -84,16 +84,16 @@
                     </Grid>
                 </Border>
 
-                <!--  cart order view  -->
+                <!--  cart order view - FIXED FOR iOS  -->
                 <Grid
                     Grid.Column="1"
-                    Margin="0,0,15,15"
+                    Margin="10,10,10,0"
                     Padding="5"
                     BackgroundColor="Transparent"
-                    HeightRequest="30"
+                    HeightRequest="50"
                     HorizontalOptions="End"
-                    VerticalOptions="End"
-                    WidthRequest="30">
+                    VerticalOptions="Start"
+                    WidthRequest="50">
                     <Grid.Behaviors>
                         <toolkit:TouchBehavior
                             Command="{Binding CartTappedCommand}"
@@ -110,11 +110,11 @@
                         VerticalOptions="Center"
                         WidthRequest="35" />
 
-                    <!--  Item Count  -->
+                    <!--  Item Count - FIXED POSITIONING  -->
                     <Label
-                        Margin="0,-30,0,0"
+                        Margin="5,-10,0,0"
                         FontAttributes="Bold"
-                        FontSize="25"
+                        FontSize="20"
                         HorizontalOptions="Center"
                         Text="{Binding BasketCount}"
                         TextColor="White"
@@ -301,31 +301,41 @@
                 </CarouselView.ItemTemplate>
             </CarouselView>
 
-            <!--  Refrace  -->
-            <Button
+            <!--  Refresh Button - FIXED FOR iOS CIRCULAR BORDER  -->
+            <Border
                 Grid.Row="2"
                 Margin="0,100,20,20"
-                Padding="10"
+                Padding="0"
                 BackgroundColor="{StaticResource DarkGrey}"
-                Command="{Binding RefreshCommand}"
-                CornerRadius="50"
+                HeightRequest="56"
                 HorizontalOptions="End"
                 IsVisible="{Binding RefreshBtnVisible}"
-                VerticalOptions="End">
-                <Button.Shadow>
+                StrokeShape="RoundRectangle 28"
+                VerticalOptions="End"
+                WidthRequest="56">
+                <Border.Shadow>
                     <Shadow
                         Brush="Black"
                         Opacity="0.5"
                         Radius="10"
                         Offset="0,0" />
-                </Button.Shadow>
-                <Button.ImageSource>
-                    <FontImageSource
-                        FontFamily="FluentIcons"
-                        Glyph="{x:Static local:IconNames.Refrace}"
-                        Color="{StaticResource Primary}" />
-                </Button.ImageSource>
-            </Button>
+                </Border.Shadow>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RefreshCommand}" />
+                </Border.GestureRecognizers>
+                <Image
+                    HeightRequest="32"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    WidthRequest="32">
+                    <Image.Source>
+                        <FontImageSource
+                            FontFamily="FluentIcons"
+                            Glyph="{x:Static local:IconNames.Refrace}"
+                            Color="{StaticResource Primary}" />
+                    </Image.Source>
+                </Image>
+            </Border>
 
             <!--  Indicator  -->
             <IndicatorView
@@ -471,31 +481,41 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <!--  close search  -->
-                <Button
+                <!--  close search - USING BORDER FOR CONSISTENT CIRCULAR SHAPE  -->
+                <Border
                     Grid.Row="2"
-                    Margin="0,10,15,20"
-                    Padding="5"
+                    Margin="0,13,15,20"
+                    Padding="0"
                     BackgroundColor="{StaticResource DarkGrey}"
-                    Command="{Binding SearchCloseCommand}"
-                    CornerRadius="50"
+                    HeightRequest="35"
                     HorizontalOptions="End"
                     IsVisible="{Binding SearchVisible}"
-                    VerticalOptions="Start">
-                    <Button.Shadow>
+                    StrokeShape="RoundRectangle 25"
+                    VerticalOptions="Start"
+                    WidthRequest="35">
+                    <Border.Shadow>
                         <Shadow
                             Brush="Black"
                             Opacity="0.5"
                             Radius="10"
                             Offset="0,0" />
-                    </Button.Shadow>
-                    <Button.ImageSource>
-                        <FontImageSource
-                            FontFamily="FluentIcons"
-                            Glyph="{x:Static local:IconNames.Close}"
-                            Color="{StaticResource Primary}" />
-                    </Button.ImageSource>
-                </Button>
+                    </Border.Shadow>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SearchCloseCommand}" />
+                    </Border.GestureRecognizers>
+                    <Image
+                        HeightRequest="25"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        WidthRequest="25">
+                        <Image.Source>
+                            <FontImageSource
+                                FontFamily="FluentIcons"
+                                Glyph="{x:Static local:IconNames.Close}"
+                                Color="{StaticResource Primary}" />
+                        </Image.Source>
+                    </Image>
+                </Border>
             </Grid>
 
             <!--  Bottom Butoon layout  -->
@@ -554,6 +574,3 @@
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>
-
-
-
