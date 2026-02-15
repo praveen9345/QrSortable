@@ -76,7 +76,7 @@
                             SelectionChangedCommand="{Binding OnSelectionCodeChangedCommand}"
                             SelectionMode="Single"
                             HeightRequest="60"
-                            WidthRequest="200">
+                            WidthRequest="240">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
@@ -94,7 +94,7 @@
                                         StrokeShape="RoundRectangle 30"
                                         StrokeThickness="2"
                                         HeightRequest="50"
-                                        WidthRequest="50">
+                                        WidthRequest="100">
                                         <Label
                                             FontAttributes="Bold"
                                             FontFamily="ItimRegular"
