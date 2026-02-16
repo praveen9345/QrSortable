@@ -25,7 +25,7 @@
                         FontSize="28"
                         HorizontalOptions="Center"
                         Text="Upgrade to Premium"
-                        TextColor="White" />
+                        TextColor="{StaticResource Primary}" />
 
                     <Label
                         FontFamily="ItimRegular"
@@ -39,7 +39,7 @@
                 <Border
                     Padding="25"
                     BackgroundColor="#1C1C1E"
-                    Stroke="#7B3FE4"
+                    Stroke="{StaticResource Primary}"
                     StrokeShape="RoundRectangle 25"
                     StrokeThickness="2">
 
@@ -68,7 +68,7 @@
                                 FontSize="30"
                                 HorizontalOptions="Center"
                                 Text="{Binding PriceText}"
-                                TextColor="White" />
+                                TextColor="{StaticResource Primary}" />
 
                             <Label
                                 FontFamily="ItimRegular"

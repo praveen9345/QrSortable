@@ -80,6 +80,9 @@
                     case YourOrdersTitle:
                         await NavigationService.Navigate<YoursOrdersView>();
                         break;
+                    case SubscribeTitle:
+                        await NavigationService.Navigate<SubscriptionView>();
+                        break;
                     case SettingsTitle:
                         await NavigationService.Navigate<SettingView>();
                         break;
