@@ -12,12 +12,10 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
         ///     ................... .....................
         /// </summary>
         Task<object> CreatePaymentOrSubscriptionAsync(
-            decimal amount,
-            string currency,
-            string paymentMethod,
-            string description,
-            bool isSubscription = false,
-            string customerEmail = null);
+            decimal amount, string currency, string paymentMethod,string description,
+            bool isSubscription = false,string customerEmail = null);
+
+        Task CancelSubscriptionAsync(string customerId, string subscriptionId);
 
         /// <summary>
         ///     ................... .....................
