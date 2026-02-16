@@ -3,6 +3,8 @@
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using Microsoft.Maui.Storage;
+    using Mollie.Api.Models.Payment.Response;
+    using Mollie.Api.Models.Subscription.Response;
     using QrSortable.Components.CoreFeatures.Cloud;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.CodeGenerator;
@@ -264,34 +266,49 @@
 
             IsPaymentMessageVisible = true;
 
-            var paymentResponse = await _mollieService.CreatePaymentAsync(
-              _product.TotalPrice, SelectedCurrencyItem, "Card", "Payment");
+            var result = await _mollieService.CreatePaymentOrSubscriptionAsync(
+            _product.TotalPrice,SelectedCurrencyItem, "Card","Payment",
+            isSubscription: false);
 
-            if (paymentResponse != null && paymentResponse.Links.Checkout != null)
+            // Check if it’s a one-time payment
+            if (result is PaymentResponse paymentResponse)
             {
-                _paymentId = paymentResponse.Id;
-
-                _timer = _timeService.StartPeriodicTimer(_ =>
+                if (paymentResponse.Links.Checkout != null)
                 {
-                    MainThread.BeginInvokeOnMainThread(async () =>
+                    _paymentId = paymentResponse.Id;
+
+                    _timer = _timeService.StartPeriodicTimer(_ =>
                     {
-                        await CheckPaymentStatusAsync();
-                    });
-                }, TimeSpan.FromSeconds(15));
+                        MainThread.BeginInvokeOnMainThread(async () =>
+                        {
+                            await CheckPaymentStatusAsync();
+                        });
+                    }, TimeSpan.FromSeconds(15));
 
-                if(_mauiEssentialsWrapper.GetDevicePlatform() == _mauiEssentialsWrapper.AndroidDevicePlatform)
-                {
-                    await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.SystemPreferred);
+                    // Open the checkout in browser
+                    if (_mauiEssentialsWrapper.GetDevicePlatform() == _mauiEssentialsWrapper.AndroidDevicePlatform)
+                    {
+                        await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.SystemPreferred);
+                    }
+                    else
+                    {
+                        await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.External);
+                    }
                 }
                 else
                 {
-                    await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.External);
+                    Console.WriteLine("PaymentShipmentViewModel:Error: Failed to create payment.");
                 }
-                   
+            }
+            // If it’s a subscription, you can handle differently
+            else if (result is SubscriptionResponse subscriptionResponse)
+            {
+                Console.WriteLine($"Subscription created successfully! ID: {subscriptionResponse.Id}");
+                // You might show a message or store subscription ID
             }
             else
             {
-                Console.WriteLine("PaymentShipmentViewModel:Error: Failed to create payment.");
+                Console.WriteLine("PaymentShipmentViewModel:Error: Unexpected result type.");
             }
 
         });

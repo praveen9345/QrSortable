@@ -1,6 +1,7 @@
 ﻿namespace QrSortable.Components.CoreFeatures.OrdersPayments
 {
     using Mollie.Api.Client;
+    using Mollie.Api.Models.Payment;
     using Mollie.Api.Models.Payment.Request;
     using Mollie.Api.Models.Payment.Response;
     using System.Globalization;
@@ -11,6 +12,8 @@
     public class MollieService : IMollieService
     {
         private readonly PaymentClient _paymentClient;
+        private readonly CustomerClient _customerClient;
+        private readonly SubscriptionClient _subscriptionClient;
         private static readonly string  MOLLIE_TEST_API_KEY = "test_a4BaGmytRmSv6J2xSxp8j6ypATxEdf";
       
         /// <summary>
@@ -20,19 +23,44 @@
         public MollieService()
         {
             _paymentClient = new PaymentClient(MOLLIE_TEST_API_KEY);
+            _customerClient = new CustomerClient(MOLLIE_TEST_API_KEY);
+            _subscriptionClient = new SubscriptionClient(MOLLIE_TEST_API_KEY);
         }
 
-         public async Task<PaymentResponse> CreatePaymentAsync(decimal amount, string currency, string pymentMethod, string description)
+        public async Task<object> CreatePaymentOrSubscriptionAsync(
+            decimal amount, string currency, string paymentMethod,string description,
+            bool isSubscription = false, string customerEmail = null)
         {
-            var paymentRequest = new PaymentRequest
+            if (!isSubscription)
             {
-                Amount = new Mollie.Api.Models.Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
-                Description = description,
-                RedirectUrl = $"myapp://payment-return?id={{paymentId}}",
-                Method = GetMolliePaymentMethodType(pymentMethod)
-            };
+                return await _paymentClient.CreatePaymentAsync(new PaymentRequest
+                {
+                    Amount = new Mollie.Api.Models.Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
+                    Description = description,
+                    RedirectUrl = $"myapp://payment-return?id={{paymentId}}",
+                    Method = GetMolliePaymentMethodType(paymentMethod)
+                });
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(customerEmail))
+                    throw new ArgumentException("Customer email is required for subscriptions.");
 
-            return await _paymentClient.CreatePaymentAsync(paymentRequest);
+                var customer = await _customerClient.CreateCustomerAsync(new Mollie.Api.Models.Customer.Request.CustomerRequest
+                {
+                    Email = customerEmail
+                });
+
+                var subscriptionRequest = new Mollie.Api.Models.Subscription.Request.SubscriptionRequest
+                {
+                    Amount = new Mollie.Api.Models.Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
+                    Interval = "1 month",
+                    Description = description,
+                    StartDate = DateTime.UtcNow
+                };
+
+                return await _subscriptionClient.CreateSubscriptionAsync(customer.Id, subscriptionRequest);
+            }
         }
 
         public async Task<PaymentResponse> GetPaymentStatusAsync(string paymentId)
