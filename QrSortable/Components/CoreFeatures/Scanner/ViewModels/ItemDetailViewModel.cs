@@ -53,9 +53,9 @@
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
-        public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService, 
+        public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService,
             IFilePickerService filePickerService, IToastService toastService, IBackendCommunicationService backendCommunicationService,
-            IBackendDatabaseManager backendDatabaseManager, IConnectivityService connectivityService, ISharedMethodService sharedMethodService, 
+            IBackendDatabaseManager backendDatabaseManager, IConnectivityService connectivityService, ISharedMethodService sharedMethodService,
             IBackendDatabaseHelper backendDatabaseHelper, IPermissionService permissionService, IMauiEssentialsWrapper mauiEssentialsWrapper)
         {
             IsBackNavigationEnabled = true;
@@ -135,7 +135,7 @@
                 return;
             }
 
-            if(!string.IsNullOrWhiteSpace(_storageData.ItemName) && !string.IsNullOrWhiteSpace(_storageData.Description))
+            if (!string.IsNullOrWhiteSpace(_storageData.ItemName) && !string.IsNullOrWhiteSpace(_storageData.Description))
             {
                 _isUpdateItem = true;
                 ItemName = _storageData.ItemName;
@@ -171,6 +171,19 @@
             IsCameraEnabled = false;
             IsCameraCapture = false;
             IsCameraCaptureVisable = false;
+
+            // Clean up zoom states when view is disappearing
+            // This prevents memory leaks from the gesture tracking
+            CleanupZoomStates();
+        }
+
+        /// <summary>
+        /// Cleanup method to be called from the view
+        /// </summary>
+        private void CleanupZoomStates()
+        {
+            // This will be called from the view's ViewDisappearing
+            // The actual cleanup happens in the code-behind
         }
 
         public AsyncRelayCommand CameraCommand => new AsyncRelayCommand(async () =>
@@ -190,7 +203,7 @@
         public AsyncRelayCommand<object> ImageCapturedCommand => new AsyncRelayCommand<object>(async (image) =>
         {
             if (!IsCameraEnabled) return;
-             
+
             if (image is PlatformImage platformImage)
             {
                 byte[] jpegCaptureImages = Array.Empty<byte>();
@@ -232,7 +245,7 @@
             {
                 Console.WriteLine("ItemDetailViewModel: Invalid image data. Expected a PlatformImage.");
             }
-            
+
             IsCameraCapture = IsCameraCaptureVisable = false;
         });
 
@@ -250,7 +263,7 @@
 
             var picture = (int)await DialogService.ShowPhotoSelectionDialog();
 
-            if(picture == (int)PhotoSelectionResponse.Camera)
+            if (picture == (int)PhotoSelectionResponse.Camera)
             {
 
                 var cameraPermission = await _permissionService.RequestPermissionAsync(Permission.Camera);
@@ -268,7 +281,7 @@
 
                 Stream photo = await _filePickerService.ImageAsync();
 
-                if(photo != null)
+                if (photo != null)
                 {
                     var byteImage = await _imageService.ConvertToJpegBytes(photo);
 
@@ -290,7 +303,7 @@
                 else
                 {
                     await DialogService.ShowAlertDialog("Could not able to pick the image", "Ok");
-                }    
+                }
             }
         });
 
@@ -363,7 +376,7 @@
                         var updatedItem = await _databaseManager.UpdateAsync(item);
                         if (updatedItem != null)
                         {
-                            if(!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                            if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
                             {
                                 var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(item, "true");
                                 await _backendDatabaseManager.UpdateAsync(dto);

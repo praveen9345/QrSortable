@@ -16,9 +16,7 @@
     <views:BaseView.Content>
         <Grid>
             <Grid.RowDefinitions>
-                <!--  back  -->
                 <RowDefinition Height="Auto" />
-                <!--  item view  -->
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -67,17 +65,18 @@
                         Color="{StaticResource Primary}" />
                 </Button.ImageSource>
             </Button>
+
             <!--  page icon  -->
             <Image
                 Grid.Row="0"
                 Aspect="AspectFit"
-                HeightRequest="180"
+                HeightRequest="130"
                 HorizontalOptions="Center"
                 IsVisible="{Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}"
                 Source="items_icon"
                 VerticalOptions="Center" />
 
-            <!--  capture buttom  -->
+            <!--  capture button  -->
             <Border
                 Margin="0,0,0,50"
                 Padding="0"
@@ -88,7 +87,6 @@
                 StrokeShape="RoundRectangle 36"
                 VerticalOptions="End"
                 WidthRequest="72">
-
                 <Border.Shadow>
                     <Shadow
                         Brush="Black"
@@ -96,7 +94,6 @@
                         Radius="10"
                         Offset="0,0" />
                 </Border.Shadow>
-
                 <Button
                     Padding="0"
                     BackgroundColor="Transparent"
@@ -104,7 +101,6 @@
                     CornerRadius="36"
                     HeightRequest="72"
                     WidthRequest="72">
-
                     <Button.ImageSource>
                         <FontImageSource
                             FontFamily="FluentIcons"
@@ -112,9 +108,7 @@
                             Size="40"
                             Color="{StaticResource Primary}" />
                     </Button.ImageSource>
-
                 </Button>
-
             </Border>
 
             <Grid
@@ -122,15 +116,10 @@
                 BackgroundColor="{OnPlatform iOS={StaticResource StatusBarColor}}"
                 IsVisible="{Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}">
                 <Grid.RowDefinitions>
-                    <!--  item name  -->
                     <RowDefinition Height="Auto" />
-                    <!--  item name  -->
                     <RowDefinition Height="Auto" />
-                    <!--  item view  -->
                     <RowDefinition Height="*" />
-                    <!--  add item image  -->
                     <RowDefinition Height="Auto" />
-
                 </Grid.RowDefinitions>
 
                 <!--  item name  -->
@@ -138,7 +127,6 @@
                     Grid.Row="0"
                     Margin="10,0,5,0"
                     Orientation="Horizontal">
-                    <!--  item name  -->
                     <Label
                         BackgroundColor="Transparent"
                         FontAttributes="Bold"
@@ -148,8 +136,6 @@
                         Text="Item Name:"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
-
-                    <!--  Placeholder for item name input field  -->
                     <Border
                         Margin="10,0,0,0"
                         Padding="5,5"
@@ -164,7 +150,6 @@
                                 Radius="10"
                                 Offset="0,0" />
                         </Border.Shadow>
-                        <!--  input field  -->
                         <Grid>
                             <Entry
                                 Margin="10,0,0,0"
@@ -181,7 +166,6 @@
                     Grid.Row="1"
                     Margin="10,0,5,0"
                     Orientation="Horizontal">
-                    <!--  remarks  -->
                     <Label
                         BackgroundColor="Transparent"
                         FontAttributes="Bold"
@@ -191,8 +175,6 @@
                         Text="Remarks:"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
-
-                    <!--  Placeholder for more info input field  -->
                     <Border
                         Margin="10,10,0,10"
                         Padding="5,5"
@@ -207,7 +189,6 @@
                                 Radius="10"
                                 Offset="0,0" />
                         </Border.Shadow>
-                        <!--  input field  -->
                         <Grid>
                             <Entry
                                 Margin="10,0,0,0"
@@ -219,43 +200,49 @@
                     </Border>
                 </StackLayout>
 
+                <!--  Image carousel with zoom  -->
                 <Grid Grid.Row="2" Background="{StaticResource DarkGrey}">
-                    <!--  default image icon  -->
                     <Image
                         Aspect="AspectFill"
                         HorizontalOptions="FillAndExpand"
                         Source="image_icon"
                         VerticalOptions="FillAndExpand" />
-                    <!--  seprator  -->
                     <BoxView
                         HeightRequest="2"
                         VerticalOptions="Start"
                         Color="{StaticResource Yellow}" />
-                    <!--  Carousel View  -->
+
+                    <!--  ZOOMABLE CAROUSEL - WORKS ON iOS & ANDROID  -->
                     <CarouselView
+                        x:Name="imageCarousel"
                         BackgroundColor="Transparent"
                         ItemsSource="{Binding ImageArray}"
                         Loop="False"
                         VerticalOptions="FillAndExpand">
                         <CarouselView.ItemTemplate>
                             <DataTemplate>
-                                <!--  boxes view  -->
-                                <Grid Margin="2,0,2,0">
-                                    <!--  images  -->
+                                <Grid Margin="2,0,2,0" BackgroundColor="Transparent">
                                     <Image
-                                        Aspect="AspectFill"
-                                        HorizontalOptions="FillAndExpand"
+                                        Aspect="AspectFit"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
                                         Rotation="{Binding Rotate}"
                                         Source="{Binding Image}"
-                                        VerticalOptions="FillAndExpand" />
-
-                                    <!--  Swipe view  -->
+                                        BackgroundColor="Transparent">
+                                        <Image.GestureRecognizers>
+                                            <PinchGestureRecognizer PinchUpdated="OnPinchUpdated" />
+                                            <PanGestureRecognizer PanUpdated="OnPanUpdated" />
+                                            <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="OnDoubleTapped" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
                                     <Button
                                         Padding="0"
+                                        Margin="5"
                                         BackgroundColor="Transparent"
                                         CornerRadius="50"
                                         HeightRequest="30"
                                         HorizontalOptions="End"
+                                        InputTransparent="False"
                                         VerticalOptions="Start"
                                         WidthRequest="30">
                                         <Button.ImageSource>
@@ -269,17 +256,15 @@
                             </DataTemplate>
                         </CarouselView.ItemTemplate>
                     </CarouselView>
-                    <!--  seprator  -->
+
                     <BoxView
                         HeightRequest="2"
                         VerticalOptions="End"
                         Color="{StaticResource Yellow}" />
                 </Grid>
 
-                <!--  add image button  -->
+                <!--  Action buttons  -->
                 <Grid Grid.Row="3" BackgroundColor="{OnPlatform iOS={StaticResource StatusBarColor}}">
-
-                    <!--  Add image button  -->
                     <Button
                         Margin="0,15,80,15"
                         Padding="0"
@@ -290,7 +275,6 @@
                         HorizontalOptions="End"
                         VerticalOptions="End"
                         WidthRequest="56">
-
                         <Button.Shadow>
                             <Shadow
                                 Brush="{StaticResource Primary}"
@@ -298,7 +282,6 @@
                                 Radius="10"
                                 Offset="0,0" />
                         </Button.Shadow>
-
                         <Button.ImageSource>
                             <FontImageSource
                                 FontFamily="FluentIcons"
@@ -306,10 +289,7 @@
                                 Size="35"
                                 Color="{StaticResource Black}" />
                         </Button.ImageSource>
-
                     </Button>
-
-                    <!--  Save button  -->
                     <Button
                         Margin="0,15,15,15"
                         Padding="0"
@@ -320,7 +300,6 @@
                         HorizontalOptions="End"
                         VerticalOptions="End"
                         WidthRequest="56">
-
                         <Button.Shadow>
                             <Shadow
                                 Brush="{StaticResource Primary}"
@@ -328,7 +307,6 @@
                                 Radius="10"
                                 Offset="0,0" />
                         </Button.Shadow>
-
                         <Button.ImageSource>
                             <FontImageSource
                                 FontFamily="FluentIcons"
@@ -336,13 +314,9 @@
                                 Size="35"
                                 Color="{StaticResource Black}" />
                         </Button.ImageSource>
-
                     </Button>
                 </Grid>
             </Grid>
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>
-
-
-
