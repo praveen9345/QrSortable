@@ -161,7 +161,7 @@
                     <Button
                         BackgroundColor="{StaticResource Primary}"
                         Command="{Binding CopyIbanCommand}"
-                        CornerRadius="20"
+                        CornerRadius="15"
                         FontAttributes="Bold"
                         FontFamily="ItimRegular"
                         FontSize="16"
@@ -203,7 +203,7 @@
                     <Button
                         BackgroundColor="{StaticResource Primary}"
                         Command="{Binding CopyReferenceCodeCommand}"
-                        CornerRadius="20"
+                        CornerRadius="15"
                         FontAttributes="Bold"
                         FontFamily="ItimRegular"
                         FontSize="16"

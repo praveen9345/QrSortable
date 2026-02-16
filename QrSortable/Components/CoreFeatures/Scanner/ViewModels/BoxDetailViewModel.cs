@@ -90,7 +90,7 @@
                         CategoryText = storageItem.Category;
                         LocationText = storageItem.Location;
 
-                        var image = ImageSource.FromFile("image_icon");
+                        var image = GetPlaceholderImage();
                         if (storageItem.ImageList != null && storageItem.ImageList.Count > 0)
                         {
                             image = ConvertToImageSource(storageItem.ImageList[0]);
@@ -424,20 +424,29 @@
         private ImageSource ConvertToImageSource(object input)
         {
             if (input == null)
-                return null;
+                return GetPlaceholderImage();
 
-            Stream stream = input switch
+            return input switch
             {
-                byte[] jpegBytes when jpegBytes.Length > 0 => new MemoryStream(jpegBytes),
-                Stream jpegStream => jpegStream,
+                byte[] jpegBytes when jpegBytes.Length > 0 =>
+                    ImageSource.FromStream(() => new MemoryStream(jpegBytes)),
+
+                Stream jpegStream =>
+                    ImageSource.FromStream(() =>
+                    {
+                        if (jpegStream.CanSeek) jpegStream.Position = 0;
+                        return jpegStream;
+                    }),
+
                 _ => throw new ArgumentException("Unsupported input type", nameof(input))
             };
-
-            if (stream.CanSeek)
-                stream.Position = 0;
-
-            return ImageSource.FromStream(() => stream );
         }
+
+        private ImageSource GetPlaceholderImage()
+        {
+            return ImageSource.FromFile("image_icon");
+        }
+
 
     }
 }
