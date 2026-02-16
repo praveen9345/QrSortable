@@ -180,52 +180,70 @@
                                                         VerticalTextAlignment="Center" />
                                                 </HorizontalStackLayout>
 
-                                                <Button
+                                                <Border
+                                                    Padding="0"
                                                     BackgroundColor="Green"
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.DownloadPDFCommand}"
-                                                    CommandParameter="{Binding .}"
-                                                    CornerRadius="50"
-                                                    FontAttributes="Bold"
-                                                    FontFamily="ItimRegular"
-                                                    FontSize="Medium"
+                                                    HeightRequest="40"
                                                     HorizontalOptions="Start"
-                                                    IsEnabled="{Binding IsEnabelStatusOfOrder}"
-                                                    Text="{Binding StatusOfOrder}"
-                                                    TextColor="Black"
+                                                    StrokeShape="RoundRectangle 20"
                                                     VerticalOptions="Center">
-                                                    <Button.Shadow>
+                                                    <!--  Shadow  -->
+                                                    <Border.Shadow>
                                                         <Shadow
                                                             Brush="Black"
                                                             Opacity="0.3"
                                                             Radius="10"
                                                             Offset="5,5" />
-                                                    </Button.Shadow>
-                                                </Button>
+                                                    </Border.Shadow>
+
+                                                    <!--  Button inside border  -->
+                                                    <Button
+                                                        Padding="20,5,20,5"
+                                                        BackgroundColor="Transparent"
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.DownloadPDFCommand}"
+                                                        CommandParameter="{Binding .}"
+                                                        FontAttributes="Bold"
+                                                        FontFamily="ItimRegular"
+                                                        FontSize="Medium"
+                                                        HorizontalOptions="Fill"
+                                                        IsEnabled="{Binding IsEnabelStatusOfOrder}"
+                                                        Text="{Binding StatusOfOrder}"
+                                                        TextColor="Black"
+                                                        VerticalOptions="Fill" />
+                                                </Border>
 
                                             </VerticalStackLayout>
 
                                             <VerticalStackLayout Grid.Column="1">
-                                                <Button
-                                                    Margin="2"
+                                                <Border
+                                                    Padding="0"
                                                     BackgroundColor="#00b8d5"
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.CopyOrderIdCommand}"
-                                                    CommandParameter="{Binding .}"
-                                                    CornerRadius="50"
-                                                    FontAttributes="Bold"
-                                                    FontFamily="ItimRegular"
-                                                    FontSize="Medium"
+                                                    HeightRequest="40"
                                                     HorizontalOptions="Center"
-                                                    Text="Copy ID"
-                                                    TextColor="Black"
+                                                    StrokeShape="RoundRectangle 20"
                                                     VerticalOptions="Center">
-                                                    <Button.Shadow>
+
+                                                    <Border.Shadow>
                                                         <Shadow
                                                             Brush="Black"
                                                             Opacity="0.3"
                                                             Radius="10"
                                                             Offset="5,5" />
-                                                    </Button.Shadow>
-                                                </Button>
+                                                    </Border.Shadow>
+
+                                                    <Button
+                                                        Padding="10,5,10,5"
+                                                        BackgroundColor="Transparent"
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.CopyOrderIdCommand}"
+                                                        CommandParameter="{Binding .}"
+                                                        FontAttributes="Bold"
+                                                        FontFamily="ItimRegular"
+                                                        FontSize="Medium"
+                                                        HorizontalOptions="Fill"
+                                                        Text="Copy ID"
+                                                        TextColor="Black"
+                                                        VerticalOptions="Fill" />
+                                                </Border>
 
                                                 <Image
                                                     Grid.Column="1"

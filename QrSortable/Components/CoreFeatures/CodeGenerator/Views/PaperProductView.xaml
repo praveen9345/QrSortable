@@ -113,7 +113,7 @@
                 <Grid Grid.Row="2" Background="{StaticResource DarkGrey}">
                     <!--  default image icon  -->
                     <Image
-                        Aspect="AspectFill"
+                        Aspect="AspectFit"
                         HorizontalOptions="Fill"
                         Source="image_icon"
                         VerticalOptions="Fill" />
@@ -166,103 +166,107 @@
                         VerticalOptions="End"
                         Color="{StaticResource Yellow}" />
                 </Grid>
-                <HorizontalStackLayout Grid.Row="3" Margin="10,10,10,5">
 
-                    <!--  nof of product  -->
+                <HorizontalStackLayout
+                    Grid.Row="3"
+                    Margin="10,10,10,5"
+                    Spacing="10"
+                    VerticalOptions="Center">
+
+                    <!--  Quantity Label  -->
                     <Label
-                        Margin="0,0,10,0"
-                        BackgroundColor="Transparent"
                         FontAttributes="Bold"
                         FontFamily="ItimRegular"
-                        FontSize="18"
-                        HorizontalTextAlignment="Center"
+                        FontSize="20"
                         Text="Quantity:"
                         TextColor="{StaticResource White}"
+                        VerticalOptions="Center"
                         VerticalTextAlignment="Center" />
 
-                    <!--  plus minus view  -->
+                    <!--  Plus / Minus Container  -->
                     <Border
-                        Grid.Column="1"
-                        Padding="5"
+                        Padding="0"
                         Background="{StaticResource Primary}"
                         HeightRequest="50"
+                        HorizontalOptions="FillAndExpand"
                         StrokeShape="RoundRectangle 30"
                         VerticalOptions="Center"
                         WidthRequest="200">
 
-                        <Grid VerticalOptions="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                        <Grid
+                            Padding="10,0"
+                            ColumnSpacing="0"
+                            VerticalOptions="Center">
 
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
                             <!--  Minus Button  -->
                             <Button
                                 Grid.Column="0"
-                                Margin="10"
                                 Padding="0"
                                 BackgroundColor="Transparent"
                                 Command="{Binding DecreaseQuantityCommand}"
-                                CornerRadius="50"
-                                FontAttributes="Bold"
-                                HeightRequest="24"
-                                HorizontalOptions="Start"
+                                CornerRadius="20"
+                                HeightRequest="40"
                                 VerticalOptions="Center"
-                                WidthRequest="24">
+                                WidthRequest="40">
+
                                 <Button.ImageSource>
                                     <FontImageSource
                                         FontFamily="FluentIcons"
                                         Glyph="{x:Static local:IconNames.Minus}"
-                                        Color="{StaticResource Black}" />
+                                        Size="18"
+                                        Color="Black" />
                                 </Button.ImageSource>
                             </Button>
 
-                            <!--  Quantity Label  -->
+                            <!--  Quantity  -->
                             <Label
                                 Grid.Column="1"
-                                Padding="-5"
                                 FontAttributes="Bold"
-                                FontSize="28"
-                                HorizontalOptions="Center"
+                                FontSize="22"
+                                HorizontalTextAlignment="Center"
                                 Text="{Binding ProductCount}"
                                 TextColor="Black"
-                                VerticalOptions="Center" />
+                                VerticalOptions="Center"
+                                VerticalTextAlignment="Center" />
 
                             <!--  Plus Button  -->
                             <Button
                                 Grid.Column="2"
-                                Margin="10"
                                 Padding="0"
                                 BackgroundColor="Transparent"
                                 Command="{Binding IncreaseQuantityCommand}"
-                                CornerRadius="50"
-                                FontAttributes="Bold"
-                                HeightRequest="24"
-                                HorizontalOptions="End"
+                                CornerRadius="20"
+                                HeightRequest="40"
                                 VerticalOptions="Center"
-                                WidthRequest="24">
+                                WidthRequest="40">
+
                                 <Button.ImageSource>
                                     <FontImageSource
                                         FontFamily="FluentIcons"
                                         Glyph="{x:Static local:IconNames.Plus}"
-                                        Color="{StaticResource Black}" />
+                                        Size="18"
+                                        Color="Black" />
                                 </Button.ImageSource>
                             </Button>
+
                         </Grid>
                     </Border>
-                    <!--  total amount  -->
+
+                    <!--  Total Amount  -->
                     <Label
-                        Margin="10,0,0,0"
-                        BackgroundColor="Transparent"
                         FontAttributes="Bold"
-                        FontFamily="ItimRegular"
-                        FontSize="30"
-                        HorizontalTextAlignment="Center"
+                        FontSize="26"
                         Text="{Binding TotalAmount}"
                         TextColor="{StaticResource Primary}"
+                        VerticalOptions="Center"
                         VerticalTextAlignment="Center" />
+
                 </HorizontalStackLayout>
 
                 <!--  add to basket  -->

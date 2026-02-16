@@ -178,6 +178,7 @@
                                             Source="cart_icon.svg"
                                             VerticalOptions="Center" />
 
+                                        <!--  Qr-scan button  -->
                                         <Border
                                             Grid.Column="1"
                                             Padding="5"
@@ -187,35 +188,37 @@
 
                                             <Grid VerticalOptions="Center">
                                                 <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <!--  Minus Button  -->
                                                 <Button
                                                     Grid.Column="0"
-                                                    Margin="10"
                                                     Padding="0"
                                                     BackgroundColor="Transparent"
                                                     Clicked="OnDecreaseQuantityButtonClicked"
-                                                    FontAttributes="Bold"
-                                                    HeightRequest="24"
-                                                    HorizontalOptions="Start"
+                                                    Command="{Binding DecreaseQuantityCommand}"
+                                                    CornerRadius="20"
+                                                    HeightRequest="40"
+                                                    HorizontalOptions="Center"
                                                     VerticalOptions="Center"
-                                                    WidthRequest="24">
+                                                    WidthRequest="40">
                                                     <Button.ImageSource>
                                                         <FontImageSource
                                                             FontFamily="FluentIcons"
                                                             Glyph="{x:Static local:IconNames.Minus}"
-                                                            Color="{StaticResource Black}" />
+                                                            Size="18"
+                                                            Color="Black" />
                                                     </Button.ImageSource>
                                                 </Button>
 
                                                 <!--  Quantity Label  -->
                                                 <Label
                                                     Grid.Column="1"
-                                                    Padding="-5"
+                                                    Padding="{OnPlatform Android='0,-6,0,0',
+                                                                         iOS='0,0,0,0'}"
                                                     FontAttributes="Bold"
                                                     FontSize="28"
                                                     HorizontalOptions="Center"
@@ -226,25 +229,26 @@
                                                 <!--  Plus Button  -->
                                                 <Button
                                                     Grid.Column="2"
-                                                    Margin="10"
                                                     Padding="0"
                                                     BackgroundColor="Transparent"
                                                     Clicked="OnIncreaseQuantityButtonClicked"
-                                                    CornerRadius="50"
-                                                    FontAttributes="Bold"
-                                                    HeightRequest="24"
-                                                    HorizontalOptions="End"
+                                                    Command="{Binding IncreaseQuantityCommand}"
+                                                    CornerRadius="20"
+                                                    HeightRequest="40"
+                                                    HorizontalOptions="Center"
                                                     VerticalOptions="Center"
-                                                    WidthRequest="24">
+                                                    WidthRequest="40">
                                                     <Button.ImageSource>
                                                         <FontImageSource
                                                             FontFamily="FluentIcons"
                                                             Glyph="{x:Static local:IconNames.Plus}"
-                                                            Color="{StaticResource Black}" />
+                                                            Size="18"
+                                                            Color="Black" />
                                                     </Button.ImageSource>
                                                 </Button>
                                             </Grid>
                                         </Border>
+
                                         <!--  Total amount  -->
                                         <Label
                                             Grid.Column="2"
@@ -255,30 +259,40 @@
                                             Text="{Binding TotalPrice, StringFormat='{}{0}€'}"
                                             TextColor="Black"
                                             VerticalOptions="Center" />
+
                                         <!--  buy now  -->
-                                        <Button
+                                        <Border
                                             Grid.Column="3"
-                                            Margin="5,0,5,0"
-                                            Padding="5"
-                                            BackgroundColor="#25BA98"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.BuyNowCommand}"
-                                            CommandParameter="{Binding .}"
-                                            CornerRadius="50"
-                                            FontAttributes="Bold"
-                                            FontFamily="ItimRegular"
-                                            FontSize="15"
+                                            Margin="0,0,5,0"
+                                            Padding="15,0,15,0"
+                                            Background="#25BA98"
+                                            HeightRequest="35"
                                             HorizontalOptions="Fill"
-                                            Text="Buy Now"
-                                            TextColor="Black"
+                                            StrokeShape="RoundRectangle 20"
                                             VerticalOptions="Center">
-                                            <Button.Shadow>
+                                            <!--  Shadow  -->
+                                            <Border.Shadow>
                                                 <Shadow
                                                     Brush="Black"
                                                     Opacity="0.5"
                                                     Radius="3"
                                                     Offset="1,1" />
-                                            </Button.Shadow>
-                                        </Button>
+                                            </Border.Shadow>
+
+                                            <!--  Button inside Border  -->
+                                            <Button
+                                                Padding="0"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.BuyNowCommand}"
+                                                CommandParameter="{Binding .}"
+                                                FontAttributes="Bold"
+                                                FontFamily="ItimRegular"
+                                                FontSize="15"
+                                                HorizontalOptions="Fill"
+                                                Text="Buy Now"
+                                                TextColor="Black"
+                                                VerticalOptions="Fill" />
+                                        </Border>
                                     </Grid>
                                 </Grid>
                             </Border>

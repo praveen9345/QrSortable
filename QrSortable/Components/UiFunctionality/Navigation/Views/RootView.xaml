@@ -522,12 +522,13 @@
             <StackLayout Grid.Row="3" BackgroundColor="{StaticResource DarkGrey}">
                 <!--  Separator  -->
                 <BoxView
+
                     BackgroundColor="{StaticResource Yellow}"
                     HeightRequest="2"
                     HorizontalOptions="Fill"
                     VerticalOptions="Center" />
 
-                <Grid>
+                <Grid Padding="0,5,0,5">
                     <Grid.ColumnDefinitions>
                         <!--  menu button  -->
                         <ColumnDefinition Width="*" />
@@ -552,11 +553,28 @@
                     <!--  qr scan button  -->
                     <Button
                         Grid.Column="1"
-                        Padding="-12"
+                        Padding="{OnPlatform Android ='-2',iOS='0'}"
+                        BackgroundColor="{StaticResource Primary}"
                         Command="{Binding QrScanCommand}"
-                        CornerRadius="100"
-                        ImageSource="qr_scan"
-                        Style="{StaticResource BottomButton}" />
+                        CornerRadius="30"
+                        HeightRequest="60"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource BottomButton}"
+                        VerticalOptions="Center"
+                        WidthRequest="60">
+
+                        <Button.Shadow>
+                            <Shadow
+                                Brush="{StaticResource Primary}"
+                                Opacity="0.8"
+                                Radius="15"
+                                Offset="0,0" />
+                        </Button.Shadow>
+
+                        <Button.ImageSource>
+                            <FileImageSource File="qr_scan.png" />
+                        </Button.ImageSource>
+                    </Button>
 
                     <!--  code generator button  -->
                     <Button

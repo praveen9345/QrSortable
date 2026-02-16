@@ -102,10 +102,12 @@
                     <!--  Placeholder for location input field  -->
                     <Border
                         Margin="10"
+                        Padding="5,5"
                         Background="{StaticResource DarkGrey}"
                         HorizontalOptions="FillAndExpand"
                         IsVisible="{Binding IsNewBarcode, Converter={StaticResource BoolInverter}}"
-                        StrokeShape="RoundRectangle 10">
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0">
                         <Border.Shadow>
                             <Shadow
                                 Brush="Black"
@@ -117,7 +119,7 @@
                             <!--  input field  -->
                             <Entry
                                 Margin="10,0,0,0"
-                                Placeholder="location ..."
+                                Placeholder="Location ..."
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding Location}" />
@@ -144,10 +146,12 @@
                     <!--  Placeholder for category input field  -->
                     <Border
                         Margin="10"
+                        Padding="5,5"
                         Background="{StaticResource DarkGrey}"
                         HorizontalOptions="FillAndExpand"
                         IsVisible="{Binding IsNewBarcode, Converter={StaticResource BoolInverter}}"
-                        StrokeShape="RoundRectangle 10">
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0">
                         <Border.Shadow>
                             <Shadow
                                 Brush="Black"
@@ -159,7 +163,7 @@
                         <Grid>
                             <Entry
                                 Margin="10,0,0,0"
-                                Placeholder="category ..."
+                                Placeholder="Category ..."
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding Category}" />
@@ -179,12 +183,13 @@
                         VerticalOptions="FillAndExpand">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="5">
+                                <Grid Padding="6">
                                     <!--  Box view  -->
                                     <Border
                                         Background="{StaticResource DarkGrey}"
                                         HorizontalOptions="FillAndExpand"
-                                        StrokeShape="RoundRectangle 10">
+                                        StrokeShape="RoundRectangle 10"
+                                        StrokeThickness="0">
                                         <Border.Shadow>
                                             <Shadow
                                                 Brush="Black"
@@ -194,8 +199,8 @@
                                         </Border.Shadow>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="1*" />
-                                                <ColumnDefinition Width="7*" />
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="6*" />
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
@@ -203,14 +208,13 @@
                                             <Image
                                                 Grid.Column="0"
                                                 Aspect="AspectFit"
-                                                HeightRequest="40"
+                                                HeightRequest="60"
                                                 Source="{Binding ImageSource}"
-                                                WidthRequest="40" />
+                                                WidthRequest="60" />
 
                                             <!--  Label  -->
                                             <Label
                                                 Grid.Column="1"
-                                                Margin="5,0,0,0"
                                                 FontFamily="ItimRegular"
                                                 FontSize="Medium"
                                                 HorizontalTextAlignment="Start"
@@ -254,29 +258,44 @@
                 </StackLayout>
 
                 <!--  add button  -->
-                <Button
+                <Border
                     Grid.Row="3"
                     Margin="0,15,15,15"
-                    Padding="10"
+                    Padding="0"
                     BackgroundColor="{StaticResource Primary}"
-                    Command="{Binding AddItemCommand}"
-                    CornerRadius="50"
+                    HeightRequest="56"
                     HorizontalOptions="End"
-                    VerticalOptions="End">
-                    <Button.Shadow>
+                    StrokeShape="RoundRectangle 28"
+                    VerticalOptions="End"
+                    WidthRequest="56">
+
+                    <Border.Shadow>
                         <Shadow
                             Brush="{StaticResource Primary}"
                             Opacity="0.5"
                             Radius="10"
                             Offset="0,0" />
-                    </Button.Shadow>
-                    <Button.ImageSource>
-                        <FontImageSource
-                            FontFamily="FluentIcons"
-                            Glyph="{x:Static local:IconNames.Plus}"
-                            Color="{StaticResource Black}" />
-                    </Button.ImageSource>
-                </Button>
+                    </Border.Shadow>
+
+                    <Button
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        Command="{Binding AddItemCommand}"
+                        CornerRadius="28"
+                        HeightRequest="56"
+                        WidthRequest="56">
+
+                        <Button.ImageSource>
+                            <FontImageSource
+                                FontFamily="FluentIcons"
+                                Glyph="{x:Static local:IconNames.Plus}"
+                                Size="28"
+                                Color="{StaticResource Black}" />
+                        </Button.ImageSource>
+
+                    </Button>
+
+                </Border>
             </Grid>
         </Grid>
     </views:BaseView.Content>

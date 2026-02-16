@@ -35,10 +35,12 @@
 
             <BoxView
                 Grid.Row="0"
+                BackgroundColor="{StaticResource StatusBarColor}"
                 HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand" 
-                IsVisible =" {OnPlatform Android=false, iOS={Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}}"
-                BackgroundColor="{StaticResource StatusBarColor}"/>
+                IsVisible="{OnPlatform Android=false,
+                                       iOS={Binding IsCameraCaptureVisable,
+                                                    Converter={StaticResource BoolInverter}}}"
+                VerticalOptions="FillAndExpand" />
 
             <!--  Back button  -->
             <Button
@@ -76,34 +78,49 @@
                 VerticalOptions="Center" />
 
             <!--  capture buttom  -->
-            <Button
+            <Border
                 Margin="0,0,0,50"
-                Padding="10"
+                Padding="0"
                 BackgroundColor="{StaticResource DarkGrey}"
-                Command="{Binding CameraCommand}"
-                CornerRadius="50"
+                HeightRequest="72"
                 HorizontalOptions="Center"
                 IsVisible="{Binding IsCameraCaptureVisable}"
-                VerticalOptions="End">
-                <Button.Shadow>
+                StrokeShape="RoundRectangle 36"
+                VerticalOptions="End"
+                WidthRequest="72">
+
+                <Border.Shadow>
                     <Shadow
                         Brush="Black"
                         Opacity="0.5"
                         Radius="10"
                         Offset="0,0" />
-                </Button.Shadow>
-                <Button.ImageSource>
-                    <FontImageSource
-                        FontFamily="FluentIcons"
-                        Glyph="{x:Static local:IconNames.Capture}"
-                        Size="50"
-                        Color="{StaticResource Primary}" />
-                </Button.ImageSource>
-            </Button>
+                </Border.Shadow>
 
-            <Grid Grid.Row="1" 
-                IsVisible="{Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}"
-                BackgroundColor="{OnPlatform iOS={StaticResource StatusBarColor}}">
+                <Button
+                    Padding="0"
+                    BackgroundColor="Transparent"
+                    Command="{Binding CameraCommand}"
+                    CornerRadius="36"
+                    HeightRequest="72"
+                    WidthRequest="72">
+
+                    <Button.ImageSource>
+                        <FontImageSource
+                            FontFamily="FluentIcons"
+                            Glyph="{x:Static local:IconNames.Capture}"
+                            Size="40"
+                            Color="{StaticResource Primary}" />
+                    </Button.ImageSource>
+
+                </Button>
+
+            </Border>
+
+            <Grid
+                Grid.Row="1"
+                BackgroundColor="{OnPlatform iOS={StaticResource StatusBarColor}}"
+                IsVisible="{Binding IsCameraCaptureVisable, Converter={StaticResource BoolInverter}}">
                 <Grid.RowDefinitions>
                     <!--  item name  -->
                     <RowDefinition Height="Auto" />
@@ -120,7 +137,7 @@
                 <StackLayout
                     Grid.Row="0"
                     Margin="10,0,5,0"
-                    Orientation="Horizontal"> 
+                    Orientation="Horizontal">
                     <!--  item name  -->
                     <Label
                         BackgroundColor="Transparent"
@@ -135,9 +152,11 @@
                     <!--  Placeholder for item name input field  -->
                     <Border
                         Margin="10,0,0,0"
+                        Padding="5,5"
                         Background="{StaticResource DarkGrey}"
                         HorizontalOptions="FillAndExpand"
-                        StrokeShape="RoundRectangle 10">
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0">
                         <Border.Shadow>
                             <Shadow
                                 Brush="Black"
@@ -176,9 +195,11 @@
                     <!--  Placeholder for more info input field  -->
                     <Border
                         Margin="10,10,0,10"
+                        Padding="5,5"
                         Background="{StaticResource DarkGrey}"
                         HorizontalOptions="FillAndExpand"
-                        StrokeShape="RoundRectangle 10">
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0">
                         <Border.Shadow>
                             <Shadow
                                 Brush="Black"
@@ -258,15 +279,17 @@
                 <!--  add image button  -->
                 <Grid Grid.Row="3" BackgroundColor="{OnPlatform iOS={StaticResource StatusBarColor}}">
 
-                    <!-- Add image button -->
+                    <!--  Add image button  -->
                     <Button
                         Margin="0,15,80,15"
-                        Padding="10"
+                        Padding="0"
                         BackgroundColor="{StaticResource Primary}"
                         Command="{Binding AddItemImagesCommand}"
-                        CornerRadius="50"
+                        CornerRadius="28"
+                        HeightRequest="56"
                         HorizontalOptions="End"
-                        VerticalOptions="End">
+                        VerticalOptions="End"
+                        WidthRequest="56">
 
                         <Button.Shadow>
                             <Shadow
@@ -280,19 +303,23 @@
                             <FontImageSource
                                 FontFamily="FluentIcons"
                                 Glyph="{x:Static local:IconNames.AddImage}"
+                                Size="35"
                                 Color="{StaticResource Black}" />
                         </Button.ImageSource>
+
                     </Button>
 
-                    <!-- Save button -->
+                    <!--  Save button  -->
                     <Button
                         Margin="0,15,15,15"
-                        Padding="10"
+                        Padding="0"
                         BackgroundColor="{StaticResource Primary}"
                         Command="{Binding SaveCommand}"
-                        CornerRadius="50"
+                        CornerRadius="28"
+                        HeightRequest="56"
                         HorizontalOptions="End"
-                        VerticalOptions="End">
+                        VerticalOptions="End"
+                        WidthRequest="56">
 
                         <Button.Shadow>
                             <Shadow
@@ -306,8 +333,10 @@
                             <FontImageSource
                                 FontFamily="FluentIcons"
                                 Glyph="{x:Static local:IconNames.Save}"
+                                Size="35"
                                 Color="{StaticResource Black}" />
                         </Button.ImageSource>
+
                     </Button>
                 </Grid>
             </Grid>
