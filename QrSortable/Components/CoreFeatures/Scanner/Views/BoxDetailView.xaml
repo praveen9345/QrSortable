@@ -209,7 +209,9 @@
                                                 Grid.Column="0"
                                                 Aspect="AspectFit"
                                                 HeightRequest="60"
+                                                HorizontalOptions="Center"
                                                 Source="{Binding ImageSource}"
+                                                VerticalOptions="Center"
                                                 WidthRequest="60" />
 
                                             <!--  Label  -->
