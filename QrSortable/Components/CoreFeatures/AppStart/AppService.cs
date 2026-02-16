@@ -5,6 +5,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.Onboarding.Views;
+    using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.UiFunctionality.Navigation;
@@ -63,17 +64,17 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         private async Task NavigateToFirstViewModelAsync()
         {
             var generalInformation = await _generalInformationManager.GetGeneralInformationAsync();
-
-            switch (generalInformation.OnboardingProgress)
-            {
-                case OnboardingProgress.NotStarted:
-                case OnboardingProgress.SignUp:
-                    await _navigationService.Navigate<OnboardingView>();
-                    break;
-                case OnboardingProgress.OnboardingCompleted:
-                    await _navigationService.Navigate<RootView>();
-                    break;
-            }
+            await _navigationService.Navigate<SubscriptionView>();
+            //switch (generalInformation.OnboardingProgress)
+            //{
+            //    case OnboardingProgress.NotStarted:
+            //    case OnboardingProgress.SignUp:
+            //        await _navigationService.Navigate<OnboardingView>();
+            //        break;
+            //    case OnboardingProgress.OnboardingCompleted:
+            //        await _navigationService.Navigate<RootView>();
+            //        break;
+            //}
         }
 
         private BaseDatabaseContext CreateNewDbContext()

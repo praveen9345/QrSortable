@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<views:BaseView
+    x:Class="QrSortable.Components.CoreFeatures.OrdersPayments.Views.SubscriptionView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    BackgroundImageSource="background_layout.webp">
+
+    <views:BaseView.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="BoolInverter" />
+        </ResourceDictionary>
+    </views:BaseView.Resources>
+
+    <views:BaseView.Content>
+        <ScrollView>
+            <VerticalStackLayout Padding="25" Spacing="25">
+
+                <!--  HEADER  -->
+                <VerticalStackLayout Spacing="5">
+                    <Label
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="28"
+                        HorizontalOptions="Center"
+                        Text="Upgrade to Premium"
+                        TextColor="White" />
+
+                    <Label
+                        FontFamily="ItimRegular"
+                        FontSize="16"
+                        HorizontalOptions="Center"
+                        Text="Unlock the full power of QrSortable"
+                        TextColor="#CCCCCC" />
+                </VerticalStackLayout>
+
+                <!--  PREMIUM CARD  -->
+                <Border
+                    Padding="25"
+                    BackgroundColor="#1C1C1E"
+                    Stroke="#7B3FE4"
+                    StrokeShape="RoundRectangle 25"
+                    StrokeThickness="2">
+
+                    <VerticalStackLayout Spacing="20">
+
+                        <!--  BADGE  -->
+                        <Border
+                            Padding="6"
+                            BackgroundColor="#7B3FE4"
+                            HorizontalOptions="Center"
+                            StrokeShape="RoundRectangle 15">
+
+                            <Label
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="16"
+                                Text="MOST POPULAR"
+                                TextColor="White" />
+                        </Border>
+
+                        <!--  PRICE  -->
+                        <VerticalStackLayout Spacing="0">
+                            <Label
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="30"
+                                HorizontalOptions="Center"
+                                Text="{Binding PriceText}"
+                                TextColor="White" />
+
+                            <Label
+                                FontFamily="ItimRegular"
+                                FontSize="16"
+                                HorizontalOptions="Center"
+                                Text="Billed monthly • Cancel anytime"
+                                TextColor="#AAAAAA" />
+                        </VerticalStackLayout>
+
+                        <!--  FEATURES  -->
+                        <CollectionView ItemsSource="{Binding PremiumFeatures}" SelectionMode="None">
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <HorizontalStackLayout Padding="5" Spacing="12">
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontFamily="ItimRegular"
+                                            FontSize="16"
+                                            Text="✔"
+                                            TextColor="#7BFFB2" />
+
+                                        <Label
+                                            FontFamily="ItimRegular"
+                                            FontSize="16"
+                                            Text="{Binding}"
+                                            TextColor="White" />
+                                    </HorizontalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                        </CollectionView>
+
+                        <!--  SUBSCRIBE BUTTON  -->
+                        <Button
+                            Command="{Binding SubscribeCommand}"
+                            CornerRadius="25"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HeightRequest="55"
+                            IsVisible="{Binding IsSubscribed, Converter={StaticResource BoolInverter}}"
+                            Text="Start Premium Now"
+                            TextColor="White">
+
+                            <Button.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Offset="0.0" Color="#7B3FE4" />
+                                    <GradientStop Offset="1.0" Color="#A855F7" />
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+
+                        <!--  ACTIVE STATE  -->
+                        <Border
+                            Padding="12"
+                            BackgroundColor="#163F2D"
+                            IsVisible="{Binding IsSubscribed}"
+                            StrokeShape="RoundRectangle 15">
+
+                            <HorizontalStackLayout Spacing="10">
+                                <Label
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"
+                                    Text="🌟" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"
+                                    Text="Premium is Active"
+                                    TextColor="#7BFFB2" />
+                            </HorizontalStackLayout>
+                        </Border>
+
+                        <!--  CANCEL BUTTON  -->
+                        <Button
+                            BackgroundColor="#3A3A3C"
+                            Command="{Binding CancelSubscriptionCommand}"
+                            CornerRadius="20"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            HeightRequest="45"
+                            IsVisible="{Binding IsSubscribed}"
+                            Text="Cancel Subscription"
+                            TextColor="White" />
+
+                    </VerticalStackLayout>
+
+                </Border>
+
+                <!--  DEMO PREMIUM FEATURE  -->
+                <Button
+                    BackgroundColor="#4B0082"
+                    Command="{Binding UsePremiumFeatureCommand}"
+                    CornerRadius="20"
+                    FontFamily="ItimRegular"
+                    FontSize="18"
+                    HeightRequest="50"
+                    Text="Try Premium Feature"
+                    TextColor="White" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </views:BaseView.Content>
+</views:BaseView>

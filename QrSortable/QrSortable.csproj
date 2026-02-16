@@ -122,6 +122,9 @@
        <Compile Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml.cs">
          <DependentUpon>SelectProductView.xaml</DependentUpon>
        </Compile>
+       <Compile Update="Components\CoreFeatures\OrdersPayments\Views\SubscriptionView.xaml.cs">
+         <DependentUpon>SubscriptionView.xaml</DependentUpon>
+       </Compile>
        <Compile Update="Components\CoreFeatures\OrdersPayments\Views\YoursOrdersView.xaml.cs">
          <DependentUpon>YoursOrdersView.xaml</DependentUpon>
        </Compile>
@@ -197,6 +200,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\SubscriptionView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\YoursOrdersView.xaml">
