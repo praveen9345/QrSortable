@@ -3,6 +3,7 @@
     x:Class="QrSortable.Components.CoreFeatures.OrdersPayments.Views.SubscriptionView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
@@ -14,163 +15,304 @@
     </views:BaseView.Resources>
 
     <views:BaseView.Content>
-        <ScrollView>
-            <VerticalStackLayout Padding="25" Spacing="25">
+        <Grid>
+            <Grid.RowDefinitions>
+                <!--  back  -->
+                <RowDefinition Height="Auto" />
+                <!--  item view  -->
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <!--  Back button  -->
+            <Button
+                Grid.Row="0"
+                Margin="15,15,0,0"
+                Padding="2"
+                BackgroundColor="{StaticResource DarkGrey}"
+                Command="{Binding BackNavigationCommand}"
+                CornerRadius="5"
+                HorizontalOptions="Start"
+                VerticalOptions="Start">
+                <Button.Shadow>
+                    <Shadow
+                        Brush="Black"
+                        Opacity="0.5"
+                        Radius="10"
+                        Offset="0,0" />
+                </Button.Shadow>
+                <Button.ImageSource>
+                    <FontImageSource
+                        FontFamily="FluentIcons"
+                        Glyph="{x:Static local:IconNames.Back}"
+                        Color="{StaticResource Primary}" />
+                </Button.ImageSource>
+            </Button>
 
-                <!--  HEADER  -->
-                <VerticalStackLayout Spacing="5">
-                    <Label
-                        FontAttributes="Bold"
-                        FontFamily="ItimRegular"
-                        FontSize="28"
-                        HorizontalOptions="Center"
-                        Text="Upgrade to Premium"
-                        TextColor="{StaticResource Primary}" />
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="10" Spacing="5">
 
-                    <Label
-                        FontFamily="ItimRegular"
-                        FontSize="16"
-                        HorizontalOptions="Center"
-                        Text="Unlock the full power of QrSortable"
-                        TextColor="#CCCCCC" />
-                </VerticalStackLayout>
-
-                <!--  PREMIUM CARD  -->
-                <Border
-                    Padding="25"
-                    BackgroundColor="#1C1C1E"
-                    Stroke="{StaticResource Primary}"
-                    StrokeShape="RoundRectangle 25"
-                    StrokeThickness="2">
-
-                    <VerticalStackLayout Spacing="20">
-
-                        <!--  BADGE  -->
-                        <Border
-                            Padding="6"
-                            BackgroundColor="#7B3FE4"
+                    <!--  HEADER  -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="28"
                             HorizontalOptions="Center"
+                            Text="Upgrade to Premium"
+                            TextColor="{StaticResource Primary}" />
+
+                        <Label
+                            FontFamily="ItimRegular"
+                            FontSize="16"
+                            HorizontalOptions="Center"
+                            Text="Unlock the full power of QrSortable"
+                            TextColor="#CCCCCC" />
+                    </VerticalStackLayout>
+
+                    <!--  EMAIL INPUT  -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="18"
+                            Text="Email Address*"
+                            TextColor="{StaticResource Primary}" />
+
+                        <Border
+                            Padding="10"
+                            BackgroundColor="#2C2C2E"
                             StrokeShape="RoundRectangle 15">
 
-                            <Label
-                                FontAttributes="Bold"
+                            <Entry
                                 FontFamily="ItimRegular"
                                 FontSize="16"
-                                Text="MOST POPULAR"
-                                TextColor="White" />
+                                Keyboard="Email"
+                                Placeholder="Enter your email"
+                                Text="{Binding CustomerEmail}" />
                         </Border>
+                    </VerticalStackLayout>
 
-                        <!--  PRICE  -->
-                        <VerticalStackLayout Spacing="0">
-                            <Label
-                                FontAttributes="Bold"
-                                FontFamily="ItimRegular"
-                                FontSize="30"
-                                HorizontalOptions="Center"
-                                Text="{Binding PriceText}"
-                                TextColor="{StaticResource Primary}" />
+                    <!--  amount view  -->
+                    <StackLayout HorizontalOptions="Start" Orientation="Horizontal">
+                        <!--  total name  -->
+                        <Label
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="20"
+                            HorizontalTextAlignment="Center"
+                            Text="Currency* :  "
+                            TextColor="{StaticResource Primary}"
+                            VerticalTextAlignment="Center" />
 
-                            <Label
-                                FontFamily="ItimRegular"
-                                FontSize="16"
-                                HorizontalOptions="Center"
-                                Text="Billed monthly • Cancel anytime"
-                                TextColor="#AAAAAA" />
-                        </VerticalStackLayout>
-
-                        <!--  FEATURES  -->
-                        <CollectionView ItemsSource="{Binding PremiumFeatures}" SelectionMode="None">
-
+                        <!--  for Android  -->
+                        <CollectionView
+                            IsVisible="{OnPlatform iOS='false',
+                                                   Android='true'}"
+                            ItemsSource="{Binding CurrencyItem}"
+                            SelectedItem="{Binding SelectedCurrencyItem, Mode=TwoWay}"
+                            SelectionChangedCommand="{Binding OnSelectionChangedCommand}"
+                            SelectionMode="Single">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                            </CollectionView.ItemsLayout>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <HorizontalStackLayout Padding="5" Spacing="12">
+                                    <Border
+                                        Padding="10"
+                                        Stroke="{StaticResource Primary}"
+                                        StrokeShape="RoundRectangle 30"
+                                        StrokeThickness="2">
                                         <Label
                                             FontAttributes="Bold"
                                             FontFamily="ItimRegular"
                                             FontSize="16"
-                                            Text="✔"
-                                            TextColor="#7BFFB2" />
-
-                                        <Label
-                                            FontFamily="ItimRegular"
-                                            FontSize="16"
-                                            Text="{Binding}"
-                                            TextColor="White" />
-                                    </HorizontalStackLayout>
+                                            HorizontalOptions="Center"
+                                            HorizontalTextAlignment="Center"
+                                            Text="{Binding .}"
+                                            TextColor="White"
+                                            VerticalOptions="Center" />
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup Name="CommonStates">
+                                                <VisualState Name="Normal">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="Transparent" />
+                                                        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                                <VisualState Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                                        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                                                        <Setter Property="StrokeThickness" Value="2" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                    </Border>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
-
                         </CollectionView>
 
-                        <!--  SUBSCRIBE BUTTON  -->
-                        <Button
-                            Command="{Binding SubscribeCommand}"
-                            CornerRadius="25"
-                            FontAttributes="Bold"
-                            FontFamily="ItimRegular"
-                            FontSize="18"
-                            HeightRequest="55"
-                            IsVisible="{Binding IsSubscribed, Converter={StaticResource BoolInverter}}"
-                            Text="Start Premium Now"
-                            TextColor="White">
+                        <!--  for iOS  -->
+                        <CollectionView
+                            Margin="15,0,15,0"
+                            HeightRequest="50"
+                            IsVisible="{OnPlatform iOS='true',
+                                                   Android='false'}"
+                            ItemsSource="{Binding CurrencyItem}"
+                            SelectedItem="{Binding SelectedCurrencyItem, Mode=TwoWay}"
+                            SelectionChangedCommand="{Binding OnSelectionChangedCommand}"
+                            SelectionMode="Single"
+                            WidthRequest="200">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout ItemSpacing="8" Orientation="Horizontal" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame
+                                        Padding="2"
+                                        BorderColor="{StaticResource Primary}"
+                                        CornerRadius="18"
+                                        HasShadow="False"
+                                        HeightRequest="40"
+                                        WidthRequest="80">
+                                        <Label
+                                            FontAttributes="Bold"
+                                            HorizontalOptions="Center"
+                                            Text="{Binding .}"
+                                            TextColor="White"
+                                            VerticalOptions="Center" />
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup Name="CommonStates">
+                                                <VisualState Name="Normal">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="Transparent" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                                <VisualState Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </StackLayout>
 
-                            <Button.Background>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                    <GradientStop Offset="0.0" Color="#7B3FE4" />
-                                    <GradientStop Offset="1.0" Color="#A855F7" />
-                                </LinearGradientBrush>
-                            </Button.Background>
-                        </Button>
+                    <!--  PREMIUM CARD  -->
+                    <Border
+                        Padding="25"
+                        BackgroundColor="#1C1C1E"
+                        Stroke="{StaticResource Primary}"
+                        StrokeShape="RoundRectangle 25"
+                        StrokeThickness="2">
 
-                        <!--  ACTIVE STATE  -->
-                        <Border
-                            Padding="12"
-                            BackgroundColor="#163F2D"
-                            IsVisible="{Binding IsSubscribed}"
-                            StrokeShape="RoundRectangle 15">
+                        <VerticalStackLayout Spacing="20">
 
-                            <HorizontalStackLayout Spacing="10">
-                                <Label
-                                    FontFamily="ItimRegular"
-                                    FontSize="18"
-                                    Text="🌟" />
+                            <!--  PRICE  -->
+                            <VerticalStackLayout Spacing="0">
                                 <Label
                                     FontAttributes="Bold"
                                     FontFamily="ItimRegular"
-                                    FontSize="18"
-                                    Text="Premium is Active"
-                                    TextColor="#7BFFB2" />
-                            </HorizontalStackLayout>
-                        </Border>
+                                    FontSize="30"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding PriceText}"
+                                    TextColor="{StaticResource Primary}" />
 
-                        <!--  CANCEL BUTTON  -->
-                        <Button
-                            BackgroundColor="#3A3A3C"
-                            Command="{Binding CancelSubscriptionCommand}"
-                            CornerRadius="20"
-                            FontFamily="ItimRegular"
-                            FontSize="18"
-                            HeightRequest="45"
-                            IsVisible="{Binding IsSubscribed}"
-                            Text="Cancel Subscription"
-                            TextColor="White" />
+                                <Label
+                                    FontFamily="ItimRegular"
+                                    FontSize="16"
+                                    HorizontalOptions="Center"
+                                    Text="Billed monthly • Cancel anytime"
+                                    TextColor="#AAAAAA" />
+                            </VerticalStackLayout>
 
-                    </VerticalStackLayout>
+                            <!--  FEATURES  -->
+                            <CollectionView ItemsSource="{Binding PremiumFeatures}" SelectionMode="None">
 
-                </Border>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <HorizontalStackLayout Padding="5" Spacing="12">
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontFamily="ItimRegular"
+                                                FontSize="16"
+                                                Text="✔"
+                                                TextColor="#7BFFB2" />
 
-                <!--  DEMO PREMIUM FEATURE  -->
-                <Button
-                    BackgroundColor="#4B0082"
-                    Command="{Binding UsePremiumFeatureCommand}"
-                    CornerRadius="20"
-                    FontFamily="ItimRegular"
-                    FontSize="18"
-                    HeightRequest="50"
-                    Text="Try Premium Feature"
-                    TextColor="White" />
+                                            <Label
+                                                FontFamily="ItimRegular"
+                                                FontSize="16"
+                                                Text="{Binding}"
+                                                TextColor="White" />
+                                        </HorizontalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
 
-            </VerticalStackLayout>
-        </ScrollView>
+                            </CollectionView>
+
+                            <!--  SUBSCRIBE BUTTON  -->
+                            <Button
+                                Command="{Binding SubscribeCommand}"
+                                CornerRadius="25"
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="18"
+                                HeightRequest="55"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource BoolInverter}}"
+                                IsVisible="{Binding IsSubscribed, Converter={StaticResource BoolInverter}}"
+                                Text="Start Premium Now"
+                                TextColor="White">
+
+                                <Button.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Offset="0.0" Color="#7B3FE4" />
+                                        <GradientStop Offset="1.0" Color="#A855F7" />
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+
+                            <!--  ACTIVE STATE  -->
+                            <Border
+                                Padding="12"
+                                BackgroundColor="#163F2D"
+                                IsVisible="{Binding IsSubscribed}"
+                                StrokeShape="RoundRectangle 15">
+
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label
+                                        FontFamily="ItimRegular"
+                                        FontSize="18"
+                                        Text="🌟" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontFamily="ItimRegular"
+                                        FontSize="18"
+                                        Text="Premium is Active"
+                                        TextColor="#7BFFB2" />
+                                </HorizontalStackLayout>
+                            </Border>
+
+                            <!--  CANCEL BUTTON  -->
+                            <Button
+                                BackgroundColor="#3A3A3C"
+                                Command="{Binding CancelSubscriptionCommand}"
+                                CornerRadius="20"
+                                FontFamily="ItimRegular"
+                                FontSize="18"
+                                HeightRequest="45"
+                                IsVisible="{Binding IsSubscribed}"
+                                Text="Cancel Subscription"
+                                TextColor="White" />
+
+                        </VerticalStackLayout>
+
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
     </views:BaseView.Content>
 </views:BaseView>

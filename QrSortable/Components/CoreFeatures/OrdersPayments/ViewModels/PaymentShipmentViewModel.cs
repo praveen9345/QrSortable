@@ -265,18 +265,25 @@
             AddInformationToProducts();
 
             IsPaymentMessageVisible = true;
+            try 
+            { 
+            // ---------------- Create Payment ----------------
+            var result = await _mollieService.CreatePaymentAsync(
+                _product.TotalPrice,
+                SelectedCurrencyItem,
+                "Card",
+                "Payment",
+                Email
+            );
 
-            var result = await _mollieService.CreatePaymentOrSubscriptionAsync(
-            _product.TotalPrice,SelectedCurrencyItem, "Card","Payment",
-            isSubscription: false);
-
-            // Check if it’s a one-time payment
-            if (result is PaymentResponse paymentResponse)
+            // ---------------- Handle Result ----------------
+            if (result is PaymentResponse payment)
             {
-                if (paymentResponse.Links.Checkout != null)
+                if (payment.Links?.Checkout != null)
                 {
-                    _paymentId = paymentResponse.Id;
+                    _paymentId = payment.Id;
 
+                    // Start timer to poll payment status
                     _timer = _timeService.StartPeriodicTimer(_ =>
                     {
                         MainThread.BeginInvokeOnMainThread(async () =>
@@ -285,31 +292,30 @@
                         });
                     }, TimeSpan.FromSeconds(15));
 
-                    // Open the checkout in browser
-                    if (_mauiEssentialsWrapper.GetDevicePlatform() == _mauiEssentialsWrapper.AndroidDevicePlatform)
-                    {
-                        await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.SystemPreferred);
-                    }
-                    else
-                    {
-                        await Browser.Default.OpenAsync(paymentResponse.Links.Checkout.Href, BrowserLaunchMode.External);
-                    }
+                    // Open checkout in browser
+                    var browserMode = (_mauiEssentialsWrapper.GetDevicePlatform() == _mauiEssentialsWrapper.AndroidDevicePlatform)
+                        ? BrowserLaunchMode.SystemPreferred
+                        : BrowserLaunchMode.External;
+
+                    await Browser.Default.OpenAsync(payment.Links.Checkout.Href, browserMode);
                 }
                 else
                 {
-                    Console.WriteLine("PaymentShipmentViewModel:Error: Failed to create payment.");
+                    Console.WriteLine("Error: Failed to create payment.");
+                    await DialogService.ShowAlertDialog("Error", "Failed to create payment.", "OK");
                 }
-            }
-            // If it’s a subscription, you can handle differently
-            else if (result is SubscriptionResponse subscriptionResponse)
-            {
-                Console.WriteLine($"Subscription created successfully! ID: {subscriptionResponse.Id}");
-                // You might show a message or store subscription ID
             }
             else
             {
-                Console.WriteLine("PaymentShipmentViewModel:Error: Unexpected result type.");
+                Console.WriteLine("Error: Unexpected result type from MollieService.");
+                await DialogService.ShowAlertDialog("Error", "Unexpected result from payment service.", "OK");
             }
+        }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Payment Error: {ex.Message}");
+        await DialogService.ShowAlertDialog("Error", ex.Message, "OK");
+    }
 
         });
 
@@ -363,7 +369,7 @@
 
             var pdfFiles = new List<byte[]>();
 
-            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Wait generating code ...",
             async () =>
             {
                 pdfFiles = await GeneratePdfFilesAsync();

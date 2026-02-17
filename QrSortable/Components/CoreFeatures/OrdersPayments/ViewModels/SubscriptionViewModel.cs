@@ -1,138 +1,239 @@
-﻿namespace QrSortable.Components.CoreFeatures.OrdersPayments.ViewModels
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Mollie.Api.Models.Payment.Response;
+using QrSortable.Components.CoreFeatures.OrdersPayments;
+using QrSortable.Components.PlatformUtils.Wrappers;
+using QrSortable.Components.TimeHandling;
+using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+using System.Collections.ObjectModel;
+
+public partial class SubscriptionViewModel : BaseViewModel
 {
-    using CommunityToolkit.Mvvm.ComponentModel;
-    using CommunityToolkit.Mvvm.Input;
-    using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
-    using System.Collections.ObjectModel;
+    private readonly ISubscriptionService _subscriptionService;
+    private readonly ITimerService _timerService;
+    private readonly IMauiEssentialsWrapper _mauiWrapper;
 
-    /// <summary>
-    /// The view model of the Subscription screen.
-    /// </summary>
-    public partial class SubscriptionViewModel : BaseViewModel
+    private string _paymentId;
+    private Timer _timer;
+    private readonly object _lock = new object();
+    private bool _subscriptionProcessed;
+
+    public SubscriptionViewModel( ISubscriptionService subscriptionService, ITimerService timerService,
+        IMauiEssentialsWrapper mauiWrapper)
     {
-        private readonly ISubscriptionService _subscriptionService;
+        _subscriptionService = subscriptionService;
+        _timerService = timerService;
+        _mauiWrapper = mauiWrapper;
 
-        public SubscriptionViewModel(ISubscriptionService subscriptionService)
+        PremiumFeatures = new ObservableCollection<string>
         {
-            _subscriptionService = subscriptionService;
+            "Multi-User Sharing",
+            "Unlimited Items per Box",
+            "Cloud Backup & Sync",
+            "Move Items Between Boxes",
+            "Multiple Images per Item",
+            "No Advertisements"
+        };
 
-            PremiumFeatures = new ObservableCollection<string>
-            {
-                "Multi-User Sharing",
-                "Unlimited Items per Box",
-                "Cloud Backup & Sync",
-                "Move Items Between Boxes",
-                "Multiple Images per Item",
-                "No Advertisements"
-            };
+        SelectedPlan = SubscriptionPlan.Monthly;
 
-            SelectedPlan = SubscriptionPlan.Monthly;
 
-            LoadState();
-        }
+        SelectedCurrencyItem = CurrencyItem[0];
+        LoadState();
+    }
 
-        #region Observable Properties
+    #region Properties
 
-        [ObservableProperty]
-        private bool isSubscribed;
+    [ObservableProperty] 
+    private bool _isSubscribed;
 
-        [ObservableProperty]
-        private string subscriptionStatusText;
+    [ObservableProperty] 
+    private string _subscriptionStatusText;
+    
+    [ObservableProperty] 
+    private bool _isBusy;
 
-        [ObservableProperty]
-        private string priceText;
+    [ObservableProperty] 
+    private string _selectedCurrencyItem;
 
-        [ObservableProperty]
-        private SubscriptionPlan selectedPlan;
+    [ObservableProperty] 
+    private string _customerEmail;
 
-        public ObservableCollection<string> PremiumFeatures { get; }
+    [ObservableProperty] 
+    private string _priceText; 
 
-        #endregion
+    [ObservableProperty] 
+    private SubscriptionPlan _selectedPlan;
 
-        #region Initialization
+    public ObservableCollection<string> PremiumFeatures { get; }
 
-        private async void LoadState()
+    public ObservableCollection<string> CurrencyItem { get; } =
+        new ObservableCollection<string>
         {
-            await _subscriptionService.LoadAsync();
-            UpdateState();
-            UpdatePrice();
-        }
+            "Euro(€)",
+            "USD($)"
+        };
 
-        private void UpdateState()
+    #endregion
+
+    private async void LoadState()
+    {
+        await _subscriptionService.LoadAsync();
+        UpdateState();
+        UpdatePrice();
+    }
+
+    private void UpdateState()
+    {
+        IsSubscribed = _subscriptionService.IsSubscribed;
+
+        SubscriptionStatusText = IsSubscribed
+            ? "🌟 Premium Active"
+            : "Upgrade to unlock premium features";
+    }
+
+    private void UpdatePrice() 
+    { 
+        PriceText = SelectedPlan switch 
+        { 
+            SubscriptionPlan.Monthly =>
+            SelectedCurrencyItem == "Euro(€)" ? "€4.99 / month" : "$4.99 / month", 
+            SubscriptionPlan.Yearly => SelectedCurrencyItem == "Euro(€)" 
+            ? "€49.99 / year (Save 20%)" : "$49.99 / year (Save 20%)",
+            _ => SelectedCurrencyItem == "Euro(€)" ? "€4.99 / month" : "$4.99 / month" 
+        }; 
+    }
+
+    #region Subscribe Flow
+
+
+    public AsyncRelayCommand OnSelectionChangedCommand => new AsyncRelayCommand(async () =>
+    {
+        UpdatePrice();
+    });
+
+    [RelayCommand]
+    private async Task Subscribe()
+    {
+        if (IsBusy) return;
+        IsBusy = true;
+
+        if (string.IsNullOrWhiteSpace(CustomerEmail))
         {
-            IsSubscribed = _subscriptionService.IsSubscribed;
-
-            SubscriptionStatusText = IsSubscribed
-                ? "🌟 Premium Active"
-                : "Upgrade to unlock premium features";
-        }
-
-        partial void OnSelectedPlanChanged(SubscriptionPlan value)
-        {
-            UpdatePrice();
-        }
-
-        private void UpdatePrice()
-        {
-            PriceText = SelectedPlan switch
-            {
-                SubscriptionPlan.Monthly => "$4.99 / month",
-                SubscriptionPlan.Yearly => "$49.99 / year (Save 20%)",
-                _ => "$4.99 / month"
-            };
-        }
-
-        #endregion
-
-        #region Commands
-
-        [RelayCommand]
-        private async Task Subscribe()
-        {
-            // In real app → trigger store purchase here
-            await _subscriptionService.ActivateSubscriptionAsync();
-            UpdateState();
-
-            await DialogService.ShowAlertDialog("Success",
-                "Premium activated successfully 🎉",
+            await DialogService.ShowAlertDialog(
+                "Error",
+                "Please enter your email",
                 "OK");
+
+            IsBusy = false;
+            return;
         }
 
-        [RelayCommand]
-        private async Task CancelSubscription()
+        try
         {
-            await _subscriptionService.CancelSubscriptionAsync();
-            UpdateState();
+            var payment =
+                await _subscriptionService.CreateInitialSubscriptionPaymentAsync(
+                    CustomerEmail,SelectedCurrencyItem, 4.99m);
 
-            await DialogService.ShowAlertDialog("Cancelled",
-                "Your subscription has been cancelled.",
-                "OK");
-        }
-
-        [RelayCommand]
-        private async Task UsePremiumFeature()
-        {
-            if (!IsSubscribed)
+            if (payment?.Links?.Checkout != null)
             {
-                await Application.Current.MainPage.DisplayAlert(
-                    "Premium Required",
-                    "This feature requires a paid subscription.",
-                    "OK");
-                return;
+                _paymentId = payment.Id;
+
+                // Start polling
+                _timer = _timerService.StartPeriodicTimer(_ =>
+                {
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        await CheckPaymentStatusAsync();
+                    });
+                }, TimeSpan.FromSeconds(10));
+
+                var browserMode =
+                    (_mauiWrapper.GetDevicePlatform() == _mauiWrapper.AndroidDevicePlatform)
+                    ? BrowserLaunchMode.SystemPreferred
+                    : BrowserLaunchMode.External;
+
+                await Browser.Default.OpenAsync(payment.Links.Checkout.Href,browserMode);
             }
-
-            await Application.Current.MainPage.DisplayAlert(
-                "Premium Feature",
-                "You are using a premium feature!",
-                "OK");
+            else
+            {
+                await DialogService.ShowAlertDialog("Error",
+                    "Failed to create payment.","OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await DialogService.ShowAlertDialog("Error", ex.Message, "OK");
         }
 
-        #endregion
+        IsBusy = false;
     }
 
-    public enum SubscriptionPlan
+    public async Task HandleMollieRedirect(string paymentId)
     {
-        Monthly,
-        Yearly
+        if (string.IsNullOrEmpty(paymentId))
+            return;
+
+        _paymentId = paymentId;
+
+        StopTimer();
+
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            await CheckPaymentStatusAsync();
+        });
     }
+
+    private async Task CheckPaymentStatusAsync()
+    {
+        if (string.IsNullOrEmpty(_paymentId))
+            return;
+
+        PaymentResponse response =
+            await _subscriptionService.GetPaymentStatusAsync(_paymentId);
+
+        if (response.Status != "paid")
+            return;
+
+        lock (_lock)
+        {
+            if (_subscriptionProcessed)
+                return;
+
+            _subscriptionProcessed = true;
+        }
+
+        StopTimer();
+
+        await _subscriptionService.FinalizeSubscriptionAsync( CustomerEmail, SelectedCurrencyItem,4.99m);
+
+        UpdateState();
+
+        await DialogService.ShowAlertDialog("Success",
+            "Premium activated successfully 🎉","OK");
+    }
+
+    private void StopTimer()
+    {
+        if (_timer != null)
+        {
+            _timerService.StopPeriodicTimer(_timer);
+            _timer.Dispose();
+            _timer = null;
+        }
+    }
+
+    #endregion
+
+    [RelayCommand]
+    private async Task CancelSubscription()
+    {
+        await _subscriptionService.CancelSubscriptionAsync();
+        UpdateState();
+
+        await DialogService.ShowAlertDialog(
+            "Cancelled","Your subscription has been cancelled.","OK");
+    }
+
+    public enum SubscriptionPlan { Monthly, Yearly }
 }

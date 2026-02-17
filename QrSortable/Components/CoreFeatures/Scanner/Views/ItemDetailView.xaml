@@ -224,11 +224,11 @@
                                 <Grid Margin="2,0,2,0" BackgroundColor="Transparent">
                                     <Image
                                         Aspect="AspectFit"
+                                        BackgroundColor="Transparent"
                                         HorizontalOptions="Center"
-                                        VerticalOptions="Center"
                                         Rotation="{Binding Rotate}"
                                         Source="{Binding Image}"
-                                        BackgroundColor="Transparent">
+                                        VerticalOptions="Center">
                                         <Image.GestureRecognizers>
                                             <PinchGestureRecognizer PinchUpdated="OnPinchUpdated" />
                                             <PanGestureRecognizer PanUpdated="OnPanUpdated" />
@@ -236,8 +236,8 @@
                                         </Image.GestureRecognizers>
                                     </Image>
                                     <Button
-                                        Padding="0"
                                         Margin="5"
+                                        Padding="0"
                                         BackgroundColor="Transparent"
                                         CornerRadius="50"
                                         HeightRequest="30"

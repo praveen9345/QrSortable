@@ -1,6 +1,7 @@
 namespace QrSortable.Components.CoreFeatures.OrdersPayments
 {
     using Mollie.Api.Models.Payment.Response;
+    using Mollie.Api.Models.Subscription.Response;
 
     /// <summary>
     ///     Interface of the service .....................
@@ -8,12 +9,12 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
     public interface IMollieService
     {
 
+        Task<PaymentResponse> CreatePaymentAsync(decimal amount, string currency, string paymentMethod, 
+            string description, string customerEmail = null);
         /// <summary>
         ///     ................... .....................
         /// </summary>
-        Task<object> CreatePaymentOrSubscriptionAsync(
-            decimal amount, string currency, string paymentMethod,string description,
-            bool isSubscription = false,string customerEmail = null);
+        Task<SubscriptionResponse> CreateSubscriptionAsync(decimal amount, string currency, string customerEmail, string description);
 
         Task CancelSubscriptionAsync(string customerId, string subscriptionId);
 

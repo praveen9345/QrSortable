@@ -1,29 +1,67 @@
-﻿namespace QrSortable.Components.CoreFeatures.OrdersPayments
+﻿using Microsoft.Maui.Storage;
+using Mollie.Api.Models.Payment.Response;
+using QrSortable.Components.CoreFeatures.OrdersPayments;
+
+public class SubscriptionService : ISubscriptionService
 {
-    public class SubscriptionService : ISubscriptionService
+    private const string SubscriptionKey = "is_subscribed";
+    private const string CustomerIdKey = "mollie_customer_id";
+    private const string SubscriptionIdKey = "mollie_subscription_id";
+
+    private readonly IMollieService _mollieService;
+
+    public bool IsSubscribed { get; private set; }
+
+    public SubscriptionService(IMollieService mollieService)
     {
-        private const string SubscriptionKey = "is_subscribed";
+        _mollieService = mollieService;
+    }
 
-        public bool IsSubscribed { get; private set; }
+    public async Task LoadAsync()
+    {
+        IsSubscribed = Preferences.Get(SubscriptionKey, false);
+        await Task.CompletedTask;
+    }
 
-        public async Task LoadAsync()
+    public async Task<PaymentResponse> CreateInitialSubscriptionPaymentAsync(
+        string email,string currency, decimal amount)
+    {
+        return await _mollieService.CreatePaymentAsync( amount,currency,
+            "Card", "Initial Payment for Subscription",email);
+    }
+
+    public async Task FinalizeSubscriptionAsync( string email,string currency, decimal amount)
+    {
+        var subscription = await _mollieService.CreateSubscriptionAsync(
+            amount,currency, email,"QrSortable Premium");
+
+        Preferences.Set(SubscriptionKey, true);
+        Preferences.Set(CustomerIdKey, subscription.CustomerId);
+        Preferences.Set(SubscriptionIdKey, subscription.Id);
+
+        IsSubscribed = true;
+    }
+
+    public async Task<PaymentResponse> GetPaymentStatusAsync(string paymentId)
+    {
+        return await _mollieService.GetPaymentStatusAsync(paymentId);
+    }
+
+    public async Task CancelSubscriptionAsync()
+    {
+        string customerId = Preferences.Get(CustomerIdKey, string.Empty);
+        string subscriptionId = Preferences.Get(SubscriptionIdKey, string.Empty);
+
+        if (!string.IsNullOrWhiteSpace(customerId) &&
+            !string.IsNullOrWhiteSpace(subscriptionId))
         {
-            IsSubscribed = Preferences.Get(SubscriptionKey, false);
-            await Task.CompletedTask;
+            await _mollieService.CancelSubscriptionAsync(customerId, subscriptionId);
         }
 
-        public async Task ActivateSubscriptionAsync()
-        {
-            IsSubscribed = true;
-            Preferences.Set(SubscriptionKey, true);
-            await Task.CompletedTask;
-        }
+        Preferences.Set(SubscriptionKey, false);
+        Preferences.Remove(CustomerIdKey);
+        Preferences.Remove(SubscriptionIdKey);
 
-        public async Task CancelSubscriptionAsync()
-        {
-            IsSubscribed = false;
-            Preferences.Set(SubscriptionKey, false);
-            await Task.CompletedTask;
-        }
+        IsSubscribed = false;
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Mollie.Api.Client;
+using Mollie.Api.Models;
+using Mollie.Api.Models.Customer.Request;
+using Mollie.Api.Models.Payment;
 using Mollie.Api.Models.Payment.Request;
 using Mollie.Api.Models.Payment.Response;
-using Mollie.Api.Models.Customer.Request;
 using Mollie.Api.Models.Subscription.Request;
 using Mollie.Api.Models.Subscription.Response;
 using System.Globalization;
@@ -13,6 +15,7 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
         private readonly PaymentClient _paymentClient;
         private readonly CustomerClient _customerClient;
         private readonly SubscriptionClient _subscriptionClient;
+        private readonly MandateClient _mandateClient;
 
         private static readonly string MOLLIE_TEST_API_KEY = "test_a4BaGmytRmSv6J2xSxp8j6ypATxEdf";
 
@@ -21,60 +24,62 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
             _paymentClient = new PaymentClient(MOLLIE_TEST_API_KEY);
             _customerClient = new CustomerClient(MOLLIE_TEST_API_KEY);
             _subscriptionClient = new SubscriptionClient(MOLLIE_TEST_API_KEY);
+            _mandateClient = new MandateClient(MOLLIE_TEST_API_KEY);
         }
 
-        // ---------------- One-time Payment ----------------
-        public async Task<PaymentResponse> CreatePaymentAsync(decimal amount, string currency, string paymentMethod, string description)
+        // --------------- One-time Payment ----------------
+        public async Task<PaymentResponse> CreatePaymentAsync(decimal amount, string currency, string paymentMethod, string description, string customerEmail = null)
         {
+            string customerId = null;
+            if (!string.IsNullOrWhiteSpace(customerEmail))
+                customerId = await GetOrCreateCustomerIdAsync(customerEmail);
+
             var paymentRequest = new PaymentRequest
             {
                 Amount = new Mollie.Api.Models.Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
                 Description = description,
                 RedirectUrl = $"myapp://payment-return?id={{paymentId}}",
-                Method = GetMolliePaymentMethodType(paymentMethod)
+                Method = GetMolliePaymentMethodType(paymentMethod),
+                CustomerId = customerId,
+                SequenceType = SequenceType.First
             };
 
             return await _paymentClient.CreatePaymentAsync(paymentRequest);
         }
 
+
+        // --------------- Subscription ----------------
+        public async Task<SubscriptionResponse> CreateSubscriptionAsync(
+         decimal amount,string currency,string customerEmail,string description)
+        {
+            if (string.IsNullOrWhiteSpace(customerEmail))
+                throw new ArgumentException("Customer email required.");
+
+            var customerId = await GetOrCreateCustomerIdAsync(customerEmail);
+
+            // OPTIONAL: verify valid mandate exists
+            bool hasMandate = await HasValidMandateAsync(customerId);
+
+            if (!hasMandate)
+                throw new Exception(
+                    "No valid mandate found. Initial payment must be completed first.");
+
+            var request = new SubscriptionRequest
+            {
+                Amount = new Amount(GetMollieCurrencyType(currency),
+                ToMollieAmount(amount)),
+                Interval = "1 month",
+                Description = description,
+                StartDate = DateTime.UtcNow.Date
+            };
+
+            return await _subscriptionClient.CreateSubscriptionAsync(customerId, request);
+        }
+
+
         public async Task<PaymentResponse> GetPaymentStatusAsync(string paymentId)
         {
             return await _paymentClient.GetPaymentAsync(paymentId);
-        }
-
-        // ---------------- One-time or Subscription (Integrated) ----------------
-        public async Task<object> CreatePaymentOrSubscriptionAsync(
-            decimal amount, string currency,string paymentMethod,
-            string description, bool isSubscription = false,string customerEmail = null)
-        {
-            if (!isSubscription)
-            {
-                // One-time payment
-                return await CreatePaymentAsync(amount, currency, paymentMethod, description);
-            }
-            else
-            {
-                // Subscription
-                if (string.IsNullOrWhiteSpace(customerEmail))
-                    throw new ArgumentException("Customer email is required for subscriptions.");
-
-                // 1. Create or fetch customer
-                var customer = await _customerClient.CreateCustomerAsync(new CustomerRequest
-                {
-                    Email = customerEmail
-                });
-
-                // 2. Create subscription
-                var subscriptionRequest = new SubscriptionRequest
-                {
-                    Amount = new Mollie.Api.Models.Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
-                    Interval = "1 month",
-                    Description = description,
-                    StartDate = DateTime.UtcNow
-                };
-
-                return await _subscriptionClient.CreateSubscriptionAsync(customer.Id, subscriptionRequest);
-            }
         }
 
         // ---------------- Subscription Management ----------------
@@ -91,6 +96,28 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
         }
 
         // ---------------- Helper Methods ----------------
+
+        private async Task<string> GetOrCreateCustomerIdAsync(string email)
+        {
+            var customerList = await _customerClient.GetCustomerListAsync();
+
+            var existingCustomer = customerList.Items
+                .FirstOrDefault(c =>
+                    c.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+            if (existingCustomer != null)
+                return existingCustomer.Id;
+
+            var newCustomer = await _customerClient.CreateCustomerAsync(
+                new CustomerRequest
+                {
+                    Email = email
+                });
+
+            return newCustomer.Id;
+        }
+
+
         private string GetMolliePaymentMethodType(string paymentMethod)
         {
             return paymentMethod switch
@@ -132,6 +159,14 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
             amount = Math.Round(amount, 2, MidpointRounding.AwayFromZero);
 
             return amount.ToString("0.00", CultureInfo.InvariantCulture);
+        }
+
+        private async Task<bool> HasValidMandateAsync(string customerId)
+        {
+            var mandates =
+                await _mandateClient.GetMandateListAsync(customerId);
+
+            return mandates.Items.Any(m => m.Status == "valid");
         }
     }
 }
