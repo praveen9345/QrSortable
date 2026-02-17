@@ -86,8 +86,10 @@
                                 FontFamily="ItimRegular"
                                 FontSize="16"
                                 Keyboard="Email"
+                                PlaceholderColor="{OnPlatform iOS='WhiteSmoke'}"
                                 Placeholder="Enter your email"
-                                Text="{Binding CustomerEmail}" />
+                                Text="{Binding CustomerEmail}"
+                                TextColor="White"/>
                         </Border>
                     </VerticalStackLayout>
 
