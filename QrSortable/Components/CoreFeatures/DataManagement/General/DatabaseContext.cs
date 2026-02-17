@@ -30,11 +30,6 @@
         public DbSet<GeneralInformation> GeneralInformation { get; set; }
         
         /// <summary>
-        ///     Gets or sets the user information in the database.
-        /// </summary>
-        public DbSet<UserInfos> UserInformation { get; set; }
-
-        /// <summary>
         ///     Gets or sets the storage entry in the database.
         /// </summary>
         public DbSet<StorageEntry> StorageEntries { get; set; }
@@ -48,6 +43,11 @@
         ///     Gets or sets the OrderPlaced entry in the database.
         /// </summary>
         public DbSet<YoursOrderData> OrderPlacedEntries { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the SubscriptionEntity entry in the database.
+        /// </summary>
+        public DbSet<SubscriptionEntity> SubscriptionEntries { get; set; }
 
         /// <summary>
         ///      Method called implicitly when the model is being created. It registers entity property

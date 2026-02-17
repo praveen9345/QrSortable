@@ -101,22 +101,19 @@ namespace QrSortable.Migrations.General
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserInformation",
+                name: "SubscriptionEntries",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Email = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false),
-                    GoogleEmail = table.Column<string>(type: "TEXT", nullable: false),
-                    UserAvatar = table.Column<string>(type: "TEXT", nullable: false),
-                    UserName = table.Column<string>(type: "TEXT", nullable: false),
-                    Gender = table.Column<string>(type: "TEXT", nullable: false),
-                    IsUserLogedIn = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsSubscribed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CustomerId = table.Column<string>(type: "TEXT", nullable: false),
+                    SubscriptionId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserInformation", x => x.ID);
+                    table.PrimaryKey("PK_SubscriptionEntries", x => x.ID);
                 });
         }
 
@@ -136,7 +133,7 @@ namespace QrSortable.Migrations.General
                 name: "StorageEntries");
 
             migrationBuilder.DropTable(
-                name: "UserInformation");
+                name: "SubscriptionEntries");
         }
     }
 }

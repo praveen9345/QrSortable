@@ -199,9 +199,6 @@
             var generalInformation = await GetAllAsync<GeneralInformation>();
             await DeleteRangeWithOptionalSaveChangesAsync(generalInformation, false);
             
-            var UserInfos = await GetAllAsync<UserInfos>();
-            await DeleteRangeWithOptionalSaveChangesAsync(UserInfos, false);
-
             var basket = await GetAllAsync<AddToBasketData>();
             await DeleteRangeWithOptionalSaveChangesAsync(basket, false);
 
@@ -210,6 +207,9 @@
 
             var storage = await GetAllAsync<StorageEntry>();
             await DeleteRangeWithOptionalSaveChangesAsync(storage, false);
+
+            var subscription = await GetAllAsync<SubscriptionEntity>();
+            await DeleteRangeWithOptionalSaveChangesAsync(subscription, false);
 
         }
 

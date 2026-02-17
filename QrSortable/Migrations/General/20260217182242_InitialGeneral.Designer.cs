@@ -11,7 +11,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.General;
 namespace QrSortable.Migrations.General
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20251225084602_InitialGeneral")]
+    [Migration("20260217182242_InitialGeneral")]
     partial class InitialGeneral
     {
         /// <inheritdoc />
@@ -133,42 +133,29 @@ namespace QrSortable.Migrations.General
                     b.ToTable("StorageEntries");
                 });
 
-            modelBuilder.Entity("QrSortable.Components.CoreFeatures.DataManagement.General.Models.UserInfos", b =>
+            modelBuilder.Entity("QrSortable.Components.CoreFeatures.DataManagement.General.Models.SubscriptionEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Email")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CustomerId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("GoogleEmail")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsUserLogedIn")
+                    b.Property<bool>("IsSubscribed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserAvatar")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserName")
+                    b.Property<string>("SubscriptionId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
-                    b.ToTable("UserInformation");
+                    b.ToTable("SubscriptionEntries");
                 });
 
             modelBuilder.Entity("QrSortable.Components.CoreFeatures.DataManagement.General.Models.YoursOrderData", b =>
