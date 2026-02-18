@@ -1,5 +1,6 @@
 ﻿using Microsoft.Maui.Storage;
 using Mollie.Api.Models.Payment.Response;
+using QrSortable.Components.CoreFeatures.DataManagement.General;
 using QrSortable.Components.CoreFeatures.OrdersPayments;
 
 public class SubscriptionService : ISubscriptionService
@@ -8,13 +9,16 @@ public class SubscriptionService : ISubscriptionService
     private const string CustomerIdKey = "mollie_customer_id";
     private const string SubscriptionIdKey = "mollie_subscription_id";
 
+
     private readonly IMollieService _mollieService;
+    private readonly IDatabaseManager _databaseManager;
 
     public bool IsSubscribed { get; private set; }
 
-    public SubscriptionService(IMollieService mollieService)
+    public SubscriptionService(IMollieService mollieService, IDatabaseManager databaseManager)
     {
         _mollieService = mollieService;
+        _databaseManager = databaseManager;
     }
 
     public async Task LoadAsync()

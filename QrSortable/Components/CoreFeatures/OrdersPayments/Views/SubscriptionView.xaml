@@ -86,7 +86,7 @@
                                 FontFamily="ItimRegular"
                                 FontSize="16"
                                 Keyboard="Email"
-                                PlaceholderColor="{OnPlatform iOS='WhiteSmoke'}"
+                                PlaceholderColor="WhiteSmoke"
                                 Placeholder="Enter your email"
                                 Text="{Binding CustomerEmail}"
                                 TextColor="White"/>

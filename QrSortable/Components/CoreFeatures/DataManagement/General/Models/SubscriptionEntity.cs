@@ -4,7 +4,7 @@ namespace QrSortable.Components.CoreFeatures.DataManagement.General.Models
 
    public class SubscriptionEntity : DatabaseEntry
     {
-        public bool IsSubscribed { get; set; }
+        public bool IsSubscribed { get; set; } = false;
         public DateTime CreatedAt { get; set; }
         public string CustomerId { get; set; }
         public string SubscriptionId { get; set; }

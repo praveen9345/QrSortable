@@ -11,7 +11,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.General;
 namespace QrSortable.Migrations.General
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260217182242_InitialGeneral")]
+    [Migration("20260218105412_InitialGeneral")]
     partial class InitialGeneral
     {
         /// <inheritdoc />
