@@ -39,7 +39,8 @@ public partial class SubscriptionViewModel : BaseViewModel
 
 
         SelectedCurrencyItem = CurrencyItem[0];
-        LoadState();
+        
+        _ = LoadStateAsync();
     }
 
     #region Properties
@@ -76,13 +77,19 @@ public partial class SubscriptionViewModel : BaseViewModel
 
     #endregion
 
-    private async void LoadState()
+    private async Task LoadStateAsync()
     {
-        await _subscriptionService.LoadAsync();
-        UpdateState();
-        UpdatePrice();
+        try
+        {
+            await _subscriptionService.LoadAsync();
+            UpdateState();
+            UpdatePrice();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("SubscriptionViewModel ="+ex);
+        }
     }
-
     private void UpdateState()
     {
         IsSubscribed = _subscriptionService.IsSubscribed;
@@ -92,19 +99,67 @@ public partial class SubscriptionViewModel : BaseViewModel
             : "Upgrade to unlock premium features";
     }
 
-    private void UpdatePrice() 
-    { 
-        PriceText = SelectedPlan switch 
-        { 
+    private void UpdatePrice()
+    {
+        PriceText = SelectedPlan switch
+        {
             SubscriptionPlan.Monthly =>
-            SelectedCurrencyItem == "Euro(€)" ? "€4.99 / month" : "$4.99 / month", 
-            SubscriptionPlan.Yearly => SelectedCurrencyItem == "Euro(€)" 
-            ? "€49.99 / year (Save 20%)" : "$49.99 / year (Save 20%)",
-            _ => SelectedCurrencyItem == "Euro(€)" ? "€4.99 / month" : "$4.99 / month" 
-        }; 
+                SelectedCurrencyItem == "Euro(€)"
+                    ? "€4.99 / month"
+                    : "$4.99 / month",
+
+            SubscriptionPlan.Yearly =>
+                SelectedCurrencyItem == "Euro(€)"
+                    ? "€49.99 / year (Save 20%)"
+                    : "$49.99 / year (Save 20%)",
+
+            _ =>
+                SelectedCurrencyItem == "Euro(€)"
+                    ? "€4.99 / month"
+                    : "$4.99 / month"
+        };
     }
 
-    #region Subscribe Flow
+
+    #region ⭐ SAFEST PATTERN
+
+    private void PrepareNewPayment(string paymentId)
+    {
+        StopTimer();
+
+        _paymentId = paymentId;
+
+        lock (_lock)
+        {
+            _subscriptionProcessed = false;
+        }
+
+        SubscriptionStatusText = "Waiting for payment…";
+
+        StartPolling();
+    }
+
+    private void StartPolling()
+    {
+        _timer = _timerService.StartPeriodicTimer(_ =>
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    await CheckPaymentStatusAsync();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex);
+                }
+            });
+        }, TimeSpan.FromSeconds(10));
+    }
+
+    #endregion
+
+    #region Subscribe 
 
 
     public AsyncRelayCommand OnSelectionChangedCommand => new AsyncRelayCommand(async () =>
@@ -133,55 +188,43 @@ public partial class SubscriptionViewModel : BaseViewModel
         {
             var payment =
                 await _subscriptionService.CreateInitialSubscriptionPaymentAsync(
-                    CustomerEmail,SelectedCurrencyItem, 4.99m);
+                    CustomerEmail, SelectedCurrencyItem, 4.99m);
 
-            if (payment?.Links?.Checkout != null)
+            if (payment?.Links?.Checkout?.Href == null)
             {
-                _paymentId = payment.Id;
+                await DialogService.ShowAlertDialog("Error", "Failed to create payment.", "OK");
+                return;
+            }
 
-                // Start polling
-                _timer = _timerService.StartPeriodicTimer(_ =>
-                {
-                    MainThread.BeginInvokeOnMainThread(async () =>
-                    {
-                        await CheckPaymentStatusAsync();
-                    });
-                }, TimeSpan.FromSeconds(10));
+           PrepareNewPayment(payment.Id);
 
-                var browserMode =
-                    (_mauiWrapper.GetDevicePlatform() == _mauiWrapper.AndroidDevicePlatform)
+            var browserMode =
+                (_mauiWrapper.GetDevicePlatform() == _mauiWrapper.AndroidDevicePlatform)
                     ? BrowserLaunchMode.SystemPreferred
                     : BrowserLaunchMode.External;
 
-                await Browser.Default.OpenAsync(payment.Links.Checkout.Href,browserMode);
-            }
-            else
-            {
-                await DialogService.ShowAlertDialog("Error",
-                    "Failed to create payment.","OK");
-            }
+            await Browser.Default.OpenAsync(payment.Links.Checkout.Href, browserMode);
         }
         catch (Exception ex)
         {
             await DialogService.ShowAlertDialog("Error", ex.Message, "OK");
         }
-
-        IsBusy = false;
+        finally
+        {
+            IsBusy = false;
+        }
     }
+    
 
     public async Task HandleMollieRedirect(string paymentId)
     {
         if (string.IsNullOrEmpty(paymentId))
             return;
 
-        _paymentId = paymentId;
+        // reset state again (important)
+        PrepareNewPayment(paymentId);
 
-        StopTimer();
-
-        await MainThread.InvokeOnMainThreadAsync(async () =>
-        {
-            await CheckPaymentStatusAsync();
-        });
+        await CheckPaymentStatusAsync();
     }
 
     private async Task CheckPaymentStatusAsync()
@@ -189,31 +232,69 @@ public partial class SubscriptionViewModel : BaseViewModel
         if (string.IsNullOrEmpty(_paymentId))
             return;
 
-        PaymentResponse response =
-            await _subscriptionService.GetPaymentStatusAsync(_paymentId);
-        
-        if (response.Status != "paid")
-            return;
+        PaymentResponse response;
 
-        lock (_lock)
+        try
         {
-            if (_subscriptionProcessed)
-            {
-                DialogService.ShowAlertDialog("Already subscribed.", "Ok");
-                return; 
-            }
-
-            _subscriptionProcessed = true;
+            response = await _subscriptionService.GetPaymentStatusAsync(_paymentId);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
+            return;
         }
 
-        StopTimer();
+        if (response == null)
+            return;
 
-        await _subscriptionService.FinalizeSubscriptionAsync( CustomerEmail, SelectedCurrencyItem,4.99m);
+        switch (response.Status)
+        {
+            case "paid":
+            {
+                lock (_lock)
+                {
+                    if (_subscriptionProcessed)
+                        return;
 
-        UpdateState();
+                    _subscriptionProcessed = true;
+                }
 
-        await DialogService.ShowAlertDialog("Success",
-            "Premium activated successfully 🎉","OK");
+                StopTimer();
+
+                await _subscriptionService.FinalizeSubscriptionAsync(
+                    CustomerEmail, SelectedCurrencyItem,4.99m);
+
+                UpdateState();
+
+                await DialogService.ShowAlertDialog(
+                    "Success",
+                    "Premium activated successfully 🎉",
+                    "OK");
+
+                break;
+            }
+
+            case "open":
+            case "pending":
+                // keep polling
+                break;
+
+            case "canceled":
+            case "failed":
+            case "expired":
+            {
+                StopTimer();
+
+                SubscriptionStatusText = "Payment not completed";
+
+                await DialogService.ShowAlertDialog(
+                    "Payment not completed",
+                    "Your payment was not completed. Please try again.",
+                    "OK");
+
+                break;
+            }
+        }
     }
 
     private void StopTimer()
@@ -232,10 +313,17 @@ public partial class SubscriptionViewModel : BaseViewModel
     private async Task CancelSubscription()
     {
         await _subscriptionService.CancelSubscriptionAsync();
+        lock (_lock)
+        {
+            _subscriptionProcessed = false;
+        }
+
         UpdateState();
 
         await DialogService.ShowAlertDialog(
-            "Cancelled","Your subscription has been cancelled.","OK");
+            "Cancelled",
+            "Your subscription has been cancelled.",
+            "OK");
     }
 
     public enum SubscriptionPlan { Monthly, Yearly }

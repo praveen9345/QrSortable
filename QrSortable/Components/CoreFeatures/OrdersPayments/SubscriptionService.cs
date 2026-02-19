@@ -105,8 +105,6 @@
             }
 
             _subscription.IsSubscribed = false;
-            _subscription.CustomerId = string.Empty;
-            _subscription.SubscriptionId = string.Empty;
 
             UpdateDatabaseAndSubscriptionInBackendAsync(_subscription);
         }

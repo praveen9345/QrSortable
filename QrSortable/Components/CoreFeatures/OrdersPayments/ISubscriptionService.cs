@@ -8,15 +8,9 @@
 
         Task LoadAsync();
 
-        Task<PaymentResponse> CreateInitialSubscriptionPaymentAsync(
-            string email,
-            string currency,
-            decimal amount);
+        Task<PaymentResponse> CreateInitialSubscriptionPaymentAsync( string email,string currency,decimal amount);
 
-        Task FinalizeSubscriptionAsync(
-            string email,
-            string currency,
-            decimal amount);
+        Task FinalizeSubscriptionAsync( string email,string currency,decimal amount);
 
         Task<PaymentResponse> GetPaymentStatusAsync(string paymentId);
 
