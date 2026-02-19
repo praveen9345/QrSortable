@@ -1,7 +1,7 @@
-﻿using Mollie.Api.Models.Payment.Response;
-
-namespace QrSortable.Components.CoreFeatures.OrdersPayments
+﻿namespace QrSortable.Components.CoreFeatures.OrdersPayments
 {
+    using Mollie.Api.Models.Payment.Response;
+
     public interface ISubscriptionService
     {
         bool IsSubscribed { get; }

@@ -8,6 +8,7 @@ namespace QrSortable.Components.CoreFeatures.DataManagement.General.Models
         public DateTime CreatedAt { get; set; }
         public string CustomerId { get; set; }
         public string SubscriptionId { get; set; }
+        public string Email { get; set; }
 
     }
 

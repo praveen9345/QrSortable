@@ -113,6 +113,34 @@
                         }
                     }
                 }
+
+                var subscriptionEntries = await (await _backendDatabaseManager
+                .GetAllAsync<DtoSubscriptionEntityModel>()).OrderBy(dto => dto.ID)
+                .ToListAsync();
+
+                if (subscriptionEntries.Any())
+                {
+                    foreach (var dto in subscriptionEntries)
+                    {
+                        if (dto.IsUpdateData == "true")
+                        {
+                            var result = await _backendCommunicationService.UpdateAsync(dto, true);
+                            if (result)
+                            {
+                                await _backendDatabaseManager.DeleteAsync(dto);
+                            }
+                        }
+                        else if (dto.IsUpdateData == "false")
+                        {
+                            var result = await _backendCommunicationService.InsertAsync(dto, true);
+                            if (result)
+                            {
+                                await _backendDatabaseManager.DeleteAsync(dto);
+                            }
+                        }
+                    }
+                }
+
                 return true;
             }
             catch (Exception ex)

@@ -65,6 +65,24 @@ namespace QrSortable.Migrations.Backend
                 {
                     table.PrimaryKey("PK_StorageEntriesDto", x => x.ID);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "SubscriptionEntriesDto",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    IsUpdateData = table.Column<string>(type: "TEXT", nullable: false),
+                    IsSubscribed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<string>(type: "TEXT", nullable: false),
+                    CustomerId = table.Column<string>(type: "TEXT", nullable: false),
+                    SubscriptionId = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubscriptionEntriesDto", x => x.ID);
+                });
         }
 
         /// <inheritdoc />
@@ -75,6 +93,9 @@ namespace QrSortable.Migrations.Backend
 
             migrationBuilder.DropTable(
                 name: "StorageEntriesDto");
+
+            migrationBuilder.DropTable(
+                name: "SubscriptionEntriesDto");
         }
     }
 }

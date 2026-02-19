@@ -11,7 +11,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.General;
 namespace QrSortable.Migrations.General
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260218105412_InitialGeneral")]
+    [Migration("20260219150716_InitialGeneral")]
     partial class InitialGeneral
     {
         /// <inheritdoc />
@@ -143,6 +143,10 @@ namespace QrSortable.Migrations.General
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

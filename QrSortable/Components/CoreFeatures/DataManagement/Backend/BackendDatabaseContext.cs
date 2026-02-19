@@ -34,5 +34,6 @@
         /// </summary>
         public DbSet<DtoOrdersModel> OrderedDto { get; set; }
 
+        public DbSet<DtoSubscriptionEntityModel> SubscriptionEntriesDto { get; set; }
     }
 }

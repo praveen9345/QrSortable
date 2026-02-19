@@ -245,7 +245,6 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
                 {
                     await _databaseManager.DeleteAsync(local);
                 }
-
             }
 
             return true;

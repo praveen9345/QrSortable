@@ -435,7 +435,7 @@
                 {
                     _databaseManager.BeginTransaction();
 
-                    _storageData.CreatedDate = DateTime.Now;
+                    _storageData.CreatedDate = DateTime.UtcNow;
                     _storageData.Category = _storageData.Category.Trim().ToUpperInvariant();
                     _storageData.ItemName = ItemName;
                     _storageData.Description = ItemDescription;

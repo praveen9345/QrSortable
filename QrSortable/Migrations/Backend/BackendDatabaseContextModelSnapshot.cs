@@ -165,6 +165,40 @@ namespace QrSortable.Migrations.Backend
 
                     b.ToTable("StorageEntriesDto");
                 });
+
+            modelBuilder.Entity("QrSortable.Components.CoreFeatures.DataManagement.Backend.Models.DtoSubscriptionEntityModel", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSubscribed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("IsUpdateData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SubscriptionId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("SubscriptionEntriesDto");
+                });
 #pragma warning restore 612, 618
         }
     }

@@ -143,6 +143,10 @@ namespace QrSortable.Migrations.General
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsSubscribed")
                         .HasColumnType("INTEGER");
 

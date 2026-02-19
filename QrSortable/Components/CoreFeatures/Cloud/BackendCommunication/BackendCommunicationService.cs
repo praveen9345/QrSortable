@@ -59,6 +59,7 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
             var type = data.GetType();
             var storageEntry = type.GetProperty("Category");
             var orderEntry = type.GetProperty("Title");
+            var subscriptionEntry = type.GetProperty("IsSubscribed");
 
             var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
 
@@ -147,6 +148,30 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
                     }
 
                 }
+                else if (subscriptionEntry != null)
+                {
+                     var document = new Dictionary<string, object>
+                    {
+                        { "MultiuserId", multiuserId ?? string.Empty },
+                        { "IsSubscribed", dataDec.IsSubscribed },
+                        { "CreatedAt",  _sharedMethodService.ConvertToString(dataDec.CreatedAt) ?? string.Empty},
+                        { "CustomerId", dataDec.CustomerId },
+                        { "SubscriptionId", dataDec.SubscriptionId },
+                        {"Email", dataDec.Email ?? string.Empty }
+                    };
+                    try
+                    {
+                        // Append new document (auto id) instead of using MultiuserId as document id
+                        await firestoreDb.Collection("Subscriptions").AddAsync(document);
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"BackendCommunicationService.InsertAsync (Subscriptions append) failed: {ex}");
+                        return false;
+                    }
+                }
+
                 return false;
             }
             catch (Exception ex)
@@ -162,6 +187,8 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
             var type = data.GetType();
             var storageEntry = type.GetProperty("Category");
             var orderEntry = type.GetProperty("Title");
+            var subscriptionEntry = type.GetProperty("IsSubscribed");
+
             var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
 
             var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
@@ -295,6 +322,68 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
                         return false;
                     }
 
+                }
+                else if (subscriptionEntry != null)
+                {
+
+                    try
+                    {
+                        var collection = firestoreDb.Collection("Subscriptions");
+
+                        // Step 1: Get all documents matching MultiuserId
+                        var querySnapshot = await collection
+                            .WhereEqualTo("MultiuserId", multiuserId)
+                            .GetSnapshotAsync();
+
+                        if (querySnapshot.Count == 0)
+                        {
+                            Console.WriteLine($"No documents found with MultiuserId");
+                            return false;
+                        }
+
+                        // Step 2: Find the document that matches 
+                        DocumentSnapshot? targetDoc = null;
+                        foreach (var doc in querySnapshot.Documents)
+                        {
+
+                            if (doc.ContainsField("MultiuserId") &&
+                                doc.GetValue<string>("MultiuserId") == multiuserId)
+                            {
+                                targetDoc = doc;
+                                break;
+                            }
+                        }
+
+                        if (targetDoc == null)
+                        {
+                            Console.WriteLine($"No document found with MultiuserId ");
+                            return false;
+                        }
+
+                        // Step 3: Update the document
+                        var document = new Dictionary<string, object>
+                        {
+                            { "MultiuserId", multiuserId ?? string.Empty },
+                            { "IsSubscribed", dataDec.IsSubscribed },
+                            { "CreatedAt",  _sharedMethodService.ConvertToString(dataDec.CreatedAt) ?? string.Empty},
+                            { "CustomerId", dataDec.CustomerId },
+                            { "SubscriptionId", dataDec.SubscriptionId },
+                            {"Email", dataDec.Email ?? string.Empty }
+                        };
+                        await collection.Document(targetDoc.Id).SetAsync(document, SetOptions.Overwrite);
+                        return true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"BackendCommunicationService.UpdateAsync (Subscriptions) failed: {ex}");
+                        if (!isFrombackendSync)
+                        {
+                            var dto = _backendDatabaseHelper.CreatDtoSubscriptionBackendData(dataDec, "true");
+                            await _backendDatabaseManager.UpdateAsync(dto);
+                        }
+                        return false;
+                    }
                 }
                 return false;
             }

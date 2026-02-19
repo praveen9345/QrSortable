@@ -78,5 +78,18 @@
             };
         }
 
+        public DtoSubscriptionEntityModel CreatDtoSubscriptionBackendData(dynamic dataDec, string isUpdateData)
+        {
+            return new DtoSubscriptionEntityModel
+            {
+                IsUpdateData = isUpdateData,
+                IsSubscribed = dataDec.IsSubscribed,
+                CreatedAt = _sharedMethodService.ConvertToString(dataDec.CreatedAt) ?? string.Empty,
+                CustomerId = dataDec.CustomerId ?? string.Empty,
+                SubscriptionId = dataDec.SubscriptionId ?? string.Empty,
+                Email = dataDec.Email ?? string.Empty
+            };
+        }
+
     }
 }

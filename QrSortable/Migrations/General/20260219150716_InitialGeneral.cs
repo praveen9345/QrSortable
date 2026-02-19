@@ -109,7 +109,8 @@ namespace QrSortable.Migrations.General
                     IsSubscribed = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CustomerId = table.Column<string>(type: "TEXT", nullable: false),
-                    SubscriptionId = table.Column<string>(type: "TEXT", nullable: false)
+                    SubscriptionId = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

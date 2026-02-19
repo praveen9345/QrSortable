@@ -10,7 +10,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.Backend;
 namespace QrSortable.Migrations.Backend
 {
     [DbContext(typeof(BackendDatabaseContext))]
-    [Migration("20251224061456_InitialBackend")]
+    [Migration("20260219150731_InitialBackend")]
     partial class InitialBackend
     {
         /// <inheritdoc />
@@ -167,6 +167,40 @@ namespace QrSortable.Migrations.Backend
                     b.HasKey("ID");
 
                     b.ToTable("StorageEntriesDto");
+                });
+
+            modelBuilder.Entity("QrSortable.Components.CoreFeatures.DataManagement.Backend.Models.DtoSubscriptionEntityModel", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSubscribed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("IsUpdateData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SubscriptionId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("SubscriptionEntriesDto");
                 });
 #pragma warning restore 612, 618
         }

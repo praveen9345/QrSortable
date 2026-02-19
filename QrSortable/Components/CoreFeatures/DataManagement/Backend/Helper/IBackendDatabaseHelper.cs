@@ -10,5 +10,7 @@
         DtoStorageEntryModel CreateDtoStorageEntryBackendData(dynamic dataDec, string isUpdateData);
 
         DtoOrdersModel CreateDtoOrdersBackendData(dynamic dataDec, string isUpdateData);
+
+        DtoSubscriptionEntityModel CreatDtoSubscriptionBackendData(dynamic dataDec, string isUpdateData);
     }
 }

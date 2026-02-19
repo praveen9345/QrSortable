@@ -191,14 +191,17 @@ public partial class SubscriptionViewModel : BaseViewModel
 
         PaymentResponse response =
             await _subscriptionService.GetPaymentStatusAsync(_paymentId);
-
+        
         if (response.Status != "paid")
             return;
 
         lock (_lock)
         {
             if (_subscriptionProcessed)
-                return;
+            {
+                DialogService.ShowAlertDialog("Already subscribed.", "Ok");
+                return; 
+            }
 
             _subscriptionProcessed = true;
         }

@@ -30,6 +30,9 @@ namespace QrSortable.Components.CoreFeatures.DataManagement.Backend
             var orders = await GetAllAsync<DtoOrdersModel>();
             await DeleteRangeWithOptionalSaveChangesAsync(orders, false);
 
+            var subscriptionEntries = await GetAllAsync<DtoSubscriptionEntityModel>();
+            await DeleteRangeWithOptionalSaveChangesAsync(subscriptionEntries, false);
+
         }
     }
 }
