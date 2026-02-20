@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mollie.Api.Models.Payment.Response;
+using QrSortable.Components.CoreFeatures.DataManagement.General;
+using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
 using QrSortable.Components.CoreFeatures.OrdersPayments;
 using QrSortable.Components.PlatformUtils.Wrappers;
 using QrSortable.Components.TimeHandling;
@@ -11,19 +13,22 @@ public partial class SubscriptionViewModel : BaseViewModel
 {
     private readonly ISubscriptionService _subscriptionService;
     private readonly ITimerService _timerService;
+    private readonly IDatabaseManager _databaseManager;
     private readonly IMauiEssentialsWrapper _mauiWrapper;
 
     private string _paymentId;
     private Timer _timer;
     private readonly object _lock = new object();
     private bool _subscriptionProcessed;
+    private string _email;
 
     public SubscriptionViewModel( ISubscriptionService subscriptionService, ITimerService timerService,
-        IMauiEssentialsWrapper mauiWrapper)
+        IMauiEssentialsWrapper mauiWrapper, IDatabaseManager databaseManager)
     {
         _subscriptionService = subscriptionService;
         _timerService = timerService;
         _mauiWrapper = mauiWrapper;
+        _databaseManager = databaseManager;
 
         PremiumFeatures = new ObservableCollection<string>
         {
@@ -82,6 +87,9 @@ public partial class SubscriptionViewModel : BaseViewModel
         try
         {
             await _subscriptionService.LoadAsync();
+            var subscription = (await _databaseManager.GetListAsync<SubscriptionEntity>())?.FirstOrDefault();
+            _email = subscription?.Email ?? string.Empty;
+
             UpdateState();
             UpdatePrice();
         }
@@ -97,6 +105,8 @@ public partial class SubscriptionViewModel : BaseViewModel
         SubscriptionStatusText = IsSubscribed
             ? "🌟 Premium Active"
             : "Upgrade to unlock premium features";
+
+
     }
 
     private void UpdatePrice()
@@ -232,67 +242,82 @@ public partial class SubscriptionViewModel : BaseViewModel
         if (string.IsNullOrEmpty(_paymentId))
             return;
 
-        PaymentResponse response;
+        bool outcome = false;
 
-        try
+        await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            response = await _subscriptionService.GetPaymentStatusAsync(_paymentId);
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine(ex);
-            return;
-        }
-
-        if (response == null)
-            return;
-
-        switch (response.Status)
-        {
-            case "paid":
-            {
-                lock (_lock)
+            outcome = (bool) await DialogService.ShowActivityIndicatorAndReturnResult("Verifying payment…",
+                async () =>
                 {
-                    if (_subscriptionProcessed)
-                        return;
+                    try
+                    {
+                        var response = await _subscriptionService.GetPaymentStatusAsync(_paymentId);
+                        if (response == null)
+                            return false;
 
-                    _subscriptionProcessed = true;
+                        switch (response.Status)
+                        {
+                            case "paid":
+                                lock (_lock)
+                                {
+                                    if (_subscriptionProcessed)
+                                        return true; // already processed
+                                    _subscriptionProcessed = true;
+                                }
+
+                                StopTimer();
+
+                                await _subscriptionService.FinalizeSubscriptionAsync(
+                                    CustomerEmail,
+                                    SelectedCurrencyItem,
+                                    4.99m);
+
+                                UpdateState();
+
+                                return true;
+
+                            case "open":
+                            case "pending":
+                                // still processing, return false to keep spinner
+                                return false;
+
+                            case "canceled":
+                            case "failed":
+                            case "expired":
+                                StopTimer();
+                                SubscriptionStatusText = "Payment not completed";
+                                return false;
+
+                            default:
+                                return false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        return false;
+                    }
                 }
+            );
+        });
 
-                StopTimer();
-
-                await _subscriptionService.FinalizeSubscriptionAsync(
-                    CustomerEmail, SelectedCurrencyItem,4.99m);
-
-                UpdateState();
-
-                await DialogService.ShowAlertDialog(
-                    "Success",
-                    "Premium activated successfully 🎉",
-                    "OK");
-
-                break;
-            }
-
-            case "open":
-            case "pending":
-                // keep polling
-                break;
-
-            case "canceled":
-            case "failed":
-            case "expired":
+        // Handle outcome after spinner closes
+        if (outcome)
+        {
+            await DialogService.ShowAlertDialog(
+                "Success",
+                "Premium activated successfully 🎉",
+                "OK");
+            CustomerEmail = IsSubscribed ? _email : string.Empty;
+        }
+        else
+        {
+            if (_subscriptionProcessed)
             {
-                StopTimer();
-
-                SubscriptionStatusText = "Payment not completed";
-
                 await DialogService.ShowAlertDialog(
-                    "Payment not completed",
-                    "Your payment was not completed. Please try again.",
-                    "OK");
-
-                break;
+                   "Failed",
+                   "Payment was not completed. Please try again.",
+                   "OK");
             }
         }
     }
