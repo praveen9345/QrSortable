@@ -336,6 +336,97 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
             }
         }
 
+        public async Task<bool> SyncSubscriptionFromFirebaseAsync()
+        {
+            // Check internet connection
+            if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                return false;
+
+            try
+            {
+                // Firestore setup
+                var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
+                var collection = firestoreDb.Collection("Subscriptions");
+
+                var multiuserId = (await _generalInfoManager.GetGeneralInformationAsync()).MultiUserId;
+
+                // Fetch backend subscriptions
+                var querySnapshot = await collection
+                    .WhereEqualTo("MultiuserId", multiuserId)
+                    .GetSnapshotAsync();
+
+                if (querySnapshot.Count == 0)
+                    return false; // No subscription data in backend
+
+                var doc = querySnapshot.Documents[0];
+                var customerId = doc.GetValue<string>("CustomerId");
+
+                // Check if local database has this subscription
+                var localSubDb = (await _databaseManager.GetListAsync<SubscriptionEntity>())
+                                 ?.FirstOrDefault(x => x.CustomerId == customerId);
+
+                if (localSubDb == null)
+                {
+                    // Insert new subscription
+                    localSubDb = new SubscriptionEntity
+                    {
+                        IsSubscribed = doc.ContainsField("IsSubscribed") ? doc.GetValue<bool>("IsSubscribed") : false,
+                        SubscriptionId = doc.ContainsField("SubscriptionId") ? doc.GetValue<string>("SubscriptionId") : string.Empty,
+                        CustomerId = doc.ContainsField("CustomerId") ? doc.GetValue<string>("CustomerId") : string.Empty,
+                        Email = doc.ContainsField("Email") ? doc.GetValue<string>("Email") : string.Empty,
+                    };
+
+                    if (doc.ContainsField("CreatedAt"))
+                    {
+                        var createdDateStr = doc.GetValue<string>("CreatedAt");
+                        if (DateTimeOffset.TryParse(createdDateStr, out var dto))
+                            localSubDb.CreatedAt = dto.UtcDateTime;
+                    }
+
+                    _databaseManager.BeginTransaction();
+
+                    var addItem = await _databaseManager.AddAsync(localSubDb);
+                    if (addItem != null) 
+                    {
+                        _databaseManager.CommitTransaction(); 
+                    }
+
+                    else 
+                    { 
+                        _databaseManager.Rollback(); 
+                    }
+                        
+                }
+                else
+                {
+                    // Update existing subscription
+                    localSubDb.IsSubscribed = doc.ContainsField("IsSubscribed") ? doc.GetValue<bool>("IsSubscribed") : localSubDb.IsSubscribed;
+                    localSubDb.SubscriptionId = doc.ContainsField("SubscriptionId") ? doc.GetValue<string>("SubscriptionId") : localSubDb.SubscriptionId;
+                    localSubDb.CustomerId = doc.ContainsField("CustomerId") ? doc.GetValue<string>("CustomerId") : localSubDb.CustomerId;
+                    localSubDb.Email = doc.ContainsField("Email") ? doc.GetValue<string>("Email") : localSubDb.Email;
+
+                    if (doc.ContainsField("CreatedAt"))
+                    {
+                        var createdDateStr = doc.GetValue<string>("CreatedAt");
+                        if (DateTimeOffset.TryParse(createdDateStr, out var dto)) 
+                        { 
+                            localSubDb.CreatedAt = dto.UtcDateTime; 
+                        }
+                            
+                    }
+
+                    await _databaseManager.UpdateAsync(localSubDb);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"SyncSubscriptionFromFirebaseAsync failed: {ex}");
+                return false;
+            }
+        }
+
         private bool CompareImageLists(IList<byte[]> localImages, IList<byte[]> backendImages)
         {
             if (localImages.Count != backendImages.Count)

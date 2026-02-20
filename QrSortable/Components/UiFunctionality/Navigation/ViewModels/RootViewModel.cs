@@ -78,6 +78,8 @@
             //ensure all data sync
             await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
 
+            await _generalDatabaseSynchronizationManager.SyncSubscriptionFromFirebaseAsync();
+
             _isInitializeVisible = true;
 
             bool outcome = false;

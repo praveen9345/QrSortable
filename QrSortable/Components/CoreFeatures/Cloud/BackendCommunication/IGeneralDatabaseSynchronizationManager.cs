@@ -16,5 +16,7 @@
         Task<bool> SynchronizeAppDataAsync();
 
         Task<bool> ClearBackendAndSyncLocalDataAsync();
+
+        Task<bool> SyncSubscriptionFromFirebaseAsync();
     }
 }

@@ -106,7 +106,7 @@ public partial class SubscriptionViewModel : BaseViewModel
             ? "🌟 Premium Active"
             : "Upgrade to unlock premium features";
 
-
+        CustomerEmail = IsSubscribed ? _email : string.Empty;
     }
 
     private void UpdatePrice()
@@ -304,11 +304,12 @@ public partial class SubscriptionViewModel : BaseViewModel
         // Handle outcome after spinner closes
         if (outcome)
         {
+            CustomerEmail = IsSubscribed ? _email : string.Empty;
+
             await DialogService.ShowAlertDialog(
                 "Success",
                 "Premium activated successfully 🎉",
-                "OK");
-            CustomerEmail = IsSubscribed ? _email : string.Empty;
+                "OK");   
         }
         else
         {
