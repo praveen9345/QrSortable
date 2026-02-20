@@ -57,6 +57,15 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
 
             var customerId = await GetOrCreateCustomerIdAsync(customerEmail);
 
+            // ✅ Check for an existing active subscription first
+            var existingSubscription = await GetActiveSubscriptionAsync(customerId);
+            if (existingSubscription != null)
+            {
+                Console.WriteLine(
+                    $"[MollieService] Subscription already exists: {existingSubscription.Id}");
+                return existingSubscription;
+            }
+
             // OPTIONAL: verify valid mandate exists
             bool hasMandate = await HasValidMandateAsync(customerId);
 
@@ -167,6 +176,22 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
                 await _mandateClient.GetMandateListAsync(customerId);
 
             return mandates.Items.Any(m => m.Status == "valid");
+        }
+
+        private async Task<SubscriptionResponse?> GetActiveSubscriptionAsync(string customerId)
+        {
+            try
+            {
+                var subscriptions = await _subscriptionClient.GetSubscriptionListAsync(customerId);
+                return subscriptions?.Items?
+                    .FirstOrDefault(s => s.Status == "active" || s.Status == "pending");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(
+                    $"[MollieService] GetActiveSubscriptionAsync failed: {ex}");
+                return null;
+            }
         }
     }
 }

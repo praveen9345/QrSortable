@@ -67,6 +67,13 @@
 
         public async Task FinalizeSubscriptionAsync(string email, string currency, decimal amount)
         {
+            if (_subscription?.IsSubscribed == true)
+            {
+                Console.WriteLine(
+                    "[SubscriptionService] Already subscribed locally, skipping finalization.");
+                return;
+            }
+
             var subscription = await _mollieService.CreateSubscriptionAsync(
                 amount, currency, email, "QrSortable Premium");
 
