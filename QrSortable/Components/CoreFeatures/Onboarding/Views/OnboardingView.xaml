@@ -11,9 +11,9 @@
         <Grid>
             <Grid.RowDefinitions>
                 <!--  back  -->
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto"/>
                 <!--  item view  -->
-                <RowDefinition Height="*" />
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!--  Back button  -->
@@ -32,13 +32,13 @@
                         Brush="Black"
                         Opacity="0.5"
                         Radius="10"
-                        Offset="0,0" />
+                        Offset="0,0"/>
                 </Button.Shadow>
                 <Button.ImageSource>
                     <FontImageSource
                         FontFamily="FluentIcons"
                         Glyph="{x:Static local:IconNames.Back}"
-                        Color="{StaticResource Primary}" />
+                        Color="{StaticResource Primary}"/>
                 </Button.ImageSource>
             </Button>
 
@@ -50,51 +50,35 @@
                 HeightRequest="150"
                 HorizontalOptions="Center"
                 Source="multiuser"
-                VerticalOptions="Center" />
+                VerticalOptions="Center"/>
 
             <StackLayout Grid.Row="1">
-                <Grid
-                    Padding="10"
-                    ColumnDefinitions="*,Auto"
-                    VerticalOptions="Start">
-
-                    <Label
-                        Grid.Column="0"
-                        FontAttributes="Bold"
-                        FontFamily="ItimRegular"
-                        FontSize="22"
-                        LineBreakMode="WordWrap"
-                        MaxLines="20"
-                        Text="To support multiple users, we need a backend to securely store data. For your protection, all data sent to the backend is fully encrypted. To keep your information safe and enable multi-user features, encryption must be turned on."
-                        TextColor="White"
-                        VerticalOptions="Center" />
-
-                    <Switch
-                        Grid.Column="1"
-                        IsToggled="{Binding IsMultiuserFunctionalityEnabled}"
-                        VerticalOptions="Center">
-                        <Switch.Behaviors>
-                            <xct:EventToCommandBehavior Command="{Binding MultiuserFunctionalityToggledCommand}" EventName="Toggled" />
-                        </Switch.Behaviors>
-                    </Switch>
-
-                </Grid>
+                <Label
+                    Grid.Row="1"
+                    Padding="0"
+                    Margin="0,-20,0,0"
+                    FontAttributes="Bold"
+                    FontSize="28"
+                    HorizontalOptions="Center"
+                    Text="Multiuser Id"
+                    FontFamily="ItimRegular"
+                    TextColor="{StaticResource Primary}"
+                    VerticalOptions="Center"/>
 
                 <Grid
-                    Padding="10"
                     ColumnDefinitions="Auto,Auto"
                     HorizontalOptions="Center"
-                    IsVisible="{Binding IsMultiuserFunctionalityEnabled}"
                     VerticalOptions="Start">
                     <Label
                         Grid.Row="1"
                         Padding="0"
                         FontAttributes="Bold"
-                        FontSize="28"
+                        FontSize="32"
+                        FontFamily="ItimRegular"
                         HorizontalOptions="Center"
                         Text="{Binding MultiuserId}"
                         TextColor="{StaticResource Primary}"
-                        VerticalOptions="Center" />
+                        VerticalOptions="Center"/>
 
                     <Button
                         Grid.Column="1"
@@ -115,28 +99,57 @@
                                 Brush="Black"
                                 Opacity="0.3"
                                 Radius="10"
-                                Offset="5,5" />
+                                Offset="5,5"/>
                         </Button.Shadow>
                     </Button>
-                
+                </Grid>
+
+                <Grid
+                    Padding="10"
+                    ColumnDefinitions="*,Auto"
+                    VerticalOptions="Start">
+
+                    <Label
+                        Grid.Column="0"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="22"
+                        LineBreakMode="WordWrap"
+                        MaxLines="20"
+                        Text="To support multiple users, we need a backend to securely store data. For your protection, all data sent to the backend is fully encrypted. To keep your information safe and enable multi-user features, encryption must be turned on."
+                        TextColor="White"
+                        VerticalOptions="Center"/>
+
+                    <Switch
+                        Grid.Column="1"
+                        IsToggled="{Binding IsMultiuserFunctionalityEnabled}"
+                        VerticalOptions="Center">
+                        <Switch.Behaviors>
+                            <xct:EventToCommandBehavior Command="{Binding MultiuserFunctionalityToggledCommand}"
+                                                        EventName="Toggled"/>
+                        </Switch.Behaviors>
+                    </Switch>
+
                 </Grid>
 
                 <Label
                     Grid.Column="0"
-                    Margin="10,30,10,0"
+                    Margin="10,0,10,0"
                     FontAttributes="Bold"
                     FontFamily="ItimRegular"
                     FontSize="20"
                     LineBreakMode="WordWrap"
                     MaxLines="10"
-                    Text="* Please provide the Multi-User ID for the other QRSortable app you wish to connect."
+                    IsVisible="{Binding IsMultiuserFunctionalityEnabled}"
+                    Text="* If you already have the Multi-User ID of the other QRSortable app and want to synchronize with it, enter that ID below."
                     TextColor="Red"
-                    VerticalOptions="Center" />
+                    VerticalOptions="Center"/>
 
                 <StackLayout
                     Grid.Row="0"
                     Margin="10,10,5,0"
-                    Orientation="Horizontal">
+                    Orientation="Horizontal"
+                    IsVisible="{Binding IsMultiuserFunctionalityEnabled}">
                     <!--  item name  -->
                     <Label
                         Margin="0,-15,0,0"
@@ -147,7 +160,7 @@
                         HorizontalTextAlignment="Center"
                         Text="Multiuser Id:"
                         TextColor="{StaticResource White}"
-                        VerticalTextAlignment="Center" />
+                        VerticalTextAlignment="Center"/>
 
                     <!--  Placeholder for item name input field  -->
                     <Border
@@ -162,7 +175,7 @@
                                 Brush="Black"
                                 Opacity="0.5"
                                 Radius="10"
-                                Offset="0,0" />
+                                Offset="0,0"/>
                         </Border.Shadow>
                         <!--  input field  -->
                         <Grid>
@@ -174,7 +187,7 @@
                                 HorizontalOptions="Fill"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
-                                Text="{Binding MultiuserIdInput}" />
+                                Text="{Binding MultiuserIdInput}"/>
                         </Grid>
                     </Border>
                 </StackLayout>
@@ -196,7 +209,7 @@
                             Brush="Black"
                             Opacity="0.3"
                             Radius="10"
-                            Offset="5,5" />
+                            Offset="5,5"/>
                     </Button.Shadow>
                 </Button>
             </StackLayout>

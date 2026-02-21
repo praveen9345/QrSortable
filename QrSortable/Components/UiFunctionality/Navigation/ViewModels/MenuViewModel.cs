@@ -81,7 +81,7 @@
                         await NavigationService.Navigate<YoursOrdersView>();
                         break;
                     case SubscribeTitle:
-                        await NavigationService.Navigate<SubscriptionView>();
+                        await NavigationService.Navigate<SubscriptionView>(false);
                         break;
                     case SettingsTitle:
                         await NavigationService.Navigate<SettingView>();

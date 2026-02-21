@@ -77,8 +77,9 @@
 
             //ensure all data sync
             await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
-
-            await _generalDatabaseSynchronizationManager.SyncSubscriptionFromFirebaseAsync();
+            
+            var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
+            await _generalDatabaseSynchronizationManager.SyncSubscriptionFromFirebaseAsync(multiuserId);
 
             _isInitializeVisible = true;
 

@@ -336,7 +336,7 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
             }
         }
 
-        public async Task<bool> SyncSubscriptionFromFirebaseAsync()
+        public async Task<bool> SyncSubscriptionFromFirebaseAsync(string multiuserId)
         {
             // Check internet connection
             if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
@@ -347,8 +347,6 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
                 // Firestore setup
                 var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
                 var collection = firestoreDb.Collection("Subscriptions");
-
-                var multiuserId = (await _generalInfoManager.GetGeneralInformationAsync()).MultiUserId;
 
                 // Fetch backend subscriptions
                 var querySnapshot = await collection

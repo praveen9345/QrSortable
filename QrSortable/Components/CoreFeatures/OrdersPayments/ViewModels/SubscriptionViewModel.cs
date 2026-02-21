@@ -7,14 +7,16 @@ using QrSortable.Components.CoreFeatures.OrdersPayments;
 using QrSortable.Components.PlatformUtils.Wrappers;
 using QrSortable.Components.TimeHandling;
 using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+using QrSortable.Components.UiFunctionality.Navigation.Views;
 using System.Collections.ObjectModel;
 
-public partial class SubscriptionViewModel : BaseViewModel
+public partial class SubscriptionViewModel : BaseViewModel<bool>
 {
     private readonly ISubscriptionService _subscriptionService;
     private readonly ITimerService _timerService;
     private readonly IDatabaseManager _databaseManager;
     private readonly IMauiEssentialsWrapper _mauiWrapper;
+    private readonly IGeneralInformationManager _generalInformationManager;
 
     private string _paymentId;
     private Timer _timer;
@@ -22,13 +24,17 @@ public partial class SubscriptionViewModel : BaseViewModel
     private bool _subscriptionProcessed;
     private string _email;
 
-    public SubscriptionViewModel( ISubscriptionService subscriptionService, ITimerService timerService,
-        IMauiEssentialsWrapper mauiWrapper, IDatabaseManager databaseManager)
+    private bool _isFromOnboarding;
+
+    public SubscriptionViewModel(ISubscriptionService subscriptionService, ITimerService timerService,
+        IMauiEssentialsWrapper mauiWrapper, IDatabaseManager databaseManager,
+        IGeneralInformationManager generalInformationManager)
     {
         _subscriptionService = subscriptionService;
         _timerService = timerService;
         _mauiWrapper = mauiWrapper;
         _databaseManager = databaseManager;
+        _generalInformationManager = generalInformationManager;
 
         PremiumFeatures = new ObservableCollection<string>
         {
@@ -44,31 +50,31 @@ public partial class SubscriptionViewModel : BaseViewModel
 
 
         SelectedCurrencyItem = CurrencyItem[0];
-        
+
         _ = LoadStateAsync();
     }
 
     #region Properties
 
-    [ObservableProperty] 
+    [ObservableProperty]
     private bool _isSubscribed;
 
-    [ObservableProperty] 
+    [ObservableProperty]
     private string _subscriptionStatusText;
-    
-    [ObservableProperty] 
+
+    [ObservableProperty]
     private bool _isBusy;
 
-    [ObservableProperty] 
+    [ObservableProperty]
     private string _selectedCurrencyItem;
 
-    [ObservableProperty] 
+    [ObservableProperty]
     private string _customerEmail;
 
-    [ObservableProperty] 
-    private string _priceText; 
+    [ObservableProperty]
+    private string _priceText;
 
-    [ObservableProperty] 
+    [ObservableProperty]
     private SubscriptionPlan _selectedPlan;
 
     public ObservableCollection<string> PremiumFeatures { get; }
@@ -79,6 +85,16 @@ public partial class SubscriptionViewModel : BaseViewModel
             "Euro(€)",
             "USD($)"
         };
+
+
+    /// <summary>
+    ///     Prepares the viewmode with a boolean data for onbording or for menu.
+    /// </summary>
+    /// <param name="isFromOnboarding">The boolean data.</param>
+    public override async void Prepare(bool isFromOnboarding)
+    {
+        _isFromOnboarding = isFromOnboarding;
+    }
 
     #endregion
 
@@ -95,10 +111,10 @@ public partial class SubscriptionViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            Console.WriteLine("SubscriptionViewModel ="+ex);
+            Console.WriteLine("SubscriptionViewModel =" + ex);
         }
     }
-    private void UpdateState()
+    private async void UpdateState()
     {
         IsSubscribed = _subscriptionService.IsSubscribed;
 
@@ -107,6 +123,11 @@ public partial class SubscriptionViewModel : BaseViewModel
             : "Upgrade to unlock premium features";
 
         CustomerEmail = IsSubscribed ? _email : string.Empty;
+
+        if (IsSubscribed)
+        {
+            await _generalInformationManager.UpdateIsBackendUsedAsync(true);
+        }
     }
 
     private void UpdatePrice()
@@ -206,7 +227,7 @@ public partial class SubscriptionViewModel : BaseViewModel
                 return;
             }
 
-           PrepareNewPayment(payment.Id);
+            PrepareNewPayment(payment.Id);
 
             var browserMode =
                 (_mauiWrapper.GetDevicePlatform() == _mauiWrapper.AndroidDevicePlatform)
@@ -224,7 +245,7 @@ public partial class SubscriptionViewModel : BaseViewModel
             IsBusy = false;
         }
     }
-    
+
 
     public async Task HandleMollieRedirect(string paymentId)
     {
@@ -246,7 +267,7 @@ public partial class SubscriptionViewModel : BaseViewModel
 
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            outcome = (bool) await DialogService.ShowActivityIndicatorAndReturnResult("Verifying payment…",
+            outcome = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Verifying payment…",
                 async () =>
                 {
                     try
@@ -306,10 +327,21 @@ public partial class SubscriptionViewModel : BaseViewModel
         {
             CustomerEmail = IsSubscribed ? _email : string.Empty;
 
+            if (IsSubscribed)
+            {
+                await _generalInformationManager.UpdateIsBackendUsedAsync(true);
+            }
+
             await DialogService.ShowAlertDialog(
                 "Success",
                 "Premium activated successfully 🎉",
-                "OK");   
+                "OK");
+
+            if (_isFromOnboarding)
+            {
+                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingCompleted);
+                await NavigationService.Navigate<RootView>();
+            }
         }
         else
         {
@@ -345,7 +377,9 @@ public partial class SubscriptionViewModel : BaseViewModel
         }
 
         UpdateState();
-
+        
+        await _generalInformationManager.UpdateIsBackendUsedAsync(false);
+        
         await DialogService.ShowAlertDialog(
             "Cancelled",
             "Your subscription has been cancelled.",

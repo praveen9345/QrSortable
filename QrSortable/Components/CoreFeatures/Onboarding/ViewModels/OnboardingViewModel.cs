@@ -6,6 +6,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
@@ -24,7 +25,7 @@
         private readonly IGeneralDatabaseSynchronizationManager _generalDatabaseSynchronizationManager;
         private readonly IDatabaseManager _databaseManager;
         private readonly IBackendDatabaseManager _backendDatabaseManager;
-       
+
         private bool _displayOnce;
 
         /// <summary>
@@ -39,7 +40,7 @@
             _toastService = toastService;
             _generalInformationManager = generalInformationManager;
             _backendCommunicationService = backendCommunicationService;
-            _generalDatabaseSynchronizationManager  = generalDatabaseSynchronizationManager;
+            _generalDatabaseSynchronizationManager = generalDatabaseSynchronizationManager;
             _databaseManager = databaseManager;
             _backendDatabaseManager = backendDatabaseManager;
 
@@ -48,8 +49,6 @@
         public async override Task InitializeAsync()
         {
             await base.InitializeAsync();
-           
-           
             _displayOnce = true;
         }
 
@@ -82,11 +81,11 @@
             base.ViewAppearing();
             var onboarding = (await _generalInformationManager.GetGeneralInformationAsync()).OnboardingProgress;
 
-            if(onboarding == OnboardingProgress.SignUp ||
+            if (onboarding == OnboardingProgress.SignUp ||
                onboarding == OnboardingProgress.NotStarted)
             {
                 await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.SignUp);
-                IsBackVisible =false;
+                IsBackVisible = false;
             }
             else
             {
@@ -94,7 +93,7 @@
             }
 
             MultiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
-            
+
             if ((await _generalInformationManager.GetGeneralInformationAsync()).IsBackendUsed)
             {
                 IsMultiuserFunctionalityEnabled = true;
@@ -114,7 +113,7 @@
             {
                 await _generalInformationManager.UpdateIsBackendUsedAsync(true);
 
-                if(!_displayOnce)
+                if (!_displayOnce)
                 {
                     await DialogService.ShowAlertDialog("Information",
                    "Use the displayed multi-user ID on another QRSortable App device to connect.", AppResources.Dialog_OK_Text);
@@ -126,16 +125,15 @@
                 var confirm = await DialogService.ShowRequestDialog("Disabling multi-user functionality will stop synchronization with other devices.",
                     AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
 
-                if (!confirm) 
+                if (!confirm)
                 {
                     IsMultiuserFunctionalityEnabled = true;
-                    return; 
+                    return;
                 }
 
-                await _generalInformationManager.UpdateIsBackendUsedAsync(false);
-                IsMultiuserFunctionalityEnabled = false;
+                await SetBackendDisable();
             }
-           
+
         });
 
         public AsyncRelayCommand DoneCommand => new AsyncRelayCommand(async () =>
@@ -147,51 +145,78 @@
 
             if (!confirmMessage)
             {
-                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingCompleted);
-                await NavigationService.Navigate<RootView>();
-                return;
+                if ((await _generalInformationManager.GetGeneralInformationAsync()).IsBackendUsed)
+                {
+                    var subscribed = await EnsureSubscriptionAsync();
+                    if (!subscribed) return;
+                }
+                else
+                {
+                    await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingCompleted);
+                    await NavigationService.Navigate<RootView>();
+                    return;
+                }
+
             }
-            else 
+            else
             {
+
                 if (string.IsNullOrWhiteSpace(multiuserIdInput))
                 {
                     await DialogService.ShowAlertDialog("Error",
                    "Please enter a valid multi-user ID to proceed.", AppResources.Dialog_OK_Text);
+                    await SetBackendDisable();
                     return;
                 }
 
             }
 
-            if(!await _backendCommunicationService.ValidateMultiuserIdAsync(multiuserIdInput))
+            if (!await _backendCommunicationService.ValidateMultiuserIdAsync(multiuserIdInput))
             {
                 await DialogService.ShowAlertDialog("Error",
-               "The entered multi-user ID is invalid or at least you need one have one saved data in given multi-user ID QRSortable App. Please check and try again.", 
+               "The entered multi-user ID is invalid or at least you need one have one saved data in given multi-user ID QRSortable App. Please check and try again.",
                AppResources.Dialog_OK_Text);
+                await SetBackendDisable();
                 return;
             }
 
-            if(multiuserIdInput == MultiuserId)
+            if (multiuserIdInput == MultiuserId)
             {
                 var confirm = await DialogService.ShowRequestDialog("The multi-user ID you entered is the same as the one already used on this device.If you press OK, all data saved on this device will be deleted and re-downloaded from the server.",
                 AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
 
-                if(!confirm) return;
+                if (!confirm)
+                {
+                    await SetBackendDisable();
+                    return;
+                }
             }
             else
             {
+                //Sync data
+                 await _generalDatabaseSynchronizationManager.SyncSubscriptionFromFirebaseAsync(multiuserIdInput);
+                //Subscription
+                var subscriptionOk = await EnsureSubscriptionAsync();
+                if (!subscriptionOk) return;
+
                 var confirm = await DialogService.ShowRequestDialog("Are you sure you want to clear the data saved on this device?",
                  AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
 
-                if (!confirm) { return; }
+                if (!confirm)
+                {
+                    await SetBackendDisable();
+                    return;
+                }
             }
 
             var success = await _generalInformationManager.UpdateTheMultiuserIdAsync(multiuserIdInput);
-            if(!success)
+            if (!success)
             {
                 await _toastService.DisplayToast("An error occurred while setting the multi-user ID. Please try again.");
+                await SetBackendDisable();
                 return;
             }
-           
+
             MultiuserId = multiuserIdInput;
 
             var result = await DialogService.ShowActivityIndicatorAndReturnResult(
@@ -215,13 +240,44 @@
                 }
                 else
                 {
+                    await SetBackendDisable();
                     await _toastService.DisplayToast(
                         "Download failed. Please check your internet connection and try again.");
                 }
             });
-           
+
 
         });
+
+        private async Task<bool> EnsureSubscriptionAsync()
+        {
+        
+            var list = await _databaseManager.GetListAsync<SubscriptionEntity>();
+            var subscription = list?.FirstOrDefault();
+
+            if (subscription?.IsSubscribed == true)
+                return true;
+
+            var confirm = await DialogService.ShowRequestDialog(
+                "Subscription required. Please upgrade to continue.",
+                AppResources.Dialog_Cancel_Text,
+                AppResources.Dialog_OK_Text);
+
+            if (!confirm)
+            {
+                await SetBackendDisable();
+                return false;
+            }
+
+            await NavigationService.Navigate<SubscriptionView>(true);
+            return false;
+        }
+
+        private async Task SetBackendDisable()
+        {
+            IsMultiuserFunctionalityEnabled = false;
+            await _generalInformationManager.UpdateIsBackendUsedAsync(false);
+        }
 
     }
 }
