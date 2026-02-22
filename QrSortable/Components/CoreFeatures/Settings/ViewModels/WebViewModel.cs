@@ -43,7 +43,7 @@
             switch(viewName)
             {
                 case "feedback":
-                    Url = "https://forms.gle/rjApAC6Z69GpEo458";
+                    Url = "https://forms.gle/5Cx6NTnz7boGvLUK8"; //english feedback
                     break;
                 case "privacyPolicy":
                     Url = "https://kidsytales.com/privacy-policy";
