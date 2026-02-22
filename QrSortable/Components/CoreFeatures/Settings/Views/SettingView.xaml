@@ -10,9 +10,11 @@
         <Grid>
             <Grid.RowDefinitions>
                 <!--  back  -->
-                <RowDefinition Height="Auto" />
-                <!--  item view  -->
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto"/>
+                <!--  settings  -->
+                <RowDefinition Height="*"/>
+                <!--  sync  -->
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!--  Back button  -->
@@ -30,13 +32,13 @@
                         Brush="Black"
                         Opacity="0.5"
                         Radius="10"
-                        Offset="0,0" />
+                        Offset="0,0"/>
                 </Button.Shadow>
                 <Button.ImageSource>
                     <FontImageSource
                         FontFamily="FluentIcons"
                         Glyph="{x:Static local:IconNames.Back}"
-                        Color="{StaticResource Primary}" />
+                        Color="{StaticResource Primary}"/>
                 </Button.ImageSource>
             </Button>
 
@@ -48,29 +50,214 @@
                 HeightRequest="150"
                 HorizontalOptions="Center"
                 Source="setting"
-                VerticalOptions="Center" />
+                VerticalOptions="Center"/>
 
-            <Button
-                Grid.Row="1"
-                Margin="10,50,10,0"
-                BackgroundColor="{StaticResource Primary}"
-                Command="{Binding SyncDataCommand}"
-                CornerRadius="10"
-                FontAttributes="Bold"
-                FontFamily="ItimRegular"
-                FontSize="20"
-                HorizontalOptions="Fill"
-                Text="Clear Backend and Sync"
-                TextColor="Black"
-                VerticalOptions="Center">
-                <Button.Shadow>
-                    <Shadow
-                        Brush="Black"
-                        Opacity="0.3"
-                        Radius="10"
-                        Offset="5,5" />
-                </Button.Shadow>
-            </Button>
+            <!-- settings -->
+            <Grid Grid.Row="1">
+                <ScrollView Orientation="Vertical">
+                    <StackLayout>
+                        <!-- version label -->
+                        <Label
+                            Text="App Version: 1.1.2"
+                            Style="{StaticResource SubHeadline}"/>
+
+                        <!-- app setting lable -->
+                        <Label
+                            Margin="20,30,0,0"
+                            Text="App settings"
+                            Style="{StaticResource BoldText}"/>
+
+                        <!-- divider -->
+                        <BoxView
+                            Style="{StaticResource LineStyle}"/>
+
+                        <!-- language selection -->
+                        <StackLayout>
+                            <Grid Padding="20,10,10,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width=".9*"/>
+                                    <ColumnDefinition Width=".1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="OnTappedEffect"
+                                        Command="{Binding LanguageCommand}">
+                                    </TapGestureRecognizer>
+                                </Grid.GestureRecognizers>
+
+                                <!-- Language text -->
+                                <Label
+                                    Grid.Column="0"
+                                    Text="Language"
+                                    FontFamily="ItimRegular"
+                                    TextColor="White"
+                                    FontSize="18"/>
+
+                                <!-- Forward navigation -->
+                                <Image
+                                    Grid.Column="1"
+                                    HeightRequest="30"
+                                    WidthRequest="30">
+                                    <Image.Source>
+                                        <FontImageSource
+                                            FontFamily="FluentIcons"
+                                            Color="{StaticResource Primary}"
+                                            Glyph="{x:Static local:IconNames.Forward}"/>
+                                    </Image.Source>
+                                </Image>
+                            </Grid>
+                        </StackLayout>
+
+                        <!-- legal lable -->
+                        <Label
+                            Margin="20,30,0,0"
+                            Text="Legal"
+                            Style="{StaticResource BoldText}"/>
+
+                        <!-- divider -->
+                        <BoxView
+                            Style="{StaticResource LineStyle}"/>
+
+                        <!-- Privacy policy -->
+                        <StackLayout>
+                            <Grid Padding="20,10,10,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width=".9*"/>
+                                    <ColumnDefinition Width=".1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="OnTappedEffect"
+                                        Command="{Binding PrivacyPolicyCommand}">
+                                    </TapGestureRecognizer>
+                                </Grid.GestureRecognizers>
+
+                                <!-- Privacy policy text -->
+                                <Label
+                                    Grid.Column="0"
+                                    Text="Privacy Policy"
+                                    TextColor="White"
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"/>
+
+                                <!-- Forward navigation -->
+                                <Image
+                                    Grid.Column="1"
+                                    HeightRequest="30"
+                                    WidthRequest="30">
+                                    <Image.Source>
+                                        <FontImageSource
+                                            FontFamily="FluentIcons"
+                                            Color="{StaticResource Primary}"
+                                            Glyph="{x:Static local:IconNames.Forward}"/>
+                                    </Image.Source>
+                                </Image>
+                            </Grid>
+                        </StackLayout>
+
+                        <!-- Terms and Conditions -->
+                        <StackLayout>
+                            <Grid Padding="20,10,10,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width=".9*"/>
+                                    <ColumnDefinition Width=".1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="OnTappedEffect"
+                                        Command="{Binding TermsAndConditionsCommand}">
+                                    </TapGestureRecognizer>
+                                </Grid.GestureRecognizers>
+
+                                <!-- Privacy policy text -->
+                                <Label
+                                    Grid.Column="0"
+                                    Text="Terms and Conditions"
+                                    TextColor="White"
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"/>
+
+                                <!-- Forward navigation -->
+                                <Image
+                                    Grid.Column="1"
+                                    HeightRequest="30"
+                                    WidthRequest="30">
+                                    <Image.Source>
+                                        <FontImageSource
+                                            FontFamily="FluentIcons"
+                                            Color="{StaticResource Primary}"
+                                            Glyph="{x:Static local:IconNames.Forward}"/>
+                                    </Image.Source>
+                                </Image>
+                            </Grid>
+                        </StackLayout>
+
+                        <!-- license information -->
+                        <StackLayout>
+                            <Grid Padding="20,10,10,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width=".9*"/>
+                                    <ColumnDefinition Width=".1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="OnTappedEffect"
+                                        Command="{Binding LicenseCommand}">
+                                    </TapGestureRecognizer>
+                                </Grid.GestureRecognizers>
+
+                                <!-- license information text -->
+                                <Label
+                                    Grid.Column="0"
+                                    Text="License Information"
+                                    TextColor="White"
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"/>
+
+                                <!-- Forward navigation -->
+                                <Image
+                                    Grid.Column="1"
+                                    HeightRequest="30"
+                                    WidthRequest="30">
+                                    <Image.Source>
+                                        <FontImageSource
+                                            FontFamily="FluentIcons"
+                                            Color="{StaticResource Primary}"
+                                            Glyph="{x:Static local:IconNames.Forward}"/>
+                                    </Image.Source>
+                                </Image>
+                            </Grid>
+                        </StackLayout>
+
+                        <!-- divider -->
+                        <BoxView
+                            Style="{StaticResource LineStyle}"/>
+
+                        <StackLayout>
+                            <Button
+                                Margin="10,50,10,0"
+                                BackgroundColor="{StaticResource Primary}"
+                                Command="{Binding SyncDataCommand}"
+                                CornerRadius="10"
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="20"
+                                HorizontalOptions="Fill"
+                                Text="Clear Backend and Sync"
+                                TextColor="Black"
+                                VerticalOptions="Center">
+                                <Button.Shadow>
+                                    <Shadow
+                                        Brush="Black"
+                                        Opacity="0.3"
+                                        Radius="10"
+                                        Offset="5,5"/>
+                                </Button.Shadow>
+                            </Button>
+                        </StackLayout>
+                    </StackLayout>
+                </ScrollView>
+            </Grid>
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>

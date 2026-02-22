@@ -14,6 +14,7 @@
     <Color x:Key="IndicatorSelectedColor">#404040</Color>
     <Color x:Key="CarouselColor">#535151</Color>
     <Color x:Key="PlaceholderColor">#CFCCCC</Color>
+    <Color x:Key="Gray85">#80808080</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Yellow">#FDB623</Color>

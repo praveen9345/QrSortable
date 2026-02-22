@@ -2,12 +2,10 @@
 {
     using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.Backend;
-    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Models;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
-    using System.Threading.Tasks;
+    using QrSortable.Components.CoreFeatures.Settings.Views;
 
 
     /// <summary>
@@ -42,50 +40,31 @@
         }
 
 
-        public async override Task InitializeAsync()
+        public AsyncRelayCommand LanguageCommand => new AsyncRelayCommand(async () =>
         {
-            await base.InitializeAsync();
 
-            //var dbEntries = await _backendDatabaseManager
-            //  .GetAllAsync<DtoStorageEntryModel>();
-            //dbEntries = dbEntries.OrderBy(dto => dto.ID);
+        });
 
-            //foreach (var dto in dbEntries)
-            //{
-            //    var entry = dto.Category;
-            //}
-
-            //var dbEntries1 = await _backendDatabaseManager
-            //  .GetAllAsync<DtoOrdersModel>();
-            //dbEntries1 = dbEntries1.OrderBy(dto => dto.ID);
-
-            //foreach (var dto in dbEntries1)
-            //{
-            //    var entry = dto.City;
-            //}
-
-            //await _backendSynchronizationManager.SynchronizeStoredObjectsAsync();
-        }
-
-        public async override void ViewAppearing()
+        public AsyncRelayCommand PrivacyPolicyCommand => new AsyncRelayCommand(async () =>
         {
-            base.ViewAppearing();
+            await NavigationService.Navigate<WebView>("privacyPolicy");
+        });
 
-            //var entries = await _backendCommunicationService.GetAllAsync<StorageEntryModel>();
-            //for (int i = 0; i < entries.Count; i++)
-            //{
-            //    var entry = entries[i];
-            //}
+        public AsyncRelayCommand TermsAndConditionsCommand => new AsyncRelayCommand(async () =>
+        {
+            await NavigationService.Navigate<WebView>("termsAndCondition");
+        });
 
-        }
-
+        public AsyncRelayCommand LicenseCommand => new AsyncRelayCommand(async () =>
+        {
+            await NavigationService.Navigate<WebView>("license");
+        });
 
         public AsyncRelayCommand SyncDataCommand => new AsyncRelayCommand(async () =>
         {
 
             await DialogService.ShowActivityIndicatorAndReturnResult("Uploading...", async () =>
             {
-                // var result = await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
                 var result = await _generalDatabaseSynchronizationManager.ClearBackendAndSyncLocalDataAsync();
 
                 await MainThread.InvokeOnMainThreadAsync(async () =>
