@@ -233,9 +233,11 @@
                         <BoxView
                             Style="{StaticResource LineStyle}"/>
 
-                        <StackLayout>
+                        <StackLayout Margin="20,30,20,0" Spacing="5">
+                              <Label
+                                    Text="Resets app data and re-syncs with the server:"
+                                    Style="{StaticResource BoldText}"/>
                             <Button
-                                Margin="10,50,10,0"
                                 BackgroundColor="{StaticResource Primary}"
                                 Command="{Binding SyncDataCommand}"
                                 CornerRadius="10"
