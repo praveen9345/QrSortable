@@ -112,9 +112,11 @@
 #if ANDROID
             builder.Services.AddSingleton<IImageService, AndroidImageService>();   
             builder.Services.AddSingleton<IPermissionService, AndroidPermissionService>();
+            builder.Services.AddSingleton<IVersionCheckService, AndroidVersionCheckService>();
 #elif IOS
             builder.Services.AddSingleton<IImageService, IosImageService>();
             builder.Services.AddSingleton<IPermissionService, IosPermissionService>();
+            builder.Services.AddSingleton<IVersionCheckService, IosVersionCheckService>();
 #endif
 
             //External Services

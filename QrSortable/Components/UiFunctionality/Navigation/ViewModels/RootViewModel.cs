@@ -8,6 +8,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
+    using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
     using QrSortable.Components.UiFunctionality.Notification;
@@ -25,6 +26,7 @@
         private readonly IGeneralDatabaseSynchronizationManager _generalDatabaseSynchronizationManager;
         private readonly IStorageVoiceAssistantService _voiceAssistantService;
         private readonly IStorageFinderService _storageFinderService;
+        private readonly IVersionCheckService _versionCheckService;
 
 
         private bool _isInitializeVisible = false;
@@ -48,7 +50,8 @@
         public RootViewModel(IDatabaseManager databaseManager, IToastService toastService, 
             IBackendSynchronizationManager backendSynchronizationManager, IGeneralInformationManager generalInformationManager,
             IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager, 
-            IStorageVoiceAssistantService voiceAssistantService, IStorageFinderService storageFinderService)
+            IStorageVoiceAssistantService voiceAssistantService, IStorageFinderService storageFinderService,
+            IVersionCheckService versionCheckService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
@@ -57,6 +60,7 @@
             _generalDatabaseSynchronizationManager = generalDatabaseSynchronizationManager;
             _voiceAssistantService = voiceAssistantService;
             _storageFinderService = storageFinderService;
+            _versionCheckService = versionCheckService;
 
             Categories = new ObservableCollection<StorageGroup>();
             SearchCategories = new ObservableCollection<StorageGroup>();
@@ -71,7 +75,19 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            
+
+            if (!await _versionCheckService.IsUsingLatestVersion())
+            {
+                var confirmMessage = await DialogService.ShowRequestDialog(
+                "A new update is available. Would you like to update now?",
+                "Later", "Update");
+
+                if (confirmMessage)
+                {
+                    await _versionCheckService.OpenAppInStore();
+                }
+            }
+                         
             //ensure backend sync
             await _backendSynchronizationManager.SynchronizeStoredObjectsAsync();
 

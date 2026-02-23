@@ -1,145 +1,83 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Style x:Key="Headline"
-           TargetType="Label">
-        <Setter Property="TextColor"
-                Value="{DynamicResource White}"/>
-        <Setter Property="FontSize"
-                Value="32"/>
-        <Setter Property="FontFamily"
-                Value="ItimRegular"/>
-        <Setter Property="HorizontalOptions"
-                Value="Center"/>
-        <Setter Property="HorizontalTextAlignment"
-                Value="Center"/>
+    <Style x:Key="Headline" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource White}" />
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="FontFamily" Value="ItimRegular" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
-    <Style TargetType="Label"
-           x:Key="SubHeadline">
-        <Setter Property="TextColor"
-                Value="{DynamicResource Primary}"/>
-        <Setter Property="FontSize"
-                Value="24"/>
-        <Setter Property="FontFamily"
-                Value="ItimRegular"/>
-        <Setter Property="HorizontalOptions"
-                Value="Center"/>
-        <Setter Property="HorizontalTextAlignment"
-                Value="Center"/>
+    <Style x:Key="SubHeadline" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource Primary}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontFamily" Value="ItimRegular" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
-    <Style x:Key="NormalText"
-           TargetType="Label">
-        <Setter Property="TextColor"
-                Value="{DynamicResource White}"/>
-        <Setter Property="FontSize"
-                Value="18"/>
-        <Setter Property="HorizontalTextAlignment"
-                Value="Start"/>
-        <Setter Property="VerticalTextAlignment"
-                Value="Center"/>
-        <Setter Property="FontFamily"
-                Value="ItimRegular"/>
+    <Style x:Key="NormalText" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource White}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="HorizontalTextAlignment" Value="Start" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="ItimRegular" />
     </Style>
 
-    <Style x:Key="BottomButton"
-           TargetType="Button">
-        <Setter Property="FontSize"
-                Value="13"/>
-        <Setter Property="Padding"
-                Value="0,5,0,0"/>
-        <Setter Property="HeightRequest"
-                Value="55"/>
-        <Setter Property="FontFamily"
-                Value="ItimRegular"/>
-        <Setter Property="FontAttributes"
-                Value="Bold"/>
-        <Setter Property="TextColor"
-                Value="{DynamicResource White}"/>
-        <Setter Property="BackgroundColor"
-                Value="Transparent"/>
-        <Setter Property="CornerRadius"
-                Value="20"/>
-        <Setter Property="ContentLayout"
-                Value="Top,0"/>
-        <Setter Property="HorizontalOptions"
-                Value="Fill"/>
+    <Style x:Key="BottomButton" TargetType="Button">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Padding" Value="0,5,0,0" />
+        <Setter Property="HeightRequest" Value="55" />
+        <Setter Property="FontFamily" Value="ItimRegular" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{DynamicResource White}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="ContentLayout" Value="Top,0" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
     </Style>
 
-    <Style x:Key="HorizontalTextButton"
-           TargetType="Button">
-        <Setter Property="FontSize"
-                Value="20"/>
-        <Setter Property="Padding"
-                Value="10"/>
-        <Setter Property="FontFamily"
-                Value="ItimRegular"/>
-        <Setter Property="FontAttributes"
-                Value="Bold"/>
-        <Setter Property="TextColor"
-                Value="{DynamicResource White}"/>
-        <Setter Property="BackgroundColor"
-                Value="Transparent"/>
-        <Setter Property="CornerRadius"
-                Value="0"/>
-        <Setter Property="HorizontalOptions"
-                Value="FillAndExpand"/>
+    <Style x:Key="HorizontalTextButton" TargetType="Button">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="FontFamily" Value="ItimRegular" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{DynamicResource White}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
     </Style>
 
-    <Style x:Key="TitleLabelStyle"
-           TargetType="Label">
-        <Setter Property="FontFamily"
-                Value="ItimRegular"/>
-        <Setter Property="FontSize"
-                Value="25"/>
-        <Setter Property="TextColor"
-                Value="Black"/>
+    <Style x:Key="TitleLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="ItimRegular" />
+        <Setter Property="FontSize" Value="25" />
+        <Setter Property="TextColor" Value="Black" />
     </Style>
 
-    <Style x:Key="DialogButtonStyle"
-           TargetType="Button">
-        <Setter Property="BackgroundColor"
-                Value="{DynamicResource Primary}"/>
-        <Setter Property="TextColor"
-                Value="Black"/>
-        <Setter Property="TextTransform"
-                Value="None"/>
-        <Setter Property="FontSize"
-                Value="20"/>
-        <Setter Property="VerticalOptions"
-                Value="End"/>
-        <Setter Property="FontFamily"
-                Value="ItimRegular"/>
-        <Setter Property="HeightRequest"
-                Value="60"/>
+    <Style x:Key="DialogButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="TextTransform" Value="None" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="VerticalOptions" Value="End" />
+        <Setter Property="FontFamily" Value="ItimRegular" />
+        <Setter Property="HeightRequest" Value="60" />
     </Style>
-    <Style TargetType="BoxView"
-           x:Key="LineStyle">
-        <Setter Property="Color"
-                Value="{DynamicResource Primary}"/>
-        <Setter Property="HeightRequest"
-                Value="1"/>
-        <Setter Property="Margin"
-                Value="20,5,20,5"/>
+    <Style x:Key="LineStyle" TargetType="BoxView">
+        <Setter Property="Color" Value="{DynamicResource Primary}" />
+        <Setter Property="HeightRequest" Value="1" />
+        <Setter Property="Margin" Value="20,5,20,5" />
     </Style>
 
-    <Style TargetType="Label"
-           x:Key="BoldText">
-        <Setter Property="TextColor"
-                Value="{DynamicResource Primary}"/>
-        <Setter Property="FontSize"
-                Value="20"/>
-        <Setter Property="FontFamily"
-                Value="ItimRegular"/>
-        <Setter Property="FontAttributes"
-                Value="Bold"/>
-        <Setter Property="HorizontalOptions"
-                Value="Start"/>
-        <Setter Property="HorizontalTextAlignment"
-                Value="Start"/>
+    <Style x:Key="BoldText" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource Primary}" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontFamily" Value="ItimRegular" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="HorizontalTextAlignment" Value="Start" />
     </Style>
 
 
