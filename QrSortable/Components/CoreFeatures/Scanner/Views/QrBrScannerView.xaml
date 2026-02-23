@@ -120,7 +120,7 @@
                 </Border.Shadow>
 
                 <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding FlashToggleCommand}" />
+                    <TapGestureRecognizer Tapped="OnFlashOnOffButtonClicked" />
                 </Border.GestureRecognizers>
 
                 <Image
