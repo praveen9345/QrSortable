@@ -84,7 +84,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
                     await _navigationService.Navigate<SelectLanguageView>(false);
                     break;
                 case OnboardingProgress.OnboardingStarted:
-                    await _navigationService.Navigate<OnboardingView>();
+                    await _navigationService.Navigate<OnboardingView>(false);
                     break;
                 case OnboardingProgress.OnboardingCompleted:
                     await _navigationService.Navigate<RootView>();

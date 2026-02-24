@@ -45,16 +45,16 @@
             <!--  page icon  -->
             <Image
                 Grid.Row="0"
-                Margin="0,-20,0,0"
+                Margin="0,10,0,0"
                 Aspect="AspectFit"
-                HeightRequest="150"
+                HeightRequest="70"
                 HorizontalOptions="Center"
-                Source="multiuser"
+                Source="language_icon"
                 VerticalOptions="Center" />
 
             <VerticalStackLayout
                 Grid.Row="1"
-                Padding="20,10"
+                Padding="5,5"
                 Spacing="10">
                 <CollectionView
                     x:Name="LanguageCollection"
@@ -66,8 +66,20 @@
 
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Padding="20">
-                                <Label Text="{Binding NativeName}" VerticalOptions="Center" />
+                            <Grid>
+                                <Label
+                                    Margin="20,10,20,10"
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    FontSize="23"
+                                    Text="{Binding NativeName}"
+                                    TextColor="White"
+                                    VerticalOptions="Center" />
+                                <BoxView
+                                    BackgroundColor="{StaticResource Primary}"
+                                    HeightRequest="1"
+                                    Opacity="0.2"
+                                    VerticalOptions="End" />
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

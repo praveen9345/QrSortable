@@ -11,7 +11,7 @@
     {
         private readonly ICultureInfoWrapper _cultureInfoWrapper;
         private readonly IGeneralInformationManager _generalInformationManager;
-        private readonly IList<string> _availableLanguageCodes = new List<string>() { "en", "de" };
+        private readonly IList<string> _availableLanguageCodes = new List<string>() { "en", "de", "fr", "es"};
         private const string DefaultLanguageCode = "en";
         
         private LanguageItem _selectedLanguage;

@@ -21,7 +21,7 @@
         }
         protected override bool OnBackButtonPressed()
         {
-            if (!_viewModel.IsBackVisible)
+            if (!_viewModel.IsFromApp)
             {
                 Application.Current.Quit();
                 

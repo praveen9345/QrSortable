@@ -17,7 +17,7 @@
     /// <summary>
     ///     The view model of the OnboardingViewModel screen.
     /// </summary>
-    public partial class OnboardingViewModel : BaseViewModel
+    public partial class OnboardingViewModel : BaseViewModel<bool>
     {
         private readonly IGeneralInformationManager _generalInformationManager;
         private readonly IToastService _toastService;
@@ -36,7 +36,6 @@
             IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager,
             IDatabaseManager databaseManager, IBackendDatabaseManager backendDatabaseManager)
         {
-            IsBackNavigationEnabled = true;
             _toastService = toastService;
             _generalInformationManager = generalInformationManager;
             _backendCommunicationService = backendCommunicationService;
@@ -74,21 +73,11 @@
         /// Represents the to set the visibility of the back in the application.
         /// </summary>
         [ObservableProperty]
-        private bool _isBackVisible;
+        private bool _isFromApp;
 
         public async override void ViewAppearing()
         {
             base.ViewAppearing();
-            var onboarding = (await _generalInformationManager.GetGeneralInformationAsync()).OnboardingProgress;
-
-            if (onboarding == OnboardingProgress.OnboardingStarted)
-            {
-                IsBackVisible = false;
-            }
-            else
-            {
-                IsBackVisible = true;
-            }
 
             MultiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
 
@@ -97,6 +86,19 @@
                 IsMultiuserFunctionalityEnabled = true;
             }
         }
+
+        /// <summary>
+        ///     Prepares the viewmodel with a boolean.
+        /// </summary>
+        /// <param name="isFromApp">
+        ///     True when the view model is opened from the application and false when the view model is opened from onboarding.
+        /// </param>
+        public override void Prepare(bool isFromApp)
+        {
+            IsFromApp = isFromApp;
+            IsBackNavigationEnabled = isFromApp;
+        }
+
 
         public AsyncRelayCommand CopyMultiuserCodeCommand => new AsyncRelayCommand(async () =>
         {

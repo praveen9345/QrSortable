@@ -78,7 +78,7 @@
               SelectedLanguageItem = null;
 
               // If not using Shell, fallback to NavigationService
-              await NavigationService.Navigate<OnboardingView>();
+              await NavigationService.Navigate<OnboardingView>(false);
          });
     }
 }
