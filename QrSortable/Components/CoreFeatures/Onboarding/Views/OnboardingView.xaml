@@ -52,7 +52,7 @@
                 Source="multiuser"
                 VerticalOptions="Center" />
 
-            <StackLayout Grid.Row="1">
+            <VerticalStackLayout Grid.Row="1">
                 <Label
                     Grid.Row="1"
                     Margin="0,-20,0,0"
@@ -211,7 +211,7 @@
                             Offset="5,5" />
                     </Button.Shadow>
                 </Button>
-            </StackLayout>
+            </VerticalStackLayout>
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>
