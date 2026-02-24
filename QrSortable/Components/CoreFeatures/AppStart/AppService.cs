@@ -5,6 +5,8 @@ namespace QrSortable.Components.CoreFeatures.AppStart
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.Onboarding.Views;
+    using QrSortable.Components.CoreFeatures.Settings;
+    using QrSortable.Components.CoreFeatures.Settings.Models;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.UiFunctionality.Navigation;
@@ -22,6 +24,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         private readonly IFileManager _fileManager;
         private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
         private readonly IGeneralInformationManager _generalInformationManager;
+        private readonly ILanguageProvider _languageProvider;
 
         private const string DatabaseName = "QrSortable.sqlite3";
         private const string BackendDatabaseName = "QrSortableBackend.sqlite3";
@@ -36,12 +39,24 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             _databaseManager = ServiceHelper.GetService<IDatabaseManager>();
             _fileManager = ServiceHelper.GetService<IFileManager>();
             _generalInformationManager = ServiceHelper.GetService<IGeneralInformationManager>();
+            _languageProvider = ServiceHelper.GetService<ILanguageProvider>();
 
             var backendDatabaseManager = ServiceHelper.GetService<IBackendDatabaseManager>();
             backendDatabaseManager.Initialize(CreateNewBackendDbContext);
 
-            _=ResetStorageAndDatabaseAfterReinstallAsync();
+            _ = InitializeAsync();
 
+        }
+
+        /// <summary>
+        ///     Ensures DB initialization and reset completes before setting the language,
+        ///     avoiding race conditions between the two operations.
+        /// </summary>
+        private async Task InitializeAsync()
+        {
+            await ResetStorageAndDatabaseAfterReinstallAsync();
+            _generalInformationManager.ResetGeneralInformation();
+            await SetLanguageAsync();
         }
 
         /// <summary>
@@ -51,7 +66,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         ///     - Setting the default culture
         /// </summary>
         public async Task OnStartAsync()
-        {
+        {  
             await NavigateToFirstViewModelAsync();
         }
 
@@ -66,7 +81,9 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             switch (generalInformation.OnboardingProgress)
             {
                 case OnboardingProgress.NotStarted:
-                case OnboardingProgress.SignUp:
+                    await _navigationService.Navigate<SelectLanguageView>(false);
+                    break;
+                case OnboardingProgress.OnboardingStarted:
                     await _navigationService.Navigate<OnboardingView>();
                     break;
                 case OnboardingProgress.OnboardingCompleted:
@@ -157,6 +174,23 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             int max = (int)Math.Pow(10, digits);
             int min = max / 10;
             return random.Next(min, max).ToString();
+        }
+
+        /// <summary>
+        ///     Sets the language saved in <see cref="GeneralInformation"/>.
+        /// </summary>
+        private async Task SetLanguageAsync()
+        {
+            var generalInfo = await _generalInformationManager.GetGeneralInformationAsync();
+            // Use the string code from DB to recreate the LanguageItem
+            if (string.IsNullOrEmpty(generalInfo.SelectedLanguageCode))
+            {
+                _languageProvider.SetDefaultLanguage();
+            }
+            else
+            {
+                _languageProvider.SelectedLanguage = new LanguageItem(generalInfo.SelectedLanguageCode);
+            }
         }
     }
 }

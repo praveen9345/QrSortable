@@ -13,17 +13,7 @@
         /// <summary>
         ///     Means that the user signing up with the registration.
         /// </summary>
-        SignUp,
-
-        /// <summary>
-        ///     Means that the user signing in with the log in.
-        /// </summary>
-        LogIn,
-
-        /// <summary>
-        ///     Means that the user providing user profile in with the child profile.
-        /// </summary>
-        UserProfile,
+        OnboardingStarted,
 
         /// <summary>
         ///     Means that the onboarding was completed completely.

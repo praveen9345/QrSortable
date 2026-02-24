@@ -48,5 +48,12 @@
         /// <returns> True, if the update was successful. False, otherwise. </returns>
         Task<bool> UpdateIsBackendUsedAsync(bool isBackendUsed);
 
+        /// <summary>
+        ///    Sets the LanguageItem when the user selects a language.
+        /// </summary>
+        /// <param name="languageCode"> New unique string representing the language.</param>
+        /// <returns> True, if the setting was successful. False, otherwise. </returns>
+        Task<bool> SetLanguageAsync(string languageCode);
+
     }
 }

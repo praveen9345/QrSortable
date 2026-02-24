@@ -118,30 +118,30 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Dialog_InternetConnection_Title" xml:space="preserve">
-    <value>Connectivity!</value>
+    <value>Konnektivität!</value>
   </data>
   <data name="Dialog_InternetConnection_Message" xml:space="preserve">
-    <value>No Internet connection available.</value>
+    <value>Keine Internetverbindung verfügbar.</value>
   </data>
   <data name="Dialog_ConfirmationMessage_Text" xml:space="preserve">
-    <value>Need your action</value>
+    <value>Wir brauchen Ihre Mithilfe</value>
   </data>
   <data name="Dialog_Cancel_Text" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Abbrechen</value>
   </data>
   <data name="Dialog_OK_Text" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="RootViewModel_MenuText" xml:space="preserve">
-    <value>Menu</value>
+    <value>Menü</value>
   </data>
   <data name="RootViewModel_CodeGeneratorText" xml:space="preserve">
     <value>Generator</value>
   </data>
   <data name="BoxDetailViewModel_DeletItemText" xml:space="preserve">
-    <value>Are you sure you want to delete?</value>
+    <value>Möchten Sie wirklich löschen?</value>
   </data>
   <data name="OnboardingViewModel_Multiuser_DiscriptionText" xml:space="preserve">
-    <value>To support multiple users, we need a backend to securely store data. For your protection, all data sent to the backend is fully encrypted. To keep your information safe and enable multi-user features, encryption must be turned on.</value>
+    <value>Um mehrere Benutzer zu unterstützen, benötigen wir ein Backend zur sicheren Speicherung von Daten. Zu Ihrem Schutz werden alle an das Backend gesendeten Daten vollständig verschlüsselt. Um Ihre Daten zu schützen und Mehrbenutzerfunktionen zu ermöglichen, muss die Verschlüsselung aktiviert sein.</value>
   </data>
 </root>

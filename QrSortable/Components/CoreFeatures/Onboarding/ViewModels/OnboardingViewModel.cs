@@ -81,10 +81,8 @@
             base.ViewAppearing();
             var onboarding = (await _generalInformationManager.GetGeneralInformationAsync()).OnboardingProgress;
 
-            if (onboarding == OnboardingProgress.SignUp ||
-               onboarding == OnboardingProgress.NotStarted)
+            if (onboarding == OnboardingProgress.OnboardingStarted)
             {
-                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.SignUp);
                 IsBackVisible = false;
             }
             else

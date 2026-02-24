@@ -11,7 +11,7 @@ using QrSortable.Components.CoreFeatures.DataManagement.General;
 namespace QrSortable.Migrations.General
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260219150716_InitialGeneral")]
+    [Migration("20260224111031_InitialGeneral")]
     partial class InitialGeneral
     {
         /// <inheritdoc />
@@ -74,6 +74,10 @@ namespace QrSortable.Migrations.General
 
                     b.Property<int>("OnboardingProgress")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("SelectedLanguageCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 

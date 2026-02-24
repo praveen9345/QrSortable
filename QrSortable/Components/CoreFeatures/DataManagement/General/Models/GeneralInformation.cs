@@ -1,7 +1,7 @@
 namespace QrSortable.Components.CoreFeatures.DataManagement.General.Models
 {
-    using System;
     using DataManagement.Models;
+    using QrSortable.Components.CoreFeatures.Settings.Models;
 
     /// <summary>
     ///     The model of how the general information will be stored in the database.
@@ -25,6 +25,11 @@ namespace QrSortable.Components.CoreFeatures.DataManagement.General.Models
         ///     Gets or sets whether the backend is being used.
         /// </summary>
         public bool IsBackendUsed { get; set; } = false;
+
+        /// <summary>
+        ///     Gets or sets the LanguageItem for the currently selected language.
+        /// </summary>
+        public string SelectedLanguageCode { get; set; } = "en";
 
     }
 }

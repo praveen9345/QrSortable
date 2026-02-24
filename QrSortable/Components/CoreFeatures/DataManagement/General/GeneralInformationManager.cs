@@ -1,6 +1,7 @@
 ﻿namespace QrSortable.Components.CoreFeatures.DataManagement.General
 {
     using Models;
+    using QrSortable.Components.CoreFeatures.Settings.Models;
     using System;
     using System.Linq;
     using System.Reflection;
@@ -43,7 +44,8 @@
                 case 0:
                     _generalInformation = new GeneralInformation
                     {
-                        NotificationPermissionStatus = PermissionStatus.Unknown
+                        NotificationPermissionStatus = PermissionStatus.Unknown,
+                        SelectedLanguageCode = "en"
                     };
                     await _databaseManager.AddAsync(_generalInformation);
                     return _generalInformation;
@@ -121,6 +123,25 @@
             Console.WriteLine($"Updating {nameof(GeneralInformation.IsBackendUsed)} to {isBackendUsed}");
             generalInformation.IsBackendUsed = isBackendUsed;
 
+            return await UpdateGeneralInformationAsync(generalInformation);
+        }
+
+        /// <summary>
+        ///      Sets the LanguageItem when the user selects a language.
+        /// </summary>
+        /// <param name="languageCode"> New unique string representing the language.</param>
+        /// <returns> True, if the setting was successful. False, otherwise. </returns>
+        public async Task<bool> SetLanguageAsync(string languageCode)
+        {
+            // 1. Get the current entity (either from cache or DB)
+            var generalInformation = await GetGeneralInformationAsync();
+
+            if (generalInformation.SelectedLanguageCode == languageCode)
+                return true;
+
+            generalInformation.SelectedLanguageCode = languageCode;
+
+            // 4. Update the database
             return await UpdateGeneralInformationAsync(generalInformation);
         }
 

@@ -39,7 +39,8 @@ namespace QrSortable.Migrations.General
                     NotificationPermissionStatus = table.Column<int>(type: "INTEGER", nullable: false),
                     OnboardingProgress = table.Column<int>(type: "INTEGER", nullable: false),
                     MultiUserId = table.Column<string>(type: "TEXT", nullable: false),
-                    IsBackendUsed = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsBackendUsed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    SelectedLanguageCode = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

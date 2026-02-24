@@ -72,6 +72,10 @@ namespace QrSortable.Migrations.General
                     b.Property<int>("OnboardingProgress")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("SelectedLanguageCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("ID");
 
                     b.ToTable("GeneralInformation");

@@ -2,6 +2,7 @@
 {
     using Microsoft.EntityFrameworkCore;
     using Models;
+    using QrSortable.Components.CoreFeatures.Settings.Models;
 
     /// <summary>
     ///     The database context enabling the communication with the general database.
@@ -28,7 +29,7 @@
         ///     Gets or sets the general information of the database.
         /// </summary>
         public DbSet<GeneralInformation> GeneralInformation { get; set; }
-        
+
         /// <summary>
         ///     Gets or sets the storage entry in the database.
         /// </summary>
