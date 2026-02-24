@@ -12,8 +12,8 @@
         <Grid>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!--  Back  -->
@@ -32,14 +32,14 @@
                     <Shadow
                         Brush="Black"
                         Opacity="0.5"
-                        Radius="10" />
+                        Radius="10"/>
                 </Button.Shadow>
 
                 <Button.ImageSource>
                     <FontImageSource
                         FontFamily="FluentIcons"
                         Glyph="{x:Static local:IconNames.Back}"
-                        Color="{StaticResource Primary}" />
+                        Color="{StaticResource Primary}"/>
                 </Button.ImageSource>
             </Button>
 
@@ -51,32 +51,32 @@
                 HeightRequest="150"
                 HorizontalOptions="Center"
                 Source="multiuser"
-                VerticalOptions="Center" />
+                VerticalOptions="Center"/>
 
             <!--  Scroll  -->
             <ScrollView Grid.Row="1">
 
-                <VerticalStackLayout Padding="20" Spacing="15">
+                <VerticalStackLayout Padding="5" Spacing="5">
 
                     <!--  Title  -->
                     <Label
-                        Margin="0,-20,0,0"
                         FontAttributes="Bold"
                         FontFamily="ItimRegular"
                         FontSize="28"
                         HorizontalOptions="Center"
                         Text="Multiuser Id"
-                        TextColor="{StaticResource Primary}" />
+                        TextColor="{StaticResource Primary}"/>
 
                     <!--  ID + Copy  -->
-                    <Grid ColumnDefinitions="Auto,Auto" HorizontalOptions="Center">
+                    <Grid ColumnDefinitions="Auto,Auto"
+                            HorizontalOptions="Center">
 
                         <Label
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="32"
                             Text="{Binding MultiuserId}"
-                            TextColor="{StaticResource Primary}" />
+                            TextColor="{StaticResource Primary}"/>
 
                         <Button
                             Grid.Column="1"
@@ -90,11 +90,12 @@
                             FontSize="16"
                             HeightRequest="40"
                             Text="{Binding [CopyText]}"
-                            TextColor="Black" />
+                            TextColor="Black"/>
                     </Grid>
 
                     <!--  Description  -->
-                    <Grid Padding="10" ColumnDefinitions="*,Auto">
+                    <Grid Padding="10"
+                            ColumnDefinitions="*,Auto">
 
                         <Label
                             Grid.Column="0"
@@ -103,12 +104,14 @@
                             FontSize="22"
                             LineBreakMode="WordWrap"
                             Text="{Binding [Multiuser_DiscriptionText]}"
-                            TextColor="White" />
+                            TextColor="White"/>
 
-                        <Switch Grid.Column="1" IsToggled="{Binding IsMultiuserFunctionalityEnabled}">
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding IsMultiuserFunctionalityEnabled}">
 
                             <Switch.Behaviors>
-                                <xct:EventToCommandBehavior Command="{Binding MultiuserFunctionalityToggledCommand}" EventName="Toggled" />
+                                <xct:EventToCommandBehavior Command="{Binding MultiuserFunctionalityToggledCommand}"
+                                        EventName="Toggled"/>
                             </Switch.Behaviors>
                         </Switch>
                     </Grid>
@@ -122,50 +125,49 @@
                         IsVisible="{Binding IsMultiuserFunctionalityEnabled}"
                         LineBreakMode="WordWrap"
                         Text="{Binding [MultiInfoText]}"
-                        TextColor="Red" />
+                        TextColor="Red"/>
 
                     <!--  Input  -->
-                    <HorizontalStackLayout
+                    <Grid
                         Margin="10,10,5,0"
                         IsVisible="{Binding IsMultiuserFunctionalityEnabled}"
-                        Spacing="10">
+                        ColumnSpacing="10">
 
+                        <!-- Columns -->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- Label -->
                         <Label
+                            Grid.Column="0"
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="20"
                             Text="Multiuser Id:"
                             TextColor="{StaticResource White}"
-                            VerticalTextAlignment="Center" />
+                            VerticalTextAlignment="Center"/>
 
+                        <!-- Input -->
                         <Border
-                            Margin="10,0,10,15"
-                            Padding="5,5"
+                            Grid.Column="1"
+                            Padding="5"
                             Background="{StaticResource DarkGrey}"
                             HorizontalOptions="FillAndExpand"
                             StrokeShape="RoundRectangle 12"
                             StrokeThickness="0">
-                            <Border.Shadow>
-                                <Shadow
-                                    Brush="Black"
-                                    Opacity="0.5"
-                                    Radius="10"
-                                    Offset="0,0" />
-                            </Border.Shadow>
-                            <!--  input field  -->
-                            <Grid>
-                                <Entry
-                                    Margin="10,0,0,0"
-                                    BackgroundColor="Transparent"
-                                    HorizontalOptions="Fill"
-                                    Placeholder="{Binding [EnterCodeText]}"
-                                    PlaceholderColor="{StaticResource PlaceholderColor}"
-                                    Style="{StaticResource NormalText}"
-                                    Text="{Binding MultiuserIdInput}"
-                                    VerticalOptions="Center" />
-                            </Grid>
+
+                            <Entry
+                                Margin="10,0"
+                                BackgroundColor="Transparent"
+                                HorizontalOptions="Fill"
+                                Placeholder="{Binding [EnterCodeText]}"
+                                PlaceholderColor="{StaticResource PlaceholderColor}"
+                                Style="{StaticResource NormalText}"
+                                Text="{Binding MultiuserIdInput}"/>
                         </Border>
-                    </HorizontalStackLayout>
+
+                    </Grid>
 
                     <!--  Done  -->
                     <Button
@@ -185,7 +187,7 @@
                                 Brush="Black"
                                 Opacity="0.3"
                                 Radius="10"
-                                Offset="5,5" />
+                                Offset="5,5"/>
                         </Button.Shadow>
                     </Button>
 
