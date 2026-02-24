@@ -144,4 +144,61 @@
   <data name="OnboardingViewModel_Multiuser_DiscriptionText" xml:space="preserve">
     <value>Um mehrere Benutzer zu unterstützen, benötigen wir ein Backend zur sicheren Speicherung von Daten. Zu Ihrem Schutz werden alle an das Backend gesendeten Daten vollständig verschlüsselt. Um Ihre Daten zu schützen und Mehrbenutzerfunktionen zu ermöglichen, muss die Verschlüsselung aktiviert sein.</value>
   </data>
+  <data name="OnboardingViewModel_CopyText" xml:space="preserve">
+    <value>Kopie</value>
+  </data>
+  <data name="OnboardingViewModel_MultiInfoText" xml:space="preserve">
+    <value>*  Wenn Sie bereits über die Multi-User-ID der anderen QRSortable-App verfügen und diese synchronisieren möchten, geben Sie diese ID unten ein.</value>
+  </data>
+  <data name="OnboardingViewModel_EnterCodeText" xml:space="preserve">
+    <value>Code eingeben...</value>
+  </data>
+  <data name="OnboardingViewModel_DoneButtText" xml:space="preserve">
+    <value>Fertig</value>
+  </data>
+  <data name="OnboardingViewModel_ClipboardText" xml:space="preserve">
+    <value>MultiuserId in die Zwischenablage kopiert!</value>
+  </data>
+  <data name="Dialog_InformationText" xml:space="preserve">
+    <value>Informationen</value>
+  </data>
+  <data name="OnboardingViewModel_MultiIdFromOtherText" xml:space="preserve">
+    <value>Verwenden Sie die angezeigte Multi-User-ID auf einem anderen QRSortable App-Gerät, um eine Verbindung herzustellen.</value>
+  </data>
+  <data name="OnboardingViewModel_DisablingMultiIduserText" xml:space="preserve">
+    <value>Durch Deaktivieren der Mehrbenutzerfunktion wird die Synchronisierung mit anderen Geräten beendet.</value>
+  </data>
+  <data name="OnboardingViewModel_CheckValidMultiId" xml:space="preserve">
+    <value>Um Multi-User-Funktionen nutzen zu können, geben Sie bitte eine gültige Multi-User-ID ein. Wenn Sie keine haben, erstellen wir ein neues Konto für Sie.</value>
+  </data>
+  <data name="OnboardingViewModel_CreateOne" xml:space="preserve">
+    <value>Erstellen</value>
+  </data>
+  <data name="Dialog_Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="OnboardingViewModel_ValidMultiIdError" xml:space="preserve">
+    <value>Bitte geben Sie eine gültige Mehrbenutzer-ID ein, um fortzufahren.</value>
+  </data>
+  <data name="OnboardingViewModel_InvalidIdError" xml:space="preserve">
+    <value>Die eingegebene Mehrbenutzer-ID ist ungültig oder Sie benötigen mindestens einen gespeicherten Datensatz in der angegebenen Mehrbenutzer-ID der QRSortable-App. Bitte überprüfen Sie dies und versuchen Sie es erneut.</value>
+  </data>
+  <data name="OnboardingViewModel_AlreadyIdError" xml:space="preserve">
+    <value>Die von Ihnen eingegebene Mehrbenutzer-ID stimmt mit der bereits auf diesem Gerät verwendeten überein. Wenn Sie auf „OK“ drücken, werden alle auf diesem Gerät gespeicherten Daten gelöscht und erneut vom Server heruntergeladen.</value>
+  </data>
+  <data name="OnboardingViewModel_ClearDataSaved" xml:space="preserve">
+    <value>Möchten Sie wirklich die auf diesem Gerät gespeicherten Daten löschen?</value>
+  </data>
+  <data name="OnboardingViewModel_SettingMultiIdError" xml:space="preserve">
+    <value>Beim Festlegen der Mehrbenutzer-ID ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.</value>
+  </data>
+  <data name="OnboardingViewModel_DownloadingText" xml:space="preserve">
+    <value>Ihre Daten werden heruntergeladen. Dies kann einen Moment dauern...</value>
+  </data>
+  <data name="OnboardingViewModel_DownloadFailed" xml:space="preserve">
+    <value>Der Download ist fehlgeschlagen. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</value>
+  </data>
+  <data name="OnboardingViewModel_SubscriptionError" xml:space="preserve">
+    <value>Abonnement erforderlich. Bitte aktualisieren Sie, um fortzufahren.</value>
+  </data>
 </root>

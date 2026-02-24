@@ -94,7 +94,30 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Dialog Cancel Text Text!!.
+        ///   Looks up a localized string similar to Dialog information Text!!.
+        /// </summary>
+        public static string Dialog_InformationText
+        {
+            get
+            {
+                return ResourceManager.GetString("Dialog_InformationText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dialog Error Text!!.
+        /// </summary>
+        public static string Dialog_Error
+        {
+            get
+            {
+                return ResourceManager.GetString("Dialog_Error", resourceCulture);
+            }
+        }
+
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dialog Cancel Text!!.
         /// </summary>
         public static string Dialog_Cancel_Text
         {
@@ -133,7 +156,7 @@ namespace QrSortable.Components.UiFunctionality.Localization
             }
         }
 
-/// <summary>
+        /// <summary>
         ///   Looks up a localized string similar to BoxDetailViewModel DeletItemText!!.
         /// </summary>
         public static string BoxDetailViewModel_DeletItemText
@@ -141,6 +164,160 @@ namespace QrSortable.Components.UiFunctionality.Localization
             get
             {
                 return ResourceManager.GetString("BoxDetailViewModel_DeletItemText", resourceCulture);
+            }
+        }
+       
+        /// <summary>
+        ///   Looks up a localized string similar to copy ClipboardText!!.
+        /// </summary>
+        public static string OnboardingViewModel_ClipboardText
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_ClipboardText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to MultiIdFromOther Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_MultiIdFromOtherText
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_MultiIdFromOtherText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to DisablingMultiIduser Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_DisablingMultiIduserText
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_DisablingMultiIduserText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Done Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_DoneButtText
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_DoneButtText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to CheckValidMultiId Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_CheckValidMultiId
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_CheckValidMultiId", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Create One Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_CreateOne
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_CreateOne", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Valid MultiId Error Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_ValidMultiIdError
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_ValidMultiIdError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to InvalidId Error Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_InvalidIdError
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_InvalidIdError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to AlreadyId Error Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_AlreadyIdError
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_AlreadyIdError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to ClearDataSaved Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_ClearDataSaved
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_ClearDataSaved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to SettingMultiIdError Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_SettingMultiIdError
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_SettingMultiIdError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_DownloadingText
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_DownloadingText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading Failed Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_DownloadFailed
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_DownloadFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to SubscriptionError Text!!.
+        /// </summary>
+        public static string OnboardingViewModel_SubscriptionError
+        {
+            get
+            {
+                return ResourceManager.GetString("OnboardingViewModel_SubscriptionError", resourceCulture);
             }
         }
 

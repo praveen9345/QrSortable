@@ -103,7 +103,7 @@
         public AsyncRelayCommand CopyMultiuserCodeCommand => new AsyncRelayCommand(async () =>
         {
             await Clipboard.Default.SetTextAsync(MultiuserId);
-            await _toastService.DisplayToast("MultiuserId copied to clipboard!");
+            await _toastService.DisplayToast(AppResources.OnboardingViewModel_ClipboardText);
 
         });
 
@@ -115,14 +115,14 @@
 
                 if (!_displayOnce)
                 {
-                    await DialogService.ShowAlertDialog("Information",
-                   "Use the displayed multi-user ID on another QRSortable App device to connect.", AppResources.Dialog_OK_Text);
+                    await DialogService.ShowAlertDialog(AppResources.Dialog_InformationText,
+                   AppResources.OnboardingViewModel_MultiIdFromOtherText, AppResources.Dialog_OK_Text);
                 }
                 _displayOnce = false;
             }
             else
             {
-                var confirm = await DialogService.ShowRequestDialog("Disabling multi-user functionality will stop synchronization with other devices.",
+                var confirm = await DialogService.ShowRequestDialog(AppResources.OnboardingViewModel_DisablingMultiIduserText,
                     AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
 
                 if (!confirm)
@@ -140,8 +140,8 @@
         {
             var multiuserIdInput = MultiuserIdInput?.Trim().ToUpperInvariant();
 
-            var confirmMessage = await DialogService.ShowRequestDialog("To use multi-user features, enter a valid multi-user ID. If you don’t have one, we’ll create a new account for you.",
-               "Create One", "Done");
+            var confirmMessage = await DialogService.ShowRequestDialog(AppResources.OnboardingViewModel_CheckValidMultiId,
+               AppResources.OnboardingViewModel_CreateOne, AppResources.OnboardingViewModel_DoneButtText);
 
             if (!confirmMessage)
             {
@@ -163,8 +163,8 @@
 
                 if (string.IsNullOrWhiteSpace(multiuserIdInput))
                 {
-                    await DialogService.ShowAlertDialog("Error",
-                   "Please enter a valid multi-user ID to proceed.", AppResources.Dialog_OK_Text);
+                    await DialogService.ShowAlertDialog(AppResources.Dialog_Error,
+                   AppResources.OnboardingViewModel_ValidMultiIdError, AppResources.Dialog_OK_Text);
                     await SetBackendDisable();
                     return;
                 }
@@ -173,16 +173,15 @@
 
             if (!await _backendCommunicationService.ValidateMultiuserIdAsync(multiuserIdInput))
             {
-                await DialogService.ShowAlertDialog("Error",
-               "The entered multi-user ID is invalid or at least you need one have one saved data in given multi-user ID QRSortable App. Please check and try again.",
-               AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(AppResources.Dialog_Error,
+                AppResources.OnboardingViewModel_InvalidIdError, AppResources.Dialog_OK_Text);
                 await SetBackendDisable();
                 return;
             }
 
             if (multiuserIdInput == MultiuserId)
             {
-                var confirm = await DialogService.ShowRequestDialog("The multi-user ID you entered is the same as the one already used on this device.If you press OK, all data saved on this device will be deleted and re-downloaded from the server.",
+                var confirm = await DialogService.ShowRequestDialog(AppResources.OnboardingViewModel_AlreadyIdError,
                 AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
 
                 if (!confirm)
@@ -199,7 +198,7 @@
                 var subscriptionOk = await EnsureSubscriptionAsync();
                 if (!subscriptionOk) return;
 
-                var confirm = await DialogService.ShowRequestDialog("Are you sure you want to clear the data saved on this device?",
+                var confirm = await DialogService.ShowRequestDialog(AppResources.OnboardingViewModel_ClearDataSaved,
                  AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
 
                 if (!confirm)
@@ -212,7 +211,7 @@
             var success = await _generalInformationManager.UpdateTheMultiuserIdAsync(multiuserIdInput);
             if (!success)
             {
-                await _toastService.DisplayToast("An error occurred while setting the multi-user ID. Please try again.");
+                await _toastService.DisplayToast(AppResources.OnboardingViewModel_SettingMultiIdError);
                 await SetBackendDisable();
                 return;
             }
@@ -220,7 +219,7 @@
             MultiuserId = multiuserIdInput;
 
             var result = await DialogService.ShowActivityIndicatorAndReturnResult(
-            "Downloading your data. This may take a few moments…",
+            AppResources.OnboardingViewModel_DownloadingText,
             async () =>
             {
                 await _databaseManager.ClearStorageBasketOrderedAsync();
@@ -241,8 +240,7 @@
                 else
                 {
                     await SetBackendDisable();
-                    await _toastService.DisplayToast(
-                        "Download failed. Please check your internet connection and try again.");
+                    await _toastService.DisplayToast(AppResources.OnboardingViewModel_DownloadFailed);
                 }
             });
 
@@ -258,10 +256,8 @@
             if (subscription?.IsSubscribed == true)
                 return true;
 
-            var confirm = await DialogService.ShowRequestDialog(
-                "Subscription required. Please upgrade to continue.",
-                AppResources.Dialog_Cancel_Text,
-                AppResources.Dialog_OK_Text);
+            var confirm = await DialogService.ShowRequestDialog(AppResources.OnboardingViewModel_SubscriptionError,
+                AppResources.Dialog_Cancel_Text,AppResources.Dialog_OK_Text);
 
             if (!confirm)
             {

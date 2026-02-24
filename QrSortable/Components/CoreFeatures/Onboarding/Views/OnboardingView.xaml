@@ -91,7 +91,7 @@
                         FontFamily="ItimRegular"
                         FontSize="16"
                         HeightRequest="40"
-                        Text="Copy"
+                        Text="{Binding [CopyText]}"
                         TextColor="Black"
                         VerticalOptions="Center">
                         <Button.Shadow>
@@ -140,7 +140,7 @@
                     IsVisible="{Binding IsMultiuserFunctionalityEnabled}"
                     LineBreakMode="WordWrap"
                     MaxLines="10"
-                    Text="* If you already have the Multi-User ID of the other QRSortable app and want to synchronize with it, enter that ID below."
+                    Text="{Binding [MultiInfoText]}"
                     TextColor="Red"
                     VerticalOptions="Center" />
 
@@ -182,7 +182,7 @@
                                 Margin="10,0,0,0"
                                 BackgroundColor="Transparent"
                                 HorizontalOptions="Fill"
-                                Placeholder="Enter code.."
+                                Placeholder="{Binding [EnterCodeText]}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding MultiuserIdInput}"
@@ -200,7 +200,7 @@
                     FontFamily="ItimRegular"
                     FontSize="20"
                     HorizontalOptions="Fill"
-                    Text="Done"
+                    Text="{Binding [DoneButtText]}"
                     TextColor="Black"
                     VerticalOptions="Center">
                     <Button.Shadow>
