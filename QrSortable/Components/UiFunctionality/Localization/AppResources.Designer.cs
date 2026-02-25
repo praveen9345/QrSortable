@@ -321,5 +321,59 @@ namespace QrSortable.Components.UiFunctionality.Localization
             }
         }
 
+        /// <summary>
+        ///   Looks up a localized string similar to QRcode Text!!.
+        /// </summary>
+        public static string CodeGeneratorViewModel_QRcodeText
+        {
+            get
+            {
+                return ResourceManager.GetString("CodeGeneratorViewModel_QRcodeText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to barcode Text!!.
+        /// </summary>
+        public static string CodeGeneratorViewModel_BarcodeText
+        {
+            get
+            {
+                return ResourceManager.GetString("CodeGeneratorViewModel_BarcodeText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to MissingTitle Text!!.
+        /// </summary>
+        public static string CodeGeneratorViewModel_MissingTitle
+        {
+            get
+            {
+                return ResourceManager.GetString("CodeGeneratorViewModel_MissingTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to SelectCode Text!!.
+        /// </summary>
+        public static string CodeGeneratorViewModel_SelectCode
+        {
+            get
+            {
+                return ResourceManager.GetString("CodeGeneratorViewModel_SelectCode", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to SelectPage Text!!.
+        /// </summary>
+        public static string CodeGeneratorViewModel_SelectPage
+        {
+            get
+            {
+                return ResourceManager.GetString("CodeGeneratorViewModel_SelectPage", resourceCulture);
+            }
+        }
     }
 }

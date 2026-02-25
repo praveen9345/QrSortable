@@ -5,6 +5,7 @@
     using Google.Rpc;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using System.Collections.ObjectModel;
 
@@ -22,6 +23,8 @@
         /// </summary>
         public ObservableCollection<string> PageSelected { get; set; }
 
+        public ObservableCollection<string> Codes { get; set; }
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="CodeGeneratorViewModel" />.
         /// </summary>
@@ -33,6 +36,12 @@
             {
                 "A4(12 code)",
                 "A5(6 code)"
+            };
+
+            Codes = new ObservableCollection<string>
+            {
+                AppResources.CodeGeneratorViewModel_QRcodeText,
+                AppResources.CodeGeneratorViewModel_BarcodeText
             };
 
         }
@@ -63,7 +72,7 @@
         /// Represents the currently selected code in the application.
         /// </summary>
         [ObservableProperty]
-        private string _selectedCode = "QR code";
+        private string _selectedCode = AppResources.CodeGeneratorViewModel_QRcodeText;
 
         /// <summary>
         /// Represents the currently selected tag name in the application.
@@ -104,7 +113,7 @@
         {
             if (!string.IsNullOrWhiteSpace(SelectedCode))
             {
-                if (SelectedCode == "QR code")
+                if (SelectedCode == "QRcode")
                 {
                     ColorVisible = true;
                     DemoImage = "qr_code_demo.png";
@@ -115,7 +124,7 @@
 
                     SelectedPage = "A4(12 code)";
                 }
-                else if (SelectedCode == "Bar code")
+                else if (SelectedCode == "Barcode")
                 {
                     ColorVisible = false;
                     DemoImage = "bar_code_demo.png";
@@ -151,13 +160,15 @@
 
             if (string.IsNullOrWhiteSpace(SelectedCode))
             {
-                await DialogService.ShowAlertDialog("Missing selection", "Please select a code type (QR code or Bar code).", "Ok");
+                await DialogService.ShowAlertDialog(AppResources.CodeGeneratorViewModel_MissingTitle, 
+                    AppResources.CodeGeneratorViewModel_SelectCode, AppResources.Dialog_OK_Text);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(SelectedPage))
             {
-                await DialogService.ShowAlertDialog("Missing selection", "Please select a page type (e.g., A4 or A5).", "Ok");
+                await DialogService.ShowAlertDialog(AppResources.CodeGeneratorViewModel_MissingTitle, 
+                    AppResources.CodeGeneratorViewModel_SelectPage, AppResources.Dialog_OK_Text);
                 return;
             }
 

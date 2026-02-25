@@ -57,7 +57,7 @@
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
-                            Text="Code:"
+                            Text="{Binding [CodeText]}"
                             TextColor="{StaticResource White}" />
 
                         <!--  for iOS  -->
@@ -66,18 +66,13 @@
                             HeightRequest="60"
                             IsVisible="{OnPlatform iOS='true',
                                                    Android='false'}"
+                            ItemsSource="{Binding Codes, Mode=TwoWay}"
                             SelectedItem="{Binding SelectedCode, Mode=TwoWay}"
                             SelectionChangedCommand="{Binding OnSelectionCodeChangedCommand}"
                             SelectionMode="Single">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="15" Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
-                            <CollectionView.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>QR code</x:String>
-                                    <x:String>Bar code</x:String>
-                                </x:Array>
-                            </CollectionView.ItemsSource>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Frame
@@ -124,6 +119,7 @@
                             HeightRequest="50"
                             IsVisible="{OnPlatform iOS='false',
                                                    Android='true'}"
+                            ItemsSource="{Binding Codes, Mode=TwoWay}"
                             SelectedItem="{Binding SelectedCode, Mode=TwoWay}"
                             SelectionChangedCommand="{Binding OnSelectionCodeChangedCommand}"
                             SelectionMode="Single"
@@ -131,12 +127,6 @@
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
-                            <CollectionView.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>QR code</x:String>
-                                    <x:String>Bar code</x:String>
-                                </x:Array>
-                            </CollectionView.ItemsSource>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Border
@@ -186,7 +176,7 @@
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
-                            Text="Page:"
+                            Text="{Binding [PageText]}"
                             TextColor="{StaticResource White}" />
 
                         <!--  for iOS  -->
@@ -301,7 +291,7 @@
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
-                            Text="Tag Name:"
+                            Text="{Binding [TagNameText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
                         <Border
@@ -320,7 +310,7 @@
                             </Border.Shadow>
                             <Entry
                                 Margin="10,0,0,0"
-                                Placeholder="e.g. Kitchen"
+                                Placeholder="{Binding [ExampleText]}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding TagName}" />
@@ -335,7 +325,7 @@
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
-                            Text="Color Hex:"
+                            Text="{Binding [HexText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
                         <Border
@@ -354,7 +344,7 @@
                             </Border.Shadow>
                             <Entry
                                 Margin="10,0,0,0"
-                                Placeholder="e.g. #000000"
+                                Placeholder="{Binding [ExampleHexText]}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding HexCode}" />
@@ -370,7 +360,7 @@
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Center"
-                            Text="No. of Pages:"
+                            Text="{Binding [NoOfPageText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
 
@@ -450,7 +440,7 @@
                         <Label
                             FontAttributes="Bold"
                             FontSize="24"
-                            Text="Total:"
+                            Text="{Binding [TotalText]}"
                             TextColor="{StaticResource Primary}" />
                         <Label
                             Margin="10,0,0,0"
@@ -467,7 +457,7 @@
                         CornerRadius="10"
                         FontAttributes="Bold"
                         FontSize="20"
-                        Text="Buy Now"
+                        Text="{Binding [BuyText]}"
                         TextColor="Black">
                         <Button.Shadow>
                             <Shadow

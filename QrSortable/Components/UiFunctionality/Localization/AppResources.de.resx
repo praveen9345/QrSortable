@@ -201,4 +201,46 @@
   <data name="OnboardingViewModel_SubscriptionError" xml:space="preserve">
     <value>Abonnement erforderlich. Bitte aktualisieren Sie, um fortzufahren.</value>
   </data>
+  <data name="CodeGeneratorViewModel_CodeText" xml:space="preserve">
+    <value>Code:</value>
+  </data>
+  <data name="CodeGeneratorViewModel_QRcodeText" xml:space="preserve">
+    <value>QRcode</value>
+  </data>
+  <data name="CodeGeneratorViewModel_BarcodeText" xml:space="preserve">
+    <value>Barcode</value>
+  </data>
+  <data name="CodeGeneratorViewModel_PageText" xml:space="preserve">
+    <value>Seite:</value>
+  </data>
+  <data name="CodeGeneratorViewModel_TagNameText" xml:space="preserve">
+    <value>Tag Name:</value>
+  </data>
+  <data name="CodeGeneratorViewModel_ExampleText" xml:space="preserve">
+    <value>z. B. Küche</value>
+  </data>
+  <data name="CodeGeneratorViewModel_HexText" xml:space="preserve">
+    <value>Farb-Hex:</value>
+  </data>
+  <data name="CodeGeneratorViewModel_ExampleHexText" xml:space="preserve">
+    <value>z. B. #000000</value>
+  </data>
+  <data name="CodeGeneratorViewModel_NoOfPageText" xml:space="preserve">
+    <value>Anzahl der Seiten:</value>
+  </data>
+  <data name="CodeGeneratorViewModel_TotalText" xml:space="preserve">
+    <value>Gesamt:</value>
+  </data>
+  <data name="CodeGeneratorViewModel_BuyText" xml:space="preserve">
+    <value>Jetzt kaufen</value>
+  </data>
+  <data name="CodeGeneratorViewModel_MissingTitle" xml:space="preserve">
+    <value>Fehlende Auswahl</value>
+  </data>
+  <data name="CodeGeneratorViewModel_SelectCode" xml:space="preserve">
+    <value>Bitte wählen Sie einen Codetyp aus (QRcode oder Barcode).</value>
+  </data>
+  <data name="CodeGeneratorViewModel_SelectPage" xml:space="preserve">
+    <value>Bitte wählen Sie einen Seitentyp aus (z. B. A4 oder A5).</value>
+  </data>
 </root>
