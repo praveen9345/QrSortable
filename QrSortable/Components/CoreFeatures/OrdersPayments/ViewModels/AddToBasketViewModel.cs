@@ -53,7 +53,7 @@
         {
             if (item == null) return;
 
-            var confirm = await DialogService.ShowRequestDialog("Are you sure you want to remove this item from the basket?",
+            var confirm = await DialogService.ShowRequestDialog(AppResources.AddToBasketViewModel_DeleteFromBasket,
                 AppResources.Dialog_Cancel_Text,AppResources.Dialog_OK_Text);
             
             if (!confirm) return;

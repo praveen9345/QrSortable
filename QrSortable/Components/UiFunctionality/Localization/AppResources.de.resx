@@ -270,4 +270,67 @@
   <data name="SelectProductViewModel_NewText" xml:space="preserve">
     <value>Neu</value>
   </data>
+  <data name="AddToBasketViewModel_BuyText" xml:space="preserve">
+    <value>Jetzt kaufen</value>
+  </data>
+  <data name="AddToBasketViewModel_DeleteFromBasket" xml:space="preserve">
+    <value>Möchten Sie diesen Artikel wirklich aus dem Warenkorb entfernen?</value>
+  </data>
+  <data name="BankTransferViewModel_AmountToPay" xml:space="preserve">
+    <value>Zu zahlender Betrag:</value>
+  </data>
+  <data name="BankTransferViewModel_Discount" xml:space="preserve">
+    <value>10 % Rabatt:</value>
+  </data>
+  <data name="BankTransferViewModel_Total" xml:space="preserve">
+    <value>Gesamt:       </value>
+  </data>
+  <data name="BankTransferViewModel_IBAN" xml:space="preserve">
+    <value>IBAN:</value>
+  </data>
+  <data name="BankTransferViewModel_CopyText" xml:space="preserve">
+    <value>Kopie</value>
+  </data>
+  <data name="BankTransferViewModel_ReferenceText" xml:space="preserve">
+    <value>Referenzcode:</value>
+  </data>
+  <data name="BankTransferViewModel_ProvideReferenceText" xml:space="preserve">
+    <value>• Bitte geben Sie den bereitgestellten Referenzcode in Ihren Zahlungsdetails an.</value>
+  </data>
+  <data name="BankTransferViewModel_TransferCompletedText" xml:space="preserve">
+    <value>• Stellen Sie sicher, dass die Überweisung innerhalb von 5 Werktagen abgeschlossen ist.</value>
+  </data>
+  <data name="BankTransferViewModel_PlacedOrderText" xml:space="preserve">
+    <value>• Klicken Sie auf „Bestellung aufgeben“, um Ihren Kauf abzuschließen.</value>
+  </data>
+  <data name="BankTransferViewModel_PlacedOrderButtText" xml:space="preserve">
+    <value>Bestellung aufgeben</value>
+  </data>
+  <data name="BankTransferViewModel_IBANCopiedText" xml:space="preserve">
+    <value>IBAN in die Zwischenablage kopiert!</value>
+  </data>
+  <data name="BankTransferViewModel_ReferenceCopiedText" xml:space="preserve">
+    <value>Referenzcode in die Zwischenablage kopiert!</value>
+  </data>
+  <data name="Dialog_Processing" xml:space="preserve">
+    <value>Wird verarbeitet...</value>
+  </data>
+  <data name="Dialog_Conformation" xml:space="preserve">
+    <value>Bestätigung 🎉</value>
+  </data>
+  <data name="BankTransferViewModel_EmailSendMssg" xml:space="preserve">
+    <value>Vielen Dank für Ihre Bestellung. Wir senden Ihnen in Kürze eine E-Mail.</value>
+  </data>
+  <data name="BankTransferViewModel_SaveErrorMsg" xml:space="preserve">
+    <value>Beim Speichern des Elements ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.</value>
+  </data>
+  <data name="SelectProductViewModel_GenrateOfA4QRcodeTitle" xml:space="preserve">
+    <value>Erstellen Sie selbst A4-QR- oder Barcodes!</value>
+  </data>
+  <data name="SelectProductViewModel_GenrateOfA4QRcodeColor" xml:space="preserve">
+    <value>* Farbe auswählen</value>
+  </data>
+  <data name="SelectProductViewModel_GenrateOfA4QRcodePrice" xml:space="preserve">
+    <value>nur {0}</value>
+  </data>
 </root>

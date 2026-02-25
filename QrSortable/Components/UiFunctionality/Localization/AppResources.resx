@@ -270,4 +270,67 @@
   <data name="SelectProductViewModel_NewText" xml:space="preserve">
     <value>New</value>
   </data>
+  <data name="AddToBasketViewModel_BuyText" xml:space="preserve">
+    <value>Buy Now</value>
+  </data>
+  <data name="AddToBasketViewModel_DeleteFromBasket" xml:space="preserve">
+    <value>Are you sure you want to remove this item from the basket?</value>
+  </data>
+  <data name="BankTransferViewModel_AmountToPay" xml:space="preserve">
+    <value>Amount to Pay:</value>
+  </data>
+  <data name="BankTransferViewModel_Discount" xml:space="preserve">
+    <value>10% discount:</value>
+  </data>
+  <data name="BankTransferViewModel_Total" xml:space="preserve">
+    <value>Total:              </value>
+  </data>
+  <data name="BankTransferViewModel_IBAN" xml:space="preserve">
+    <value>IBAN:</value>
+  </data>
+  <data name="BankTransferViewModel_CopyText" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="BankTransferViewModel_ReferenceText" xml:space="preserve">
+    <value>Reference code:</value>
+  </data>
+  <data name="BankTransferViewModel_ProvideReferenceText" xml:space="preserve">
+    <value>• Please include the provided reference code in your payment details.</value>
+  </data>
+  <data name="BankTransferViewModel_TransferCompletedText" xml:space="preserve">
+    <value>• Ensure the transfer is completed within 5 business days.</value>
+  </data>
+  <data name="BankTransferViewModel_PlacedOrderText" xml:space="preserve">
+    <value>• Click “Place an Order” to finalize your purchase.</value>
+  </data>
+  <data name="BankTransferViewModel_PlacedOrderButtText" xml:space="preserve">
+    <value>Place an Order</value>
+  </data>
+  <data name="BankTransferViewModel_IBANCopiedText" xml:space="preserve">
+    <value>IBAN copied to clipboard!</value>
+  </data>
+  <data name="BankTransferViewModel_ReferenceCopiedText" xml:space="preserve">
+    <value>Reference code copied to clipboard!</value>
+  </data>
+  <data name="Dialog_Processing" xml:space="preserve">
+    <value>Processing...</value>
+  </data>
+  <data name="Dialog_Conformation" xml:space="preserve">
+    <value>Confirmation 🎉</value>
+  </data>
+  <data name="BankTransferViewModel_EmailSendMssg" xml:space="preserve">
+    <value>Thank you for your order. We will send you an email shortly.</value>
+  </data>
+  <data name="BankTransferViewModel_SaveErrorMsg" xml:space="preserve">
+    <value>An unexpected error occurred while saving the item. Please try again.</value>
+  </data>
+  <data name="SelectProductViewModel_GenrateOfA4QRcodeTitle" xml:space="preserve">
+    <value>Generate A4 QR or bar codes yourself!</value>
+  </data>
+  <data name="SelectProductViewModel_GenrateOfA4QRcodeColor" xml:space="preserve">
+    <value>* select color</value>
+  </data>
+  <data name="SelectProductViewModel_GenrateOfA4QRcodePrice" xml:space="preserve">
+    <value> {0} only</value>
+  </data>
 </root>

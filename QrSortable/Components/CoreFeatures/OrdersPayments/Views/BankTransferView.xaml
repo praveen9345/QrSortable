@@ -66,7 +66,7 @@
                         FontFamily="ItimRegular"
                         FontSize="18"
                         HorizontalTextAlignment="Start"
-                        Text="Amount to Pay:"
+                        Text="{Binding [AmountToPay]}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
 
@@ -89,7 +89,7 @@
                         FontFamily="ItimRegular"
                         FontSize="18"
                         HorizontalTextAlignment="Start"
-                        Text="10% discount:"
+                        Text="{Binding [Discount]}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
                     <Label
@@ -116,7 +116,7 @@
                         FontFamily="ItimRegular"
                         FontSize="20"
                         HorizontalTextAlignment="Start"
-                        Text="Total:              "
+                        Text="{Binding [Total]}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
                     <Label
@@ -145,7 +145,7 @@
                         FontFamily="ItimRegular"
                         FontSize="18"
                         HorizontalTextAlignment="Start"
-                        Text="IBAN:"
+                        Text="{Binding [IBAN]}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
                     <Label
@@ -166,7 +166,7 @@
                         FontFamily="ItimRegular"
                         FontSize="16"
                         HorizontalOptions="Fill"
-                        Text="Copy"
+                        Text="{Binding [CopyText]}"
                         TextColor="Black"
                         VerticalOptions="Center">
                         <Button.Shadow>
@@ -187,7 +187,7 @@
                         FontFamily="ItimRegular"
                         FontSize="18"
                         HorizontalTextAlignment="Start"
-                        Text="Reference code:"
+                        Text="{Binding [ReferenceText]}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
                     <Label
@@ -208,7 +208,7 @@
                         FontFamily="ItimRegular"
                         FontSize="16"
                         HorizontalOptions="Fill"
-                        Text="Copy"
+                        Text="{Binding [CopyText]}"
                         TextColor="Black"
                         VerticalOptions="Center">
                         <Button.Shadow>
@@ -233,21 +233,21 @@
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Start"
-                            Text="• Please include the provided reference code in your payment details."
+                            Text="{Binding [ProvideReferenceText]}"
                             TextColor="Black" />
                         <Label
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Start"
-                            Text="• Ensure the transfer is completed within 5 business days."
+                            Text="{Binding [TransferCompletedText]}"
                             TextColor="Black" />
                         <Label
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Start"
-                            Text="• Click “Place an Order” to finalize your purchase."
+                            Text="{Binding [PlacedOrderText]}"
                             TextColor="Black" />
                     </VerticalStackLayout>
                 </Border>
@@ -262,7 +262,7 @@
                     FontSize="20"
                     HorizontalOptions="Fill"
                     IsVisible="{Binding BankTransferVisible}"
-                    Text="Place an Order"
+                    Text="{Binding [PlacedOrderButtText]}"
                     TextColor="Black"
                     VerticalOptions="Center">
                     <Button.Shadow>

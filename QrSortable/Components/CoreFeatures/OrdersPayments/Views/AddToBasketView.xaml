@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:resx="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
     <views:BaseView.Content>
@@ -289,7 +290,7 @@
                                                 FontFamily="ItimRegular"
                                                 FontSize="15"
                                                 HorizontalOptions="Fill"
-                                                Text="Buy Now"
+                                                Text="{x:Static resx:AppResources.AddToBasketViewModel_BuyText}"
                                                 TextColor="Black"
                                                 VerticalOptions="Fill" />
                                         </Border>

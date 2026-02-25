@@ -110,7 +110,7 @@
         public AsyncRelayCommand CopyIbanCommand => new AsyncRelayCommand(async () =>
         {
             await Clipboard.Default.SetTextAsync(IbanCode);
-            await _toastService.DisplayToast("IBAN copied to clipboard!");
+            await _toastService.DisplayToast(AppResources.BankTransferViewModel_IBANCopiedText);
 
         });
 
@@ -118,7 +118,7 @@
         {
 
             await Clipboard.Default.SetTextAsync(ReferenceCode);
-            await _toastService.DisplayToast("Reference code copied to clipboard!");
+            await _toastService.DisplayToast(AppResources.BankTransferViewModel_ReferenceCopiedText);
 
         });
 
@@ -126,12 +126,12 @@
         {
             if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
             {
-                await DialogService.ShowAlertDialog("No Internet Connection",
-                    "To place an order, an internet connection is required. Please check your connection and try again.", "OK");
+                await DialogService.ShowAlertDialog(AppResources.Dialog_InternetConnection_Title,
+                    AppResources.Dialog_InternetConnection_Message, AppResources.Dialog_OK_Text);
                 return;
             }
 
-            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Processing...",
+            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(AppResources.Dialog_Processing,
             async () =>{return await DatabaseAndBackendStoringAsync(); });
 
             if (result)
@@ -148,14 +148,13 @@
                 }
 
                 await DialogService.ShowAlertDialog(
-                    "Confirmation 🎉",
-                    "Thank you for your order. We will send you an email shortly.",
-                    "OK");
+                    AppResources.Dialog_Conformation,AppResources.BankTransferViewModel_EmailSendMssg,
+                    AppResources.Dialog_OK_Text);
                 await NavigationService.Navigate<RootView>();
             }
             else
             {
-                await DialogService.ShowAlertDialog("An unexpected error occurred while saving the item. Please try again.", AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(AppResources.BankTransferViewModel_SaveErrorMsg, AppResources.Dialog_OK_Text);
             }
         });
 
@@ -226,7 +225,7 @@
 
         private string GetCodeAndPageType(string data)
         {
-            if (_product.Title == "Generate A4 QR or bar code yourself!")
+            if (_product.Title == AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle)
             {
                 return data;
             }

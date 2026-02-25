@@ -59,6 +59,29 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
 
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dialog Processing Message Text!!.
+        /// </summary>
+        public static string Dialog_Processing
+        {
+            get
+            {
+                return ResourceManager.GetString("Dialog_Processing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dialog Conformation Text!!.
+        /// </summary>
+        public static string Dialog_Conformation
+        {
+            get
+            {
+                return ResourceManager.GetString("Dialog_Conformation", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Dialog InternetConnection Message Text!!.
         /// </summary>
@@ -439,6 +462,106 @@ namespace QrSortable.Components.UiFunctionality.Localization
             get
             {
                 return ResourceManager.GetString("SelectProductViewModel_NewText", resourceCulture);
+            }
+        }
+
+
+        /// <summary>
+        ///   Looks up a localized string similar to Buy Text!!.
+        /// </summary>
+        public static string AddToBasketViewModel_BuyText
+        {
+            get
+            {
+                return ResourceManager.GetString("AddToBasketViewModel_BuyText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to DeleteFromBasket Text!!.
+        /// </summary>
+        public static string AddToBasketViewModel_DeleteFromBasket
+        {
+            get
+            {
+                return ResourceManager.GetString("AddToBasketViewModel_DeleteFromBasket", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to IBANCopied Text!!.
+        /// </summary>
+        public static string BankTransferViewModel_IBANCopiedText
+        {
+            get
+            {
+                return ResourceManager.GetString("BankTransferViewModel_IBANCopiedText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to ReferenceCopied  Text!!.
+        /// </summary>
+        public static string BankTransferViewModel_ReferenceCopiedText
+        {
+            get
+            {
+                return ResourceManager.GetString("BankTransferViewModel_ReferenceCopiedText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to EmailSendMssg Text!!.
+        /// </summary>
+        public static string BankTransferViewModel_EmailSendMssg
+        {
+            get
+            {
+                return ResourceManager.GetString("BankTransferViewModel_EmailSendMssg", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to SaveErrorMsg Text!!.
+        /// </summary>
+        public static string BankTransferViewModel_SaveErrorMsg
+        {
+            get
+            {
+                return ResourceManager.GetString("BankTransferViewModel_SaveErrorMsg", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate codes Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_GenrateOfA4QRcodeTitle
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_GenrateOfA4QRcodeTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate select codes Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_GenrateOfA4QRcodeColor
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_GenrateOfA4QRcodeColor", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate select codes Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_GenrateOfA4QRcodePrice
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_GenrateOfA4QRcodePrice", resourceCulture);
             }
         }
 

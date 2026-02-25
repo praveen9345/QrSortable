@@ -118,9 +118,10 @@
                 },
                 new Product
                 {
-                    Title = "Generate A4 QR or bar codes yourself!",
-                    Description = "* select color",
-                    Price = "2€ only",
+                    Title = AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle,
+                    Description = AppResources.SelectProductViewModel_GenrateOfA4QRcodeColor,
+                    Price = string.Format(AppResources.SelectProductViewModel_GenrateOfA4QRcodePrice,
+                    await GetFormattedPrice(5)),
                     IsNew = true,
                     ImageUrl = "code_pdf_icon.png"
                 }
