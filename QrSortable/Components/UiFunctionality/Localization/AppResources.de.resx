@@ -243,4 +243,31 @@
   <data name="CodeGeneratorViewModel_SelectPage" xml:space="preserve">
     <value>Bitte wählen Sie einen Seitentyp aus (z. B. A4 oder A5).</value>
   </data>
+  <data name="PaperProductViewModel_Quantity" xml:space="preserve">
+    <value>Menge:</value>
+  </data>
+  <data name="PaperProductViewModel_Basket" xml:space="preserve">
+    <value>In den Warenkorb</value>
+  </data>
+  <data name="PaperProductViewModel_BuyText" xml:space="preserve">
+    <value>Jetzt kaufen</value>
+  </data>
+  <data name="PaperProductViewModel_BasketSuccess" xml:space="preserve">
+    <value>Erfolgreich in den Warenkorb gelegt.</value>
+  </data>
+  <data name="PaperProductViewModel_ErrorSaveItem" xml:space="preserve">
+    <value>Beim Speichern des Elements ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.</value>
+  </data>
+  <data name="SelectProductViewModel_SetOfA4QRcodeTitle" xml:space="preserve">
+    <value>Set mit 5 A4 QRcodes</value>
+  </data>
+  <data name="SelectProductViewModel_SetOfA4QRcodeDiscription" xml:space="preserve">
+    <value>* orange, gelb, grün, rot, pink</value>
+  </data>
+  <data name="SelectProductViewModel_SetOfA4QRcodePrice" xml:space="preserve">
+    <value>nur {0}</value>
+  </data>
+  <data name="SelectProductViewModel_NewText" xml:space="preserve">
+    <value>Neu</value>
+  </data>
 </root>

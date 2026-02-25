@@ -6,8 +6,10 @@
     using QrSortable.Components.CoreFeatures.CodeGenerator.Views;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using System.Collections.ObjectModel;
+    using System.Globalization;
 
     /// <summary>
     ///     The view model of the Select Product view screen.
@@ -15,6 +17,7 @@
     public partial class SelectProductViewModel : BaseViewModel
     {
         private readonly IDatabaseManager _databaseManager;
+        private readonly IGeneralInformationManager _generalInformationManager;
         public ObservableCollection<Product> Products { get; set; }
 
         /// <summary>
@@ -22,10 +25,11 @@
         /// </summary>
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
-        public SelectProductViewModel(IDatabaseManager databaseManager)
+        public SelectProductViewModel(IDatabaseManager databaseManager, IGeneralInformationManager generalInformationManager)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
+            _generalInformationManager = generalInformationManager;
             
             LoadProducts();
         }
@@ -50,8 +54,7 @@
                 await MainThread.InvokeOnMainThreadAsync(() =>
                 {
                     BasketCount = basketData != null && basketData.Count > 0
-                        ? basketData.Count.ToString()
-                        : "0";
+                        ? basketData.Count.ToString() : "0";
                 });
             }
             catch (Exception ex)
@@ -79,7 +82,7 @@
             {
                 SelectedItem.OrderId = GenereateOrderedId();
 
-                if (SelectedItem.Title == "Generate A4 QR or bar code yourself!")
+                if (SelectedItem.Title == "Generate A4 QR or bar codes yourself!")
                 {
                     await NavigationService.Navigate<CodeGeneratorView>(SelectedItem);
                 }
@@ -92,29 +95,30 @@
             }
         });
 
-        private void LoadProducts()
+        private async void LoadProducts()
         {
             Products = new ObservableCollection<Product>
             {
                 new Product
                 {
-
-                    Title = "Set of 5 A4 QR code",
-                    Description = "* orange, yellow, green, red, pink",
-                    Price = "10€ only",
+                    
+                    Title = AppResources.SelectProductViewModel_SetOfA4QRcodeTitle,
+                    Description = AppResources.SelectProductViewModel_SetOfA4QRcodeDiscription,
+                    Price = string.Format(AppResources.SelectProductViewModel_SetOfA4QRcodePrice,
+                    await GetFormattedPrice(10)),
                     IsNew = true,
                     ImageUrl = "qr_barcode_icon"
                 },
                 new Product
                  {
-                    Title = "Set of 5 A4 Bar code",
+                    Title = "Set of 5 A4 Barcode",
                     Description = "* orange, yellow, green, red, pink",
                     Price = "10€ only",
                     ImageUrl = "bar_code"
                 },
                 new Product
                 {
-                    Title = "Generate A4 QR or bar code yourself!",
+                    Title = "Generate A4 QR or bar codes yourself!",
                     Description = "* select color",
                     Price = "2€ only",
                     IsNew = true,
@@ -137,6 +141,16 @@
             int max = (int)Math.Pow(10, digits);
             int min = max / 10;
             return random.Next(min, max).ToString();
+        }
+
+        public async Task<string> GetFormattedPrice(decimal price)
+        {
+            var generalInfo = await _generalInformationManager.GetGeneralInformationAsync();
+            var selectedLanguage = generalInfo.SelectedLanguageCode;
+
+            string symbol = selectedLanguage == "en" ? "$" : "€";
+
+            return $"{symbol}{price:0}";
         }
     }
 }

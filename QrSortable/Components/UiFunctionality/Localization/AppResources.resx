@@ -243,4 +243,31 @@
   <data name="CodeGeneratorViewModel_SelectPage" xml:space="preserve">
     <value>Please select a page type (e.g., A4 or A5).</value>
   </data>
+  <data name="PaperProductViewModel_Quantity" xml:space="preserve">
+    <value>Quantity:</value>
+  </data>
+  <data name="PaperProductViewModel_Basket" xml:space="preserve">
+    <value>Add to Basket</value>
+  </data>
+  <data name="PaperProductViewModel_BuyText" xml:space="preserve">
+    <value>Buy Now</value>
+  </data>
+  <data name="PaperProductViewModel_BasketSuccess" xml:space="preserve">
+    <value>Added to basket successfully.</value>
+  </data>
+  <data name="PaperProductViewModel_ErrorSaveItem" xml:space="preserve">
+    <value>An unexpected error occurred while saving the item. Please try again.</value>
+  </data>
+  <data name="SelectProductViewModel_SetOfA4QRcodeTitle" xml:space="preserve">
+    <value>Set of 5 A4 QRcode</value>
+  </data>
+  <data name="SelectProductViewModel_SetOfA4QRcodeDiscription" xml:space="preserve">
+    <value>* orange, yellow, green, red, pink</value>
+  </data>
+  <data name="SelectProductViewModel_SetOfA4QRcodePrice" xml:space="preserve">
+    <value> {0} only</value>
+  </data>
+  <data name="SelectProductViewModel_NewText" xml:space="preserve">
+    <value>New</value>
+  </data>
 </root>

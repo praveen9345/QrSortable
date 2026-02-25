@@ -375,5 +375,72 @@ namespace QrSortable.Components.UiFunctionality.Localization
                 return ResourceManager.GetString("CodeGeneratorViewModel_SelectPage", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to save Basket Successful Text!!.
+        /// </summary>
+        public static string PaperProductViewModel_BasketSuccess
+        {
+            get
+            {
+                return ResourceManager.GetString("PaperProductViewModel_BasketSuccess", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to save ErrorSaveItem Text!!.
+        /// </summary>
+        public static string PaperProductViewModel_ErrorSaveItem
+        {
+            get
+            {
+                return ResourceManager.GetString("PaperProductViewModel_ErrorSaveItem", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to SetOfA4QRcodeTitle Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_SetOfA4QRcodeTitle
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_SetOfA4QRcodeTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to SetOfA4QRcodeDiscription Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_SetOfA4QRcodeDiscription
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_SetOfA4QRcodeDiscription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to SetOfA4QRcodePrice Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_SetOfA4QRcodePrice
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_SetOfA4QRcodePrice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to New Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_NewText
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_NewText", resourceCulture);
+            }
+        }
+
     }
 }

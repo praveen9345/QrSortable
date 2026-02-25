@@ -144,15 +144,13 @@
                 {
                     _databaseManager.CommitTransaction();
                     await LoadBasketCountAsync();
-                    await _toastService.DisplayToast("Product added to basket successfully.");
+                    await _toastService.DisplayToast(AppResources.PaperProductViewModel_BasketSuccess);
                 }
                 else
                 {
                     _databaseManager.Rollback();
                     await DialogService.ShowAlertDialog(
-                         "An unexpected error occurred while saving the item. Please try again.",
-                        AppResources.Dialog_OK_Text
-                     );
+                         AppResources.PaperProductViewModel_ErrorSaveItem, AppResources.Dialog_OK_Text);
                 }
                 
             }

@@ -178,7 +178,7 @@
                         FontAttributes="Bold"
                         FontFamily="ItimRegular"
                         FontSize="20"
-                        Text="Quantity:"
+                        Text="{Binding [Quantity]}"
                         TextColor="{StaticResource White}"
                         VerticalOptions="Center"
                         VerticalTextAlignment="Center" />
@@ -280,7 +280,7 @@
                     FontFamily="ItimRegular"
                     FontSize="20"
                     HorizontalOptions="Fill"
-                    Text="Add to Basket"
+                    Text="{Binding [Basket]}"
                     TextColor="Black"
                     VerticalOptions="Center">
                     <Button.Shadow>
@@ -303,7 +303,7 @@
                     FontFamily="ItimRegular"
                     FontSize="20"
                     HorizontalOptions="Fill"
-                    Text="Buy Now"
+                    Text="{Binding [BuyText]}"
                     TextColor="Black"
                     VerticalOptions="Center">
                     <Button.Shadow>
