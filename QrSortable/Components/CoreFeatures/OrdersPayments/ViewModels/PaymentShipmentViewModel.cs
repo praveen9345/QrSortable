@@ -44,7 +44,8 @@
         private Timer _timer;
         private bool _orderProcessed = false;
         private readonly object _lock = new object();
-        private const string CODE_GENERATED_NAME = "Generate A4 QR or bar code yourself!";
+        private static readonly string CODE_GENERATED_NAME =
+            AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle.ToString();
 
         public ObservableCollection<string> CurrencyItem { get; } =
         new ObservableCollection<string>
@@ -210,15 +211,15 @@
                 string.IsNullOrWhiteSpace(CountryName) ||
                 string.IsNullOrWhiteSpace(Email))
             {
-                await DialogService.ShowAlertDialog("Missing Information",
-                    "Please fill in all fields before proceeding.", "OK");
+                await DialogService.ShowAlertDialog(AppResources.CodeGeneratorViewModel_MissingTitle,
+                    AppResources.PaymentShipmentViewModel_FillFieldText, AppResources.Dialog_OK_Text);
                 return;
             }
 
             if (!IsValidEmail(Email))
             {
-                await DialogService.ShowAlertDialog("Invalid Email",
-                    "Please enter a valid email address.", "OK");
+                await DialogService.ShowAlertDialog(AppResources.PaymentShipmentViewModel_InvalidText,
+                    AppResources.PaymentShipmentViewModel_EnterEmailText, AppResources.Dialog_OK_Text);
                 return;
             }
 
@@ -242,22 +243,22 @@
                 string.IsNullOrWhiteSpace(CountryName) ||
                 string.IsNullOrWhiteSpace(Email))
             {
-                await DialogService.ShowAlertDialog("Missing Information",
-                    "Please fill in all fields before proceeding.", "OK");
+                await DialogService.ShowAlertDialog(AppResources.CodeGeneratorViewModel_MissingTitle,
+                    AppResources.PaymentShipmentViewModel_FillFieldText, AppResources.Dialog_OK_Text);
                 return;
             }
 
             if (!IsValidEmail(Email))
             {
-                await DialogService.ShowAlertDialog("Invalid Email",
-                    "Please enter a valid email address.", "OK");
+                await DialogService.ShowAlertDialog(AppResources.PaymentShipmentViewModel_InvalidText,
+                    AppResources.PaymentShipmentViewModel_EnterEmailText, AppResources.Dialog_OK_Text);
                 return;
             }
 
             if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
             {
-                await DialogService.ShowAlertDialog("No Internet Connection",
-                    "To place an order, an internet connection is required. Please check your connection and try again.", "OK");
+                await DialogService.ShowAlertDialog(AppResources.Dialog_InternetConnection_Title,
+                     AppResources.Dialog_InternetConnection_Message, AppResources.Dialog_OK_Text);
                 return;
             }
 
@@ -302,19 +303,21 @@
                 else
                 {
                     Console.WriteLine("Error: Failed to create payment.");
-                    await DialogService.ShowAlertDialog("Error", "Failed to create payment.", "OK");
+                    await DialogService.ShowAlertDialog(AppResources.Dialog_Error,
+                        AppResources.PaymentShipmentViewModel_FailedPayment, AppResources.Dialog_OK_Text);
                 }
             }
             else
             {
                 Console.WriteLine("Error: Unexpected result type from MollieService.");
-                await DialogService.ShowAlertDialog("Error", "Unexpected result from payment service.", "OK");
+                await DialogService.ShowAlertDialog(AppResources.Dialog_Error,
+                    AppResources.PaymentShipmentViewModel_UnexpectedPayment, AppResources.Dialog_OK_Text);
             }
         }
     catch (Exception ex)
     {
         Console.WriteLine($"Payment Error: {ex.Message}");
-        await DialogService.ShowAlertDialog("Error", ex.Message, "OK");
+        await DialogService.ShowAlertDialog(AppResources.Dialog_Error, ex.Message, AppResources.Dialog_OK_Text);
     }
 
         });
@@ -345,12 +348,12 @@
 
             PaymentStatusMessage = paymentResponse.Status switch
             {
-                "paid" => "Your payment was successful!",
-                "pending" => "Your payment is pending.",
-                "open" => "Your payment is still open.",
-                "failed" => "Your payment failed.",
-                "canceled" => "Your payment was canceled.",
-                _ => "Unknown payment status."
+                "paid" => AppResources.General_PaidText,
+                "pending" => AppResources.General_PendingText,
+                "open" => AppResources.General_OpenText,
+                "failed" => AppResources.General_FailedText,
+                "canceled" => AppResources.General_CancelPaymentText,
+                _ => AppResources.General_UnknownPaymentText
             };
 
             if (paymentResponse.Status != "paid") { return; }
@@ -365,7 +368,7 @@
 
             StopTimer();
 
-            PaymentStatusMessage = "Order received! We'll send a confirmation email shortly.! 🎉";
+            PaymentStatusMessage = AppResources.PaymentShipmentViewModel_OrderReceived;
 
             var pdfFiles = new List<byte[]>();
 

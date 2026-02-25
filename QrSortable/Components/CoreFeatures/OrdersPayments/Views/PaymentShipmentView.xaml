@@ -70,7 +70,7 @@
                         FontFamily="ItimRegular"
                         FontSize="22"
                         HorizontalTextAlignment="Start"
-                        Text="Shipping and Billing Address:"
+                        Text="{Binding [ShipAndBillAddressText]}"
                         TextColor="{StaticResource Primary}"
                         VerticalTextAlignment="Center" />
 
@@ -86,7 +86,7 @@
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Center"
-                            Text="Name:"
+                            Text="{Binding [NameText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
 
@@ -109,7 +109,7 @@
                             <Grid>
                                 <Entry
                                     Margin="10,0,0,0"
-                                    Placeholder="e.g. enter name.."
+                                    Placeholder="{Binding [EnterNameText]}"
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding Name}" />
@@ -129,7 +129,7 @@
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Center"
-                            Text="Street:"
+                            Text="{Binding [StreetText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
 
@@ -152,7 +152,7 @@
                             <Grid>
                                 <Entry
                                     Margin="10,0,0,0"
-                                    Placeholder="e.g. enter street name.."
+                                    Placeholder="{Binding [EnterStreetPlaceText]}"
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding StreetName}" />
@@ -172,7 +172,7 @@
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Center"
-                            Text="House No.:"
+                            Text="{Binding [HouseNoText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
 
@@ -196,7 +196,7 @@
                                 <Entry
                                     Margin="10,0,0,0"
                                     Keyboard="Numeric"
-                                    Placeholder="e.g. enter house number.."
+                                    Placeholder="{Binding [EnterHouseNoPlaceText]}"
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding HouseNumber}" />
@@ -216,7 +216,7 @@
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Center"
-                            Text="ZIP code:"
+                            Text="{Binding [ZIPText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
 
@@ -239,7 +239,7 @@
                             <Grid>
                                 <Entry
                                     Margin="10,0,0,0"
-                                    Placeholder="e.g. enter ZIP/Postal code.."
+                                    Placeholder="{Binding [ZIPPlaceText]}"
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding ZipCode}" />
@@ -259,7 +259,7 @@
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Center"
-                            Text="City:"
+                            Text="{Binding [CityText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
 
@@ -282,7 +282,7 @@
                             <Grid>
                                 <Entry
                                     Margin="10,0,0,0"
-                                    Placeholder="e.g. enter city.."
+                                    Placeholder="{Binding [CityPlaceText]}"
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding CityName}" />
@@ -302,7 +302,7 @@
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Center"
-                            Text="Country:"
+                            Text="{Binding [CountryText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
 
@@ -325,7 +325,7 @@
                             <Grid>
                                 <Entry
                                     Margin="10,0,0,0"
-                                    Placeholder="e.g. enter country.."
+                                    Placeholder="{Binding [CountryPlaceText]}"
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding CountryName}" />
@@ -345,7 +345,7 @@
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Center"
-                            Text="Email:"
+                            Text="{Binding [EmailText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
 
@@ -369,7 +369,7 @@
                                 <Entry
                                     Margin="10,0,0,0"
                                     Keyboard="Email"
-                                    Placeholder="e.g. yourname@example.com"
+                                    Placeholder="{Binding [EmailPlaceText]}"
                                     PlaceholderColor="{StaticResource PlaceholderColor}"
                                     Style="{StaticResource NormalText}"
                                     Text="{Binding Email}" />

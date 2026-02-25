@@ -333,4 +333,85 @@
   <data name="SelectProductViewModel_GenrateOfA4QRcodePrice" xml:space="preserve">
     <value>nur {0}</value>
   </data>
+  <data name="PaymentShipmentViewModel_ShipAndBillAddressText" xml:space="preserve">
+    <value>Liefer- und Rechnungsadresse:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_NameText" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EnterNameText" xml:space="preserve">
+    <value>z. B. Name eingeben...</value>
+  </data>
+  <data name="PaymentShipmentViewModel_StreetText" xml:space="preserve">
+    <value>Straße:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EnterStreetPlaceText" xml:space="preserve">
+    <value>z. B. Straßenname eingeben...</value>
+  </data>
+  <data name="PaymentShipmentViewModel_HouseNoText" xml:space="preserve">
+    <value>Hausnummer:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EnterHouseNoPlaceText" xml:space="preserve">
+    <value>z. B. Hausnummer eingeben...</value>
+  </data>
+  <data name="PaymentShipmentViewModel_ZIPText" xml:space="preserve">
+    <value>Postleitzahl:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_ZIPPlaceText" xml:space="preserve">
+    <value>z. B. Postleitzahl eingeben...</value>
+  </data>
+  <data name="PaymentShipmentViewModel_CityText" xml:space="preserve">
+    <value>Stadt:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_CityPlaceText" xml:space="preserve">
+    <value>z. B. Stadt eingeben...</value>
+  </data>
+  <data name="PaymentShipmentViewModel_CountryText" xml:space="preserve">
+    <value>Land:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_CountryPlaceText" xml:space="preserve">
+    <value>z. B. Land eingeben...</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EmailText" xml:space="preserve">
+    <value>Email:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EmailPlaceText" xml:space="preserve">
+    <value>e.g. ihrname@example.com</value>
+  </data>
+  <data name="PaymentShipmentViewModel_FillFieldText" xml:space="preserve">
+    <value>Bitte füllen Sie alle Felder aus, bevor Sie fortfahren.</value>
+  </data>
+  <data name="PaymentShipmentViewModel_InvalidText" xml:space="preserve">
+    <value>Ungültige EMail</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EnterEmailText" xml:space="preserve">
+    <value>Bitte geben Sie eine gültige EMail Adresse ein.</value>
+  </data>
+  <data name="PaymentShipmentViewModel_FailedPayment" xml:space="preserve">
+    <value>Zahlung konnte nicht erstellt werden.</value>
+  </data>
+  <data name="PaymentShipmentViewModel_UnexpectedPayment" xml:space="preserve">
+    <value>Unerwartetes Ergebnis vom Zahlungsdienst.</value>
+  </data>
+  <data name="General_PaidText" xml:space="preserve">
+    <value>Ihre Zahlung war erfolgreich!</value>
+  </data>
+  <data name="General_PendingText" xml:space="preserve">
+    <value>Ihre Zahlung steht aus.</value>
+  </data>
+  <data name="General_OpenText" xml:space="preserve">
+    <value>Ihre Zahlung ist noch offen.</value>
+  </data>
+  <data name="General_FailedText" xml:space="preserve">
+    <value>Ihre Zahlung ist fehlgeschlagen.</value>
+  </data>
+  <data name="General_CancelPaymentText" xml:space="preserve">
+    <value>Ihre Zahlung wurde storniert.</value>
+  </data>
+  <data name="General_UnknownPaymentText" xml:space="preserve">
+    <value>Unbekannter Zahlungsstatus.</value>
+  </data>
+  <data name="PaymentShipmentViewModel_OrderReceived" xml:space="preserve">
+    <value>Bestellung eingegangen! Wir senden Ihnen in Kürze eine Bestätigungs-E-Mail.! 🎉</value>
+  </data>
 </root>

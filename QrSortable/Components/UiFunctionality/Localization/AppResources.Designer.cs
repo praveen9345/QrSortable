@@ -162,6 +162,72 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to paid Text!!.
+        /// </summary>
+        public static string General_PaidText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_PaidText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to pending Text!!.
+        /// </summary>
+        public static string General_PendingText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_PendingText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to open Text!!.
+        /// </summary>
+        public static string General_OpenText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_OpenText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to failed Text!!.
+        /// </summary>
+        public static string General_FailedText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_FailedText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to cancel payment Text!!.
+        /// </summary>
+        public static string General_CancelPaymentText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_CancelPaymentText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to unknown payment Text!!.
+        /// </summary>
+        public static string General_UnknownPaymentText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_UnknownPaymentText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to RootViewModel MenuText!!.
         /// </summary>
         public static string RootViewModel_MenuText {
@@ -562,6 +628,72 @@ namespace QrSortable.Components.UiFunctionality.Localization
             get
             {
                 return ResourceManager.GetString("SelectProductViewModel_GenrateOfA4QRcodePrice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate FillField Text!!.
+        /// </summary>
+        public static string PaymentShipmentViewModel_FillFieldText
+        {
+            get
+            {
+                return ResourceManager.GetString("PaymentShipmentViewModel_FillFieldText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate Invalid Text!!.
+        /// </summary>
+        public static string PaymentShipmentViewModel_InvalidText
+        {
+            get
+            {
+                return ResourceManager.GetString("PaymentShipmentViewModel_InvalidText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate enter email Text!!.
+        /// </summary>
+        public static string PaymentShipmentViewModel_EnterEmailText
+        {
+            get
+            {
+                return ResourceManager.GetString("PaymentShipmentViewModel_EnterEmailText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate FailedPayment Text!!.
+        /// </summary>
+        public static string PaymentShipmentViewModel_FailedPayment
+        {
+            get
+            {
+                return ResourceManager.GetString("PaymentShipmentViewModel_FailedPayment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate UnexpectedPayment Text!!.
+        /// </summary>
+        public static string PaymentShipmentViewModel_UnexpectedPayment
+        {
+            get
+            {
+                return ResourceManager.GetString("PaymentShipmentViewModel_UnexpectedPayment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate order received Text!!.
+        /// </summary>
+        public static string PaymentShipmentViewModel_OrderReceived
+        {
+            get
+            {
+                return ResourceManager.GetString("PaymentShipmentViewModel_OrderReceived", resourceCulture);
             }
         }
 
