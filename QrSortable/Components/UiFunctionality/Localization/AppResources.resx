@@ -645,4 +645,7 @@
   <data name="QrBrScannerViewModel_CameraRestricted" xml:space="preserve">
     <value>Camera access is restricted on this device.</value>
   </data>
+  <data name="FilePickerService_PickImage" xml:space="preserve">
+    <value>Pick Image Please</value>
+  </data>
 </root>
