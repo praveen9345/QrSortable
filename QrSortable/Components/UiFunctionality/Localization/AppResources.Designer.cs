@@ -1425,5 +1425,16 @@ namespace QrSortable.Components.UiFunctionality.Localization
                 return ResourceManager.GetString("QrBrScannerViewModel_CameraRestricted", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar pick image Text!!.
+        /// </summary>
+        public static string FilePickerService_PickImage
+        {
+            get
+            {
+                return ResourceManager.GetString("FilePickerService_PickImage", resourceCulture);
+            }
+        }
     }
 }
