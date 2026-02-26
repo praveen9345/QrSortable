@@ -77,7 +77,7 @@
                 switch (selected.Title)
                 {
                     case MultiuserTitle:
-                        await NavigationService.Navigate<OnboardingView>();
+                        await NavigationService.Navigate<OnboardingView>(true);
                         break;
                     case AddToBasketTitle:
                         await NavigationService.Navigate<AddToBasketView>();

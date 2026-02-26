@@ -6,6 +6,7 @@
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
     using QrSortable.Components.CoreFeatures.Settings.Views;
+    using QrSortable.Components.CoreFeatures.Onboarding.Views;
 
 
     /// <summary>
@@ -42,7 +43,7 @@
 
         public AsyncRelayCommand LanguageCommand => new AsyncRelayCommand(async () =>
         {
-
+           await NavigationService.Navigate<SelectLanguageView>(true);
         });
 
         public AsyncRelayCommand PrivacyPolicyCommand => new AsyncRelayCommand(async () =>

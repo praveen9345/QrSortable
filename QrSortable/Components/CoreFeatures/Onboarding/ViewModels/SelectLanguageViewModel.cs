@@ -74,11 +74,17 @@
              // Optionally update onboarding progress
              await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingStarted);
 
-              // Clear selection in UI
-              SelectedLanguageItem = null;
+             // Clear selection in UI
+             SelectedLanguageItem = null;
 
-              // If not using Shell, fallback to NavigationService
-              await NavigationService.Navigate<OnboardingView>(false);
+             if (IsFromApp)
+             {
+                await NavigationService.Close();
+             }
+             else
+             {
+                await NavigationService.Navigate<OnboardingView>(false); 
+             }
          });
     }
 }
