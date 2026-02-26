@@ -414,4 +414,103 @@
   <data name="PaymentShipmentViewModel_OrderReceived" xml:space="preserve">
     <value>Order received! We'll send a confirmation email shortly.! 🎉</value>
   </data>
+  <data name="PaymentShipmentViewModel_UnexpectedErrorText" xml:space="preserve">
+    <value>An unexpected error occurred while saving the item. Please try again."</value>
+  </data>
+  <data name="General_PendingStatusText" xml:space="preserve">
+    <value>Pending...</value>
+  </data>
+  <data name="General_DownloadStatusText" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="PaymentShipmentViewModel_GeneratedCodeMsg" xml:space="preserve">
+    <value>Wait generating code ...</value>
+  </data>
+  <data name="SubscriptionViewModel_UpgradePremiumText" xml:space="preserve">
+    <value>Upgrade to Premium</value>
+  </data>
+  <data name="SubscriptionViewModel_UnlockText" xml:space="preserve">
+    <value>Unlock the full power of QrSortable</value>
+  </data>
+  <data name="SubscriptionViewModel_EmailText" xml:space="preserve">
+    <value>Email Address*</value>
+  </data>
+  <data name="General_EmailText" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="SubscriptionViewModel_CurrencyText" xml:space="preserve">
+    <value>Currency* :  </value>
+  </data>
+  <data name="SubscriptionViewModel_BillingText" xml:space="preserve">
+    <value>Billed monthly • Cancel anytime</value>
+  </data>
+  <data name="SubscriptionViewModel_StartPremiumText" xml:space="preserve">
+    <value>Start Premium Now</value>
+  </data>
+  <data name="SubscriptionViewModel_PremiumActiveText" xml:space="preserve">
+    <value>Premium is Active</value>
+  </data>
+  <data name="SubscriptionViewModel_CancelSubText" xml:space="preserve">
+    <value>Cancel Subscription</value>
+  </data>
+  <data name="SubscriptionViewModel_SharingMsgText" xml:space="preserve">
+    <value>Multi-User Sharing</value>
+  </data>
+  <data name="SubscriptionViewModel_UnlimitedText" xml:space="preserve">
+    <value>Unlimited Items per Box</value>
+  </data>
+  <data name="SubscriptionViewModel_CloudBackText" xml:space="preserve">
+    <value>Cloud Backup &amp; Sync</value>
+  </data>
+  <data name="SubscriptionViewModel_MoveItemText" xml:space="preserve">
+    <value>Move Items Between Boxes</value>
+  </data>
+  <data name="SubscriptionViewModel_MultipleImagesText" xml:space="preserve">
+    <value>Multiple Images per Item</value>
+  </data>
+  <data name="SubscriptionViewModel_AdvertisementsText" xml:space="preserve">
+    <value>No Advertisements</value>
+  </data>
+  <data name="SubscriptionViewModel_PremiumActiveMsg" xml:space="preserve">
+    <value>🌟 Premium Active</value>
+  </data>
+  <data name="SubscriptionViewModel_UnlockFeaturesText" xml:space="preserve">
+    <value>Upgrade to unlock premium features</value>
+  </data>
+  <data name="SubscriptionViewModel_WaitingPaymentText" xml:space="preserve">
+    <value>Waiting for payment…</value>
+  </data>
+  <data name="SubscriptionViewModel_EnterEmailText" xml:space="preserve">
+    <value>Please enter your email</value>
+  </data>
+  <data name="SubscriptionViewModel_FailedPaymentText" xml:space="preserve">
+    <value>Failed to create payment.</value>
+  </data>
+  <data name="SubscriptionViewModel_PaymentCompletedText" xml:space="preserve">
+    <value>Payment not completed</value>
+  </data>
+  <data name="General_SucessText" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="SubscriptionViewModel_ActivePremiumText" xml:space="preserve">
+    <value>Premium activated successfully 🎉</value>
+  </data>
+  <data name="General_FailedError" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="SubscriptionViewModel_SubscriptiontCancelText" xml:space="preserve">
+    <value>Your subscription has been cancelled.</value>
+  </data>
+  <data name="SubscriptionViewModel_EnterEmailPlaceText" xml:space="preserve">
+    <value>Enter your email</value>
+  </data>
+  <data name="SubscriptionViewModel_MonthSelectedEuroCurrencyText" xml:space="preserve">
+    <value>€4.99 / month</value>
+  </data>
+  <data name="SubscriptionViewModel_MonthSelectedDollerCurrencyText" xml:space="preserve">
+    <value>$4.99 / month</value>
+  </data>
+  <data name="SubscriptionViewModel_VerifyingPaymentText" xml:space="preserve">
+    <value>Verifying payment…</value>
+  </data>
 </root>

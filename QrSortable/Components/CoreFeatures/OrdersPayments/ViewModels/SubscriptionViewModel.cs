@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Mollie.Api.Models.Payment.Response;
 using QrSortable.Components.CoreFeatures.DataManagement.General;
 using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
 using QrSortable.Components.CoreFeatures.OrdersPayments;
 using QrSortable.Components.PlatformUtils.Wrappers;
 using QrSortable.Components.TimeHandling;
+using QrSortable.Components.UiFunctionality.Localization;
 using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
 using QrSortable.Components.UiFunctionality.Navigation.Views;
 using System.Collections.ObjectModel;
@@ -38,12 +38,12 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
 
         PremiumFeatures = new ObservableCollection<string>
         {
-            "Multi-User Sharing",
-            "Unlimited Items per Box",
-            "Cloud Backup & Sync",
-            "Move Items Between Boxes",
-            "Multiple Images per Item",
-            "No Advertisements"
+            AppResources.SubscriptionViewModel_SharingMsgText,
+            AppResources.SubscriptionViewModel_UnlimitedText,
+            AppResources.SubscriptionViewModel_CloudBackText,
+            AppResources.SubscriptionViewModel_MoveItemText,
+            AppResources.SubscriptionViewModel_MultipleImagesText,
+            AppResources.SubscriptionViewModel_AdvertisementsText
         };
 
         SelectedPlan = SubscriptionPlan.Monthly;
@@ -119,8 +119,8 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
         IsSubscribed = _subscriptionService.IsSubscribed;
 
         SubscriptionStatusText = IsSubscribed
-            ? "🌟 Premium Active"
-            : "Upgrade to unlock premium features";
+            ? AppResources.SubscriptionViewModel_PremiumActiveMsg
+            : AppResources.SubscriptionViewModel_UnlockFeaturesText;
 
         CustomerEmail = IsSubscribed ? _email : string.Empty;
 
@@ -136,8 +136,8 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
         {
             SubscriptionPlan.Monthly =>
                 SelectedCurrencyItem == "Euro(€)"
-                    ? "€4.99 / month"
-                    : "$4.99 / month",
+                    ? AppResources.SubscriptionViewModel_MonthSelectedEuroCurrencyText
+                    : AppResources.SubscriptionViewModel_MonthSelectedDollerCurrencyText,
 
             SubscriptionPlan.Yearly =>
                 SelectedCurrencyItem == "Euro(€)"
@@ -146,8 +146,8 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
 
             _ =>
                 SelectedCurrencyItem == "Euro(€)"
-                    ? "€4.99 / month"
-                    : "$4.99 / month"
+                    ? AppResources.SubscriptionViewModel_MonthSelectedEuroCurrencyText
+                    : AppResources.SubscriptionViewModel_MonthSelectedDollerCurrencyText
         };
     }
 
@@ -165,7 +165,7 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
             _subscriptionProcessed = false;
         }
 
-        SubscriptionStatusText = "Waiting for payment…";
+        SubscriptionStatusText = AppResources.SubscriptionViewModel_WaitingPaymentText;
 
         StartPolling();
     }
@@ -207,9 +207,8 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
         if (string.IsNullOrWhiteSpace(CustomerEmail))
         {
             await DialogService.ShowAlertDialog(
-                "Error",
-                "Please enter your email",
-                "OK");
+                AppResources.Dialog_Error,AppResources.SubscriptionViewModel_EnterEmailText,
+                AppResources.Dialog_OK_Text);
 
             IsBusy = false;
             return;
@@ -223,7 +222,9 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
 
             if (payment?.Links?.Checkout?.Href == null)
             {
-                await DialogService.ShowAlertDialog("Error", "Failed to create payment.", "OK");
+                await DialogService.ShowAlertDialog(AppResources.Dialog_Error, 
+                    AppResources.SubscriptionViewModel_FailedPaymentText, 
+                    AppResources.Dialog_OK_Text);
                 return;
             }
 
@@ -238,7 +239,8 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
         }
         catch (Exception ex)
         {
-            await DialogService.ShowAlertDialog("Error", ex.Message, "OK");
+            await DialogService.ShowAlertDialog(AppResources.Dialog_Error, 
+                ex.Message, AppResources.Dialog_OK_Text);
         }
         finally
         {
@@ -267,7 +269,8 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
 
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            outcome = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Verifying payment…",
+            outcome = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(
+                AppResources.SubscriptionViewModel_VerifyingPaymentText,
                 async () =>
                 {
                     try
@@ -306,7 +309,7 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
                             case "failed":
                             case "expired":
                                 StopTimer();
-                                SubscriptionStatusText = "Payment not completed";
+                                SubscriptionStatusText = AppResources.SubscriptionViewModel_PaymentCompletedText;
                                 return false;
 
                             default:
@@ -333,9 +336,8 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
             }
 
             await DialogService.ShowAlertDialog(
-                "Success",
-                "Premium activated successfully 🎉",
-                "OK");
+                AppResources.General_SucessText, AppResources.SubscriptionViewModel_ActivePremiumText,
+                AppResources.Dialog_OK_Text);
 
             if (_isFromOnboarding)
             {
@@ -348,9 +350,8 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
             if (_subscriptionProcessed)
             {
                 await DialogService.ShowAlertDialog(
-                   "Failed",
-                   "Payment was not completed. Please try again.",
-                   "OK");
+                   AppResources.General_FailedError,AppResources.General_FailedText,
+                   AppResources.Dialog_OK_Text);
             }
         }
     }
@@ -381,9 +382,8 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
         await _generalInformationManager.UpdateIsBackendUsedAsync(false);
         
         await DialogService.ShowAlertDialog(
-            "Cancelled",
-            "Your subscription has been cancelled.",
-            "OK");
+            AppResources.Dialog_InformationText,AppResources.SubscriptionViewModel_SubscriptiontCancelText,
+            AppResources.Dialog_OK_Text);
     }
 
     public enum SubscriptionPlan { Monthly, Yearly }

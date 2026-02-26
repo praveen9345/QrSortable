@@ -57,14 +57,14 @@
                             FontFamily="ItimRegular"
                             FontSize="28"
                             HorizontalOptions="Center"
-                            Text="Upgrade to Premium"
+                            Text="{Binding [UpgradePremiumText]}"
                             TextColor="{StaticResource Primary}" />
 
                         <Label
                             FontFamily="ItimRegular"
                             FontSize="16"
                             HorizontalOptions="Center"
-                            Text="Unlock the full power of QrSortable"
+                            Text="{Binding [UnlockText]}"
                             TextColor="#CCCCCC" />
                     </VerticalStackLayout>
 
@@ -74,7 +74,7 @@
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
-                            Text="Email Address*"
+                            Text="{Binding [EmailText]}"
                             TextColor="{StaticResource Primary}" />
 
                         <Border
@@ -86,10 +86,10 @@
                                 FontFamily="ItimRegular"
                                 FontSize="16"
                                 Keyboard="Email"
+                                Placeholder="{Binding [EnterEmailPlaceText]}"
                                 PlaceholderColor="WhiteSmoke"
-                                Placeholder="Enter your email"
                                 Text="{Binding CustomerEmail}"
-                                TextColor="White"/>
+                                TextColor="White" />
                         </Border>
                     </VerticalStackLayout>
 
@@ -102,7 +102,7 @@
                             FontFamily="ItimRegular"
                             FontSize="20"
                             HorizontalTextAlignment="Center"
-                            Text="Currency* :  "
+                            Text="{Binding [CurrencyText]}"
                             TextColor="{StaticResource Primary}"
                             VerticalTextAlignment="Center" />
 
@@ -228,7 +228,7 @@
                                     FontFamily="ItimRegular"
                                     FontSize="16"
                                     HorizontalOptions="Center"
-                                    Text="Billed monthly • Cancel anytime"
+                                    Text="{Binding [BillingText]}"
                                     TextColor="#AAAAAA" />
                             </VerticalStackLayout>
 
@@ -266,7 +266,7 @@
                                 HeightRequest="55"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource BoolInverter}}"
                                 IsVisible="{Binding IsSubscribed, Converter={StaticResource BoolInverter}}"
-                                Text="Start Premium Now"
+                                Text="{Binding [StartPremiumText]}"
                                 TextColor="White">
 
                                 <Button.Background>
@@ -293,7 +293,7 @@
                                         FontAttributes="Bold"
                                         FontFamily="ItimRegular"
                                         FontSize="18"
-                                        Text="Premium is Active"
+                                        Text="{Binding [PremiumActiveText]}"
                                         TextColor="#7BFFB2" />
                                 </HorizontalStackLayout>
                             </Border>
@@ -307,7 +307,7 @@
                                 FontSize="18"
                                 HeightRequest="45"
                                 IsVisible="{Binding IsSubscribed}"
-                                Text="Cancel Subscription"
+                                Text="{Binding [CancelSubText]}"
                                 TextColor="White" />
 
                         </VerticalStackLayout>

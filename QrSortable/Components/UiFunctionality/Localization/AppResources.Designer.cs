@@ -206,6 +206,28 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to pending Text!!.
+        /// </summary>
+        public static string General_PendingStatusText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_PendingStatusText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to download Text!!.
+        /// </summary>
+        public static string General_DownloadStatusText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_DownloadStatusText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to cancel payment Text!!.
         /// </summary>
         public static string General_CancelPaymentText
@@ -226,6 +248,40 @@ namespace QrSortable.Components.UiFunctionality.Localization
                 return ResourceManager.GetString("General_UnknownPaymentText", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to email Text!!.
+        /// </summary>
+        public static string General_EmailText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_EmailText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to sucess Text!!.
+        /// </summary>
+        public static string General_SucessText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_SucessText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to failed Text!!.
+        /// </summary>
+        public static string General_FailedError
+        {
+            get
+            {
+                return ResourceManager.GetString("General_FailedError", resourceCulture);
+            }
+        }
+
 
         /// <summary>
         ///   Looks up a localized string similar to RootViewModel MenuText!!.
@@ -694,6 +750,216 @@ namespace QrSortable.Components.UiFunctionality.Localization
             get
             {
                 return ResourceManager.GetString("PaymentShipmentViewModel_OrderReceived", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate unexpected error Text!!.
+        /// </summary>
+        public static string PaymentShipmentViewModel_UnexpectedErrorText
+        {
+            get
+            {
+                return ResourceManager.GetString("PaymentShipmentViewModel_UnexpectedErrorText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate genrate code msg Text!!.
+        /// </summary>
+        public static string PaymentShipmentViewModel_GeneratedCodeMsg
+        {
+            get
+            {
+                return ResourceManager.GetString("PaymentShipmentViewModel_GeneratedCodeMsg", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate sharing msg Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_SharingMsgText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_SharingMsgText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate unlimited Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_UnlimitedText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_UnlimitedText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar togenerate cloud Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_CloudBackText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_CloudBackText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar move item Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_MoveItemText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_MoveItemText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar multiple Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_MultipleImagesText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_MultipleImagesText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar advertisements Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_AdvertisementsText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_AdvertisementsText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar premium Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_PremiumActiveMsg
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_PremiumActiveMsg", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar unlok features Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_UnlockFeaturesText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_UnlockFeaturesText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar wait payment Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_WaitingPaymentText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_WaitingPaymentText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar enter email Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_EnterEmailText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_EnterEmailText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar failed payment Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_FailedPaymentText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_FailedPaymentText", resourceCulture);
+            }
+        }
+
+
+        /// <summary>
+        ///   Looks up a localized string similar completed payment Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_PaymentCompletedText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_PaymentCompletedText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar active premium Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_ActivePremiumText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_ActivePremiumText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar subscription cancel Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_SubscriptiontCancelText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_SubscriptiontCancelText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar montly cost Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_MonthSelectedEuroCurrencyText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_MonthSelectedEuroCurrencyText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar doller Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_MonthSelectedDollerCurrencyText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_MonthSelectedDollerCurrencyText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar varifying Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_VerifyingPaymentText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_VerifyingPaymentText", resourceCulture);
             }
         }
 

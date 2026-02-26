@@ -4,7 +4,6 @@
     using CommunityToolkit.Mvvm.Input;
     using Microsoft.Maui.Storage;
     using Mollie.Api.Models.Payment.Response;
-    using Mollie.Api.Models.Subscription.Response;
     using QrSortable.Components.CoreFeatures.Cloud;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.CodeGenerator;
@@ -372,7 +371,13 @@
 
             var pdfFiles = new List<byte[]>();
 
-            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Wait generating code ...",
+            var processingMsg = AppResources.Dialog_Processing;
+            if(_product.Title == CODE_GENERATED_NAME)
+            {
+                processingMsg = AppResources.PaymentShipmentViewModel_GeneratedCodeMsg;
+            }
+
+            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(processingMsg,
             async () =>
             {
                 pdfFiles = await GeneratePdfFilesAsync();
@@ -409,7 +414,7 @@
             }
             else
             {
-                await DialogService.ShowAlertDialog("An unexpected error occurred while saving the item. Please try again.", AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(AppResources.PaymentShipmentViewModel_UnexpectedErrorText, AppResources.Dialog_OK_Text);
             }
         }
 
@@ -513,10 +518,10 @@
 
         private string StatusOfOrder()
         {
-            string status = "Pending...";
+            string status = AppResources.General_PendingStatusText;
             if (_product.Title == CODE_GENERATED_NAME)
             {
-                status = "Download";
+                status = AppResources.General_DownloadStatusText;
             }
             return status;
         }
@@ -527,7 +532,7 @@
 
             if (_product.Title == CODE_GENERATED_NAME)
             {
-                if (_product.CodeType == "QR code")
+                if (_product.CodeType == AppResources.CodeGeneratorViewModel_QRcodeText) 
                 {
                     var qrCodesCustom = await _codeService.GenerateQrCodesAsync(
                         tag: _product.TagName,

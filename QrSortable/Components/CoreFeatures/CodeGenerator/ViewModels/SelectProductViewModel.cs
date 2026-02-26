@@ -82,7 +82,7 @@
             {
                 SelectedItem.OrderId = GenereateOrderedId();
 
-                if (SelectedItem.Title == "Generate A4 QR or bar codes yourself!")
+                if (SelectedItem.Title == AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle)
                 {
                     await NavigationService.Navigate<CodeGeneratorView>(SelectedItem);
                 }
