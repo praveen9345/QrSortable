@@ -51,7 +51,7 @@
                 FontFamily="ItimRegular"
                 FontSize="Large"
                 HorizontalOptions="Center"
-                Text="Align within the frame to scan"
+                Text="{Binding [AlignFrame]}"
                 TextColor="{StaticResource Primary}" />
 
             <!--  frame image  -->

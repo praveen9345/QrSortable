@@ -282,6 +282,28 @@ namespace QrSortable.Components.UiFunctionality.Localization
             }
         }
 
+        /// <summary>
+        ///   Looks up a localized string similar to successfully deleted Text!!.
+        /// </summary>
+        public static string General_SuccessDeleteText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_SuccessDeleteText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to loading Text!!.
+        /// </summary>
+        public static string General_LoadingText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_LoadingText", resourceCulture);
+            }
+        }
+
 
         /// <summary>
         ///   Looks up a localized string similar to RootViewModel MenuText!!.
@@ -963,5 +985,445 @@ namespace QrSortable.Components.UiFunctionality.Localization
             }
         }
 
+        /// <summary>
+        ///   Looks up a localized string similar copy id Text!!.
+        /// </summary>
+        public static string YoursOrdersViewModel_CopyId
+        {
+            get
+            {
+                return ResourceManager.GetString("YoursOrdersViewModel_CopyId", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar copy clipboard Text!!.
+        /// </summary>
+        public static string YoursOrdersViewModel_CopyToClipboard
+        {
+            get
+            {
+                return ResourceManager.GetString("YoursOrdersViewModel_CopyToClipboard", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar location placeholder Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_LocationPlaceText
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_LocationPlaceText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar category placeholder Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_CategoryPlaceText
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_CategoryPlaceText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar category Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_CategoryText
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_CategoryText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar field empty Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_LeftEmptyText
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_LeftEmptyText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar item not found Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_ItemNotFoundText
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_ItemNotFoundText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar item not possible to delete Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_NotPossibleToDelete
+        {
+            get
+            {
+                return ResourceManager.GetString("YoursOrdersViewModel_NotPossibleToDelete", resourceCulture);
+            }
+        }
+
+
+        /// <summary>
+        ///   Looks up a localized string similar item could not be deleted error Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_UnexpectedDeleteError
+        {
+            get
+            {
+                return ResourceManager.GetString("YoursOrdersViewModel_UnexpectedDeleteError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar item could not be already selected Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_AlreadySelectedText
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_AlreadySelectedText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar item could not be target box Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_TargetBox
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_TargetBox", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar item could not be moving Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_Moving
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_Moving", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar data move error Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_MovedError
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_MovedError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar successfully moved Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_SuccessMoved
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_SuccessMoved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar error moved Text!!.
+        /// </summary>
+        public static string BoxDetailViewModel_ErrorMoving
+        {
+            get
+            {
+                return ResourceManager.GetString("BoxDetailViewModel_ErrorMoving", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar item name Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_ItemName
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_ItemName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar enter name Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_EnterNamePlace
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_EnterNamePlace", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar remarks Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_Remarks
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_Remarks", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar more info Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_MoreInfo
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_MoreInfo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar camera permission Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_CameraPermission
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_CameraPermission", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar could not capture Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_NotCapture
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_NotCapture", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar max. image added Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_ImageAdded
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_ImageAdded", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar not able to pick images Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_NotAbleToPick
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_NotAbleToPick", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar empty field error Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_EmptyFieldError
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_EmptyFieldError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar atleast add one image Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_AddOneImage
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_AddOneImage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar not able to retrieve data Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_NotAbleToRetrieveData
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_NotAbleToRetrieveData", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar item not found Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_ItemNotFound
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_ItemNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar can not be modified Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_CanNotBeModified
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_CanNotBeModified", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar successfully update Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_SuccessfullyUpdate
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_SuccessfullyUpdate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar data could not be update Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_DataCouldNotUpdate
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_DataCouldNotUpdate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar unexpected error Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_UnexpectedErrorUpdate
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_UnexpectedErrorUpdate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar unexpected storage Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_UnexpectedStorage
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_UnexpectedStorage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar item already exist Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_ItemAlreadyExists
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_ItemAlreadyExists", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar item successful saved Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_SuccessSaved
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_SuccessSaved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar data could not be saved Text!!.
+        /// </summary>
+        public static string Dialog_DataCouldNoBeSaved
+        {
+            get
+            {
+                return ResourceManager.GetString("Dialog_DataCouldNoBeSaved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar unexpected processing error Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_UnexpectedErrorProcessing
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_UnexpectedErrorProcessing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar one 1mb data Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_OneMBData
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_OneMBData", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar camera permission Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_CameraPermissionRequired
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_CameraPermissionRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar open setting Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_OpenSettings
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_OpenSettings", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar camera restricted Text!!.
+        /// </summary>
+        public static string QrBrScannerViewModel_CameraRestricted
+        {
+            get
+            {
+                return ResourceManager.GetString("QrBrScannerViewModel_CameraRestricted", resourceCulture);
+            }
+        }
     }
 }

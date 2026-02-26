@@ -513,4 +513,136 @@
   <data name="SubscriptionViewModel_VerifyingPaymentText" xml:space="preserve">
     <value>Verifying payment…</value>
   </data>
+  <data name="YoursOrdersViewModel_CopyId" xml:space="preserve">
+    <value>Copy ID</value>
+  </data>
+  <data name="YoursOrdersViewModel_CopyToClipboard" xml:space="preserve">
+    <value>OrderId copied to clipboard!</value>
+  </data>
+  <data name="BoxDetailViewModel_LocationPlaceText" xml:space="preserve">
+    <value>Location ...</value>
+  </data>
+  <data name="BoxDetailViewModel_CategoryPlaceText" xml:space="preserve">
+    <value>Category ...</value>
+  </data>
+  <data name="BoxDetailViewModel_CategoryText" xml:space="preserve">
+    <value>Category:</value>
+  </data>
+  <data name="BoxDetailViewModel_LeftEmptyText" xml:space="preserve">
+    <value>Location and Category fields are required and cannot be left empty.</value>
+  </data>
+  <data name="BoxDetailViewModel_ItemNotFoundText" xml:space="preserve">
+    <value>The selected item could not be found.</value>
+  </data>
+  <data name="General_SuccessDeleteText" xml:space="preserve">
+    <value>Successfully deleted.</value>
+  </data>
+  <data name="BoxDetailViewModel_NotPossibleToDelete" xml:space="preserve">
+    <value>Data could not be deleted, try again later.</value>
+  </data>
+  <data name="BoxDetailViewModel_UnexpectedDeleteError" xml:space="preserve">
+    <value>An unexpected error occurred while deleting the item.</value>
+  </data>
+  <data name="BoxDetailViewModel_SelectedItemText" xml:space="preserve">
+    <value>The selected item is already in the chosen box.</value>
+  </data>
+  <data name="BoxDetailViewModel_AlreadySelectedText" xml:space="preserve">
+    <value>The selected item is already in the chosen box.</value>
+  </data>
+  <data name="BoxDetailViewModel_TargetBox" xml:space="preserve">
+    <value>The target box could not be found.</value>
+  </data>
+  <data name="BoxDetailViewModel_Moving" xml:space="preserve">
+    <value>Moving...</value>
+  </data>
+  <data name="BoxDetailViewModel_MovedError" xml:space="preserve">
+    <value>Data could not be moved, try again later.</value>
+  </data>
+  <data name="BoxDetailViewModel_SuccessMoved" xml:space="preserve">
+    <value>Successfully moved.</value>
+  </data>
+  <data name="BoxDetailViewModel_ErrorMoving" xml:space="preserve">
+    <value>An unexpected error occurred while moving the item.</value>
+  </data>
+  <data name="ItemDetailViewModel_ItemName" xml:space="preserve">
+    <value>Item Name:</value>
+  </data>
+  <data name="ItemDetailViewModel_EnterNamePlace" xml:space="preserve">
+    <value>Enter name..</value>
+  </data>
+  <data name="ItemDetailViewModel_Remarks" xml:space="preserve">
+    <value>Remarks:</value>
+  </data>
+  <data name="ItemDetailViewModel_MoreInfo" xml:space="preserve">
+    <value>More info...</value>
+  </data>
+  <data name="ItemDetailViewModel_CameraPermission" xml:space="preserve">
+    <value>Camera permission is required to capture images.</value>
+  </data>
+  <data name="General_LoadingText" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="ItemDetailViewModel_NotCapture" xml:space="preserve">
+    <value>Could not able to capture the image</value>
+  </data>
+  <data name="ItemDetailViewModel_ImageAdded" xml:space="preserve">
+    <value>You can add a maximum of 4 images only.</value>
+  </data>
+  <data name="ItemDetailViewModel_NotAbleToPick" xml:space="preserve">
+    <value>Could not able to pick the image.</value>
+  </data>
+  <data name="ItemDetailViewModel_EmptyFieldError" xml:space="preserve">
+    <value>ItemName and ItemDescription fields are required and cannot be left empty.</value>
+  </data>
+  <data name="ItemDetailViewModel_AddOneImage" xml:space="preserve">
+    <value>Please add at least one image before saving the item.</value>
+  </data>
+  <data name="ItemDetailViewModel_NotAbleToRetrieveData" xml:space="preserve">
+    <value>Could not retrieve items from the database.</value>
+  </data>
+  <data name="ItemDetailViewModel_ItemNotFound" xml:space="preserve">
+    <value>Item not found. Please refresh and try again.</value>
+  </data>
+  <data name="ItemDetailViewModel_CanNotBeModified" xml:space="preserve">
+    <value>Item name '{0}' cannot be modified. Please try again.</value>
+  </data>
+  <data name="ItemDetailViewModel_SuccessfullyUpdate" xml:space="preserve">
+    <value>Successfully updated.</value>
+  </data>
+  <data name="ItemDetailViewModel_DataCouldNotUpdate" xml:space="preserve">
+    <value>Data could not be updated, try again later.</value>
+  </data>
+  <data name="ItemDetailViewModel_UnexpectedErrorUpdate" xml:space="preserve">
+    <value>An unexpected error occurred while updating the item.</value>
+  </data>
+  <data name="ItemDetailViewModel_UnexpectedStorage" xml:space="preserve">
+    <value>Unexpected error: storage data is missing.</value>
+  </data>
+  <data name="ItemDetailViewModel_ItemAlreadyExists" xml:space="preserve">
+    <value>An item with the name '{0}' already exists. Please choose a different name.</value>
+  </data>
+  <data name="ItemDetailViewModel_SuccessSaved" xml:space="preserve">
+    <value>Successfully saved.</value>
+  </data>
+  <data name="Dialog_DataCouldNoBeSaved" xml:space="preserve">
+    <value>Data could not be saved, try again later.</value>
+  </data>
+  <data name="ItemDetailViewModel_UnexpectedErrorProcessing" xml:space="preserve">
+    <value>An unexpected error occurred while processing your request.</value>
+  </data>
+  <data name="ItemDetailViewModel_OneMBData" xml:space="preserve">
+    <value>Adding this image would exceed the 1MB total limit for this item.</value>
+  </data>
+  <data name="ItemDetailViewModel_CameraPermissionRequired" xml:space="preserve">
+    <value>Camera permission is required", "Please enable it in Settings.</value>
+  </data>
+  <data name="ItemDetailViewModel_OpenSettings" xml:space="preserve">
+    <value>Open Settings</value>
+  </data>
+  <data name="QrBrScannerViewModel_AlignFrame" xml:space="preserve">
+    <value>Align within the frame to scan</value>
+  </data>
+  <data name="QrBrScannerViewModel_CameraRestricted" xml:space="preserve">
+    <value>Camera access is restricted on this device.</value>
+  </data>
 </root>

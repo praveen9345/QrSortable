@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:resx="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
@@ -133,7 +134,7 @@
                         FontFamily="ItimRegular"
                         FontSize="18"
                         HorizontalTextAlignment="Center"
-                        Text="Item Name:"
+                        Text="{x:Static resx:AppResources.ItemDetailViewModel_ItemName}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
                     <Border
@@ -153,7 +154,7 @@
                         <Grid>
                             <Entry
                                 Margin="10,0,0,0"
-                                Placeholder="Enter name.."
+                                Placeholder="{x:Static resx:AppResources.ItemDetailViewModel_EnterNamePlace}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding ItemName}" />
@@ -172,7 +173,7 @@
                         FontFamily="ItimRegular"
                         FontSize="18"
                         HorizontalTextAlignment="Center"
-                        Text="Remarks:"
+                        Text="{x:Static resx:AppResources.ItemDetailViewModel_Remarks}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
                     <Border
@@ -192,7 +193,7 @@
                         <Grid>
                             <Entry
                                 Margin="10,0,0,0"
-                                Placeholder="More info..."
+                                Placeholder="{x:Static resx:AppResources.ItemDetailViewModel_MoreInfo}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding ItemDescription}" />

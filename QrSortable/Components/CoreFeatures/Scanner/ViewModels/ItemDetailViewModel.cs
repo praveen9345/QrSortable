@@ -190,10 +190,8 @@
         {
             if (!IsCameraEnabled)
             {
-                await DialogService.ShowAlertDialog(
-                    "Camera permission is required to capture images.",
-                    AppResources.Dialog_OK_Text
-                );
+                await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_CameraPermission,
+                    AppResources.Dialog_OK_Text);
                 return;
             }
 
@@ -207,7 +205,7 @@
             if (image is PlatformImage platformImage)
             {
                 byte[] jpegCaptureImages = Array.Empty<byte>();
-                var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+                var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(AppResources.General_LoadingText,
                  async () =>
                  {
                      jpegCaptureImages = await _imageService.PlatformImageConvertAsync(platformImage);
@@ -217,7 +215,8 @@
 
                 if (!result || jpegCaptureImages.Length == 0)
                 {
-                    await DialogService.ShowAlertDialog("Could not able to capture the image", AppResources.Dialog_OK_Text);
+                    await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_NotCapture,
+                        AppResources.Dialog_OK_Text);
                 }
                 else
                 {
@@ -254,8 +253,7 @@
 
             if (_imageArrayDb != null && _imageArrayDb.Count >= 4)
             {
-                await DialogService.ShowAlertDialog(
-                    "You can add a maximum of 4 images only.",
+                await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_ImageAdded,
                     AppResources.Dialog_OK_Text
                 );
                 return;
@@ -302,7 +300,8 @@
                 }
                 else
                 {
-                    await DialogService.ShowAlertDialog("Could not able to pick the image", "Ok");
+                    await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_NotAbleToPick, 
+                        AppResources.Dialog_OK_Text);
                 }
             }
         });
@@ -315,8 +314,7 @@
             if (string.IsNullOrWhiteSpace(ItemName) || string.IsNullOrWhiteSpace(ItemDescription))
             {
                 await DialogService.ShowAlertDialog(
-                    "ItemName and ItemDescription fields are required and cannot be left empty.",
-                    AppResources.Dialog_OK_Text
+                    AppResources.ItemDetailViewModel_EmptyFieldError,AppResources.Dialog_OK_Text
                 );
                 return;
             }
@@ -325,8 +323,7 @@
             if (_imageArrayDb == null || _imageArrayDb.Count < 1)
             {
                 await DialogService.ShowAlertDialog(
-                    "Please add at least one image before saving the item.",
-                    AppResources.Dialog_OK_Text
+                    AppResources.ItemDetailViewModel_AddOneImage,AppResources.Dialog_OK_Text
                 );
                 return;
             }
@@ -336,7 +333,8 @@
                 var allItems = await _databaseManager.GetAllAsync<StorageEntry>();
                 if (allItems == null)
                 {
-                    await DialogService.ShowAlertDialog("Could not retrieve items from the database.", AppResources.Dialog_OK_Text);
+                    await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_NotAbleToRetrieveData, 
+                        AppResources.Dialog_OK_Text);
                     return;
                 }
 
@@ -349,7 +347,8 @@
                     if (item == null)
                     {
                         Console.WriteLine("Error: SaveCommand: Could not find the item to update.");
-                        await DialogService.ShowAlertDialog("Item not found. Please refresh and try again.", AppResources.Dialog_OK_Text);
+                        await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_ItemNotFound, 
+                            AppResources.Dialog_OK_Text);
                         return;
                     }
 
@@ -357,7 +356,7 @@
                     if (item.ItemName != ItemName)
                     {
                         await DialogService.ShowAlertDialog(
-                            $"Item name '{ItemName}' cannot be modified. Please try again.",
+                            string.Format(AppResources.ItemDetailViewModel_CanNotBeModified, ItemName),
                             AppResources.Dialog_OK_Text
                         );
                         ItemName = item.ItemName;
@@ -386,19 +385,20 @@
                                 await _backendCommunicationService.UpdateAsync(item);
                             }
 
-                            await _toastService.DisplayToast("Successfully updated.");
+                            await _toastService.DisplayToast(AppResources.ItemDetailViewModel_SuccessfullyUpdate);
                             await NavigationService.Close();
                         }
                         else
                         {
-                            await DialogService.ShowAlertDialog("Data could not be updated, try again later.", AppResources.Dialog_OK_Text);
+                            await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_DataCouldNotUpdate, 
+                                AppResources.Dialog_OK_Text);
                         }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"SaveCommand: Exception during update: {ex}");
                         await DialogService.ShowAlertDialog(
-                            "An unexpected error occurred while updating the item.",
+                            AppResources.ItemDetailViewModel_UnexpectedErrorUpdate,
                             AppResources.Dialog_OK_Text
                         );
                     }
@@ -413,7 +413,7 @@
                 {
                     Console.WriteLine("Error: SaveCommand: _storageData is null");
                     await DialogService.ShowAlertDialog(
-                        "Unexpected error: storage data is missing.",
+                        AppResources.ItemDetailViewModel_UnexpectedStorage,
                         AppResources.Dialog_OK_Text
                     );
                     return;
@@ -424,7 +424,7 @@
                 if (isDuplicate)
                 {
                     await DialogService.ShowAlertDialog(
-                        $"An item with the name '{ItemName}' already exists. Please choose a different name.",
+                        string.Format(AppResources.ItemDetailViewModel_ItemAlreadyExists, ItemName),
                         AppResources.Dialog_OK_Text
                     );
                     ItemName = string.Empty;
@@ -459,7 +459,7 @@
                             // send to backend (DtoStorageEntryModel)
                             await _backendCommunicationService.InsertAsync(_storageData);
                         }
-                        await _toastService.DisplayToast("Successfully saved.");
+                        await _toastService.DisplayToast(AppResources.ItemDetailViewModel_SuccessSaved);
                         await NavigationService.Close();
 
                     }
@@ -467,7 +467,8 @@
                     {
                         _databaseManager.Rollback();
                         Console.WriteLine("SaveCommand: AddAsync returned null - rollback performed.");
-                        await DialogService.ShowAlertDialog("Data could not be saved, try again later.", AppResources.Dialog_OK_Text);
+                        await DialogService.ShowAlertDialog(AppResources.Dialog_DataCouldNoBeSaved,
+                            AppResources.Dialog_OK_Text);
                     }
                 }
                 catch (Exception ex)
@@ -475,8 +476,7 @@
 
                     Console.WriteLine($"SaveCommand: Exception during add: {ex}");
                     await DialogService.ShowAlertDialog(
-                        "An unexpected error occurred while saving the item. Please try again.",
-                        AppResources.Dialog_OK_Text
+                        AppResources.BankTransferViewModel_SaveErrorMsg,AppResources.Dialog_OK_Text
                     );
                 }
             }
@@ -484,7 +484,7 @@
             {
                 Console.WriteLine($"SaveCommand: Unexpected exception: {ex}");
                 await DialogService.ShowAlertDialog(
-                    "An unexpected error occurred while processing your request.",
+                    AppResources.ItemDetailViewModel_UnexpectedErrorProcessing,
                     AppResources.Dialog_OK_Text
                 );
             }
@@ -552,9 +552,7 @@
             if (currentTotalSize + newImage.Length > maxAllowedSize)
             {
                 await DialogService.ShowAlertDialog(
-                    "Adding this image would exceed the 1MB total limit for this item.",
-                    "Ok"
-                );
+                    AppResources.ItemDetailViewModel_OneMBData,AppResources.Dialog_OK_Text);
                 return false;
             }
             return true;
@@ -563,9 +561,8 @@
         private async Task HandleDeniedPermission()
         {
             bool openSettings = await DialogService.ShowRequestDialog(
-                "Camera permission is required", "Please enable it in Settings.",
-                "Cancel",
-                "Open Settings");
+                AppResources.ItemDetailViewModel_CameraPermissionRequired,
+                AppResources.Dialog_Cancel_Text,AppResources.ItemDetailViewModel_OpenSettings);
 
             if (openSettings)
             {

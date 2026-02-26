@@ -513,4 +513,136 @@
   <data name="SubscriptionViewModel_VerifyingPaymentText" xml:space="preserve">
     <value>Zahlung wird überprüft…</value>
   </data>
+  <data name="YoursOrdersViewModel_CopyId" xml:space="preserve">
+    <value>ID kopieren</value>
+  </data>
+  <data name="YoursOrdersViewModel_CopyToClipboard" xml:space="preserve">
+    <value>Bestellnummer in Zwischenablage kopiert!</value>
+  </data>
+  <data name="BoxDetailViewModel_LocationPlaceText" xml:space="preserve">
+    <value>Standort ...</value>
+  </data>
+  <data name="BoxDetailViewModel_CategoryPlaceText" xml:space="preserve">
+    <value>Kategorie ...</value>
+  </data>
+  <data name="BoxDetailViewModel_CategoryText" xml:space="preserve">
+    <value>Kategorie:</value>
+  </data>
+  <data name="BoxDetailViewModel_LeftEmptyText" xml:space="preserve">
+    <value>Die Felder „Standort“ und „Kategorie“ sind Pflichtfelder und dürfen nicht leer gelassen werden.</value>
+  </data>
+  <data name="BoxDetailViewModel_ItemNotFoundText" xml:space="preserve">
+    <value>Das ausgewählte Element wurde nicht gefunden.</value>
+  </data>
+  <data name="General_SuccessDeleteText" xml:space="preserve">
+    <value>Erfolgreich gelöscht.</value>
+  </data>
+  <data name="BoxDetailViewModel_NotPossibleToDelete" xml:space="preserve">
+    <value>Die Daten konnten nicht gelöscht werden. Versuchen Sie es später erneut.</value>
+  </data>
+  <data name="BoxDetailViewModel_UnexpectedDeleteError" xml:space="preserve">
+    <value>Beim Löschen des Elements ist ein unerwarteter Fehler aufgetreten.</value>
+  </data>
+  <data name="BoxDetailViewModel_SelectedItemText" xml:space="preserve">
+    <value>Der ausgewählte Artikel befindet sich bereits in der ausgewählten Box.</value>
+  </data>
+  <data name="BoxDetailViewModel_AlreadySelectedText" xml:space="preserve">
+    <value>Der ausgewählte Artikel befindet sich bereits in der ausgewählten Box.</value>
+  </data>
+  <data name="BoxDetailViewModel_TargetBox" xml:space="preserve">
+    <value>Das Zielfeld wurde nicht gefunden.</value>
+  </data>
+  <data name="BoxDetailViewModel_Moving" xml:space="preserve">
+    <value>Umzug...</value>
+  </data>
+  <data name="BoxDetailViewModel_MovedError" xml:space="preserve">
+    <value>Die Daten konnten nicht verschoben werden. Versuchen Sie es später erneut.</value>
+  </data>
+  <data name="BoxDetailViewModel_SuccessMoved" xml:space="preserve">
+    <value>Erfolgreich verschoben.</value>
+  </data>
+  <data name="BoxDetailViewModel_ErrorMoving" xml:space="preserve">
+    <value>Beim Verschieben des Elements ist ein unerwarteter Fehler aufgetreten.</value>
+  </data>
+  <data name="ItemDetailViewModel_ItemName" xml:space="preserve">
+    <value>Artikelname:</value>
+  </data>
+  <data name="ItemDetailViewModel_EnterNamePlace" xml:space="preserve">
+    <value>Name eingeben...</value>
+  </data>
+  <data name="ItemDetailViewModel_Remarks" xml:space="preserve">
+    <value>Anmerkungen:</value>
+  </data>
+  <data name="ItemDetailViewModel_MoreInfo" xml:space="preserve">
+    <value>Weitere Info...</value>
+  </data>
+  <data name="ItemDetailViewModel_CameraPermission" xml:space="preserve">
+    <value>Zum Aufnehmen von Bildern ist eine Kameraberechtigung erforderlich.</value>
+  </data>
+  <data name="General_LoadingText" xml:space="preserve">
+    <value>Wird geladen...</value>
+  </data>
+  <data name="ItemDetailViewModel_NotCapture" xml:space="preserve">
+    <value>Das Bild konnte nicht erfasst werden.</value>
+  </data>
+  <data name="ItemDetailViewModel_ImageAdded" xml:space="preserve">
+    <value>Sie können maximal 4 Bilder hinzufügen.</value>
+  </data>
+  <data name="ItemDetailViewModel_NotAbleToPick" xml:space="preserve">
+    <value>Das Bild konnte nicht ausgewählt werden.</value>
+  </data>
+  <data name="ItemDetailViewModel_EmptyFieldError" xml:space="preserve">
+    <value>Die Felder „ItemName“ und „ItemDescription“ sind Pflichtfelder und dürfen nicht leer gelassen werden.</value>
+  </data>
+  <data name="ItemDetailViewModel_AddOneImage" xml:space="preserve">
+    <value>Bitte fügen Sie mindestens ein Bild hinzu, bevor Sie den Artikel speichern.</value>
+  </data>
+  <data name="ItemDetailViewModel_NotAbleToRetrieveData" xml:space="preserve">
+    <value>Die Elemente konnten nicht aus der Datenbank abgerufen werden.</value>
+  </data>
+  <data name="ItemDetailViewModel_ItemNotFound" xml:space="preserve">
+    <value>Artikel nicht gefunden. Bitte aktualisieren Sie die Seite und versuchen Sie es erneut.</value>
+  </data>
+  <data name="ItemDetailViewModel_CanNotBeModified" xml:space="preserve">
+    <value>Der Name des Artikels '{0}' kann nicht geändert werden. Bitte versuchen Sie es erneut.</value>
+  </data>
+  <data name="ItemDetailViewModel_SuccessfullyUpdate" xml:space="preserve">
+    <value>Erfolgreich aktualisiert.</value>
+  </data>
+  <data name="ItemDetailViewModel_DataCouldNotUpdate" xml:space="preserve">
+    <value>Die Daten konnten nicht aktualisiert werden. Versuchen Sie es später erneut.</value>
+  </data>
+  <data name="ItemDetailViewModel_UnexpectedErrorUpdate" xml:space="preserve">
+    <value>Beim Aktualisieren des Elements ist ein unerwarteter Fehler aufgetreten.</value>
+  </data>
+  <data name="ItemDetailViewModel_UnexpectedStorage" xml:space="preserve">
+    <value>Unerwarteter Fehler: Speicherdaten fehlen.</value>
+  </data>
+  <data name="ItemDetailViewModel_ItemAlreadyExists" xml:space="preserve">
+    <value>Ein Element mit dem Namen '{0}'  ist bereits vorhanden. Bitte wählen Sie einen anderen Namen.</value>
+  </data>
+  <data name="ItemDetailViewModel_SuccessSaved" xml:space="preserve">
+    <value>Erfolgreich gespeichert.</value>
+  </data>
+  <data name="Dialog_DataCouldNoBeSaved" xml:space="preserve">
+    <value>Die Daten konnten nicht gespeichert werden. Versuchen Sie es später erneut.</value>
+  </data>
+  <data name="ItemDetailViewModel_UnexpectedErrorProcessing" xml:space="preserve">
+    <value>Bei der Bearbeitung Ihrer Anfrage ist ein unerwarteter Fehler aufgetreten.</value>
+  </data>
+  <data name="ItemDetailViewModel_OneMBData" xml:space="preserve">
+    <value>Das Hinzufügen dieses Bildes würde die Gesamtgröße von 1 MB für diesen Artikel überschreiten.</value>
+  </data>
+  <data name="ItemDetailViewModel_CameraPermissionRequired" xml:space="preserve">
+    <value>Kamera-Berechtigung erforderlich„, “Bitte in den Einstellungen aktivieren.</value>
+  </data>
+  <data name="ItemDetailViewModel_OpenSettings" xml:space="preserve">
+    <value>Einstellungen öffnen</value>
+  </data>
+  <data name="QrBrScannerViewModel_AlignFrame" xml:space="preserve">
+    <value>Im Rahmen zum Scannen ausrichten</value>
+  </data>
+  <data name="QrBrScannerViewModel_CameraRestricted" xml:space="preserve">
+    <value>Der Zugriff auf die Kamera ist auf diesem Gerät eingeschränkt.</value>
+  </data>
 </root>

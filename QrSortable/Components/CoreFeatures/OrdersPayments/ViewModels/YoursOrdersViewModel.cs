@@ -2,10 +2,10 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
-    using PdfSharpCore.Drawing.BarCodes;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Models;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
     using System.Collections.ObjectModel;
@@ -67,7 +67,7 @@
         {
             if (item == null) return;
             await Clipboard.Default.SetTextAsync(item.OrderId);
-            await _toastService.DisplayToast("OrderId copied to clipboard!");
+            await _toastService.DisplayToast(AppResources.YoursOrdersViewModel_CopyToClipboard);
         });
 
         public AsyncRelayCommand<OrderedData> DownloadPDFCommand => new AsyncRelayCommand<OrderedData>(async (item) =>
@@ -146,7 +146,7 @@
         //TODO: need to adjust with real images
         private void ImageUrlForTitle(string title)
         {
-            if (title == "Set of 5 A4 QR code")
+            if (title == AppResources.SelectProductViewModel_SetOfA4QRcodeTitle)
             {
                 _urlImage = "code_pdf_icon";
                 _isEnabelStatusOfOrder= false;
@@ -156,7 +156,7 @@
                 _urlImage = "code_pdf_icon";
                 _isEnabelStatusOfOrder = false;
             }
-            else if (title == "Generate A4 QR or bar code yourself!")
+            else if (title == AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle)
             {
                 _urlImage = "code_pdf_icon";
                 _isEnabelStatusOfOrder = true;
@@ -172,8 +172,7 @@
                 await MainThread.InvokeOnMainThreadAsync(() =>
                 {
                     BasketCount = basketData != null && basketData.Count > 0
-                        ? basketData.Count.ToString()
-                        : "0";
+                        ? basketData.Count.ToString() : "0";
                 });
             }
             catch (Exception ex)

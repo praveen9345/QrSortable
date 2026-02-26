@@ -68,7 +68,7 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            CategoryText = "Category:"; 
+            CategoryText = AppResources.BoxDetailViewModel_CategoryText; 
         }
 
         /// <summary>
@@ -172,8 +172,8 @@
             {
                 if (string.IsNullOrWhiteSpace(Location) || string.IsNullOrWhiteSpace(Category))
                 {
-                    await DialogService.ShowAlertDialog(
-                        "Location and Category fields are required and cannot be left empty.", "Ok");
+                    await DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_LeftEmptyText, 
+                        AppResources.Dialog_OK_Text);
                     return;
                 }
             }
@@ -212,7 +212,8 @@
                 }
                 else
                 {
-                    await DialogService.ShowAlertDialog("The selected item could not be found.", AppResources.Dialog_OK_Text);
+                    await DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_ItemNotFoundText, 
+                        AppResources.Dialog_OK_Text);
                 }
             }
             catch (Exception ex)
@@ -264,19 +265,21 @@
                     if (itemInCollection != null)
                     {
                         MainThread.BeginInvokeOnMainThread(() => Items.Remove(itemInCollection));
-                        await _toastService.DisplayToast("Successfully deleted.");
+                        await _toastService.DisplayToast(AppResources.General_SuccessDeleteText);
                     }
                         
                 }
                 else
                 {
-                    await DialogService.ShowAlertDialog("Data could not be deleted, try again later.", AppResources.Dialog_OK_Text);
+                    await DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_NotPossibleToDelete, 
+                        AppResources.Dialog_OK_Text);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"BoxDetailViewModel.DeleteItemCommand: Exception: {ex}");
-                await DialogService.ShowAlertDialog("An unexpected error occurred while deleting the item.", AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_UnexpectedDeleteError,
+                    AppResources.Dialog_OK_Text);
             }
         });
 
@@ -304,7 +307,8 @@
                         // If the user selected the same box, just inform and return
                         if (result == entryTomove.BarcodeValue)
                         {
-                            await DialogService.ShowAlertDialog("The selected item is already in the chosen box.", AppResources.Dialog_OK_Text);
+                            await DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_AlreadySelectedText, 
+                                AppResources.Dialog_OK_Text);
                             return;
                         }
 
@@ -315,12 +319,14 @@
 
                             if (targetToMove == null)
                             {
-                                await DialogService.ShowAlertDialog("The target box could not be found.", AppResources.Dialog_OK_Text);
+                                await DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_TargetBox,
+                                    AppResources.Dialog_OK_Text);
                                 return;
                             }
 
 
-                            var outcomeObj = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Moving...",
+                            var outcomeObj = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(
+                                AppResources.BoxDetailViewModel_Moving,
                             async () =>
                             {
                                 _databaseManager.BeginTransaction();
@@ -389,7 +395,8 @@
 
                             if (!outcomeObj)
                             {
-                                await DialogService.ShowAlertDialog("Data could not be moved, try again later.", AppResources.Dialog_OK_Text);
+                                await DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_MovedError,
+                                    AppResources.Dialog_OK_Text);
                                 return;
                             }
                             // Perform UI updates on main thread after dialog closed
@@ -397,27 +404,30 @@
                             if (itemInCollection != null)
                             {
                                 MainThread.BeginInvokeOnMainThread(() => Items.Remove(itemInCollection));
-                                await _toastService.DisplayToast("Successfully moved.");
+                                await _toastService.DisplayToast(AppResources.BoxDetailViewModel_SuccessMoved);
                             }
                                
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine($"BoxDetailViewModel.MoveItemCommand: Exception: {ex}");
-                            await DialogService.ShowAlertDialog("An unexpected error occurred while moving the item.", AppResources.Dialog_OK_Text);
+                            await DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_ErrorMoving,
+                                AppResources.Dialog_OK_Text);
                         }
                     }
 
                 }
                 else
                 {
-                    await DialogService.ShowAlertDialog("Data could not be moved, try again later.", AppResources.Dialog_OK_Text);
+                    await DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_MovedError, 
+                        AppResources.Dialog_OK_Text);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"BoxDetailViewModel.DeleteItemCommand: Exception: {ex}");
-                await DialogService.ShowAlertDialog("An unexpected error occurred while moving the item.", AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_ErrorMoving,
+                    AppResources.Dialog_OK_Text);
             }
         });
 

@@ -10,6 +10,7 @@
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.PlatformUtils.Models;
     using PermissionStatus = PlatformUtils.Models.PermissionStatus;
+    using QrSortable.Components.UiFunctionality.Localization;
 
 
     /// <summary>
@@ -76,8 +77,8 @@
 
                 case PermissionStatus.Restricted:
                     await DialogService.ShowAlertDialog(
-                        "Camera access is restricted on this device.",
-                        "OK");
+                        AppResources.QrBrScannerViewModel_CameraRestricted,
+                        AppResources.Dialog_OK_Text);
                     await NavigationService.Close();
                     break;
 
@@ -126,9 +127,8 @@
         private async Task HandleDeniedPermission()
         {
             bool openSettings = await DialogService.ShowRequestDialog(
-                "Camera permission is required","Please enable it in Settings.",
-                "Cancel",
-                "Open Settings");
+                AppResources.ItemDetailViewModel_CameraPermissionRequired,
+                AppResources.Dialog_Cancel_Text, AppResources.ItemDetailViewModel_OpenSettings);
 
             if (openSettings)
             {
