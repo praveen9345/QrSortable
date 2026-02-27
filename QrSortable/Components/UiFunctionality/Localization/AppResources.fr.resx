@@ -1,0 +1,741 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Dialog_InternetConnection_Title" xml:space="preserve">
+    <value>Connectivité !</value>
+  </data>
+  <data name="Dialog_InternetConnection_Message" xml:space="preserve">
+    <value>Aucune connexion Internet disponible.</value>
+  </data>
+  <data name="Dialog_ConfirmationMessage_Text" xml:space="preserve">
+    <value>Besoin de votre action</value>
+  </data>
+  <data name="Dialog_Cancel_Text" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Dialog_OK_Text" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="RootViewModel_MenuText" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="RootViewModel_CodeGeneratorText" xml:space="preserve">
+    <value>Générateur</value>
+  </data>
+  <data name="BoxDetailViewModel_DeletItemText" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir supprimer ?</value>
+  </data>
+  <data name="OnboardingViewModel_Multiuser_DiscriptionText" xml:space="preserve">
+    <value>Pour prendre en charge plusieurs utilisateurs, nous avons besoin d'un backend afin de stocker les données en toute sécurité. Pour votre protection, toutes les données envoyées au backend sont entièrement cryptées. Afin de garantir la sécurité de vos informations et d'activer les fonctionnalités multi-utilisateurs, le cryptage doit être activé.</value>
+  </data>
+  <data name="OnboardingViewModel_CopyText" xml:space="preserve">
+    <value>Copier</value>
+  </data>
+  <data name="OnboardingViewModel_MultiInfoText" xml:space="preserve">
+    <value>* Si vous disposez déjà de l'identifiant multi-utilisateurs de l'autre application QRSortable et que vous souhaitez vous synchroniser avec celle-ci, saisissez cet identifiant ci-dessous.</value>
+  </data>
+  <data name="OnboardingViewModel_EnterCodeText" xml:space="preserve">
+    <value>Entrez le code...</value>
+  </data>
+  <data name="OnboardingViewModel_DoneButtText" xml:space="preserve">
+    <value>Terminé</value>
+  </data>
+  <data name="OnboardingViewModel_ClipboardText" xml:space="preserve">
+    <value>MultiuserId copié dans le presse-papiers !</value>
+  </data>
+  <data name="Dialog_InformationText" xml:space="preserve">
+    <value>Informations</value>
+  </data>
+  <data name="OnboardingViewModel_MultiIdFromOtherText" xml:space="preserve">
+    <value>Utilisez l'identifiant multi-utilisateurs affiché sur un autre appareil équipé de l'application QRSortable pour vous connecter.</value>
+  </data>
+  <data name="OnboardingViewModel_DisablingMultiIduserText" xml:space="preserve">
+    <value>La désactivation de la fonctionnalité multi-utilisateurs interrompra la synchronisation avec les autres appareils.</value>
+  </data>
+  <data name="OnboardingViewModel_CheckValidMultiId" xml:space="preserve">
+    <value>Pour utiliser les fonctionnalités multi-utilisateurs, entrez un identifiant multi-utilisateurs valide. Si vous n'en avez pas, nous créerons un nouveau compte pour vous.</value>
+  </data>
+  <data name="OnboardingViewModel_CreateOne" xml:space="preserve">
+    <value>Créer un</value>
+  </data>
+  <data name="Dialog_Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="OnboardingViewModel_ValidMultiIdError" xml:space="preserve">
+    <value>Veuillez saisir un identifiant multi-utilisateurs valide pour continuer.</value>
+  </data>
+  <data name="OnboardingViewModel_InvalidIdError" xml:space="preserve">
+    <value>L'identifiant multi-utilisateurs saisi n'est pas valide ou vous devez au moins avoir une donnée enregistrée dans l'application QRSortable App avec cet identifiant multi-utilisateurs. Veuillez vérifier et réessayer.</value>
+  </data>
+  <data name="OnboardingViewModel_AlreadyIdError" xml:space="preserve">
+    <value>L'identifiant multi-utilisateurs que vous avez saisi est déjà utilisé sur cet appareil. Si vous appuyez sur OK, toutes les données enregistrées sur cet appareil seront supprimées et téléchargées à nouveau depuis le serveur.</value>
+  </data>
+  <data name="OnboardingViewModel_ClearDataSaved" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir effacer les données enregistrées sur cet appareil ?</value>
+  </data>
+  <data name="OnboardingViewModel_SettingMultiIdError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la configuration de l'identifiant multi-utilisateurs. Veuillez réessayer.</value>
+  </data>
+  <data name="OnboardingViewModel_DownloadingText" xml:space="preserve">
+    <value>Téléchargement de vos données. Cela peut prendre quelques instants...</value>
+  </data>
+  <data name="OnboardingViewModel_DownloadFailed" xml:space="preserve">
+    <value>Le téléchargement a échoué. Veuillez vérifier votre connexion Internet et réessayer.</value>
+  </data>
+  <data name="OnboardingViewModel_SubscriptionError" xml:space="preserve">
+    <value>Abonnement requis. Veuillez passer à la version supérieure pour continuer.</value>
+  </data>
+  <data name="CodeGeneratorViewModel_CodeText" xml:space="preserve">
+    <value>Code :</value>
+  </data>
+  <data name="CodeGeneratorViewModel_QRcodeText" xml:space="preserve">
+    <value>QRcode</value>
+  </data>
+  <data name="CodeGeneratorViewModel_BarcodeText" xml:space="preserve">
+    <value>Code-barres</value>
+  </data>
+  <data name="CodeGeneratorViewModel_PageText" xml:space="preserve">
+    <value>Page:</value>
+  </data>
+  <data name="CodeGeneratorViewModel_TagNameText" xml:space="preserve">
+    <value>Nom du tag :</value>
+  </data>
+  <data name="CodeGeneratorViewModel_ExampleText" xml:space="preserve">
+    <value>e.g. cuisine</value>
+  </data>
+  <data name="CodeGeneratorViewModel_HexText" xml:space="preserve">
+    <value>Couleur hex:</value>
+  </data>
+  <data name="CodeGeneratorViewModel_ExampleHexText" xml:space="preserve">
+    <value>e.g. #000000</value>
+  </data>
+  <data name="CodeGeneratorViewModel_NoOfPageText" xml:space="preserve">
+    <value>Nombre de pages :</value>
+  </data>
+  <data name="CodeGeneratorViewModel_TotalText" xml:space="preserve">
+    <value>Total:</value>
+  </data>
+  <data name="CodeGeneratorViewModel_BuyText" xml:space="preserve">
+    <value>Acheter maintenant</value>
+  </data>
+  <data name="CodeGeneratorViewModel_MissingTitle" xml:space="preserve">
+    <value>Sélection manquante</value>
+  </data>
+  <data name="CodeGeneratorViewModel_SelectCode" xml:space="preserve">
+    <value>Veuillez sélectionner un type de code (QRcode ou Barcode).</value>
+  </data>
+  <data name="CodeGeneratorViewModel_SelectPage" xml:space="preserve">
+    <value>Veuillez sélectionner un type de page (par exemple, A4 ou A5).</value>
+  </data>
+  <data name="PaperProductViewModel_Quantity" xml:space="preserve">
+    <value>Quantité :</value>
+  </data>
+  <data name="PaperProductViewModel_Basket" xml:space="preserve">
+    <value>Ajouter au panier</value>
+  </data>
+  <data name="PaperProductViewModel_BuyText" xml:space="preserve">
+    <value>Acheter maintenant</value>
+  </data>
+  <data name="PaperProductViewModel_BasketSuccess" xml:space="preserve">
+    <value>Ajouté au panier avec succès.</value>
+  </data>
+  <data name="PaperProductViewModel_ErrorSaveItem" xml:space="preserve">
+    <value>Une erreur inattendue s'est produite lors de l'enregistrement de l'élément. Veuillez réessayer.</value>
+  </data>
+  <data name="SelectProductViewModel_SetOfA4QRcodeTitle" xml:space="preserve">
+    <value>Lot de 5 QRcode A4</value>
+  </data>
+  <data name="SelectProductViewModel_SetOfA4QRcodeDiscription" xml:space="preserve">
+    <value>* orange, jaune, vert, rouge, rose</value>
+  </data>
+  <data name="SelectProductViewModel_SetOfA4QRcodePrice" xml:space="preserve">
+    <value> {0} uniquement</value>
+  </data>
+  <data name="SelectProductViewModel_NewText" xml:space="preserve">
+    <value>Nouveau</value>
+  </data>
+  <data name="AddToBasketViewModel_BuyText" xml:space="preserve">
+    <value>Acheter maintenant</value>
+  </data>
+  <data name="AddToBasketViewModel_DeleteFromBasket" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir supprimer cet article du panier ?</value>
+  </data>
+  <data name="BankTransferViewModel_AmountToPay" xml:space="preserve">
+    <value>Montant à payer :</value>
+  </data>
+  <data name="BankTransferViewModel_Discount" xml:space="preserve">
+    <value>10 % de réduction :</value>
+  </data>
+  <data name="BankTransferViewModel_Total" xml:space="preserve">
+    <value>Total :              </value>
+  </data>
+  <data name="BankTransferViewModel_IBAN" xml:space="preserve">
+    <value>IBAN:</value>
+  </data>
+  <data name="BankTransferViewModel_CopyText" xml:space="preserve">
+    <value>Copier</value>
+  </data>
+  <data name="BankTransferViewModel_ReferenceText" xml:space="preserve">
+    <value>Code de référence :</value>
+  </data>
+  <data name="BankTransferViewModel_ProvideReferenceText" xml:space="preserve">
+    <value>• Veuillez inclure le code de référence fourni dans vos informations de paiement.</value>
+  </data>
+  <data name="BankTransferViewModel_TransferCompletedText" xml:space="preserve">
+    <value>• Veiller à ce que le transfert soit effectué dans un délai de 5 jours ouvrables.</value>
+  </data>
+  <data name="BankTransferViewModel_PlacedOrderText" xml:space="preserve">
+    <value>• Cliquez sur « Passer une commande » pour finaliser votre achat.</value>
+  </data>
+  <data name="BankTransferViewModel_PlacedOrderButtText" xml:space="preserve">
+    <value>Passer une commande</value>
+  </data>
+  <data name="BankTransferViewModel_IBANCopiedText" xml:space="preserve">
+    <value>IBAN copié dans le presse-papiers !</value>
+  </data>
+  <data name="BankTransferViewModel_ReferenceCopiedText" xml:space="preserve">
+    <value>Code de référence copié dans le presse-papiers !</value>
+  </data>
+  <data name="Dialog_Processing" xml:space="preserve">
+    <value>Traitement en cours...</value>
+  </data>
+  <data name="Dialog_Conformation" xml:space="preserve">
+    <value>Confirmation 🎉</value>
+  </data>
+  <data name="BankTransferViewModel_EmailSendMssg" xml:space="preserve">
+    <value>Merci pour votre commande. Nous vous enverrons un e-mail sous peu.</value>
+  </data>
+  <data name="BankTransferViewModel_SaveErrorMsg" xml:space="preserve">
+    <value>Une erreur inattendue s'est produite lors de l'enregistrement de l'élément. Veuillez réessayer.</value>
+  </data>
+  <data name="SelectProductViewModel_GenrateOfA4QRcodeTitle" xml:space="preserve">
+    <value>Générez vous-même des codes QR ou des codes-barres au format A4 !</value>
+  </data>
+  <data name="SelectProductViewModel_GenrateOfA4QRcodeColor" xml:space="preserve">
+    <value>* sélectionner la couleur</value>
+  </data>
+  <data name="SelectProductViewModel_GenrateOfA4QRcodePrice" xml:space="preserve">
+    <value> {0} uniquement</value>
+  </data>
+  <data name="PaymentShipmentViewModel_ShipAndBillAddressText" xml:space="preserve">
+    <value>Adresse de livraison et de facturation :</value>
+  </data>
+  <data name="PaymentShipmentViewModel_NameText" xml:space="preserve">
+    <value>Nom:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EnterNameText" xml:space="preserve">
+    <value>e.g. entrez le nom...</value>
+  </data>
+  <data name="PaymentShipmentViewModel_StreetText" xml:space="preserve">
+    <value>Rue:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EnterStreetPlaceText" xml:space="preserve">
+    <value>e.g. entrez le nom de la rue...</value>
+  </data>
+  <data name="PaymentShipmentViewModel_HouseNoText" xml:space="preserve">
+    <value>Numéro de maison :</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EnterHouseNoPlaceText" xml:space="preserve">
+    <value>e.g. entrez le numéro de la maison...</value>
+  </data>
+  <data name="PaymentShipmentViewModel_ZIPText" xml:space="preserve">
+    <value>Code postal:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_ZIPPlaceText" xml:space="preserve">
+    <value>e.g. entrez le code postal.</value>
+  </data>
+  <data name="PaymentShipmentViewModel_CityText" xml:space="preserve">
+    <value>Ville :</value>
+  </data>
+  <data name="PaymentShipmentViewModel_CityPlaceText" xml:space="preserve">
+    <value>e.g. entrez la ville...</value>
+  </data>
+  <data name="PaymentShipmentViewModel_CountryText" xml:space="preserve">
+    <value>Pays :</value>
+  </data>
+  <data name="PaymentShipmentViewModel_CountryPlaceText" xml:space="preserve">
+    <value>e.g. entrez le pays...</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EmailText" xml:space="preserve">
+    <value>Courriel:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EmailPlaceText" xml:space="preserve">
+    <value>e.g. tonnom@gmail.com</value>
+  </data>
+  <data name="PaymentShipmentViewModel_FillFieldText" xml:space="preserve">
+    <value>Veuillez remplir tous les champs avant de continuer.</value>
+  </data>
+  <data name="PaymentShipmentViewModel_InvalidText" xml:space="preserve">
+    <value>Adresse e-mail invalide</value>
+  </data>
+  <data name="PaymentShipmentViewModel_EnterEmailText" xml:space="preserve">
+    <value>Veuillez saisir une adresse e-mail valide.</value>
+  </data>
+  <data name="PaymentShipmentViewModel_FailedPayment" xml:space="preserve">
+    <value>Échec de la création du paiement.</value>
+  </data>
+  <data name="PaymentShipmentViewModel_UnexpectedPayment" xml:space="preserve">
+    <value>Résultat inattendu du service de paiement.</value>
+  </data>
+  <data name="General_PaidText" xml:space="preserve">
+    <value>Votre paiement a été effectué avec succès !</value>
+  </data>
+  <data name="General_PendingText" xml:space="preserve">
+    <value>Votre paiement est en attente.</value>
+  </data>
+  <data name="General_OpenText" xml:space="preserve">
+    <value>Votre paiement est toujours en attente.</value>
+  </data>
+  <data name="General_FailedText" xml:space="preserve">
+    <value>Votre paiement a échoué.</value>
+  </data>
+  <data name="General_CancelPaymentText" xml:space="preserve">
+    <value>Votre paiement a été annulé.</value>
+  </data>
+  <data name="General_UnknownPaymentText" xml:space="preserve">
+    <value>Statut de paiement inconnu.</value>
+  </data>
+  <data name="PaymentShipmentViewModel_OrderReceived" xml:space="preserve">
+    <value>Commande reçue ! Nous vous enverrons un e-mail de confirmation sous peu. ! 🎉</value>
+  </data>
+  <data name="PaymentShipmentViewModel_UnexpectedErrorText" xml:space="preserve">
+    <value>Une erreur inattendue s'est produite lors de l'enregistrement de l'élément. Veuillez réessayer.</value>
+  </data>
+  <data name="General_PendingStatusText" xml:space="preserve">
+    <value>En attente...</value>
+  </data>
+  <data name="General_DownloadStatusText" xml:space="preserve">
+    <value>Télécharger</value>
+  </data>
+  <data name="PaymentShipmentViewModel_GeneratedCodeMsg" xml:space="preserve">
+    <value>Attente génération du code...</value>
+  </data>
+  <data name="SubscriptionViewModel_UpgradePremiumText" xml:space="preserve">
+    <value>Passez à Premium</value>
+  </data>
+  <data name="SubscriptionViewModel_UnlockText" xml:space="preserve">
+    <value>Libérez toute la puissance de QrSortable</value>
+  </data>
+  <data name="SubscriptionViewModel_EmailText" xml:space="preserve">
+    <value>Adresse e-mail*</value>
+  </data>
+  <data name="General_EmailText" xml:space="preserve">
+    <value>Courriel</value>
+  </data>
+  <data name="SubscriptionViewModel_CurrencyText" xml:space="preserve">
+    <value>Devise* :  </value>
+  </data>
+  <data name="SubscriptionViewModel_BillingText" xml:space="preserve">
+    <value>Facturation mensuelle • Résiliation possible à tout moment</value>
+  </data>
+  <data name="SubscriptionViewModel_StartPremiumText" xml:space="preserve">
+    <value>Commencez Premium dès maintenant</value>
+  </data>
+  <data name="SubscriptionViewModel_PremiumActiveText" xml:space="preserve">
+    <value>La prime est active</value>
+  </data>
+  <data name="SubscriptionViewModel_CancelSubText" xml:space="preserve">
+    <value>Annuler l'abonnement</value>
+  </data>
+  <data name="SubscriptionViewModel_SharingMsgText" xml:space="preserve">
+    <value>Partage multi-utilisateurs</value>
+  </data>
+  <data name="SubscriptionViewModel_UnlimitedText" xml:space="preserve">
+    <value>Articles illimités par boîte</value>
+  </data>
+  <data name="SubscriptionViewModel_CloudBackText" xml:space="preserve">
+    <value>Sauvegarde et synchronisation dans le cloud</value>
+  </data>
+  <data name="SubscriptionViewModel_MoveItemText" xml:space="preserve">
+    <value>Déplacer des articles entre des boîtes</value>
+  </data>
+  <data name="SubscriptionViewModel_MultipleImagesText" xml:space="preserve">
+    <value>Plusieurs images par article</value>
+  </data>
+  <data name="SubscriptionViewModel_AdvertisementsText" xml:space="preserve">
+    <value>Pas de publicités</value>
+  </data>
+  <data name="SubscriptionViewModel_PremiumActiveMsg" xml:space="preserve">
+    <value>🌟 Premium Actif</value>
+  </data>
+  <data name="SubscriptionViewModel_UnlockFeaturesText" xml:space="preserve">
+    <value>Passez à la version supérieure pour débloquer les fonctionnalités premium</value>
+  </data>
+  <data name="SubscriptionViewModel_WaitingPaymentText" xml:space="preserve">
+    <value>En attente de paiement…</value>
+  </data>
+  <data name="SubscriptionViewModel_EnterEmailText" xml:space="preserve">
+    <value>Veuillez saisir votre adresse e-mail</value>
+  </data>
+  <data name="SubscriptionViewModel_FailedPaymentText" xml:space="preserve">
+    <value>Impossible de créer le paiement.</value>
+  </data>
+  <data name="SubscriptionViewModel_PaymentCompletedText" xml:space="preserve">
+    <value>Paiement non effectué</value>
+  </data>
+  <data name="General_SucessText" xml:space="preserve">
+    <value>Succès</value>
+  </data>
+  <data name="SubscriptionViewModel_ActivePremiumText" xml:space="preserve">
+    <value>Abonnement Premium activé avec succès 🎉</value>
+  </data>
+  <data name="General_FailedError" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="SubscriptionViewModel_SubscriptiontCancelText" xml:space="preserve">
+    <value>Votre abonnement a été résilié.</value>
+  </data>
+  <data name="SubscriptionViewModel_EnterEmailPlaceText" xml:space="preserve">
+    <value>Entrez ton e-mail</value>
+  </data>
+  <data name="SubscriptionViewModel_MonthSelectedEuroCurrencyText" xml:space="preserve">
+    <value>€4.99 / mois</value>
+  </data>
+  <data name="SubscriptionViewModel_MonthSelectedDollerCurrencyText" xml:space="preserve">
+    <value>$4.99 / mois</value>
+  </data>
+  <data name="SubscriptionViewModel_VerifyingPaymentText" xml:space="preserve">
+    <value>Vérification du paiement…</value>
+  </data>
+  <data name="YoursOrdersViewModel_CopyId" xml:space="preserve">
+    <value>Copier l'ID</value>
+  </data>
+  <data name="YoursOrdersViewModel_CopyToClipboard" xml:space="preserve">
+    <value>Numéro de commande copié dans le presse-papiers !</value>
+  </data>
+  <data name="BoxDetailViewModel_LocationPlaceText" xml:space="preserve">
+    <value>Emplacement ...</value>
+  </data>
+  <data name="BoxDetailViewModel_CategoryPlaceText" xml:space="preserve">
+    <value>Catégorie ...</value>
+  </data>
+  <data name="BoxDetailViewModel_CategoryText" xml:space="preserve">
+    <value>Catégorie :</value>
+  </data>
+  <data name="BoxDetailViewModel_LeftEmptyText" xml:space="preserve">
+    <value>Les champs « Emplacement » et « Catégorie » sont obligatoires et ne peuvent être laissés vides.</value>
+  </data>
+  <data name="BoxDetailViewModel_ItemNotFoundText" xml:space="preserve">
+    <value>L'élément sélectionné est introuvable.</value>
+  </data>
+  <data name="General_SuccessDeleteText" xml:space="preserve">
+    <value>Suppression réussie.</value>
+  </data>
+  <data name="BoxDetailViewModel_NotPossibleToDelete" xml:space="preserve">
+    <value>Les données n'ont pas pu être supprimées, veuillez réessayer plus tard.</value>
+  </data>
+  <data name="BoxDetailViewModel_UnexpectedDeleteError" xml:space="preserve">
+    <value>Une erreur inattendue s'est produite lors de la suppression de l'élément.</value>
+  </data>
+  <data name="BoxDetailViewModel_SelectedItemText" xml:space="preserve">
+    <value>L'élément sélectionné se trouve déjà dans la case choisie.</value>
+  </data>
+  <data name="BoxDetailViewModel_AlreadySelectedText" xml:space="preserve">
+    <value>L'élément sélectionné se trouve déjà dans la case choisie.</value>
+  </data>
+  <data name="BoxDetailViewModel_TargetBox" xml:space="preserve">
+    <value>La boîte cible est introuvable.</value>
+  </data>
+  <data name="BoxDetailViewModel_Moving" xml:space="preserve">
+    <value>Déménagement...</value>
+  </data>
+  <data name="BoxDetailViewModel_MovedError" xml:space="preserve">
+    <value>Les données n'ont pas pu être transférées, veuillez réessayer plus tard.</value>
+  </data>
+  <data name="BoxDetailViewModel_SuccessMoved" xml:space="preserve">
+    <value>Déménagement réussi.</value>
+  </data>
+  <data name="BoxDetailViewModel_ErrorMoving" xml:space="preserve">
+    <value>Une erreur inattendue s'est produite lors du déplacement de l'élément.</value>
+  </data>
+  <data name="ItemDetailViewModel_ItemName" xml:space="preserve">
+    <value>Nom de l'article :</value>
+  </data>
+  <data name="ItemDetailViewModel_EnterNamePlace" xml:space="preserve">
+    <value>Entrez le nom...</value>
+  </data>
+  <data name="ItemDetailViewModel_Remarks" xml:space="preserve">
+    <value>Remarques :</value>
+  </data>
+  <data name="ItemDetailViewModel_MoreInfo" xml:space="preserve">
+    <value>Plus d'informations...</value>
+  </data>
+  <data name="ItemDetailViewModel_CameraPermission" xml:space="preserve">
+    <value>Une autorisation d'accès à l'appareil photo est nécessaire pour capturer des images.</value>
+  </data>
+  <data name="General_LoadingText" xml:space="preserve">
+    <value>Chargement...</value>
+  </data>
+  <data name="ItemDetailViewModel_NotCapture" xml:space="preserve">
+    <value>Impossible de capturer l'image</value>
+  </data>
+  <data name="ItemDetailViewModel_ImageAdded" xml:space="preserve">
+    <value>Vous pouvez ajouter un maximum de 4 images seulement.</value>
+  </data>
+  <data name="ItemDetailViewModel_NotAbleToPick" xml:space="preserve">
+    <value>Impossible de sélectionner l'image.</value>
+  </data>
+  <data name="ItemDetailViewModel_EmptyFieldError" xml:space="preserve">
+    <value>Les champs ItemName et ItemDescription sont obligatoires et ne peuvent pas être laissés vides.</value>
+  </data>
+  <data name="ItemDetailViewModel_AddOneImage" xml:space="preserve">
+    <value>Veuillez ajouter au moins une image avant d'enregistrer l'élément.</value>
+  </data>
+  <data name="ItemDetailViewModel_NotAbleToRetrieveData" xml:space="preserve">
+    <value>Impossible de récupérer les éléments de la base de données.</value>
+  </data>
+  <data name="ItemDetailViewModel_ItemNotFound" xml:space="preserve">
+    <value>Élément introuvable. Veuillez actualiser la page et réessayer.</value>
+  </data>
+  <data name="ItemDetailViewModel_CanNotBeModified" xml:space="preserve">
+    <value>Le nom de l'élément  '{0}' ne peut pas être modifié. Veuillez réessayer.</value>
+  </data>
+  <data name="ItemDetailViewModel_SuccessfullyUpdate" xml:space="preserve">
+    <value>Mise à jour réussie.</value>
+  </data>
+  <data name="ItemDetailViewModel_DataCouldNotUpdate" xml:space="preserve">
+    <value>Les données n'ont pas pu être mises à jour, veuillez réessayer plus tard.</value>
+  </data>
+  <data name="ItemDetailViewModel_UnexpectedErrorUpdate" xml:space="preserve">
+    <value>Une erreur inattendue s'est produite lors de la mise à jour de l'élément.</value>
+  </data>
+  <data name="ItemDetailViewModel_UnexpectedStorage" xml:space="preserve">
+    <value>Erreur inattendue : les données de stockage sont manquantes.</value>
+  </data>
+  <data name="ItemDetailViewModel_ItemAlreadyExists" xml:space="preserve">
+    <value>Un élément portant le nom '{0}' existe déjà. Veuillez choisir un autre nom.</value>
+  </data>
+  <data name="ItemDetailViewModel_SuccessSaved" xml:space="preserve">
+    <value>Enregistrement réussi.</value>
+  </data>
+  <data name="Dialog_DataCouldNoBeSaved" xml:space="preserve">
+    <value>Les données n'ont pas pu être enregistrées, veuillez réessayer plus tard.</value>
+  </data>
+  <data name="ItemDetailViewModel_UnexpectedErrorProcessing" xml:space="preserve">
+    <value>Une erreur inattendue s'est produite lors du traitement de votre demande.</value>
+  </data>
+  <data name="ItemDetailViewModel_OneMBData" xml:space="preserve">
+    <value>L'ajout de cette image dépasserait la limite totale de 1 Mo pour cet élément.</value>
+  </data>
+  <data name="ItemDetailViewModel_CameraPermissionRequired" xml:space="preserve">
+    <value>L'autorisation pour l'appareil photo est requise », « Veuillez l'activer dans les paramètres.</value>
+  </data>
+  <data name="ItemDetailViewModel_OpenSettings" xml:space="preserve">
+    <value>Ouvrir les paramètres</value>
+  </data>
+  <data name="QrBrScannerViewModel_AlignFrame" xml:space="preserve">
+    <value>Alignez-vous dans le cadre pour scanner</value>
+  </data>
+  <data name="QrBrScannerViewModel_CameraRestricted" xml:space="preserve">
+    <value>L'accès à l'appareil photo est restreint sur cet appareil.</value>
+  </data>
+  <data name="FilePickerService_PickImage" xml:space="preserve">
+    <value>Sélectionnez une image, s'il vous plaît.</value>
+  </data>
+  <data name="QrBrScannerViewModel_InvalidCodes" xml:space="preserve">
+    <value>Codes invalides. Veuillez scanner des codes valides à partir de QrSortable.</value>
+  </data>
+  <data name="SettingViewModel_AppSettings" xml:space="preserve">
+    <value>Paramètres de l'application</value>
+  </data>
+  <data name="SettingViewModel_LanguageText" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="SettingViewModel_PrivacyPolicyText" xml:space="preserve">
+    <value>Politique de confidentialité</value>
+  </data>
+  <data name="SettingViewModel_TermsCondition" xml:space="preserve">
+    <value>Conditions générales</value>
+  </data>
+  <data name="SettingViewModel_LicenseInfoText" xml:space="preserve">
+    <value>Informations sur la licence</value>
+  </data>
+  <data name="SettingViewModel_ResetsData" xml:space="preserve">
+    <value>Réinitialise les données de l'application et resynchronise avec le serveur :</value>
+  </data>
+  <data name="SettingViewModel_ClearButtonText" xml:space="preserve">
+    <value>Effacer le backend et synchroniser</value>
+  </data>
+  <data name="SettingViewModel_LegalText" xml:space="preserve">
+    <value>Juridique</value>
+  </data>
+  <data name="General_UploadingProgress" xml:space="preserve">
+    <value>Téléchargement...</value>
+  </data>
+  <data name="SettingViewModel_DataSync" xml:space="preserve">
+    <value>Données synchronisées avec succès.</value>
+  </data>
+  <data name="SettingViewModel_FailedDataSync" xml:space="preserve">
+    <value>Échec de la synchronisation des données ou absence de connexion Internet. Réessayez plus tard.</value>
+  </data>
+  <data name="MenuViewModel_MultiuserText" xml:space="preserve">
+    <value>Multiuser</value>
+  </data>
+  <data name="MenuViewModel_SubscribeText" xml:space="preserve">
+    <value>S'abonner</value>
+  </data>
+  <data name="MenuViewModel_ShareText" xml:space="preserve">
+    <value>Partager</value>
+  </data>
+  <data name="MenuViewModel_BasketText" xml:space="preserve">
+    <value>Panier</value>
+  </data>
+  <data name="MenuViewModel_YourOrderText" xml:space="preserve">
+    <value>Vos commandes</value>
+  </data>
+  <data name="MenuViewModel_SettingText" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="MenuViewModel_FeedbackText" xml:space="preserve">
+    <value>Commentaires</value>
+  </data>
+  <data name="DialogMoveToViewModel_SelectBarcode" xml:space="preserve">
+    <value>Veuillez sélectionner un code-barres Box.</value>
+  </data>
+  <data name="RootViewModel_FindText" xml:space="preserve">
+    <value>Trouver ...</value>
+  </data>
+  <data name="RootViewModel_LaterText" xml:space="preserve">
+    <value>Plus tard</value>
+  </data>
+  <data name="RootViewModel_UpdateText" xml:space="preserve">
+    <value>Mise à jour</value>
+  </data>
+  <data name="RootViewModel_UpdateAvailableText" xml:space="preserve">
+    <value>Une nouvelle mise à jour est disponible. Souhaitez-vous effectuer la mise à jour maintenant ?</value>
+  </data>
+  <data name="RootViewModel_NoStorageFoundText" xml:space="preserve">
+    <value>Aucune entrée de stockage trouvée ou échec du chargement des catégories.</value>
+  </data>
+  <data name="RootViewModel_RefreshText" xml:space="preserve">
+    <value>Échec de l'actualisation des catégories.</value>
+  </data>
+  <data name="RootViewModel_SyncText" xml:space="preserve">
+    <value>Synchronisation...</value>
+  </data>
+  <data name="RootViewModel_DataSyncSuccessText" xml:space="preserve">
+    <value>Les données ont été synchronisées avec succès.</value>
+  </data>
+  <data name="General_FillAllField" xml:space="preserve">
+    <value>Veuillez remplir tous les champs avant de continuer.</value>
+  </data>
+  <data name="RootViewModel_NoResultFoundText" xml:space="preserve">
+    <value>Aucun résultat trouvé pour votre recherche.</value>
+  </data>
+</root>
