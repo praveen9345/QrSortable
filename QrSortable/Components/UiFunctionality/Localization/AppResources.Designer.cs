@@ -1427,6 +1427,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar invalid code Text!!.
+        /// </summary>
+        public static string QrBrScannerViewModel_InvalidCodes
+        {
+            get
+            {
+                return ResourceManager.GetString("QrBrScannerViewModel_InvalidCodes", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar pick image Text!!.
         /// </summary>
         public static string FilePickerService_PickImage
