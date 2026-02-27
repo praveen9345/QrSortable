@@ -36,8 +36,8 @@
         {
             if(!_mauiEssentialWrapper.IsInternetConnectionAvailable())
             {
-                await DialogService.ShowAlertDialog("🌐 Connectivity",
-                "Internet Connection is required.", AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(AppResources.Dialog_InternetConnection_Title,
+              AppResources.Dialog_InternetConnection_Message, AppResources.Dialog_OK_Text);
                 await NavigationService.Close();
             }
             switch(viewName)

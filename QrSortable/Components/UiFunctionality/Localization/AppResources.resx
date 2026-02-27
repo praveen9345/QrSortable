@@ -684,4 +684,25 @@
   <data name="SettingViewModel_FailedDataSync" xml:space="preserve">
     <value>Data synchronization failed or no internet connection. Try again later.</value>
   </data>
+  <data name="MenuViewModel_MultiuserText" xml:space="preserve">
+    <value>Multiuser</value>
+  </data>
+  <data name="MenuViewModel_SubscribeText" xml:space="preserve">
+    <value>Subscribe</value>
+  </data>
+  <data name="MenuViewModel_ShareText" xml:space="preserve">
+    <value>Share</value>
+  </data>
+  <data name="MenuViewModel_BasketText" xml:space="preserve">
+    <value>Basket</value>
+  </data>
+  <data name="MenuViewModel_YourOrderText" xml:space="preserve">
+    <value>Your Orders</value>
+  </data>
+  <data name="MenuViewModel_SettingText" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="MenuViewModel_FeedbackText" xml:space="preserve">
+    <value>Feedback</value>
+  </data>
 </root>

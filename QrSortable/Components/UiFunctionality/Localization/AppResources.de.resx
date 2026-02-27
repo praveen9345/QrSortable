@@ -684,4 +684,25 @@
   <data name="SettingViewModel_FailedDataSync" xml:space="preserve">
     <value>Die Datensynchronisierung ist fehlgeschlagen oder es besteht keine Internetverbindung. Versuchen Sie es später erneut.</value>
   </data>
+  <data name="MenuViewModel_MultiuserText" xml:space="preserve">
+    <value>Mehrbenutzer</value>
+  </data>
+  <data name="MenuViewModel_SubscribeText" xml:space="preserve">
+    <value>Abonnieren</value>
+  </data>
+  <data name="MenuViewModel_ShareText" xml:space="preserve">
+    <value>Teilen</value>
+  </data>
+  <data name="MenuViewModel_BasketText" xml:space="preserve">
+    <value>Korb</value>
+  </data>
+  <data name="MenuViewModel_YourOrderText" xml:space="preserve">
+    <value>Ihre Bestellungen</value>
+  </data>
+  <data name="MenuViewModel_SettingText" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="MenuViewModel_FeedbackText" xml:space="preserve">
+    <value>Rückmeldung</value>
+  </data>
 </root>

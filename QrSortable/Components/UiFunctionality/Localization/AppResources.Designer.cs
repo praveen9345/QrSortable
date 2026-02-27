@@ -1480,5 +1480,82 @@ namespace QrSortable.Components.UiFunctionality.Localization
                 return ResourceManager.GetString("SettingViewModel_FailedDataSync", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string  data multiuser Text!!.
+        /// </summary>
+        public static string MenuViewModel_MultiuserText
+        {
+            get
+            {
+                return ResourceManager.GetString("MenuViewModel_MultiuserText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string subscribe Text!!.
+        /// </summary>
+        public static string MenuViewModel_SubscribeText
+        {
+            get
+            {
+                return ResourceManager.GetString("MenuViewModel_SubscribeText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string share Text!!.
+        /// </summary>
+        public static string MenuViewModel_ShareText
+        {
+            get
+            {
+                return ResourceManager.GetString("MenuViewModel_ShareText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string basket Text!!.
+        /// </summary>
+        public static string MenuViewModel_BasketText
+        {
+            get
+            {
+                return ResourceManager.GetString("MenuViewModel_BasketText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string your orders Text!!.
+        /// </summary>
+        public static string MenuViewModel_YourOrderText
+        {
+            get
+            {
+                return ResourceManager.GetString("MenuViewModel_YourOrderText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string setting Text!!.
+        /// </summary>
+        public static string MenuViewModel_SettingText
+        {
+            get
+            {
+                return ResourceManager.GetString("MenuViewModel_SettingText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string feedback Text!!.
+        /// </summary>
+        public static string MenuViewModel_FeedbackText
+        {
+            get
+            {
+                return ResourceManager.GetString("MenuViewModel_FeedbackText", resourceCulture);
+            }
+        }
     }
 }

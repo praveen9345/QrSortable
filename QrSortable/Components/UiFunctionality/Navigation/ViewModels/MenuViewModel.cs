@@ -19,14 +19,13 @@
         private readonly IMauiEssentialsWrapper _mauiEssentialWrapper;
         public ObservableCollection<MenuItem> MenuItems { get; set; }
 
-        private const string MultiuserTitle = "Multiuser";
-        private const string SubscribeTitle = "Subscribe";
-        private const string ShareTitle = "Share";
-        private const string AddToBasketTitle = "Basket";
-        private const string YourOrdersTitle = "Your Orders";
-        private const string SettingsTitle = "Settings";
-        private const string FeedbackTitle = "Feedback";
-        private const string ProfileDeleteTitle = "Profile Delete";
+        private static readonly string MultiuserTitle = AppResources.MenuViewModel_MultiuserText;
+        private static readonly string SubscribeTitle = AppResources.MenuViewModel_SubscribeText;
+        private static readonly string ShareTitle = AppResources.MenuViewModel_ShareText;
+        private static readonly string AddToBasketTitle = AppResources.MenuViewModel_BasketText;
+        private static readonly string YourOrdersTitle = AppResources.MenuViewModel_YourOrderText;
+        private static readonly string SettingsTitle = AppResources.MenuViewModel_SettingText;
+        private static readonly string FeedbackTitle = AppResources.MenuViewModel_FeedbackText;
 
 
         /// <summary>
@@ -46,20 +45,9 @@
                 new MenuItem { Icon=IconNames.Subscribe, Title=SubscribeTitle , HasBadge=true, Badge="Coming Soon"},
                 new MenuItem { Icon=IconNames.Share, Title=ShareTitle },
                 new MenuItem { Icon=IconNames.Settings, Title=SettingsTitle },
-                new MenuItem { Icon=IconNames.Feedback, Title=FeedbackTitle },
-                new MenuItem { Icon=IconNames.ProfileDelete, Title=ProfileDeleteTitle }
+                new MenuItem { Icon=IconNames.Feedback, Title=FeedbackTitle }
             };
 
-        }
-
-        /// <summary>
-        /// Initializes the component asynchronously, ensuring proper initialization of general information
-        /// and notification permissions.
-        /// </summary>
-        /// <returns>An awaitable task.</returns>
-        public override async Task InitializeAsync()
-        {
-            await base.InitializeAsync();
         }
 
         /// <summary>
@@ -76,26 +64,28 @@
 
                 switch (selected.Title)
                 {
-                    case MultiuserTitle:
+                    case var _ when selected.Title == MultiuserTitle:
                         await NavigationService.Navigate<OnboardingView>(true);
                         break;
-                    case AddToBasketTitle:
+
+                    case var _ when selected.Title == AddToBasketTitle:
                         await NavigationService.Navigate<AddToBasketView>();
                         break;
-                    case YourOrdersTitle:
+
+                    case var _ when selected.Title == YourOrdersTitle:
                         await NavigationService.Navigate<YoursOrdersView>();
                         break;
-                    case SubscribeTitle:
+
+                    case var _ when selected.Title == SubscribeTitle:
                         await NavigationService.Navigate<SubscriptionView>(false);
                         break;
-                    case SettingsTitle:
+
+                    case var _ when selected.Title == SettingsTitle:
                         await NavigationService.Navigate<SettingView>();
                         break;
-                    case FeedbackTitle:
+
+                    case var _ when selected.Title == FeedbackTitle:
                         await NavigationService.Navigate<WebView>("feedback");
-                        break;
-                    case "":
-                        // Future Implementation
                         break;
                 }
 
@@ -111,8 +101,8 @@
         {
             if (!_mauiEssentialWrapper.IsInternetConnectionAvailable())
             {
-                 await DialogService.ShowAlertDialog("🌐 Connectivity",
-                "Internet Connection is required.", AppResources.Dialog_OK_Text);
+                 await DialogService.ShowAlertDialog(AppResources.Dialog_InternetConnection_Title,
+                AppResources.Dialog_InternetConnection_Message, AppResources.Dialog_OK_Text);
                 await NavigationService.Close();
                 return true;
             }
