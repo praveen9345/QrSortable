@@ -648,4 +648,7 @@
   <data name="FilePickerService_PickImage" xml:space="preserve">
     <value>Pick Image Please</value>
   </data>
+  <data name="QrBrScannerViewModel_InvalidCodes" xml:space="preserve">
+    <value>Invalid codes. Please scan valid codes from QrSortable.</value>
+  </data>
 </root>

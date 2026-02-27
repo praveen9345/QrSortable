@@ -109,8 +109,9 @@
                 }
                 catch
                 {
-                    // TODO: Handle decryption errors by displaying a message to the user.
-                    decryptedValue = "Invalid";
+                    await DialogService.ShowAlertDialog( AppResources.QrBrScannerViewModel_InvalidCodes,
+                        AppResources.Dialog_OK_Text);
+                    return;
                 }
 
                 string displayValue = decryptedValue + "," + result.FirstOrDefault()?.BarcodeFormat.ToString();
