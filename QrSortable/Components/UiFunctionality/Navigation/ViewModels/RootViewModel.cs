@@ -79,8 +79,8 @@
             if (!await _versionCheckService.IsUsingLatestVersion())
             {
                 var confirmMessage = await DialogService.ShowRequestDialog(
-                "A new update is available. Would you like to update now?",
-                "Later", "Update");
+                AppResources.RootViewModel_UpdateAvailableText,
+                AppResources.RootViewModel_LaterText, AppResources.RootViewModel_UpdateText);
 
                 if (confirmMessage)
                 {
@@ -104,7 +104,7 @@
             // Ensure we run UI code on the main thread
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                outcome = (bool)await DialogService.ShowActivityIndicatorAndReturnResult("Loading...",
+                outcome = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(AppResources.General_LoadingText,
                    async () =>
                    {
                         return await LoadCategoryAsync();
@@ -114,7 +114,7 @@
 
             if (!outcome)
             {
-                await _toastService.DisplayToast("Failed to load categories or no storage entries found.");
+                await _toastService.DisplayToast(AppResources.RootViewModel_NoStorageFoundText);
             }
         }
 
@@ -142,7 +142,7 @@
                 var success = await LoadCategoryAsync();
                 if (!success)
                 {
-                    await _toastService.DisplayToast("Failed to refresh categories.");
+                    await _toastService.DisplayToast(AppResources.RootViewModel_RefreshText);
                 }
             }
 
@@ -178,14 +178,14 @@
 
         public AsyncRelayCommand RefreshCommand => new AsyncRelayCommand(async () =>
         {
-            await DialogService.ShowActivityIndicatorAndReturnResult("Synchronizing...", async () =>
+            await DialogService.ShowActivityIndicatorAndReturnResult(AppResources.RootViewModel_SyncText, async () =>
             {
                 var result = await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
                     if (result)
                     {
-                        await _toastService.DisplayToast("Data synchronized successfully.");
+                        await _toastService.DisplayToast(AppResources.RootViewModel_DataSyncSuccessText);
                     }   
                 });
 
@@ -247,7 +247,7 @@
             catch (Exception ex)
             {
                 
-                await _toastService.DisplayToast($"Error loading categories: {ex.Message}");
+                await _toastService.DisplayToast($"{ex.Message}");
                 return false;
             }
         }
@@ -272,8 +272,8 @@
 
             if (string.IsNullOrWhiteSpace(SearchText))
             {
-                await DialogService.ShowAlertDialog("Missing Information",
-                    "Please fill in all fields before proceeding.", AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(AppResources.Dialog_InformationText,
+                    AppResources.General_FillAllField, AppResources.Dialog_OK_Text);
                 return;
             }
             
@@ -290,12 +290,12 @@
                         SearchCategories.Clear();
                         SearchText = string.Empty;
                         SearchVisible = false;
-                        _toastService.DisplayToast("No results found for your search.");
+                        _toastService.DisplayToast(AppResources.RootViewModel_NoResultFoundText);
                     });
                     return;
                 }
 
-                await DialogService.ShowActivityIndicatorAndReturnResult("Loading...", async () =>
+                await DialogService.ShowActivityIndicatorAndReturnResult(AppResources.General_LoadingText, async () =>
                 {
 
                    var grouped = results

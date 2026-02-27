@@ -61,7 +61,7 @@
                         <!--  Serch Text  -->
                         <Entry
                             Grid.Column="1"
-                            Placeholder="Find ..."
+                            Placeholder="{Binding [FindText]}"
                             PlaceholderColor="{StaticResource PlaceholderColor}"
                             Style="{StaticResource NormalText}"
                             Text="{Binding SearchText}" />
@@ -522,7 +522,6 @@
             <StackLayout Grid.Row="3" BackgroundColor="{StaticResource DarkGrey}">
                 <!--  Separator  -->
                 <BoxView
-
                     BackgroundColor="{StaticResource Yellow}"
                     HeightRequest="2"
                     HorizontalOptions="Fill"
@@ -553,7 +552,8 @@
                     <!--  qr scan button  -->
                     <Button
                         Grid.Column="1"
-                        Padding="{OnPlatform Android ='-2',iOS='0'}"
+                        Padding="{OnPlatform Android='-2',
+                                             iOS='0'}"
                         BackgroundColor="{StaticResource Primary}"
                         Command="{Binding QrScanCommand}"
                         CornerRadius="30"

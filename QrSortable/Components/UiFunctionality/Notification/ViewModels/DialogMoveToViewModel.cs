@@ -1,9 +1,7 @@
 ﻿namespace QrSortable.Components.UiFunctionality.Notification.ViewModels
 {
-    using BarcodeScanning;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.UiFunctionality.Localization;
@@ -80,7 +78,7 @@
             // CloseDialog expects the dialog result (string)
             if(string.IsNullOrEmpty(SelectedMoveTo))
             {
-                await _toastService.DisplayToast("Please select a Box bar code.");
+                await _toastService.DisplayToast(AppResources.DialogMoveToViewModel_SelectBarcode);
                 return;
             }
             NavigationService.CloseDialog(SelectedMoveTo);

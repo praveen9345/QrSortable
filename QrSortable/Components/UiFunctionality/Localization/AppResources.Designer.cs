@@ -315,6 +315,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
             }
         }
 
+        /// <summary>
+        ///   Looks up a localized string similar to fille the field Text!!.
+        /// </summary>
+        public static string General_FillAllField
+        {
+            get
+            {
+                return ResourceManager.GetString("General_FillAllField", resourceCulture);
+            }
+        }
+
 
         /// <summary>
         ///   Looks up a localized string similar to RootViewModel MenuText!!.
@@ -324,6 +335,95 @@ namespace QrSortable.Components.UiFunctionality.Localization
                 return ResourceManager.GetString("RootViewModel_MenuText", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to later Text!!.
+        /// </summary>
+        public static string RootViewModel_LaterText
+        {
+            get
+            {
+                return ResourceManager.GetString("RootViewModel_LaterText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to update Text!!.
+        /// </summary>
+        public static string RootViewModel_UpdateText
+        {
+            get
+            {
+                return ResourceManager.GetString("RootViewModel_UpdateText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to update available Text!!.
+        /// </summary>
+        public static string RootViewModel_UpdateAvailableText
+        {
+            get
+            {
+                return ResourceManager.GetString("RootViewModel_UpdateAvailableText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to no storage found Text!!.
+        /// </summary>
+        public static string RootViewModel_NoStorageFoundText
+        {
+            get
+            {
+                return ResourceManager.GetString("RootViewModel_NoStorageFoundText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to refresh Text!!.
+        /// </summary>
+        public static string RootViewModel_RefreshText
+        {
+            get
+            {
+                return ResourceManager.GetString("RootViewModel_RefreshText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to sync Text!!.
+        /// </summary>
+        public static string RootViewModel_SyncText
+        {
+            get
+            {
+                return ResourceManager.GetString("RootViewModel_SyncText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to result not found Text!!.
+        /// </summary>
+        public static string RootViewModel_NoResultFoundText
+        {
+            get
+            {
+                return ResourceManager.GetString("RootViewModel_NoResultFoundText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to data sync successful Text!!.
+        /// </summary>
+        public static string RootViewModel_DataSyncSuccessText
+        {
+            get
+            {
+                return ResourceManager.GetString("RootViewModel_DataSyncSuccessText", resourceCulture);
+            }
+        }
+
 
         /// <summary>
         ///   Looks up a localized string similar to RootViewModel CodeGeneratorText!!.
@@ -1557,5 +1657,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
                 return ResourceManager.GetString("MenuViewModel_FeedbackText", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string select barcode Text!!.
+        /// </summary>
+        public static string DialogMoveToViewModel_SelectBarcode
+        {
+            get
+            {
+                return ResourceManager.GetString("DialogMoveToViewModel_SelectBarcode", resourceCulture);
+            }
+        }
+
     }
 }

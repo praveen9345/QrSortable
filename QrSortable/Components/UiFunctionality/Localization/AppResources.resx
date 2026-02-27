@@ -705,4 +705,37 @@
   <data name="MenuViewModel_FeedbackText" xml:space="preserve">
     <value>Feedback</value>
   </data>
+  <data name="DialogMoveToViewModel_SelectBarcode" xml:space="preserve">
+    <value>Please select a Box barcode.</value>
+  </data>
+  <data name="RootViewModel_FindText" xml:space="preserve">
+    <value>Find ...</value>
+  </data>
+  <data name="RootViewModel_LaterText" xml:space="preserve">
+    <value>Later</value>
+  </data>
+  <data name="RootViewModel_UpdateText" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="RootViewModel_UpdateAvailableText" xml:space="preserve">
+    <value>A new update is available. Would you like to update now?</value>
+  </data>
+  <data name="RootViewModel_NoStorageFoundText" xml:space="preserve">
+    <value>No storage entries found or failed to load categories.</value>
+  </data>
+  <data name="RootViewModel_RefreshText" xml:space="preserve">
+    <value>Failed to refresh categories.</value>
+  </data>
+  <data name="RootViewModel_SyncText" xml:space="preserve">
+    <value>Synchronizing ...</value>
+  </data>
+  <data name="RootViewModel_DataSyncSuccessText" xml:space="preserve">
+    <value>Data synchronized successfully.</value>
+  </data>
+  <data name="General_FillAllField" xml:space="preserve">
+    <value>Please fill in all fields before proceeding.</value>
+  </data>
+  <data name="RootViewModel_NoResultFoundText" xml:space="preserve">
+    <value>No results found for your search.</value>
+  </data>
 </root>
