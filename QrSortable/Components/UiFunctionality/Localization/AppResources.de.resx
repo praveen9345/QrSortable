@@ -651,4 +651,37 @@
   <data name="QrBrScannerViewModel_InvalidCodes" xml:space="preserve">
     <value>Ungültige Codes. Bitte scannen Sie gültige Codes von QrSortable.</value>
   </data>
+  <data name="SettingViewModel_AppSettings" xml:space="preserve">
+    <value>App Einstellungen</value>
+  </data>
+  <data name="SettingViewModel_LanguageText" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="SettingViewModel_PrivacyPolicyText" xml:space="preserve">
+    <value>Datenschutzerklärung</value>
+  </data>
+  <data name="SettingViewModel_TermsCondition" xml:space="preserve">
+    <value>Allgemeine Geschäftsbedingungen</value>
+  </data>
+  <data name="SettingViewModel_LicenseInfoText" xml:space="preserve">
+    <value>Lizenzinformationen</value>
+  </data>
+  <data name="SettingViewModel_ResetsData" xml:space="preserve">
+    <value>App-Daten zurücksetzen und erneut mit dem Server synchronisieren:</value>
+  </data>
+  <data name="SettingViewModel_ClearButtonText" xml:space="preserve">
+    <value>Backend löschen und synchronisieren</value>
+  </data>
+  <data name="SettingViewModel_LegalText" xml:space="preserve">
+    <value>Rechtlich</value>
+  </data>
+  <data name="General_UploadingProgress" xml:space="preserve">
+    <value>Hochladen...</value>
+  </data>
+  <data name="SettingViewModel_DataSync" xml:space="preserve">
+    <value>Daten erfolgreich synchronisiert.</value>
+  </data>
+  <data name="SettingViewModel_FailedDataSync" xml:space="preserve">
+    <value>Die Datensynchronisierung ist fehlgeschlagen oder es besteht keine Internetverbindung. Versuchen Sie es später erneut.</value>
+  </data>
 </root>

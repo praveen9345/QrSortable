@@ -1,22 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<views:BaseView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
-                xmlns:local="clr-namespace:QrSortable.Resources"
-                x:Class="QrSortable.Components.CoreFeatures.Settings.Views.WebView"
-                BackgroundImageSource="background_layout.webp">
+<?xml version="1.0" encoding="UTF-8" ?>
+<views:BaseView
+    x:Class="QrSortable.Components.CoreFeatures.Settings.Views.WebView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
+    BackgroundImageSource="background_layout.webp">
     <views:BaseView.Content>
         <Grid RowDefinitions="*">
 
-            <!-- WebView fills whole page -->
+            <!--  WebView fills whole page  -->
             <WebView
                 x:Name="Browser"
-                Source="{Binding Url}"
                 HorizontalOptions="Fill"
-                VerticalOptions="Fill"/>
+                Source="{Binding Url}"
+                VerticalOptions="Fill" />
 
-            <!-- Back button overlay -->
-             <Button
+            <!--  Back button overlay  -->
+            <Button
                 Margin="15,15,0,0"
                 Padding="2"
                 BackgroundColor="{StaticResource DarkGrey}"
@@ -42,6 +43,3 @@
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>
-
-
-           

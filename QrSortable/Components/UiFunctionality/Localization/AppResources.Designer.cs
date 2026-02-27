@@ -304,6 +304,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
             }
         }
 
+        /// <summary>
+        ///   Looks up a localized string similar to uploading Text!!.
+        /// </summary>
+        public static string General_UploadingProgress
+        {
+            get
+            {
+                return ResourceManager.GetString("General_UploadingProgress", resourceCulture);
+            }
+        }
+
 
         /// <summary>
         ///   Looks up a localized string similar to RootViewModel MenuText!!.
@@ -1445,6 +1456,28 @@ namespace QrSortable.Components.UiFunctionality.Localization
             get
             {
                 return ResourceManager.GetString("FilePickerService_PickImage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string  data sync successful Text!!.
+        /// </summary>
+        public static string SettingViewModel_DataSync
+        {
+            get
+            {
+                return ResourceManager.GetString("SettingViewModel_DataSync", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string  data failed to sync Text!!.
+        /// </summary>
+        public static string SettingViewModel_FailedDataSync
+        {
+            get
+            {
+                return ResourceManager.GetString("SettingViewModel_FailedDataSync", resourceCulture);
             }
         }
     }

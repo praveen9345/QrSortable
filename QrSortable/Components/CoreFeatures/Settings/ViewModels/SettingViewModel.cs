@@ -1,12 +1,13 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Settings.ViewModels
 {
+    using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
-    using QrSortable.Components.CoreFeatures.DataManagement.Backend;
+    using QrSortable.Components.CoreFeatures.Onboarding.Views;
+    using QrSortable.Components.CoreFeatures.Settings.Views;
+    using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
-    using QrSortable.Components.CoreFeatures.Settings.Views;
-    using QrSortable.Components.CoreFeatures.Onboarding.Views;
 
 
     /// <summary>
@@ -17,29 +18,28 @@
 
         private readonly IGeneralDatabaseSynchronizationManager _generalDatabaseSynchronizationManager;
 
-        private readonly IBackendCommunicationService _backendCommunicationService;
-
-        private readonly IBackendDatabaseManager _backendDatabaseManager;
-
-        private readonly IBackendSynchronizationManager _backendSynchronizationManager;
-
         private readonly IToastService _toast;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SettingViewModel" />.
         /// </summary>
-        public SettingViewModel(IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager,
-            IBackendCommunicationService backendCommunicationService, IBackendDatabaseManager backendDatabaseManager,
-            IBackendSynchronizationManager backendSynchronizationManager, IToastService toast)
+        public SettingViewModel(IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager, IToastService toast)
         {
             IsBackNavigationEnabled = true;
             _generalDatabaseSynchronizationManager = generalDatabaseSynchronizationManager;
-            _backendCommunicationService = backendCommunicationService;
-            _backendDatabaseManager = backendDatabaseManager;
-            _backendSynchronizationManager = backendSynchronizationManager;
             _toast = toast;
         }
 
+
+        [ObservableProperty]
+        public string _appVersion;
+
+        public override void ViewAppearing()
+        {
+            base.ViewAppearing();
+
+            AppVersion = AppInfo.VersionString;
+        }
 
         public AsyncRelayCommand LanguageCommand => new AsyncRelayCommand(async () =>
         {
@@ -64,7 +64,7 @@
         public AsyncRelayCommand SyncDataCommand => new AsyncRelayCommand(async () =>
         {
 
-            await DialogService.ShowActivityIndicatorAndReturnResult("Uploading...", async () =>
+            await DialogService.ShowActivityIndicatorAndReturnResult(AppResources.General_UploadingProgress, async () =>
             {
                 var result = await _generalDatabaseSynchronizationManager.ClearBackendAndSyncLocalDataAsync();
 
@@ -72,11 +72,11 @@
                 {
                     if (result)
                     {
-                        await _toast.DisplayToast("Data synchronized successfully.");
+                        await _toast.DisplayToast(AppResources.SettingViewModel_DataSync);
                     }
                     else
                     {
-                        await _toast.DisplayToast("Data synchronization failed or no internet connection. Try again later.");
+                        await _toast.DisplayToast(AppResources.SettingViewModel_FailedDataSync);
                     }
                 });
 

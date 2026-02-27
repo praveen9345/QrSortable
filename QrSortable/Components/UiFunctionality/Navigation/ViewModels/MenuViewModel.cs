@@ -99,7 +99,6 @@
                         break;
                 }
 
-
                 SelectedMenuItem = null;
             });
         /// <summary>

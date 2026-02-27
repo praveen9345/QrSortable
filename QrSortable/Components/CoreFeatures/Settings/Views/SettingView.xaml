@@ -57,13 +57,16 @@
                 <ScrollView Orientation="Vertical">
                     <StackLayout>
                         <!--  version label  -->
-                        <Label Style="{StaticResource SubHeadline}" Text="App Version: 1.1.2" />
+                        <Label
+                            FontAttributes="Bold"
+                            Style="{StaticResource SubHeadline}"
+                            Text="{Binding AppVersion}" />
 
                         <!--  app setting lable  -->
                         <Label
                             Margin="20,30,0,0"
                             Style="{StaticResource BoldText}"
-                            Text="App settings" />
+                            Text="{Binding [AppSettings]}" />
 
                         <!--  divider  -->
                         <BoxView Style="{StaticResource LineStyle}" />
@@ -84,7 +87,7 @@
                                     Grid.Column="0"
                                     FontFamily="ItimRegular"
                                     FontSize="18"
-                                    Text="Language"
+                                    Text="{Binding [LanguageText]}"
                                     TextColor="White" />
 
                                 <!--  Forward navigation  -->
@@ -106,7 +109,7 @@
                         <Label
                             Margin="20,30,0,0"
                             Style="{StaticResource BoldText}"
-                            Text="Legal" />
+                            Text="{Binding [LegalText]}" />
 
                         <!--  divider  -->
                         <BoxView Style="{StaticResource LineStyle}" />
@@ -127,7 +130,7 @@
                                     Grid.Column="0"
                                     FontFamily="ItimRegular"
                                     FontSize="18"
-                                    Text="Privacy Policy"
+                                    Text="{Binding [PrivacyPolicyText]}"
                                     TextColor="White" />
 
                                 <!--  Forward navigation  -->
@@ -161,7 +164,7 @@
                                     Grid.Column="0"
                                     FontFamily="ItimRegular"
                                     FontSize="18"
-                                    Text="Terms and Conditions"
+                                    Text="{Binding [TermsCondition]}"
                                     TextColor="White" />
 
                                 <!--  Forward navigation  -->
@@ -195,7 +198,7 @@
                                     Grid.Column="0"
                                     FontFamily="ItimRegular"
                                     FontSize="18"
-                                    Text="License Information"
+                                    Text="{Binding [LicenseInfoText]}"
                                     TextColor="White" />
 
                                 <!--  Forward navigation  -->
@@ -217,7 +220,7 @@
                         <BoxView Style="{StaticResource LineStyle}" />
 
                         <StackLayout Margin="20,30,20,0" Spacing="5">
-                            <Label Style="{StaticResource BoldText}" Text="Resets app data and re-syncs with the server:" />
+                            <Label Style="{StaticResource BoldText}" Text="{Binding [ResetsData]}" />
                             <Button
                                 BackgroundColor="{StaticResource Primary}"
                                 Command="{Binding SyncDataCommand}"
@@ -226,7 +229,7 @@
                                 FontFamily="ItimRegular"
                                 FontSize="20"
                                 HorizontalOptions="Fill"
-                                Text="Clear Backend and Sync"
+                                Text="{Binding [ClearButtonText]}"
                                 TextColor="Black"
                                 VerticalOptions="Center">
                                 <Button.Shadow>
