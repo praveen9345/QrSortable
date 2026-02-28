@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
     <views:BaseView.Content>
@@ -66,7 +67,7 @@
                         FontFamily="ItimRegular"
                         FontSize="18"
                         HorizontalTextAlignment="Start"
-                        Text="{Binding [AmountToPay]}"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_AmountToPay]}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
 
@@ -89,7 +90,7 @@
                         FontFamily="ItimRegular"
                         FontSize="18"
                         HorizontalTextAlignment="Start"
-                        Text="{Binding [Discount]}"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_Discount]}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
                     <Label
@@ -116,7 +117,7 @@
                         FontFamily="ItimRegular"
                         FontSize="20"
                         HorizontalTextAlignment="Start"
-                        Text="{Binding [Total]}"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_Total]}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
                     <Label
@@ -145,7 +146,7 @@
                         FontFamily="ItimRegular"
                         FontSize="18"
                         HorizontalTextAlignment="Start"
-                        Text="{Binding [IBAN]}"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_IBAN]}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
                     <Label
@@ -166,7 +167,7 @@
                         FontFamily="ItimRegular"
                         FontSize="16"
                         HorizontalOptions="Fill"
-                        Text="{Binding [CopyText]}"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_CopyText]}"
                         TextColor="Black"
                         VerticalOptions="Center">
                         <Button.Shadow>
@@ -187,7 +188,7 @@
                         FontFamily="ItimRegular"
                         FontSize="18"
                         HorizontalTextAlignment="Start"
-                        Text="{Binding [ReferenceText]}"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_ReferenceText]}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
                     <Label
@@ -208,7 +209,7 @@
                         FontFamily="ItimRegular"
                         FontSize="16"
                         HorizontalOptions="Fill"
-                        Text="{Binding [CopyText]}"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_CopyText]}"
                         TextColor="Black"
                         VerticalOptions="Center">
                         <Button.Shadow>
@@ -233,21 +234,21 @@
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Start"
-                            Text="{Binding [ProvideReferenceText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_ProvideReferenceText]}"
                             TextColor="Black" />
                         <Label
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Start"
-                            Text="{Binding [TransferCompletedText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_TransferCompletedText]}"
                             TextColor="Black" />
                         <Label
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Start"
-                            Text="{Binding [PlacedOrderText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_PlacedOrderText]}"
                             TextColor="Black" />
                     </VerticalStackLayout>
                 </Border>
@@ -262,7 +263,7 @@
                     FontSize="20"
                     HorizontalOptions="Fill"
                     IsVisible="{Binding BankTransferVisible}"
-                    Text="{Binding [PlacedOrderButtText]}"
+                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_PlacedOrderButtText]}"
                     TextColor="Black"
                     VerticalOptions="Center">
                     <Button.Shadow>

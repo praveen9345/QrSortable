@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
-    xmlns:resx="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
+    xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
@@ -158,7 +158,7 @@
                                                     FontFamily="ItimRegular"
                                                     FontSize="Large"
                                                     HorizontalTextAlignment="Center"
-                                                    Text="{x:Static resx:AppResources.SelectProductViewModel_NewText}"
+                                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SelectProductViewModel_NewText]}"
                                                     TextColor="{StaticResource Black}"
                                                     VerticalTextAlignment="Center" />
                                             </Border>

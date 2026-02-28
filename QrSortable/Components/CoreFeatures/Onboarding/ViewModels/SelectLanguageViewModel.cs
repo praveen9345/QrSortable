@@ -8,6 +8,7 @@
     using QrSortable.Components.CoreFeatures.Settings;
     using QrSortable.Components.CoreFeatures.Settings.Models;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using QrSortable.Components.UiFunctionality.Navigation.Views;
     using System.Collections.ObjectModel;
 
     /// <summary>
@@ -76,7 +77,7 @@
 
              if (IsFromApp)
              {
-                await NavigationService.Close();
+                 await NavigationService.Navigate<RootView>();
              }
              else
              {

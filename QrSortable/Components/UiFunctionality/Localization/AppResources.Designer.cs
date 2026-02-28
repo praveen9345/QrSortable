@@ -435,6 +435,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to find Text!!.
+        ///</summary>
+        public static string RootViewModel_FindText
+        {
+            get
+            {
+                return ResourceManager.GetString("RootViewModel_FindText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to BoxDetailViewModel DeletItemText!!.
         /// </summary>
         public static string BoxDetailViewModel_DeletItemText

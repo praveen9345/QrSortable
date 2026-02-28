@@ -738,4 +738,13 @@
   <data name="RootViewModel_NoResultFoundText" xml:space="preserve">
     <value>No results found for your search.</value>
   </data>
+  <data name="PaymentShipmentViewModel_Total" xml:space="preserve">
+    <value>Total:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_CardPayment" xml:space="preserve">
+    <value>Card payment</value>
+  </data>
+  <data name="PaymentShipmentViewModel_BankTransfer" xml:space="preserve">
+    <value>Bank transfer(10% discount)</value>
+  </data>
 </root>

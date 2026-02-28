@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
     <views:BaseView.Content>
@@ -66,7 +67,7 @@
                         <Label
                             Margin="20,30,0,0"
                             Style="{StaticResource BoldText}"
-                            Text="{Binding [AppSettings]}" />
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SettingViewModel_AppSettings]}" />
 
                         <!--  divider  -->
                         <BoxView Style="{StaticResource LineStyle}" />
@@ -87,7 +88,7 @@
                                     Grid.Column="0"
                                     FontFamily="ItimRegular"
                                     FontSize="18"
-                                    Text="{Binding [LanguageText]}"
+                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SettingViewModel_LanguageText]}"
                                     TextColor="White" />
 
                                 <!--  Forward navigation  -->
@@ -109,7 +110,7 @@
                         <Label
                             Margin="20,30,0,0"
                             Style="{StaticResource BoldText}"
-                            Text="{Binding [LegalText]}" />
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SettingViewModel_LegalText]}" />
 
                         <!--  divider  -->
                         <BoxView Style="{StaticResource LineStyle}" />
@@ -130,7 +131,7 @@
                                     Grid.Column="0"
                                     FontFamily="ItimRegular"
                                     FontSize="18"
-                                    Text="{Binding [PrivacyPolicyText]}"
+                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SettingViewModel_PrivacyPolicyText]}"
                                     TextColor="White" />
 
                                 <!--  Forward navigation  -->
@@ -164,7 +165,7 @@
                                     Grid.Column="0"
                                     FontFamily="ItimRegular"
                                     FontSize="18"
-                                    Text="{Binding [TermsCondition]}"
+                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SettingViewModel_TermsCondition]}"
                                     TextColor="White" />
 
                                 <!--  Forward navigation  -->
@@ -198,7 +199,7 @@
                                     Grid.Column="0"
                                     FontFamily="ItimRegular"
                                     FontSize="18"
-                                    Text="{Binding [LicenseInfoText]}"
+                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SettingViewModel_LicenseInfoText]}"
                                     TextColor="White" />
 
                                 <!--  Forward navigation  -->
@@ -220,7 +221,7 @@
                         <BoxView Style="{StaticResource LineStyle}" />
 
                         <StackLayout Margin="20,30,20,0" Spacing="5">
-                            <Label Style="{StaticResource BoldText}" Text="{Binding [ResetsData]}" />
+                            <Label Style="{StaticResource BoldText}" Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SettingViewModel_ResetsData]}" />
                             <Button
                                 BackgroundColor="{StaticResource Primary}"
                                 Command="{Binding SyncDataCommand}"
@@ -229,7 +230,7 @@
                                 FontFamily="ItimRegular"
                                 FontSize="20"
                                 HorizontalOptions="Fill"
-                                Text="{Binding [ClearButtonText]}"
+                                Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SettingViewModel_ClearButtonText]}"
                                 TextColor="Black"
                                 VerticalOptions="Center">
                                 <Button.Shadow>

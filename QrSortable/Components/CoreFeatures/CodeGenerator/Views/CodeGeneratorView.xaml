@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
@@ -57,7 +58,7 @@
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
-                            Text="{Binding [CodeText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[CodeGeneratorViewModel_CodeText]}"
                             TextColor="{StaticResource White}" />
 
                         <!--  for iOS  -->
@@ -176,7 +177,7 @@
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
-                            Text="{Binding [PageText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[CodeGeneratorViewModel_PageText]}"
                             TextColor="{StaticResource White}" />
 
                         <!--  for iOS  -->
@@ -291,7 +292,7 @@
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
-                            Text="{Binding [TagNameText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[CodeGeneratorViewModel_TagNameText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
                         <Border
@@ -310,7 +311,7 @@
                             </Border.Shadow>
                             <Entry
                                 Margin="10,0,0,0"
-                                Placeholder="{Binding [ExampleText]}"
+                                Placeholder="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[CodeGeneratorViewModel_ExampleText]}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding TagName}" />
@@ -325,7 +326,7 @@
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
-                            Text="{Binding [HexText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[CodeGeneratorViewModel_HexText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
                         <Border
@@ -344,7 +345,7 @@
                             </Border.Shadow>
                             <Entry
                                 Margin="10,0,0,0"
-                                Placeholder="{Binding [ExampleHexText]}"
+                                Placeholder="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[CodeGeneratorViewModel_ExampleHexText]}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding HexCode}" />
@@ -360,7 +361,7 @@
                             FontFamily="ItimRegular"
                             FontSize="18"
                             HorizontalTextAlignment="Center"
-                            Text="{Binding [NoOfPageText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[CodeGeneratorViewModel_NoOfPageText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
 
@@ -440,7 +441,7 @@
                         <Label
                             FontAttributes="Bold"
                             FontSize="24"
-                            Text="{Binding [TotalText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[CodeGeneratorViewModel_TotalText]}"
                             TextColor="{StaticResource Primary}" />
                         <Label
                             Margin="10,0,0,0"
@@ -457,7 +458,7 @@
                         CornerRadius="10"
                         FontAttributes="Bold"
                         FontSize="20"
-                        Text="{Binding [BuyText]}"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[CodeGeneratorViewModel_BuyText]}"
                         TextColor="Black">
                         <Button.Shadow>
                             <Shadow

@@ -22,6 +22,14 @@
             BindingContext = _viewModel = viewModel;
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            FindText.Placeholder = LocalizationService.Instance["RootViewModel_FindText"];
+            MenuText.Text = LocalizationService.Instance["RootViewModel_MenuText"];
+            CodeGeneratorText.Text = LocalizationService.Instance["RootViewModel_CodeGeneratorText"];
+
+        }
         protected override bool OnBackButtonPressed()
         {
             Application.Current.Quit();
@@ -47,7 +55,7 @@
                     }
                     else
                     {
-                        await _viewModel.DialogService.ShowAlertDialog("The selected item could not be found.", AppResources.Dialog_OK_Text);
+                        await _viewModel.DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_ItemNotFoundText, AppResources.Dialog_OK_Text);
                     }
                 }
                 catch (Exception ex)
@@ -81,7 +89,7 @@
                     }
                     else
                     {
-                        await _viewModel.DialogService.ShowAlertDialog("The selected item could not be found.", AppResources.Dialog_OK_Text);
+                        await _viewModel.DialogService.ShowAlertDialog(AppResources.BoxDetailViewModel_ItemNotFoundText, AppResources.Dialog_OK_Text);
                     }
                 }
                 catch (Exception ex)

@@ -3,6 +3,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.Settings.Models;
     using QrSortable.Components.CoreFeatures.Settings.Wrappers;
+    using QrSortable.Components.UiFunctionality.Localization;
 
     /// <summary>
     ///     The LanguageProvider to facilitate language selection.
@@ -10,6 +11,7 @@
     public class LanguageProvider : ILanguageProvider
     {
         private readonly ICultureInfoWrapper _cultureInfoWrapper;
+        private readonly ILocalizationService _localizationService;
         private readonly IGeneralInformationManager _generalInformationManager;
         private readonly IList<string> _availableLanguageCodes = new List<string>() { "en", "de", "fr", "es"};
         private const string DefaultLanguageCode = "en";
@@ -21,9 +23,11 @@
         /// </summary>
         /// <param name="cultureInfoWrapper">The wrapper for handling culture infos.</param>
         /// <param name="generalInformationManager">The service for providing the GeneralInformation entity.</param>
-        public LanguageProvider(ICultureInfoWrapper cultureInfoWrapper, IGeneralInformationManager generalInformationManager)
+        public LanguageProvider(ICultureInfoWrapper cultureInfoWrapper, 
+            IGeneralInformationManager generalInformationManager, ILocalizationService localizationService)
         {
             _cultureInfoWrapper = cultureInfoWrapper;
+            _localizationService = localizationService;
             _generalInformationManager = generalInformationManager;
         }
 
@@ -35,7 +39,7 @@
                 if (value != null)
                 {
                     _selectedLanguage = value;
-                    _cultureInfoWrapper.SetCulture(value.CultureInfo);
+                    _localizationService.SetCulture(value.CultureInfo);
                 }
             }
         }

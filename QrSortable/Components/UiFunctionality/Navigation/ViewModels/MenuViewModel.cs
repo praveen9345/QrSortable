@@ -6,53 +6,76 @@
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.CoreFeatures.Settings.Views;
     using QrSortable.Components.UiFunctionality.Navigation.Models;
-    using QrSortable.Resources;
-    using System.Collections.ObjectModel;
     using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.UiFunctionality.Localization;
+    using System.Collections.ObjectModel;
+    using QrSortable.Resources;
 
-    /// <summary>
-    ///     The view model of the MenuViewModel  screen.
-    /// </summary>
     public partial class MenuViewModel : BaseViewModel
     {
         private readonly IMauiEssentialsWrapper _mauiEssentialWrapper;
+
         public ObservableCollection<MenuItem> MenuItems { get; set; }
 
-        private static readonly string MultiuserTitle = AppResources.MenuViewModel_MultiuserText;
-        private static readonly string SubscribeTitle = AppResources.MenuViewModel_SubscribeText;
-        private static readonly string ShareTitle = AppResources.MenuViewModel_ShareText;
-        private static readonly string AddToBasketTitle = AppResources.MenuViewModel_BasketText;
-        private static readonly string YourOrdersTitle = AppResources.MenuViewModel_YourOrderText;
-        private static readonly string SettingsTitle = AppResources.MenuViewModel_SettingText;
-        private static readonly string FeedbackTitle = AppResources.MenuViewModel_FeedbackText;
-
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="MenuViewModel" />.
-        /// </summary>
-        /// <param name="mauiEssentialsWrapper">An instance of <see cref="IMauiEssentialsWrapper" /> used to access platform-specific features.</param>
         public MenuViewModel(IMauiEssentialsWrapper mauiEssentialsWrapper)
         {
             IsBackNavigationEnabled = true;
             _mauiEssentialWrapper = mauiEssentialsWrapper;
 
-            MenuItems = new ObservableCollection<MenuItem>
-            {
-                new MenuItem { Icon=IconNames.Multiuser, Title= MultiuserTitle },
-                new MenuItem { Icon=IconNames.AddToBasket, Title= AddToBasketTitle },
-                new MenuItem { Icon=IconNames.YourOrders, Title=YourOrdersTitle },
-                new MenuItem { Icon=IconNames.Subscribe, Title=SubscribeTitle , HasBadge=true, Badge="Coming Soon"},
-                new MenuItem { Icon=IconNames.Share, Title=ShareTitle },
-                new MenuItem { Icon=IconNames.Settings, Title=SettingsTitle },
-                new MenuItem { Icon=IconNames.Feedback, Title=FeedbackTitle }
-            };
+            BuildMenu();
 
+            LocalizationService.Instance.PropertyChanged += (_, __) =>
+            {
+                BuildMenu();
+            };
         }
 
-        /// <summary>
-        /// Represents the currently selected menu item in the application.
-        /// </summary>
+        private void BuildMenu()
+        {
+            MenuItems = new ObservableCollection<MenuItem>
+            {
+                new MenuItem
+                {
+                    Icon=IconNames.Multiuser,
+                    Title= LocalizationService.Instance["MenuViewModel_MultiuserText"]
+                },
+                new MenuItem
+                {
+                    Icon=IconNames.AddToBasket,
+                    Title= LocalizationService.Instance["MenuViewModel_BasketText"]
+                },
+                new MenuItem
+                {
+                    Icon=IconNames.YourOrders,
+                    Title= LocalizationService.Instance["MenuViewModel_YourOrderText"]
+                },
+                new MenuItem
+                {
+                    Icon=IconNames.Subscribe,
+                    Title= LocalizationService.Instance["MenuViewModel_SubscribeText"],
+                    HasBadge=true,
+                    Badge="Coming Soon"
+                },
+                new MenuItem
+                {
+                    Icon=IconNames.Share,
+                    Title= LocalizationService.Instance["MenuViewModel_ShareText"]
+                },
+                new MenuItem
+                {
+                    Icon=IconNames.Settings,
+                    Title= LocalizationService.Instance["MenuViewModel_SettingText"]
+                },
+                new MenuItem
+                {
+                    Icon=IconNames.Feedback,
+                    Title= LocalizationService.Instance["MenuViewModel_FeedbackText"]
+                }
+            };
+
+            OnPropertyChanged(nameof(MenuItems));
+        }
+
         [ObservableProperty]
         private MenuItem _selectedMenuItem;
 
@@ -62,38 +85,30 @@
                 if (selected == null)
                     return;
 
-                switch (selected.Title)
-                {
-                    case var _ when selected.Title == MultiuserTitle:
-                        await NavigationService.Navigate<OnboardingView>(true);
-                        break;
+                // Compare using resource keys instead of translated text
+                var key = selected.Title;
 
-                    case var _ when selected.Title == AddToBasketTitle:
-                        await NavigationService.Navigate<AddToBasketView>();
-                        break;
+                if (key == LocalizationService.Instance["MenuViewModel_MultiuserText"])
+                    await NavigationService.Navigate<OnboardingView>(true);
 
-                    case var _ when selected.Title == YourOrdersTitle:
-                        await NavigationService.Navigate<YoursOrdersView>();
-                        break;
+                else if (key == LocalizationService.Instance["MenuViewModel_BasketText"])
+                    await NavigationService.Navigate<AddToBasketView>();
 
-                    case var _ when selected.Title == SubscribeTitle:
-                        await NavigationService.Navigate<SubscriptionView>(false);
-                        break;
+                else if (key == LocalizationService.Instance["MenuViewModel_YourOrderText"])
+                    await NavigationService.Navigate<YoursOrdersView>();
 
-                    case var _ when selected.Title == SettingsTitle:
-                        await NavigationService.Navigate<SettingView>();
-                        break;
+                else if (key == LocalizationService.Instance["MenuViewModel_SubscribeText"])
+                    await NavigationService.Navigate<SubscriptionView>(false);
 
-                    case var _ when selected.Title == FeedbackTitle:
-                        await NavigationService.Navigate<WebView>("feedback");
-                        break;
-                }
+                else if (key == LocalizationService.Instance["MenuViewModel_SettingText"])
+                    await NavigationService.Navigate<SettingView>();
+
+                else if (key == LocalizationService.Instance["MenuViewModel_FeedbackText"])
+                    await NavigationService.Navigate<WebView>("feedback");
 
                 SelectedMenuItem = null;
             });
-        /// <summary>
-        ///     The navigation command to close the menu.
-        /// </summary>
+
         public AsyncRelayCommand CloseButtonCommand =>
             new AsyncRelayCommand(() => NavigationService.Close());
 

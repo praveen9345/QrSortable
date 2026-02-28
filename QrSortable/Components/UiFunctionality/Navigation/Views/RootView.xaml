@@ -60,8 +60,8 @@
 
                         <!--  Serch Text  -->
                         <Entry
+                            x:Name="FindText"
                             Grid.Column="1"
-                            Placeholder="{Binding [FindText]}"
                             PlaceholderColor="{StaticResource PlaceholderColor}"
                             Style="{StaticResource NormalText}"
                             Text="{Binding SearchText}" />
@@ -539,11 +539,11 @@
 
                     <!--  Menu button  -->
                     <Button
+                        x:Name="MenuText"
                         Grid.Column="0"
                         Command="{Binding MenuCommand}"
                         CornerRadius="0"
-                        Style="{StaticResource BottomButton}"
-                        Text="{Binding [MenuText]}">
+                        Style="{StaticResource BottomButton}">
                         <Button.ImageSource>
                             <FontImageSource FontFamily="FluentIcons" Glyph="{x:Static local:IconNames.MenuIcon}" />
                         </Button.ImageSource>
@@ -578,11 +578,11 @@
 
                     <!--  code generator button  -->
                     <Button
+                        x:Name="CodeGeneratorText"
                         Grid.Column="2"
                         Command="{Binding CodeGeneratorCommand}"
                         CornerRadius="0"
-                        Style="{StaticResource BottomButton}"
-                        Text="{Binding [CodeGeneratorText]}">
+                        Style="{StaticResource BottomButton}">
                         <Button.ImageSource>
                             <FontImageSource FontFamily="FluentIcons" Glyph="{x:Static local:IconNames.CodeGen}" />
                         </Button.ImageSource>

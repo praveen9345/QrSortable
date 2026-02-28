@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
@@ -178,7 +179,7 @@
                         FontAttributes="Bold"
                         FontFamily="ItimRegular"
                         FontSize="20"
-                        Text="{Binding [Quantity]}"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaperProductViewModel_Quantity]}"
                         TextColor="{StaticResource White}"
                         VerticalOptions="Center"
                         VerticalTextAlignment="Center" />
@@ -280,7 +281,7 @@
                     FontFamily="ItimRegular"
                     FontSize="20"
                     HorizontalOptions="Fill"
-                    Text="{Binding [Basket]}"
+                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaperProductViewModel_Basket]}"
                     TextColor="Black"
                     VerticalOptions="Center">
                     <Button.Shadow>
@@ -303,7 +304,7 @@
                     FontFamily="ItimRegular"
                     FontSize="20"
                     HorizontalOptions="Fill"
-                    Text="{Binding [BuyText]}"
+                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaperProductViewModel_BuyText]}"
                     TextColor="Black"
                     VerticalOptions="Center">
                     <Button.Shadow>

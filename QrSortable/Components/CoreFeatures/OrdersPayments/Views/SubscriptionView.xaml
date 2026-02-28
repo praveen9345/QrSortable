@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
@@ -57,14 +58,14 @@
                             FontFamily="ItimRegular"
                             FontSize="28"
                             HorizontalOptions="Center"
-                            Text="{Binding [UpgradePremiumText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SubscriptionViewModel_UpgradePremiumText]}"
                             TextColor="{StaticResource Primary}" />
 
                         <Label
                             FontFamily="ItimRegular"
                             FontSize="16"
                             HorizontalOptions="Center"
-                            Text="{Binding [UnlockText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SubscriptionViewModel_UnlockText]}"
                             TextColor="#CCCCCC" />
                     </VerticalStackLayout>
 
@@ -74,7 +75,7 @@
                             FontAttributes="Bold"
                             FontFamily="ItimRegular"
                             FontSize="18"
-                            Text="{Binding [EmailText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SubscriptionViewModel_EmailText]}"
                             TextColor="{StaticResource Primary}" />
 
                         <Border
@@ -86,7 +87,7 @@
                                 FontFamily="ItimRegular"
                                 FontSize="16"
                                 Keyboard="Email"
-                                Placeholder="{Binding [EnterEmailPlaceText]}"
+                                Placeholder="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SubscriptionViewModel_EnterEmailPlaceText]}"
                                 PlaceholderColor="WhiteSmoke"
                                 Text="{Binding CustomerEmail}"
                                 TextColor="White" />
@@ -102,7 +103,7 @@
                             FontFamily="ItimRegular"
                             FontSize="20"
                             HorizontalTextAlignment="Center"
-                            Text="{Binding [CurrencyText]}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SubscriptionViewModel_CurrencyText]}"
                             TextColor="{StaticResource Primary}"
                             VerticalTextAlignment="Center" />
 
@@ -228,7 +229,7 @@
                                     FontFamily="ItimRegular"
                                     FontSize="16"
                                     HorizontalOptions="Center"
-                                    Text="{Binding [BillingText]}"
+                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SubscriptionViewModel_BillingText]}"
                                     TextColor="#AAAAAA" />
                             </VerticalStackLayout>
 
@@ -248,7 +249,7 @@
                                             <Label
                                                 FontFamily="ItimRegular"
                                                 FontSize="16"
-                                                Text="{Binding}"
+                                                Text="{Binding .}"
                                                 TextColor="White" />
                                         </HorizontalStackLayout>
                                     </DataTemplate>
@@ -266,7 +267,7 @@
                                 HeightRequest="55"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource BoolInverter}}"
                                 IsVisible="{Binding IsSubscribed, Converter={StaticResource BoolInverter}}"
-                                Text="{Binding [StartPremiumText]}"
+                                Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SubscriptionViewModel_StartPremiumText]}"
                                 TextColor="White">
 
                                 <Button.Background>
@@ -293,7 +294,7 @@
                                         FontAttributes="Bold"
                                         FontFamily="ItimRegular"
                                         FontSize="18"
-                                        Text="{Binding [PremiumActiveText]}"
+                                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SubscriptionViewModel_PremiumActiveText]}"
                                         TextColor="#7BFFB2" />
                                 </HorizontalStackLayout>
                             </Border>
@@ -307,7 +308,7 @@
                                 FontSize="18"
                                 HeightRequest="45"
                                 IsVisible="{Binding IsSubscribed}"
-                                Text="{Binding [CancelSubText]}"
+                                Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SubscriptionViewModel_CancelSubText]}"
                                 TextColor="White" />
 
                         </VerticalStackLayout>
