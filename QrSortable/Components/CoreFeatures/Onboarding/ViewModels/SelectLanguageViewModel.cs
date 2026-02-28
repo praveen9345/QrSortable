@@ -71,9 +71,6 @@
              // Persist language & set culture
              await _languageProvider.SetSelectedLanguageAsync(selectedItem);
 
-             // Optionally update onboarding progress
-             await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingStarted);
-
              // Clear selection in UI
              SelectedLanguageItem = null;
 
@@ -83,6 +80,8 @@
              }
              else
              {
+                // Optionally update onboarding progress
+                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingStarted);
                 await NavigationService.Navigate<OnboardingView>(false); 
              }
          });
