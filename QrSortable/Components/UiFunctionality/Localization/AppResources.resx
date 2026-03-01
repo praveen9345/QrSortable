@@ -756,4 +756,10 @@
   <data name="DialogPhotoSelectionViewModel_GalleryText" xml:space="preserve">
     <value>From gallery  </value>
   </data>
+  <data name="MainPage_SmartLabel" xml:space="preserve">
+    <value>Move Smarter. Store Safer.</value>
+  </data>
+  <data name="MainPage_HomePageText" xml:space="preserve">
+    <value>Home Page</value>
+  </data>
 </root>

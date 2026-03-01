@@ -118,648 +118,648 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Dialog_InternetConnection_Title" xml:space="preserve">
-    <value>Connectivité !</value>
+    <value>¡Conectividad!</value>
   </data>
   <data name="Dialog_InternetConnection_Message" xml:space="preserve">
-    <value>Aucune connexion Internet disponible.</value>
+    <value>No hay conexión a Internet disponible.</value>
   </data>
   <data name="Dialog_ConfirmationMessage_Text" xml:space="preserve">
-    <value>Besoin de votre action</value>
+    <value>Necesitamos tu acción</value>
   </data>
   <data name="Dialog_Cancel_Text" xml:space="preserve">
-    <value>Annuler</value>
+    <value>Cancelar</value>
   </data>
   <data name="Dialog_OK_Text" xml:space="preserve">
-    <value>OK</value>
+    <value>Vale</value>
   </data>
   <data name="RootViewModel_MenuText" xml:space="preserve">
-    <value>Menu</value>
+    <value>Menú</value>
   </data>
   <data name="RootViewModel_CodeGeneratorText" xml:space="preserve">
-    <value>Générateur</value>
+    <value>Generador</value>
   </data>
   <data name="BoxDetailViewModel_DeletItemText" xml:space="preserve">
-    <value>Êtes-vous sûr de vouloir supprimer ?</value>
+    <value>¿Está seguro de que desea eliminar?</value>
   </data>
   <data name="OnboardingViewModel_Multiuser_DiscriptionText" xml:space="preserve">
-    <value>Pour prendre en charge plusieurs utilisateurs, nous avons besoin d'un backend afin de stocker les données en toute sécurité. Pour votre protection, toutes les données envoyées au backend sont entièrement cryptées. Afin de garantir la sécurité de vos informations et d'activer les fonctionnalités multi-utilisateurs, le cryptage doit être activé.</value>
+    <value>Para admitir múltiples usuarios, necesitamos un backend que almacene los datos de forma segura. Para su protección, todos los datos enviados al backend están totalmente cifrados. Para mantener su información segura y habilitar las funciones multiusuario, el cifrado debe estar activado.</value>
   </data>
   <data name="OnboardingViewModel_CopyText" xml:space="preserve">
-    <value>Copier</value>
+    <value>Copiar</value>
   </data>
   <data name="OnboardingViewModel_MultiInfoText" xml:space="preserve">
-    <value>* Si vous disposez déjà de l'identifiant multi-utilisateurs de l'autre application QRSortable et que vous souhaitez vous synchroniser avec celle-ci, saisissez cet identifiant ci-dessous.</value>
+    <value>* Si ya tienes el ID multiusuario de la otra aplicación QRSortable y deseas sincronizarla, introduce ese ID a continuación.</value>
   </data>
   <data name="OnboardingViewModel_EnterCodeText" xml:space="preserve">
-    <value>Entrez le code...</value>
+    <value>Ingrese el código...</value>
   </data>
   <data name="OnboardingViewModel_DoneButtText" xml:space="preserve">
-    <value>Terminé</value>
+    <value>Hecho</value>
   </data>
   <data name="OnboardingViewModel_ClipboardText" xml:space="preserve">
-    <value>MultiuserId copié dans le presse-papiers !</value>
+    <value>¡MultiuserId copiado al portapapeles!</value>
   </data>
   <data name="Dialog_InformationText" xml:space="preserve">
-    <value>Informations</value>
+    <value>Información</value>
   </data>
   <data name="OnboardingViewModel_MultiIdFromOtherText" xml:space="preserve">
-    <value>Utilisez l'identifiant multi-utilisateurs affiché sur un autre appareil équipé de l'application QRSortable pour vous connecter.</value>
+    <value>Utilice el ID multiusuario que se muestra en otro dispositivo con la aplicación QRSortable para conectarse.</value>
   </data>
   <data name="OnboardingViewModel_DisablingMultiIduserText" xml:space="preserve">
-    <value>La désactivation de la fonctionnalité multi-utilisateurs interrompra la synchronisation avec les autres appareils.</value>
+    <value>Al desactivar la función multiusuario, se detendrá la sincronización con otros dispositivos.</value>
   </data>
   <data name="OnboardingViewModel_CheckValidMultiId" xml:space="preserve">
-    <value>Pour utiliser les fonctionnalités multi-utilisateurs, entrez un identifiant multi-utilisateurs valide. Si vous n'en avez pas, nous créerons un nouveau compte pour vous.</value>
+    <value>Para utilizar las funciones multiusuario, introduzca un ID multiusuario válido. Si no tiene uno, le crearemos una nueva cuenta.</value>
   </data>
   <data name="OnboardingViewModel_CreateOne" xml:space="preserve">
-    <value>Créer un</value>
+    <value>Crear uno</value>
   </data>
   <data name="Dialog_Error" xml:space="preserve">
-    <value>Erreur</value>
+    <value>Error</value>
   </data>
   <data name="OnboardingViewModel_ValidMultiIdError" xml:space="preserve">
-    <value>Veuillez saisir un identifiant multi-utilisateurs valide pour continuer.</value>
+    <value>Introduzca un ID multiusuario válido para continuar.</value>
   </data>
   <data name="OnboardingViewModel_InvalidIdError" xml:space="preserve">
-    <value>L'identifiant multi-utilisateurs saisi n'est pas valide ou vous devez au moins avoir une donnée enregistrée dans l'application QRSortable App avec cet identifiant multi-utilisateurs. Veuillez vérifier et réessayer.</value>
+    <value>El ID multiusuario introducido no es válido o, como mínimo, necesita tener un dato guardado en la aplicación QRSortable con ese ID multiusuario. Compruébelo y vuelva a intentarlo.</value>
   </data>
   <data name="OnboardingViewModel_AlreadyIdError" xml:space="preserve">
-    <value>L'identifiant multi-utilisateurs que vous avez saisi est déjà utilisé sur cet appareil. Si vous appuyez sur OK, toutes les données enregistrées sur cet appareil seront supprimées et téléchargées à nouveau depuis le serveur.</value>
+    <value>El ID multiusuario que ha introducido es el mismo que ya se utiliza en este dispositivo. Si pulsa Aceptar, todos los datos guardados en este dispositivo se eliminarán y se volverán a descargar desde el servidor.</value>
   </data>
   <data name="OnboardingViewModel_ClearDataSaved" xml:space="preserve">
-    <value>Êtes-vous sûr de vouloir effacer les données enregistrées sur cet appareil ?</value>
+    <value>¿Está seguro de que desea borrar los datos guardados en este dispositivo?</value>
   </data>
   <data name="OnboardingViewModel_SettingMultiIdError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la configuration de l'identifiant multi-utilisateurs. Veuillez réessayer.</value>
+    <value>Se ha producido un error al configurar el ID multiusuario. Inténtalo de nuevo.</value>
   </data>
   <data name="OnboardingViewModel_DownloadingText" xml:space="preserve">
-    <value>Téléchargement de vos données. Cela peut prendre quelques instants...</value>
+    <value>Descargando tus datos. Esto puede tardar unos instantes...</value>
   </data>
   <data name="OnboardingViewModel_DownloadFailed" xml:space="preserve">
-    <value>Le téléchargement a échoué. Veuillez vérifier votre connexion Internet et réessayer.</value>
+    <value>La descarga ha fallado. Comprueba tu conexión a Internet e inténtalo de nuevo.</value>
   </data>
   <data name="OnboardingViewModel_SubscriptionError" xml:space="preserve">
-    <value>Abonnement requis. Veuillez passer à la version supérieure pour continuer.</value>
+    <value>Se requiere suscripción. Actualice para continuar.</value>
   </data>
   <data name="CodeGeneratorViewModel_CodeText" xml:space="preserve">
-    <value>Code :</value>
+    <value>Código:</value>
   </data>
   <data name="CodeGeneratorViewModel_QRcodeText" xml:space="preserve">
-    <value>QRcode</value>
+    <value>Código QR</value>
   </data>
   <data name="CodeGeneratorViewModel_BarcodeText" xml:space="preserve">
-    <value>Code-barres</value>
+    <value>Código de barras</value>
   </data>
   <data name="CodeGeneratorViewModel_PageText" xml:space="preserve">
-    <value>Page:</value>
+    <value>Página:</value>
   </data>
   <data name="CodeGeneratorViewModel_TagNameText" xml:space="preserve">
-    <value>Nom du tag :</value>
+    <value>Nombre de la etiqueta:</value>
   </data>
   <data name="CodeGeneratorViewModel_ExampleText" xml:space="preserve">
-    <value>e.g. cuisine</value>
+    <value>p. ej., cocina</value>
   </data>
   <data name="CodeGeneratorViewModel_HexText" xml:space="preserve">
-    <value>Couleur hex:</value>
+    <value>Color Hex:</value>
   </data>
   <data name="CodeGeneratorViewModel_ExampleHexText" xml:space="preserve">
-    <value>e.g. #000000</value>
+    <value>p. ej. #000000</value>
   </data>
   <data name="CodeGeneratorViewModel_NoOfPageText" xml:space="preserve">
-    <value>Nombre de pages :</value>
+    <value>Número de páginas:</value>
   </data>
   <data name="CodeGeneratorViewModel_TotalText" xml:space="preserve">
     <value>Total:</value>
   </data>
   <data name="CodeGeneratorViewModel_BuyText" xml:space="preserve">
-    <value>Acheter maintenant</value>
+    <value>Comprar ahora</value>
   </data>
   <data name="CodeGeneratorViewModel_MissingTitle" xml:space="preserve">
-    <value>Sélection manquante</value>
+    <value>Selección faltante</value>
   </data>
   <data name="CodeGeneratorViewModel_SelectCode" xml:space="preserve">
-    <value>Veuillez sélectionner un type de code (QRcode ou Barcode).</value>
+    <value>Seleccione un tipo de código (código QR o código de barras).</value>
   </data>
   <data name="CodeGeneratorViewModel_SelectPage" xml:space="preserve">
-    <value>Veuillez sélectionner un type de page (par exemple, A4 ou A5).</value>
+    <value>Seleccione un tipo de página (p. ej., A4 o A5).</value>
   </data>
   <data name="PaperProductViewModel_Quantity" xml:space="preserve">
-    <value>Quantité :</value>
+    <value>Cantidad:</value>
   </data>
   <data name="PaperProductViewModel_Basket" xml:space="preserve">
-    <value>Ajouter au panier</value>
+    <value>Añadir a la cesta</value>
   </data>
   <data name="PaperProductViewModel_BuyText" xml:space="preserve">
-    <value>Acheter maintenant</value>
+    <value>Comprar ahora</value>
   </data>
   <data name="PaperProductViewModel_BasketSuccess" xml:space="preserve">
-    <value>Ajouté au panier avec succès.</value>
+    <value>Añadido a la cesta correctamente.</value>
   </data>
   <data name="PaperProductViewModel_ErrorSaveItem" xml:space="preserve">
-    <value>Une erreur inattendue s'est produite lors de l'enregistrement de l'élément. Veuillez réessayer.</value>
+    <value>Se ha producido un error inesperado al guardar el elemento. Inténtalo de nuevo.</value>
   </data>
   <data name="SelectProductViewModel_SetOfA4QRcodeTitle" xml:space="preserve">
-    <value>Lot de 5 QRcode A4</value>
+    <value>Juego de 5 códigos QR A4</value>
   </data>
   <data name="SelectProductViewModel_SetOfA4QRcodeDiscription" xml:space="preserve">
-    <value>* orange, jaune, vert, rouge, rose</value>
+    <value>* naranja, amarillo, verde, rojo, rosa</value>
   </data>
   <data name="SelectProductViewModel_SetOfA4QRcodePrice" xml:space="preserve">
-    <value> {0} uniquement</value>
+    <value> {0} únicamente</value>
   </data>
   <data name="SelectProductViewModel_NewText" xml:space="preserve">
-    <value>Nouveau</value>
+    <value>Nuevo</value>
   </data>
   <data name="AddToBasketViewModel_BuyText" xml:space="preserve">
-    <value>Acheter maintenant</value>
+    <value>Comprar ahora</value>
   </data>
   <data name="AddToBasketViewModel_DeleteFromBasket" xml:space="preserve">
-    <value>Êtes-vous sûr de vouloir supprimer cet article du panier ?</value>
+    <value>¿Estás seguro de que deseas eliminar este artículo de la cesta?</value>
   </data>
   <data name="BankTransferViewModel_AmountToPay" xml:space="preserve">
-    <value>Montant à payer :</value>
+    <value>Importe a pagar:</value>
   </data>
   <data name="BankTransferViewModel_Discount" xml:space="preserve">
-    <value>10 % de réduction :</value>
+    <value>10 % de descuento:</value>
   </data>
   <data name="BankTransferViewModel_Total" xml:space="preserve">
-    <value>Total :              </value>
+    <value>Total:              </value>
   </data>
   <data name="BankTransferViewModel_IBAN" xml:space="preserve">
     <value>IBAN:</value>
   </data>
   <data name="BankTransferViewModel_CopyText" xml:space="preserve">
-    <value>Copier</value>
+    <value>Copiar</value>
   </data>
   <data name="BankTransferViewModel_ReferenceText" xml:space="preserve">
-    <value>Code de référence :</value>
+    <value>Código de referencia:</value>
   </data>
   <data name="BankTransferViewModel_ProvideReferenceText" xml:space="preserve">
-    <value>• Veuillez inclure le code de référence fourni dans vos informations de paiement.</value>
+    <value>• Por favor, incluya el código de referencia proporcionado en los datos de pago.</value>
   </data>
   <data name="BankTransferViewModel_TransferCompletedText" xml:space="preserve">
-    <value>• Veiller à ce que le transfert soit effectué dans un délai de 5 jours ouvrables.</value>
+    <value>• Asegúrese de que la transferencia se complete en un plazo de 5 días hábiles.</value>
   </data>
   <data name="BankTransferViewModel_PlacedOrderText" xml:space="preserve">
-    <value>• Cliquez sur « Passer une commande » pour finaliser votre achat.</value>
+    <value>• Haga clic en «Realizar pedido» para finalizar su compra.</value>
   </data>
   <data name="BankTransferViewModel_PlacedOrderButtText" xml:space="preserve">
-    <value>Passer une commande</value>
+    <value>Realizar un pedido</value>
   </data>
   <data name="BankTransferViewModel_IBANCopiedText" xml:space="preserve">
-    <value>IBAN copié dans le presse-papiers !</value>
+    <value>¡IBAN copiado al portapapeles!</value>
   </data>
   <data name="BankTransferViewModel_ReferenceCopiedText" xml:space="preserve">
-    <value>Code de référence copié dans le presse-papiers !</value>
+    <value>¡Código de referencia copiado en el portapapeles!</value>
   </data>
   <data name="Dialog_Processing" xml:space="preserve">
-    <value>Traitement en cours...</value>
+    <value>Procesando...</value>
   </data>
   <data name="Dialog_Conformation" xml:space="preserve">
-    <value>Confirmation 🎉</value>
+    <value>Confirmación 🎉</value>
   </data>
   <data name="BankTransferViewModel_EmailSendMssg" xml:space="preserve">
-    <value>Merci pour votre commande. Nous vous enverrons un e-mail sous peu.</value>
+    <value>Gracias por su pedido. Le enviaremos un correo electrónico en breve.</value>
   </data>
   <data name="BankTransferViewModel_SaveErrorMsg" xml:space="preserve">
-    <value>Une erreur inattendue s'est produite lors de l'enregistrement de l'élément. Veuillez réessayer.</value>
+    <value>Se ha producido un error inesperado al guardar el elemento. Inténtalo de nuevo.</value>
   </data>
   <data name="SelectProductViewModel_GenrateOfA4QRcodeTitle" xml:space="preserve">
-    <value>Générez vous-même des codes QR ou des codes-barres au format A4 !</value>
+    <value>¡Genera tú mismo códigos QR o códigos de barras en formato A4!</value>
   </data>
   <data name="SelectProductViewModel_GenrateOfA4QRcodeColor" xml:space="preserve">
-    <value>* sélectionner la couleur</value>
+    <value>* seleccionar color</value>
   </data>
   <data name="SelectProductViewModel_GenrateOfA4QRcodePrice" xml:space="preserve">
-    <value> {0} uniquement</value>
+    <value> {0} únicamente</value>
   </data>
   <data name="PaymentShipmentViewModel_ShipAndBillAddressText" xml:space="preserve">
-    <value>Adresse de livraison et de facturation :</value>
+    <value>Dirección de envío y facturación:</value>
   </data>
   <data name="PaymentShipmentViewModel_NameText" xml:space="preserve">
-    <value>Nom:</value>
+    <value>Nombre:</value>
   </data>
   <data name="PaymentShipmentViewModel_EnterNameText" xml:space="preserve">
-    <value>e.g. entrez le nom...</value>
+    <value>p. ej.,  introduzca el nombre...</value>
   </data>
   <data name="PaymentShipmentViewModel_StreetText" xml:space="preserve">
-    <value>Rue:</value>
+    <value>Calle:</value>
   </data>
   <data name="PaymentShipmentViewModel_EnterStreetPlaceText" xml:space="preserve">
-    <value>e.g. entrez le nom de la rue...</value>
+    <value>p. ej.,  introduzca el nombre de la calle...</value>
   </data>
   <data name="PaymentShipmentViewModel_HouseNoText" xml:space="preserve">
-    <value>Numéro de maison :</value>
+    <value>N.º de vivienda:</value>
   </data>
   <data name="PaymentShipmentViewModel_EnterHouseNoPlaceText" xml:space="preserve">
-    <value>e.g. entrez le numéro de la maison...</value>
+    <value>p. ej.,  introduzca el número de la casa...</value>
   </data>
   <data name="PaymentShipmentViewModel_ZIPText" xml:space="preserve">
-    <value>Code postal:</value>
+    <value>Código postal:</value>
   </data>
   <data name="PaymentShipmentViewModel_ZIPPlaceText" xml:space="preserve">
-    <value>e.g. entrez le code postal.</value>
+    <value> p. ej., introduzca el código postal.</value>
   </data>
   <data name="PaymentShipmentViewModel_CityText" xml:space="preserve">
-    <value>Ville :</value>
+    <value>Ciudad:</value>
   </data>
   <data name="PaymentShipmentViewModel_CityPlaceText" xml:space="preserve">
-    <value>e.g. entrez la ville...</value>
+    <value>p. ej., introduzca la ciudad...</value>
   </data>
   <data name="PaymentShipmentViewModel_CountryText" xml:space="preserve">
-    <value>Pays :</value>
+    <value>País:</value>
   </data>
   <data name="PaymentShipmentViewModel_CountryPlaceText" xml:space="preserve">
-    <value>e.g. entrez le pays...</value>
+    <value>p. ej., introduzca el país...</value>
   </data>
   <data name="PaymentShipmentViewModel_EmailText" xml:space="preserve">
-    <value>Courriel:</value>
+    <value>Correo electrónico:</value>
   </data>
   <data name="PaymentShipmentViewModel_EmailPlaceText" xml:space="preserve">
-    <value>e.g. tonnom@example.com</value>
+    <value>p. ej., tunombre@example.com</value>
   </data>
   <data name="PaymentShipmentViewModel_FillFieldText" xml:space="preserve">
-    <value>Veuillez remplir tous les champs avant de continuer.</value>
+    <value>Rellene todos los campos antes de continuar.</value>
   </data>
   <data name="PaymentShipmentViewModel_InvalidText" xml:space="preserve">
-    <value>Adresse e-mail invalide</value>
+    <value>Correo electrónico no válido</value>
   </data>
   <data name="PaymentShipmentViewModel_EnterEmailText" xml:space="preserve">
-    <value>Veuillez saisir une adresse e-mail valide.</value>
+    <value>Introduzca una dirección de correo electrónico válida.</value>
   </data>
   <data name="PaymentShipmentViewModel_FailedPayment" xml:space="preserve">
-    <value>Échec de la création du paiement.</value>
+    <value>No se pudo crear el pago.</value>
   </data>
   <data name="PaymentShipmentViewModel_UnexpectedPayment" xml:space="preserve">
-    <value>Résultat inattendu du service de paiement.</value>
+    <value>Resultado inesperado del servicio de pago.</value>
   </data>
   <data name="General_PaidText" xml:space="preserve">
-    <value>Votre paiement a été effectué avec succès !</value>
+    <value>¡Tu pago se realizó correctamente!</value>
   </data>
   <data name="General_PendingText" xml:space="preserve">
-    <value>Votre paiement est en attente.</value>
+    <value>Tu pago está pendiente.</value>
   </data>
   <data name="General_OpenText" xml:space="preserve">
-    <value>Votre paiement est toujours en attente.</value>
+    <value>Su pago sigue pendiente.</value>
   </data>
   <data name="General_FailedText" xml:space="preserve">
-    <value>Votre paiement a échoué.</value>
+    <value>Tu pago no se completó.</value>
   </data>
   <data name="General_CancelPaymentText" xml:space="preserve">
-    <value>Votre paiement a été annulé.</value>
+    <value>Su pago fue cancelado.</value>
   </data>
   <data name="General_UnknownPaymentText" xml:space="preserve">
-    <value>Statut de paiement inconnu.</value>
+    <value>Estado de pago desconocido.</value>
   </data>
   <data name="PaymentShipmentViewModel_OrderReceived" xml:space="preserve">
-    <value>Commande reçue ! Nous vous enverrons un e-mail de confirmation sous peu. ! 🎉</value>
+    <value>¡Pedido recibido! En breve te enviaremos un correo electrónico de confirmación. 🎉</value>
   </data>
   <data name="PaymentShipmentViewModel_UnexpectedErrorText" xml:space="preserve">
-    <value>Une erreur inattendue s'est produite lors de l'enregistrement de l'élément. Veuillez réessayer.</value>
+    <value>Se ha producido un error inesperado al guardar el elemento. Inténtalo de nuevo.</value>
   </data>
   <data name="General_PendingStatusText" xml:space="preserve">
-    <value>En attente...</value>
+    <value>Pendiente...</value>
   </data>
   <data name="General_DownloadStatusText" xml:space="preserve">
-    <value>Télécharger</value>
+    <value>Descargar</value>
   </data>
   <data name="PaymentShipmentViewModel_GeneratedCodeMsg" xml:space="preserve">
-    <value>Attente génération du code...</value>
+    <value>Esperando generación de código...</value>
   </data>
   <data name="SubscriptionViewModel_UpgradePremiumText" xml:space="preserve">
-    <value>Passez à Premium</value>
+    <value>Actualizar a Premium</value>
   </data>
   <data name="SubscriptionViewModel_UnlockText" xml:space="preserve">
-    <value>Libérez toute la puissance de QrSortable</value>
+    <value>Aproveche todo el potencial de QrSortable</value>
   </data>
   <data name="SubscriptionViewModel_EmailText" xml:space="preserve">
-    <value>Adresse e-mail*</value>
+    <value>Dirección de correo electrónico*</value>
   </data>
   <data name="General_EmailText" xml:space="preserve">
-    <value>Courriel</value>
+    <value>Correo electrónico</value>
   </data>
   <data name="SubscriptionViewModel_CurrencyText" xml:space="preserve">
-    <value>Devise* :  </value>
+    <value>Moneda* :  </value>
   </data>
   <data name="SubscriptionViewModel_BillingText" xml:space="preserve">
-    <value>Facturation mensuelle • Résiliation possible à tout moment</value>
+    <value>Facturación mensual • Cancelación en cualquier momento</value>
   </data>
   <data name="SubscriptionViewModel_StartPremiumText" xml:space="preserve">
-    <value>Commencez Premium dès maintenant</value>
+    <value>Empieza Premium ahora</value>
   </data>
   <data name="SubscriptionViewModel_PremiumActiveText" xml:space="preserve">
-    <value>La prime est active</value>
+    <value>Premium Activo</value>
   </data>
   <data name="SubscriptionViewModel_CancelSubText" xml:space="preserve">
-    <value>Annuler l'abonnement</value>
+    <value>Cancelar suscripción</value>
   </data>
   <data name="SubscriptionViewModel_SharingMsgText" xml:space="preserve">
-    <value>Partage multi-utilisateurs</value>
+    <value>Compartir entre múltiples usuarios</value>
   </data>
   <data name="SubscriptionViewModel_UnlimitedText" xml:space="preserve">
-    <value>Articles illimités par boîte</value>
+    <value>Artículos ilimitados por caja</value>
   </data>
   <data name="SubscriptionViewModel_CloudBackText" xml:space="preserve">
-    <value>Sauvegarde et synchronisation dans le cloud</value>
+    <value>Copia de seguridad y sincronización en la nube</value>
   </data>
   <data name="SubscriptionViewModel_MoveItemText" xml:space="preserve">
-    <value>Déplacer des articles entre des boîtes</value>
+    <value>Mover elementos entre cajas</value>
   </data>
   <data name="SubscriptionViewModel_MultipleImagesText" xml:space="preserve">
-    <value>Plusieurs images par article</value>
+    <value>Varias imágenes por artículo</value>
   </data>
   <data name="SubscriptionViewModel_AdvertisementsText" xml:space="preserve">
-    <value>Pas de publicités</value>
+    <value>Sin anuncios</value>
   </data>
   <data name="SubscriptionViewModel_PremiumActiveMsg" xml:space="preserve">
-    <value>🌟 Premium Actif</value>
+    <value>🌟 Premium Activo</value>
   </data>
   <data name="SubscriptionViewModel_UnlockFeaturesText" xml:space="preserve">
-    <value>Passez à la version supérieure pour débloquer les fonctionnalités premium</value>
+    <value>Actualiza para desbloquear funciones premium.</value>
   </data>
   <data name="SubscriptionViewModel_WaitingPaymentText" xml:space="preserve">
-    <value>En attente de paiement…</value>
+    <value>Waiting for payment…</value>
   </data>
   <data name="SubscriptionViewModel_EnterEmailText" xml:space="preserve">
-    <value>Veuillez saisir votre adresse e-mail</value>
+    <value>Introduzca su correo electrónico</value>
   </data>
   <data name="SubscriptionViewModel_FailedPaymentText" xml:space="preserve">
-    <value>Impossible de créer le paiement.</value>
+    <value>No se ha podido crear el pago.</value>
   </data>
   <data name="SubscriptionViewModel_PaymentCompletedText" xml:space="preserve">
-    <value>Paiement non effectué</value>
+    <value>Pago no completado</value>
   </data>
   <data name="General_SucessText" xml:space="preserve">
-    <value>Succès</value>
+    <value>Éxito</value>
   </data>
   <data name="SubscriptionViewModel_ActivePremiumText" xml:space="preserve">
-    <value>Abonnement Premium activé avec succès 🎉</value>
+    <value>Premium activado con éxito 🎉</value>
   </data>
   <data name="General_FailedError" xml:space="preserve">
-    <value>Failed</value>
+    <value>Fallido</value>
   </data>
   <data name="SubscriptionViewModel_SubscriptiontCancelText" xml:space="preserve">
-    <value>Votre abonnement a été résilié.</value>
+    <value>Tu suscripción ha sido cancelada.</value>
   </data>
   <data name="SubscriptionViewModel_EnterEmailPlaceText" xml:space="preserve">
-    <value>Entrez ton e-mail</value>
+    <value>Introduce tu correo electrónico</value>
   </data>
   <data name="SubscriptionViewModel_MonthSelectedEuroCurrencyText" xml:space="preserve">
-    <value>€4.99 / mois</value>
+    <value>€4.99 al mes</value>
   </data>
   <data name="SubscriptionViewModel_MonthSelectedDollerCurrencyText" xml:space="preserve">
-    <value>$4.99 / mois</value>
+    <value>$4.99 al mes</value>
   </data>
   <data name="SubscriptionViewModel_VerifyingPaymentText" xml:space="preserve">
-    <value>Vérification du paiement…</value>
+    <value>Verificando el pago...</value>
   </data>
   <data name="YoursOrdersViewModel_CopyId" xml:space="preserve">
-    <value>Copier l'ID</value>
+    <value>Copiar ID</value>
   </data>
   <data name="YoursOrdersViewModel_CopyToClipboard" xml:space="preserve">
-    <value>Numéro de commande copié dans le presse-papiers !</value>
+    <value>¡El ID del pedido se ha copiado al portapapeles!</value>
   </data>
   <data name="BoxDetailViewModel_LocationPlaceText" xml:space="preserve">
-    <value>Emplacement ...</value>
+    <value>Ubicación...</value>
   </data>
   <data name="BoxDetailViewModel_CategoryPlaceText" xml:space="preserve">
-    <value>Catégorie ...</value>
+    <value>Categoría...</value>
   </data>
   <data name="BoxDetailViewModel_CategoryText" xml:space="preserve">
-    <value>Catégorie :</value>
+    <value>Categoría:</value>
   </data>
   <data name="BoxDetailViewModel_LeftEmptyText" xml:space="preserve">
-    <value>Les champs « Emplacement » et « Catégorie » sont obligatoires et ne peuvent être laissés vides.</value>
+    <value>Los campos Ubicación y Categoría son obligatorios y no pueden dejarse vacíos.</value>
   </data>
   <data name="BoxDetailViewModel_ItemNotFoundText" xml:space="preserve">
-    <value>L'élément sélectionné est introuvable.</value>
+    <value>No se ha encontrado el artículo seleccionado.</value>
   </data>
   <data name="General_SuccessDeleteText" xml:space="preserve">
-    <value>Suppression réussie.</value>
+    <value>Eliminación correcta.</value>
   </data>
   <data name="BoxDetailViewModel_NotPossibleToDelete" xml:space="preserve">
-    <value>Les données n'ont pas pu être supprimées, veuillez réessayer plus tard.</value>
+    <value>No se pudieron eliminar los datos, inténtalo de nuevo más tarde.</value>
   </data>
   <data name="BoxDetailViewModel_UnexpectedDeleteError" xml:space="preserve">
-    <value>Une erreur inattendue s'est produite lors de la suppression de l'élément.</value>
+    <value>Se ha producido un error inesperado al eliminar el elemento.</value>
   </data>
   <data name="BoxDetailViewModel_SelectedItemText" xml:space="preserve">
-    <value>L'élément sélectionné se trouve déjà dans la case choisie.</value>
+    <value>El artículo seleccionado ya se encuentra en la caja elegida.</value>
   </data>
   <data name="BoxDetailViewModel_AlreadySelectedText" xml:space="preserve">
-    <value>L'élément sélectionné se trouve déjà dans la case choisie.</value>
+    <value>El artículo seleccionado ya se encuentra en la caja elegida.</value>
   </data>
   <data name="BoxDetailViewModel_TargetBox" xml:space="preserve">
-    <value>La boîte cible est introuvable.</value>
+    <value>No se ha encontrado la caja de destino.</value>
   </data>
   <data name="BoxDetailViewModel_Moving" xml:space="preserve">
-    <value>Déménagement...</value>
+    <value>Mudanza...</value>
   </data>
   <data name="BoxDetailViewModel_MovedError" xml:space="preserve">
-    <value>Les données n'ont pas pu être transférées, veuillez réessayer plus tard.</value>
+    <value>No se pudieron mover los datos, inténtalo de nuevo más tarde.</value>
   </data>
   <data name="BoxDetailViewModel_SuccessMoved" xml:space="preserve">
-    <value>Déménagement réussi.</value>
+    <value>Se movió con éxito.</value>
   </data>
   <data name="BoxDetailViewModel_ErrorMoving" xml:space="preserve">
-    <value>Une erreur inattendue s'est produite lors du déplacement de l'élément.</value>
+    <value>Se ha producido un error inesperado al mover el elemento.</value>
   </data>
   <data name="ItemDetailViewModel_ItemName" xml:space="preserve">
-    <value>Nom de l'article :</value>
+    <value>Nombre del artículo:</value>
   </data>
   <data name="ItemDetailViewModel_EnterNamePlace" xml:space="preserve">
-    <value>Entrez le nom...</value>
+    <value>Escribe el nombre...</value>
   </data>
   <data name="ItemDetailViewModel_Remarks" xml:space="preserve">
-    <value>Remarques :</value>
+    <value>Observaciones:</value>
   </data>
   <data name="ItemDetailViewModel_MoreInfo" xml:space="preserve">
-    <value>Plus d'informations...</value>
+    <value>Más información...</value>
   </data>
   <data name="ItemDetailViewModel_CameraPermission" xml:space="preserve">
-    <value>Une autorisation d'accès à l'appareil photo est nécessaire pour capturer des images.</value>
+    <value>Se requiere permiso de la cámara para capturar imágenes.</value>
   </data>
   <data name="General_LoadingText" xml:space="preserve">
-    <value>Chargement...</value>
+    <value>Cargando...</value>
   </data>
   <data name="ItemDetailViewModel_NotCapture" xml:space="preserve">
-    <value>Impossible de capturer l'image</value>
+    <value>No se pudo capturar la imagen.</value>
   </data>
   <data name="ItemDetailViewModel_ImageAdded" xml:space="preserve">
-    <value>Vous pouvez ajouter un maximum de 4 images seulement.</value>
+    <value>Solo puedes añadir un máximo de 4 imágenes.</value>
   </data>
   <data name="ItemDetailViewModel_NotAbleToPick" xml:space="preserve">
-    <value>Impossible de sélectionner l'image.</value>
+    <value>No se pudo seleccionar la imagen.</value>
   </data>
   <data name="ItemDetailViewModel_EmptyFieldError" xml:space="preserve">
-    <value>Les champs ItemName et ItemDescription sont obligatoires et ne peuvent pas être laissés vides.</value>
+    <value>Los campos ItemName y ItemDescription son obligatorios y no pueden dejarse vacíos.</value>
   </data>
   <data name="ItemDetailViewModel_AddOneImage" xml:space="preserve">
-    <value>Veuillez ajouter au moins une image avant d'enregistrer l'élément.</value>
+    <value>Añade al menos una imagen antes de guardar el elemento.</value>
   </data>
   <data name="ItemDetailViewModel_NotAbleToRetrieveData" xml:space="preserve">
-    <value>Impossible de récupérer les éléments de la base de données.</value>
+    <value>No se pudieron recuperar los elementos de la base de datos.</value>
   </data>
   <data name="ItemDetailViewModel_ItemNotFound" xml:space="preserve">
-    <value>Élément introuvable. Veuillez actualiser la page et réessayer.</value>
+    <value>Elemento no encontrado. Actualice la página e inténtelo de nuevo.</value>
   </data>
   <data name="ItemDetailViewModel_CanNotBeModified" xml:space="preserve">
-    <value>Le nom de l'élément  '{0}' ne peut pas être modifié. Veuillez réessayer.</value>
+    <value>El nombre del elemento '{0}' no se puede modificar. Inténtalo de nuevo.</value>
   </data>
   <data name="ItemDetailViewModel_SuccessfullyUpdate" xml:space="preserve">
-    <value>Mise à jour réussie.</value>
+    <value>Actualizado correctamente.</value>
   </data>
   <data name="ItemDetailViewModel_DataCouldNotUpdate" xml:space="preserve">
-    <value>Les données n'ont pas pu être mises à jour, veuillez réessayer plus tard.</value>
+    <value>No se pudieron actualizar los datos, inténtalo de nuevo más tarde.</value>
   </data>
   <data name="ItemDetailViewModel_UnexpectedErrorUpdate" xml:space="preserve">
-    <value>Une erreur inattendue s'est produite lors de la mise à jour de l'élément.</value>
+    <value>Se ha producido un error inesperado al actualizar el elemento.</value>
   </data>
   <data name="ItemDetailViewModel_UnexpectedStorage" xml:space="preserve">
-    <value>Erreur inattendue : les données de stockage sont manquantes.</value>
+    <value>Error inesperado: faltan datos de almacenamiento.</value>
   </data>
   <data name="ItemDetailViewModel_ItemAlreadyExists" xml:space="preserve">
-    <value>Un élément portant le nom '{0}' existe déjà. Veuillez choisir un autre nom.</value>
+    <value>Ya existe un elemento con el nombre '{0}'. Elija otro nombre.</value>
   </data>
   <data name="ItemDetailViewModel_SuccessSaved" xml:space="preserve">
-    <value>Enregistrement réussi.</value>
+    <value>Guardado correctamente.</value>
   </data>
   <data name="Dialog_DataCouldNoBeSaved" xml:space="preserve">
-    <value>Les données n'ont pas pu être enregistrées, veuillez réessayer plus tard.</value>
+    <value>No se pudieron guardar los datos, inténtalo de nuevo más tarde.</value>
   </data>
   <data name="ItemDetailViewModel_UnexpectedErrorProcessing" xml:space="preserve">
-    <value>Une erreur inattendue s'est produite lors du traitement de votre demande.</value>
+    <value>Se ha producido un error inesperado al procesar su solicitud.</value>
   </data>
   <data name="ItemDetailViewModel_OneMBData" xml:space="preserve">
-    <value>L'ajout de cette image dépasserait la limite totale de 1 Mo pour cet élément.</value>
+    <value>Añadir esta imagen superaría el límite total de 1 MB para este elemento.</value>
   </data>
   <data name="ItemDetailViewModel_CameraPermissionRequired" xml:space="preserve">
-    <value>L'autorisation pour l'appareil photo est requise », « Veuillez l'activer dans les paramètres.</value>
+    <value>Se requiere permiso para la cámara», «Actívelo en Ajustes.</value>
   </data>
   <data name="ItemDetailViewModel_OpenSettings" xml:space="preserve">
-    <value>Ouvrir les paramètres</value>
+    <value>Abrir configuración</value>
   </data>
   <data name="QrBrScannerViewModel_AlignFrame" xml:space="preserve">
-    <value>Alignez-vous dans le cadre pour scanner</value>
+    <value>Alinee dentro del marco para escanear.</value>
   </data>
   <data name="QrBrScannerViewModel_CameraRestricted" xml:space="preserve">
-    <value>L'accès à l'appareil photo est restreint sur cet appareil.</value>
+    <value>El acceso a la cámara está restringido en este dispositivo.</value>
   </data>
   <data name="FilePickerService_PickImage" xml:space="preserve">
-    <value>Sélectionnez une image, s'il vous plaît.</value>
+    <value>Elija una imagen, por favor.</value>
   </data>
   <data name="QrBrScannerViewModel_InvalidCodes" xml:space="preserve">
-    <value>Codes invalides. Veuillez scanner des codes valides à partir de QrSortable.</value>
+    <value>Códigos no válidos. Escanee códigos válidos de QrSortable.</value>
   </data>
   <data name="SettingViewModel_AppSettings" xml:space="preserve">
-    <value>Paramètres de l'application</value>
+    <value>Configuración de la aplicación</value>
   </data>
   <data name="SettingViewModel_LanguageText" xml:space="preserve">
-    <value>Langue</value>
+    <value>Idioma</value>
   </data>
   <data name="SettingViewModel_PrivacyPolicyText" xml:space="preserve">
-    <value>Politique de confidentialité</value>
+    <value>Política de privacidad</value>
   </data>
   <data name="SettingViewModel_TermsCondition" xml:space="preserve">
-    <value>Conditions générales</value>
+    <value>Términos y condiciones</value>
   </data>
   <data name="SettingViewModel_LicenseInfoText" xml:space="preserve">
-    <value>Informations sur la licence</value>
+    <value>Información sobre la licencia</value>
   </data>
   <data name="SettingViewModel_ResetsData" xml:space="preserve">
-    <value>Réinitialise les données de l'application et resynchronise avec le serveur :</value>
+    <value>Restablece los datos de la aplicación y vuelve a sincronizar con el servidor:</value>
   </data>
   <data name="SettingViewModel_ClearButtonText" xml:space="preserve">
-    <value>Effacer le backend et synchroniser</value>
+    <value>Borrar backend y sincronizar</value>
   </data>
   <data name="SettingViewModel_LegalText" xml:space="preserve">
-    <value>Juridique</value>
+    <value>Legal</value>
   </data>
   <data name="General_UploadingProgress" xml:space="preserve">
-    <value>Téléchargement...</value>
+    <value>Cargando...</value>
   </data>
   <data name="SettingViewModel_DataSync" xml:space="preserve">
-    <value>Données synchronisées avec succès.</value>
+    <value>Datos sincronizados correctamente.</value>
   </data>
   <data name="SettingViewModel_FailedDataSync" xml:space="preserve">
-    <value>Échec de la synchronisation des données ou absence de connexion Internet. Réessayez plus tard.</value>
+    <value>La sincronización de datos ha fallado o no hay conexión a Internet. Inténtalo de nuevo más tarde.</value>
   </data>
   <data name="MenuViewModel_MultiuserText" xml:space="preserve">
-    <value>Multiuser</value>
+    <value>Multiusuario</value>
   </data>
   <data name="MenuViewModel_SubscribeText" xml:space="preserve">
-    <value>S'abonner</value>
+    <value>Suscríbete</value>
   </data>
   <data name="MenuViewModel_ShareText" xml:space="preserve">
-    <value>Partager</value>
+    <value>Compartir</value>
   </data>
   <data name="MenuViewModel_BasketText" xml:space="preserve">
-    <value>Panier</value>
+    <value>Cesta</value>
   </data>
   <data name="MenuViewModel_YourOrderText" xml:space="preserve">
-    <value>Vos commandes</value>
+    <value>Sus pedidos</value>
   </data>
   <data name="MenuViewModel_SettingText" xml:space="preserve">
-    <value>Paramètres</value>
+    <value>Configuración</value>
   </data>
   <data name="MenuViewModel_FeedbackText" xml:space="preserve">
-    <value>Commentaires</value>
+    <value>Comentarios</value>
   </data>
   <data name="DialogMoveToViewModel_SelectBarcode" xml:space="preserve">
-    <value>Veuillez sélectionner un code-barres Box.</value>
+    <value>Seleccione un código de barras de la caja.</value>
   </data>
   <data name="RootViewModel_FindText" xml:space="preserve">
-    <value>Trouver ...</value>
+    <value>Buscar ...</value>
   </data>
   <data name="RootViewModel_LaterText" xml:space="preserve">
-    <value>Plus tard</value>
+    <value>Más tarde</value>
   </data>
   <data name="RootViewModel_UpdateText" xml:space="preserve">
-    <value>Mise à jour</value>
+    <value>Actualización</value>
   </data>
   <data name="RootViewModel_UpdateAvailableText" xml:space="preserve">
-    <value>Une nouvelle mise à jour est disponible. Souhaitez-vous effectuer la mise à jour maintenant ?</value>
+    <value>Hay una nueva actualización disponible. ¿Desea actualizar ahora?</value>
   </data>
   <data name="RootViewModel_NoStorageFoundText" xml:space="preserve">
-    <value>Aucune entrée de stockage trouvée ou échec du chargement des catégories.</value>
+    <value>No se han encontrado entradas de almacenamiento o no se han podido cargar las categorías.</value>
   </data>
   <data name="RootViewModel_RefreshText" xml:space="preserve">
-    <value>Échec de l'actualisation des catégories.</value>
+    <value>No se pudieron actualizar las categorías.</value>
   </data>
   <data name="RootViewModel_SyncText" xml:space="preserve">
-    <value>Synchronisation...</value>
+    <value>Sincronizando...</value>
   </data>
   <data name="RootViewModel_DataSyncSuccessText" xml:space="preserve">
-    <value>Les données ont été synchronisées avec succès.</value>
+    <value>Datos sincronizados correctamente.</value>
   </data>
   <data name="General_FillAllField" xml:space="preserve">
-    <value>Veuillez remplir tous les champs avant de continuer.</value>
+    <value>Rellene todos los campos antes de continuar.</value>
   </data>
   <data name="RootViewModel_NoResultFoundText" xml:space="preserve">
-    <value>Aucun résultat trouvé pour votre recherche.</value>
+    <value>No se han encontrado resultados para tu búsqueda.</value>
   </data>
   <data name="PaymentShipmentViewModel_Total" xml:space="preserve">
     <value>Total:</value>
   </data>
   <data name="PaymentShipmentViewModel_CardPayment" xml:space="preserve">
-    <value>Paiement par carte</value>
+    <value>Pago con tarjeta</value>
   </data>
   <data name="PaymentShipmentViewModel_BankTransfer" xml:space="preserve">
-    <value>Virement bancaire (10 % de réduction)</value>
+    <value>Transferencia bancaria (10 % de descuento)</value>
   </data>
   <data name="DialogMoveToViewModel_MoveToText" xml:space="preserve">
-    <value>Déplacer vers</value>
+    <value>Mudarse a</value>
   </data>
   <data name="DialogPhotoSelectionViewModel_CameraText" xml:space="preserve">
-    <value>Capturer une photo</value>
+    <value>Capturar foto</value>
   </data>
   <data name="DialogPhotoSelectionViewModel_GalleryText" xml:space="preserve">
-    <value>Depuis la galerie  </value>
+    <value>De la galería </value>
   </data>
   <data name="MainPage_SmartLabel" xml:space="preserve">
-    <value>Déménager mieux. Stocker sûr.</value>
+    <value>Múdate Mejor. Almacena Seguro.</value>
   </data>
   <data name="MainPage_HomePageText" xml:space="preserve">
-    <value>Page d'accueil</value>
+    <value>Página de inicio</value>
   </data>
 </root>
