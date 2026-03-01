@@ -13,8 +13,6 @@
             <Grid.RowDefinitions>
                 <!--  back  -->
                 <RowDefinition Height="Auto" />
-                <!--  cart order view  -->
-                <RowDefinition Height="40" />
                 <!--  item view  -->
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
@@ -49,14 +47,14 @@
                 Grid.Row="0"
                 Margin="10"
                 Aspect="AspectFit"
-                HeightRequest="100"
+                HeightRequest="80"
                 HorizontalOptions="Center"
                 Source="qr_barcode_icon"
                 VerticalOptions="Center" />
 
             <!--  cart order view  -->
             <Grid
-                Grid.Row="1"
+                Grid.Row="0"
                 Margin="5"
                 BackgroundColor="Transparent"
                 HeightRequest="80"
@@ -90,7 +88,7 @@
 
             <!--  item view  -->
             <CollectionView
-                Grid.Row="2"
+                Grid.Row="1"
                 ItemsSource="{Binding Products}"
                 SelectedItem="{Binding SelectedItem}"
                 SelectionChangedCommand="{Binding OnSelectionChangedCommand}"
@@ -107,6 +105,18 @@
                                 StrokeShape="RoundRectangle 10"
                                 VerticalOptions="Fill">
                                 <StackLayout>
+
+                                    <Label
+                                        Grid.Row="0"
+                                        BackgroundColor="Transparent"
+                                        FontAttributes="Bold"
+                                        FontFamily="ItimRegular"
+                                        FontSize="Large"
+                                        HorizontalTextAlignment="Start"
+                                        Text="{Binding Title}"
+                                        TextColor="{StaticResource Black}"
+                                        VerticalTextAlignment="Start" />
+
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="8*" />
@@ -114,16 +124,6 @@
                                         </Grid.ColumnDefinitions>
 
                                         <VerticalStackLayout Grid.Column="0" Padding="9">
-                                            <Label
-                                                BackgroundColor="Transparent"
-                                                FontAttributes="Bold"
-                                                FontFamily="ItimRegular"
-                                                FontSize="Large"
-                                                HorizontalTextAlignment="Start"
-                                                Text="{Binding Title}"
-                                                TextColor="{StaticResource Black}"
-                                                VerticalTextAlignment="Center" />
-
                                             <Label
                                                 BackgroundColor="Transparent"
                                                 FontAttributes="None"
@@ -195,8 +195,6 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-
-
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>
