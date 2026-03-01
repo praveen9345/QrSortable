@@ -747,4 +747,13 @@
   <data name="PaymentShipmentViewModel_BankTransfer" xml:space="preserve">
     <value>Bank transfer(10% discount)</value>
   </data>
+  <data name="DialogMoveToViewModel_MoveToText" xml:space="preserve">
+    <value>Move To</value>
+  </data>
+  <data name="DialogPhotoSelectionViewModel_CameraText" xml:space="preserve">
+    <value>Capture photo</value>
+  </data>
+  <data name="DialogPhotoSelectionViewModel_GalleryText" xml:space="preserve">
+    <value>From gallery  </value>
+  </data>
 </root>

@@ -1,62 +1,59 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<views:BaseView 
+<views:BaseView
+    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogPhotoSelectionView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
-    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogPhotoSelectionView"
-    BackgroundColor="{OnPlatform Android='#80000000', iOS='#99000000'}"
+    BackgroundColor="{OnPlatform Android='#80000000',
+                                 iOS='#99000000'}"
     Shell.PresentationMode="Modal">
     <views:BaseView.Content>
         <VerticalStackLayout
             x:Name="photoSelectionLayout"
-            HorizontalOptions="FillAndExpand"  
-            VerticalOptions="FillAndExpand" 
-            BackgroundColor="Transparent">
+            BackgroundColor="Transparent"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
             <VerticalStackLayout.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnLayoutTapped" />
             </VerticalStackLayout.GestureRecognizers>
-            <Border 
+            <Border
                 x:Name="boaderLayout"
                 Padding="3"
-                StrokeShape="RoundRectangle 5"
+                Background="{StaticResource StatusBarColor}"
                 HorizontalOptions="Center"
-                VerticalOptions="Center"
-                Background="{StaticResource StatusBarColor}">
-                <StackLayout 
-                    Orientation="Vertical">
-                    <StackLayout
-                        Orientation="Horizontal">
+                StrokeShape="RoundRectangle 5"
+                VerticalOptions="Center">
+                <StackLayout Orientation="Vertical">
+                    <StackLayout Orientation="Horizontal">
                         <Button
-                            Text="Capture photo"
                             Command="{Binding CapturePhotoCommand}"
-                            Style="{StaticResource HorizontalTextButton}">
-                            <Button.ImageSource >
-                                <FontImageSource 
-                                     Size="40"
-                                     FontFamily="FluentIcons"
-                                     Color="{StaticResource Primary}"
-                                     Glyph="{x:Static local:IconNames.Camera}"/>
+                            Style="{StaticResource HorizontalTextButton}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[DialogPhotoSelectionViewModel_CameraText]}">
+                            <Button.ImageSource>
+                                <FontImageSource
+                                    FontFamily="FluentIcons"
+                                    Glyph="{x:Static local:IconNames.Camera}"
+                                    Size="40"
+                                    Color="{StaticResource Primary}" />
                             </Button.ImageSource>
                         </Button>
                     </StackLayout>
 
-                    <BoxView 
-                        HeightRequest="1"
-                        BackgroundColor="White"/>
+                    <BoxView BackgroundColor="White" HeightRequest="1" />
 
-                    <StackLayout
-                        Orientation="Horizontal">
+                    <StackLayout Orientation="Horizontal">
                         <Button
-                            Text="From gallery  "
                             Command="{Binding GalleryCommand}"
-                            Style="{StaticResource HorizontalTextButton}">
-                            <Button.ImageSource >
-                                <FontImageSource 
-                                    Size="40"
-                                    Color="{StaticResource Primary}"
+                            Style="{StaticResource HorizontalTextButton}"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[DialogPhotoSelectionViewModel_GalleryText]}">
+                            <Button.ImageSource>
+                                <FontImageSource
                                     FontFamily="FluentIcons"
-                                    Glyph="{x:Static local:IconNames.Gallery}"/>
+                                    Glyph="{x:Static local:IconNames.Gallery}"
+                                    Size="40"
+                                    Color="{StaticResource Primary}" />
                             </Button.ImageSource>
                         </Button>
                     </StackLayout>

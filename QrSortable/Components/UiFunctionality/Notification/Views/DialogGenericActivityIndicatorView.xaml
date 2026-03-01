@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<views:BaseView 
+<views:BaseView
+    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogGenericActivityIndicatorView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
-    x:Class="QrSortable.Components.UiFunctionality.Notification.Views.DialogGenericActivityIndicatorView"
-    BackgroundColor="{OnPlatform Android='#80000000', iOS='#99000000'}" x:Name="This"
+    x:Name="This"
+    BackgroundColor="{OnPlatform Android='#80000000',
+                                 iOS='#99000000'}"
     Shell.PresentationMode="Modal">
-    <views:BaseView.Content >
-        <StackLayout 
-            x:Name="DialogLayout" 
-            HorizontalOptions="CenterAndExpand" 
-            VerticalOptions="CenterAndExpand" 
-            Padding="15">
-            <Border 
-                BackgroundColor="White" 
+    <views:BaseView.Content>
+        <StackLayout
+            x:Name="DialogLayout"
+            Padding="15"
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="CenterAndExpand">
+            <Border
                 Padding="30,30,30,20"
-                VerticalOptions="Center"
+                BackgroundColor="White"
                 HorizontalOptions="Center"
-                Stroke="Transparent" 
-                StrokeShape="RoundRectangle 15">
+                Stroke="Transparent"
+                StrokeShape="RoundRectangle 15"
+                VerticalOptions="Center">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <ActivityIndicator 
-                        Grid.Row="0" 
-                        HeightRequest="40" 
-                        IsRunning="True" 
-                        Color="{StaticResource Primary}"/>
-                    <Label 
-                        Grid.Row="1" 
-                        Text="{Binding Text}" 
-                        TextColor="Black"
-                        HorizontalTextAlignment="Center" 
-                        Margin="0,10,0,0"/>
+                    <ActivityIndicator
+                        Grid.Row="0"
+                        HeightRequest="40"
+                        IsRunning="True"
+                        Color="{StaticResource Primary}" />
+                    <Label
+                        Grid.Row="1"
+                        Margin="0,10,0,0"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Text}"
+                        TextColor="Black" />
                 </Grid>
             </Border>
         </StackLayout>

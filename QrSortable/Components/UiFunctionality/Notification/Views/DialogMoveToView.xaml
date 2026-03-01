@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundColor="{OnPlatform Android='#80000000',
                                  iOS='#99000000'}"
@@ -47,7 +48,7 @@
                         FontFamily="ItimRegular"
                         FontSize="25"
                         HorizontalOptions="Center"
-                        Text="Move To"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[DialogMoveToViewModel_MoveToText]}"
                         TextColor="White" />
 
                     <!--  Box Icon + selection list  -->
@@ -148,7 +149,7 @@
                             CornerRadius="4"
                             HorizontalOptions="FillAndExpand"
                             Style="{StaticResource DialogButtonStyle}"
-                            Text="Cancel" />
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[Dialog_Cancel_Text]}" />
 
                         <BoxView
                             Grid.Column="1"
@@ -162,7 +163,7 @@
                             CornerRadius="4"
                             HorizontalOptions="FillAndExpand"
                             Style="{StaticResource DialogButtonStyle}"
-                            Text="Ok" />
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[Dialog_OK_Text]}" />
                     </Grid>
                 </VerticalStackLayout>
             </Border>
