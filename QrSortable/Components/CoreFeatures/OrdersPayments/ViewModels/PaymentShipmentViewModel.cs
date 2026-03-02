@@ -99,7 +99,7 @@
             ProductTitle = parameter.Title;
 
             TotalAmount = _product.TotalPrice.ToString() + "€";
-            if (_product.Title == CODE_GENERATED_NAME) 
+            if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB")) 
             { 
                 BankTransferVisible = false; 
             }
@@ -372,7 +372,7 @@
             var pdfFiles = new List<byte[]>();
 
             var processingMsg = AppResources.Dialog_Processing;
-            if(_product.Title == CODE_GENERATED_NAME)
+            if(_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
             {
                 processingMsg = AppResources.PaymentShipmentViewModel_GeneratedCodeMsg;
             }
@@ -388,10 +388,10 @@
             {
                 await RemoveProductFromBasket();
 
-                if(_product.Title == CODE_GENERATED_NAME)
+                if(_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
                 {
                     var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                    var fileName = (_product.CodeType == "QR code") ? $"{timestamp}Your_QR_Codes.pdf"
+                    var fileName = (_product.CodeType == "QRcode") ? $"{timestamp}Your_QR_Codes.pdf"
                         : $"{timestamp}Your_Barcodes.pdf";
 
                     string filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
@@ -508,7 +508,7 @@
 
         private string GetCodeAndPageType(string data)
         {
-            if(_product.Title == CODE_GENERATED_NAME)
+            if(_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
             {
                 return data;
             }
@@ -519,7 +519,7 @@
         private string StatusOfOrder()
         {
             string status = AppResources.General_PendingStatusText;
-            if (_product.Title == CODE_GENERATED_NAME)
+            if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
             {
                 status = AppResources.General_DownloadStatusText;
             }
@@ -530,7 +530,7 @@
         {
             var pdfBytes = new List<byte[]>();
 
-            if (_product.Title == CODE_GENERATED_NAME)
+            if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
             {
                 if (_product.CodeType == AppResources.CodeGeneratorViewModel_QRcodeText) 
                 {

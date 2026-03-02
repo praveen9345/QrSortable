@@ -132,7 +132,7 @@
   <data name="Dialog_OK_Text" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="RootViewModel_MenuText" xml:space="preserve">
+  <data name="()" xml:space="preserve">
     <value>Menü</value>
   </data>
   <data name="RootViewModel_CodeGeneratorText" xml:space="preserve">
@@ -259,7 +259,7 @@
     <value>Beim Speichern des Elements ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48QRTitle" xml:space="preserve">
-    <value>Standardpaket (48 QR-Etiketten)</value>
+    <value>Standardpaket (48 QR-Etiketten) (SQR)</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48QRDiscription" xml:space="preserve">
     <value>* schwarz, blau, gelb, rosa</value>
@@ -325,7 +325,7 @@
     <value>Beim Speichern des Elements ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.</value>
   </data>
   <data name="SelectProductViewModel_GenrateOfA4QRcodeTitle" xml:space="preserve">
-    <value>Erstellen Sie selbst A4-QR- oder Barcodes!</value>
+    <value>Erstellen Sie selbst A4-QR- oder Barcodes! (GQB)</value>
   </data>
   <data name="SelectProductViewModel_GenrateOfA4QRcodeColor" xml:space="preserve">
     <value>* Farbe auswählen</value>
@@ -763,7 +763,7 @@
     <value>Startseite</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48BrTitle" xml:space="preserve">
-    <value>Standardpaket (48 Barcode-Etiketten)</value>
+    <value>Standardpaket (48 Barcode-Etiketten) (SBR)</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48BrDiscription" xml:space="preserve">
     <value>schwarz farbcodiert</value>
@@ -772,7 +772,7 @@
     <value>nur {0}</value>
   </data>
   <data name="SelectProductViewModel_LargePack100QRTitle" xml:space="preserve">
-    <value>Großpackung (100 QR-Etiketten)</value>
+    <value>Großpackung (100 QR-Etiketten) (LQR)</value>
   </data>
   <data name="SelectProductViewModel_LargePack100QRDiscription" xml:space="preserve">
     <value>Schwarz farbcodiert (auch in der Anfrage farbig dargestellt)</value>

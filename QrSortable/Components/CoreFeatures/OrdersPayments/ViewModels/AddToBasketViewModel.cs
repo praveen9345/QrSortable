@@ -154,19 +154,20 @@
         private string GetImage(string title)
         {
             var image = "image_icon";
-            if (title == AppResources.SelectProductViewModel_StandardPack48QRTitle)
+            if (title.Contains("SQR") && AppResources.SelectProductViewModel_StandardPack48QRTitle.Contains("SQR"))
             {
                 image = "qr_standerd_pack_1.png";
 
-            } else if (title == AppResources.SelectProductViewModel_StandardPack48BrTitle)
+            } 
+            else if (title.Contains("SBR") && AppResources.SelectProductViewModel_StandardPack48BrTitle.Contains("SBR"))
             {
                 image = "br_standerd_pack_1.png";
             }
-            else if (title == AppResources.SelectProductViewModel_LargePack100QRTitle)
+            else if (title.Contains("LQR") && AppResources.SelectProductViewModel_LargePack100QRTitle.Contains("LQR"))
             {
                 image = "qr_large_pack_1.png";
             }
-            else if (title == AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle)
+            else if (title.Contains("GQB") && AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle.Contains("GQB"))
             {
                 image = "code_pdf_icon.png";
             }

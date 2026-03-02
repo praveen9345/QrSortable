@@ -132,7 +132,7 @@
   <data name="Dialog_OK_Text" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="RootViewModel_MenuText" xml:space="preserve">
+  <data name="()" xml:space="preserve">
     <value>Menu</value>
   </data>
   <data name="RootViewModel_CodeGeneratorText" xml:space="preserve">
@@ -259,7 +259,7 @@
     <value>An unexpected error occurred while saving the item. Please try again.</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48QRTitle" xml:space="preserve">
-    <value>Standard Pack (48 QR Labels)</value>
+    <value>Standard Pack (48 QR Labels) (SQR)</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48QRDiscription" xml:space="preserve">
     <value>* black, blue, yellow, pink</value>
@@ -325,7 +325,7 @@
     <value>An unexpected error occurred while saving the item. Please try again.</value>
   </data>
   <data name="SelectProductViewModel_GenrateOfA4QRcodeTitle" xml:space="preserve">
-    <value>Generate A4 QR or bar codes yourself!</value>
+    <value>Generate A4 QR or bar codes yourself! (GQB)</value>
   </data>
   <data name="SelectProductViewModel_GenrateOfA4QRcodeColor" xml:space="preserve">
     <value>* select color</value>
@@ -763,7 +763,7 @@
     <value>Home Page</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48BrTitle" xml:space="preserve">
-    <value>Standard Pack (48 Barcode Labels)</value>
+    <value>Standard Pack (48 Barcode Labels) (SBR)</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48BrDiscription" xml:space="preserve">
     <value>black color coded</value>
@@ -772,7 +772,7 @@
     <value> {0} only</value>
   </data>
   <data name="SelectProductViewModel_LargePack100QRTitle" xml:space="preserve">
-    <value>Large Pack (100 QR Labels)</value>
+    <value>Large Pack (100 QR Labels) (LQR)</value>
   </data>
   <data name="SelectProductViewModel_LargePack100QRDiscription" xml:space="preserve">
     <value>Black color-coded (also colored in the request)</value>

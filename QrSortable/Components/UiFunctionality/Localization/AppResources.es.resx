@@ -132,7 +132,7 @@
   <data name="Dialog_OK_Text" xml:space="preserve">
     <value>Vale</value>
   </data>
-  <data name="RootViewModel_MenuText" xml:space="preserve">
+  <data name="()" xml:space="preserve">
     <value>Menú</value>
   </data>
   <data name="RootViewModel_CodeGeneratorText" xml:space="preserve">
@@ -259,7 +259,7 @@
     <value>Se ha producido un error inesperado al guardar el elemento. Inténtalo de nuevo.</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48QRTitle" xml:space="preserve">
-    <value>Paquete estándar (48 etiquetas QR)</value>
+    <value>Paquete estándar (48 etiquetas QR) (SQR)</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48QRDiscription" xml:space="preserve">
     <value>* negro, azul, amarillo, rosa</value>
@@ -325,7 +325,7 @@
     <value>Se ha producido un error inesperado al guardar el elemento. Inténtalo de nuevo.</value>
   </data>
   <data name="SelectProductViewModel_GenrateOfA4QRcodeTitle" xml:space="preserve">
-    <value>¡Genera tú mismo códigos QR o códigos de barras en formato A4!</value>
+    <value>¡Genera tú mismo códigos QR o códigos de barras en formato A4! (GQB)</value>
   </data>
   <data name="SelectProductViewModel_GenrateOfA4QRcodeColor" xml:space="preserve">
     <value>* seleccionar color</value>
@@ -763,7 +763,7 @@
     <value>Página de inicio</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48BrTitle" xml:space="preserve">
-    <value>Paquete estándar (48 etiquetas con código de barras)</value>
+    <value>Paquete estándar (48 etiquetas con código de barras) (SBR)</value>
   </data>
   <data name="SelectProductViewModel_StandardPack48BrDiscription" xml:space="preserve">
     <value>color negro codificado</value>
@@ -772,7 +772,7 @@
     <value> {0} únicamente</value>
   </data>
   <data name="SelectProductViewModel_LargePack100QRTitle" xml:space="preserve">
-    <value>Paquete grande (100 etiquetas QR)</value>
+    <value>Paquete grande (100 etiquetas QR) (LQR)</value>
   </data>
   <data name="SelectProductViewModel_LargePack100QRDiscription" xml:space="preserve">
     <value>Codificado con el color negro (también coloreado en la solicitud)</value>

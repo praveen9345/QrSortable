@@ -84,7 +84,7 @@
                 {
 
                     var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                    var fileName = (existing.CodeType == "QR code") ? $"{timestamp}Your_QR_Codes.pdf"
+                    var fileName = (existing.CodeType == "QRcode") ? $"{timestamp}Your_QR_Codes.pdf"
                         : $"{timestamp}Your_Barcodes.pdf";
 
                     string filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
@@ -146,22 +146,22 @@
         //TODO: need to adjust with real images
         private void ImageUrlForTitle(string title)
         {
-            if (title == AppResources.SelectProductViewModel_StandardPack48QRTitle)
+            if (title.Contains("SQR") && AppResources.SelectProductViewModel_StandardPack48QRTitle.Contains("SQR"))
             {
                 _urlImage = "qr_standerd_pack_1.png";
-                _isEnabelStatusOfOrder= false;
+                _isEnabelStatusOfOrder = false;
             }
-            else if (title == AppResources.SelectProductViewModel_StandardPack48BrTitle)
+            else if (title.Contains("SBR") && AppResources.SelectProductViewModel_StandardPack48BrTitle.Contains("SBR"))
             {
                 _urlImage = "br_standerd_pack_1.png";
                 _isEnabelStatusOfOrder = false;
             }
-            else if (title == AppResources.SelectProductViewModel_LargePack100QRTitle)
+            else if (title.Contains("LQR") && AppResources.SelectProductViewModel_LargePack100QRTitle.Contains("LQR"))
             {
                 _urlImage = "qr_large_pack_1.png";
                 _isEnabelStatusOfOrder = false;
-            }
-            else if (title == AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle)
+            }  
+            else if (title.Contains("GQB") && AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle.Contains("GQB"))
             {
                 _urlImage = "code_pdf_icon.png";
                 _isEnabelStatusOfOrder = true;
