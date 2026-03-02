@@ -51,7 +51,7 @@
                 HorizontalOptions="Center"
                 Source="bank_transfer"
                 VerticalOptions="Center" />
-
+            
             <!--  Order Summary Section  -->
             <VerticalStackLayout
                 Grid.Row="1"
