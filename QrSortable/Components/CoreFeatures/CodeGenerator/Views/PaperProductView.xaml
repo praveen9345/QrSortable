@@ -15,7 +15,7 @@
                     <!--  back  -->
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="325" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -126,11 +126,11 @@
                         <CarouselView.ItemTemplate>
                             <DataTemplate>
                                 <!--  boxes view  -->
-                                <Grid Margin="2,2,2,0">
+                                <Grid Margin="5">
                                     <!--  images  -->
                                     <Image
                                         Aspect="AspectFill"
-                                        HeightRequest="310"
+                                        HeightRequest="320"
                                         HorizontalOptions="Start"
                                         Rotation="{Binding Rotate}"
                                         Source="{Binding Image}"
