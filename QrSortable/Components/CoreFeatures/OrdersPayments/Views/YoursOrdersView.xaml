@@ -250,7 +250,7 @@
                                                     Grid.Column="1"
                                                     Margin="5"
                                                     Aspect="AspectFit"
-                                                    HeightRequest="150"
+                                                    HeightRequest="110"
                                                     HorizontalOptions="Center"
                                                     Source="{Binding ImageUrl}"
                                                     VerticalOptions="Center" />

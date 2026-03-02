@@ -148,17 +148,22 @@
         {
             if (title == AppResources.SelectProductViewModel_StandardPack48QRTitle)
             {
-                _urlImage = "code_pdf_icon";
+                _urlImage = "qr_standerd_pack_1.png";
                 _isEnabelStatusOfOrder= false;
             }
-            else if (title == "Set of 5 A4 Bar code")
+            else if (title == AppResources.SelectProductViewModel_StandardPack48BrTitle)
             {
-                _urlImage = "code_pdf_icon";
+                _urlImage = "br_standerd_pack_1.png";
+                _isEnabelStatusOfOrder = false;
+            }
+            else if (title == AppResources.SelectProductViewModel_LargePack100QRTitle)
+            {
+                _urlImage = "qr_large_pack_1.png";
                 _isEnabelStatusOfOrder = false;
             }
             else if (title == AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle)
             {
-                _urlImage = "code_pdf_icon";
+                _urlImage = "code_pdf_icon.png";
                 _isEnabelStatusOfOrder = true;
             }
         }

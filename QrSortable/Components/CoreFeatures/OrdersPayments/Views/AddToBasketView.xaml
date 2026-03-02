@@ -156,9 +156,9 @@
                                             <Image
                                                 Margin="5"
                                                 Aspect="AspectFit"
-                                                HeightRequest="120"
+                                                HeightRequest="110"
                                                 HorizontalOptions="Center"
-                                                Source="code_pdf_icon"
+                                                Source="{Binding Image}"
                                                 VerticalOptions="Center" />
                                         </VerticalStackLayout>
 

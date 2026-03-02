@@ -26,6 +26,9 @@
         [ObservableProperty] 
         private decimal _totalPrice;
 
+        [ObservableProperty]
+        private string _image;
+
         partial void OnPriceChanged(string value) => RecalculateTotal();
         partial void OnProductQuantityChanged(int value) => RecalculateTotal();
 

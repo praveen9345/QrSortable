@@ -138,7 +138,8 @@
                             Price = data.Price,
                             ProductQuantity = data.ProductQuantity,
                             DateTime = data.DateTime,
-                            TotalPrice = data.TotalPrice
+                            TotalPrice = data.TotalPrice,
+                            Image = GetImage(data.Title)
                         });
                     }
                 });
@@ -148,6 +149,28 @@
             {
                 Console.WriteLine($"PaperProductViewModel: Error loading basket data: {ex.Message}");
             }
+        }
+
+        private string GetImage(string title)
+        {
+            var image = "image_icon";
+            if (title == AppResources.SelectProductViewModel_StandardPack48QRTitle)
+            {
+                image = "qr_standerd_pack_1.png";
+
+            } else if (title == AppResources.SelectProductViewModel_StandardPack48BrTitle)
+            {
+                image = "br_standerd_pack_1.png";
+            }
+            else if (title == AppResources.SelectProductViewModel_LargePack100QRTitle)
+            {
+                image = "qr_large_pack_1.png";
+            }
+            else if (title == AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle)
+            {
+                image = "code_pdf_icon.png";
+            }
+            return image;
         }
 
         private string ComputeHash(IEnumerable<AddToBasketData> items)
