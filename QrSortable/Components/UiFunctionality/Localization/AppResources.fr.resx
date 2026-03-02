@@ -258,13 +258,13 @@
   <data name="PaperProductViewModel_ErrorSaveItem" xml:space="preserve">
     <value>Une erreur inattendue s'est produite lors de l'enregistrement de l'élément. Veuillez réessayer.</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodeTitle" xml:space="preserve">
-    <value>Lot de 5 QRcode A4</value>
+  <data name="SelectProductViewModel_StandardPack48QRTitle" xml:space="preserve">
+    <value>Pack standard (48 étiquettes QR)</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodeDiscription" xml:space="preserve">
-    <value>* orange, jaune, vert, rouge, rose</value>
+  <data name="SelectProductViewModel_StandardPack48QRDiscription" xml:space="preserve">
+    <value>* noir, bleu, jaune, rose</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodePrice" xml:space="preserve">
+  <data name="SelectProductViewModel_StandardPack48QRPrice" xml:space="preserve">
     <value> {0} uniquement</value>
   </data>
   <data name="SelectProductViewModel_NewText" xml:space="preserve">
@@ -761,5 +761,23 @@
   </data>
   <data name="MainPage_HomePageText" xml:space="preserve">
     <value>Page d'accueil</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrTitle" xml:space="preserve">
+    <value>Pack standard (48 étiquettes à code-barres)</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrDiscription" xml:space="preserve">
+    <value>couleur noire codée</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrPrice" xml:space="preserve">
+    <value> {0} uniquement</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRTitle" xml:space="preserve">
+    <value>Grand paquet (100 étiquettes QR)</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRDiscription" xml:space="preserve">
+    <value>Code couleur noir (également coloré dans la demande)</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRPrice" xml:space="preserve">
+    <value> {0} uniquement</value>
   </data>
 </root>

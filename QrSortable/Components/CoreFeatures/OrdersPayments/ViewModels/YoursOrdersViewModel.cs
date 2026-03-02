@@ -146,7 +146,7 @@
         //TODO: need to adjust with real images
         private void ImageUrlForTitle(string title)
         {
-            if (title == AppResources.SelectProductViewModel_SetOfA4QRcodeTitle)
+            if (title == AppResources.SelectProductViewModel_StandardPack48QRTitle)
             {
                 _urlImage = "code_pdf_icon";
                 _isEnabelStatusOfOrder= false;

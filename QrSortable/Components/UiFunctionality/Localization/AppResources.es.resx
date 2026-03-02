@@ -258,13 +258,13 @@
   <data name="PaperProductViewModel_ErrorSaveItem" xml:space="preserve">
     <value>Se ha producido un error inesperado al guardar el elemento. Inténtalo de nuevo.</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodeTitle" xml:space="preserve">
-    <value>Juego de 5 códigos QR A4</value>
+  <data name="SelectProductViewModel_StandardPack48QRTitle" xml:space="preserve">
+    <value>Paquete estándar (48 etiquetas QR)</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodeDiscription" xml:space="preserve">
-    <value>* naranja, amarillo, verde, rojo, rosa</value>
+  <data name="SelectProductViewModel_StandardPack48QRDiscription" xml:space="preserve">
+    <value>* negro, azul, amarillo, rosa</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodePrice" xml:space="preserve">
+  <data name="SelectProductViewModel_StandardPack48QRPrice" xml:space="preserve">
     <value> {0} únicamente</value>
   </data>
   <data name="SelectProductViewModel_NewText" xml:space="preserve">
@@ -761,5 +761,23 @@
   </data>
   <data name="MainPage_HomePageText" xml:space="preserve">
     <value>Página de inicio</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrTitle" xml:space="preserve">
+    <value>Paquete estándar (48 etiquetas con código de barras)</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrDiscription" xml:space="preserve">
+    <value>color negro codificado</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrPrice" xml:space="preserve">
+    <value> {0} únicamente</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRTitle" xml:space="preserve">
+    <value>Paquete grande (100 etiquetas QR)</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRDiscription" xml:space="preserve">
+    <value>Codificado con el color negro (también coloreado en la solicitud)</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRPrice" xml:space="preserve">
+    <value> {0} únicamente</value>
   </data>
 </root>

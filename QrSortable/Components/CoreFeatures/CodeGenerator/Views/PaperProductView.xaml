@@ -15,7 +15,7 @@
                     <!--  back  -->
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -112,12 +112,6 @@
                 </Grid>
 
                 <Grid Grid.Row="2" Background="{StaticResource DarkGrey}">
-                    <!--  default image icon  -->
-                    <Image
-                        Aspect="AspectFit"
-                        HorizontalOptions="Fill"
-                        Source="image_icon"
-                        VerticalOptions="Fill" />
                     <!--  seprator  -->
                     <BoxView
                         HeightRequest="2"
@@ -132,14 +126,15 @@
                         <CarouselView.ItemTemplate>
                             <DataTemplate>
                                 <!--  boxes view  -->
-                                <Grid Margin="2,0,2,0">
+                                <Grid Margin="2,2,2,0">
                                     <!--  images  -->
                                     <Image
                                         Aspect="AspectFill"
-                                        HorizontalOptions="Fill"
+                                        HeightRequest="310"
+                                        HorizontalOptions="Start"
                                         Rotation="{Binding Rotate}"
                                         Source="{Binding Image}"
-                                        VerticalOptions="Fill" />
+                                        VerticalOptions="Start" />
 
                                     <!--  Swipe view  -->
                                     <Button

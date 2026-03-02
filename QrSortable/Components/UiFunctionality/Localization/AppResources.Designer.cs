@@ -688,35 +688,101 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to SetOfA4QRcodeTitle Text!!.
+        ///   Looks up a localized string similar to StandardPack48QRTitle Text!!.
         /// </summary>
-        public static string SelectProductViewModel_SetOfA4QRcodeTitle
+        public static string SelectProductViewModel_StandardPack48QRTitle
         {
             get
             {
-                return ResourceManager.GetString("SelectProductViewModel_SetOfA4QRcodeTitle", resourceCulture);
+                return ResourceManager.GetString("SelectProductViewModel_StandardPack48QRTitle", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to SetOfA4QRcodeDiscription Text!!.
+        ///   Looks up a localized string similar to StandardPack48QrTitle Text!!.
         /// </summary>
-        public static string SelectProductViewModel_SetOfA4QRcodeDiscription
+        public static string SelectProductViewModel_StandardPack48BrTitle
         {
             get
             {
-                return ResourceManager.GetString("SelectProductViewModel_SetOfA4QRcodeDiscription", resourceCulture);
+                return ResourceManager.GetString("SelectProductViewModel_StandardPack48BrTitle", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to SetOfA4QRcodePrice Text!!.
+        ///   Looks up a localized string similar to StandardPack48BrDiscription Text!!.
         /// </summary>
-        public static string SelectProductViewModel_SetOfA4QRcodePrice
+        public static string SelectProductViewModel_StandardPack48BrDiscription
         {
             get
             {
-                return ResourceManager.GetString("SelectProductViewModel_SetOfA4QRcodePrice", resourceCulture);
+                return ResourceManager.GetString("SelectProductViewModel_StandardPack48BrDiscription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to StandardPack48BrPrice Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_StandardPack48BrPrice
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_StandardPack48BrPrice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to StandardPack Discription Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_StandardPack48QRDiscription
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_StandardPack48QRDiscription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to LargePack100QRTitle Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_LargePack100QRTitle
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_LargePack100QRTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to LargePack100QRDiscription Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_LargePack100QRDiscription
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_LargePack100QRDiscription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to LargePack100QRPrice Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_LargePack100QRPrice
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_LargePack100QRPrice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to StandardPack Price Text!!.
+        /// </summary>
+        public static string SelectProductViewModel_StandardPack48QRPrice
+        {
+            get
+            {
+                return ResourceManager.GetString("SelectProductViewModel_StandardPack48QRPrice", resourceCulture);
             }
         }
 

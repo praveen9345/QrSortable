@@ -107,6 +107,15 @@
 		<MauiImage Include="Resources\Images\code_pdf_icon.png" />
 		<MauiImage Include="Resources\Images\qr_code_demo.png" />
 		<MauiImage Include="Resources\Images\bar_code_demo.png" />
+		<MauiImage Include="Resources\Images\qr_standerd_pack_1.png" />
+		<MauiImage Include="Resources\Images\qr_standerd_pack_2.png" />
+	    <MauiImage Include="Resources\Images\qr_standerd_pack_3.png" />
+		<MauiImage Include="Resources\Images\br_standerd_pack_1.png" />
+	    <MauiImage Include="Resources\Images\br_standerd_pack_2.png" />
+	    <MauiImage Include="Resources\Images\br_standerd_pack_3.png" />
+		<MauiImage Include="Resources\Images\qr_large_pack_1.png" />
+		<MauiImage Include="Resources\Images\qr_large_pack_2.png" />
+		<MauiImage Include="Resources\Images\qr_large_pack_3.png" />
 	</ItemGroup>
 
 	<ItemGroup>

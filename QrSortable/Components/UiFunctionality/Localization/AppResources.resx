@@ -258,13 +258,13 @@
   <data name="PaperProductViewModel_ErrorSaveItem" xml:space="preserve">
     <value>An unexpected error occurred while saving the item. Please try again.</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodeTitle" xml:space="preserve">
-    <value>Set of 5 A4 QRcode</value>
+  <data name="SelectProductViewModel_StandardPack48QRTitle" xml:space="preserve">
+    <value>Standard Pack (48 QR Labels)</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodeDiscription" xml:space="preserve">
-    <value>* orange, yellow, green, red, pink</value>
+  <data name="SelectProductViewModel_StandardPack48QRDiscription" xml:space="preserve">
+    <value>* black, blue, yellow, pink</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodePrice" xml:space="preserve">
+  <data name="SelectProductViewModel_StandardPack48QRPrice" xml:space="preserve">
     <value> {0} only</value>
   </data>
   <data name="SelectProductViewModel_NewText" xml:space="preserve">
@@ -761,5 +761,23 @@
   </data>
   <data name="MainPage_HomePageText" xml:space="preserve">
     <value>Home Page</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrTitle" xml:space="preserve">
+    <value>Standard Pack (48 Barcode Labels)</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrDiscription" xml:space="preserve">
+    <value>black color coded</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrPrice" xml:space="preserve">
+    <value> {0} only</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRTitle" xml:space="preserve">
+    <value>Large Pack (100 QR Labels)</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRDiscription" xml:space="preserve">
+    <value>Black color-coded (also colored in the request)</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRPrice" xml:space="preserve">
+    <value>{0} only</value>
   </data>
 </root>

@@ -51,13 +51,7 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-           
-
-            ImageArray.Add(new Images()
-            {
-                Image = "code_pdf_icon.png",
-                Rotate = 0
-            });
+            await LoadImagesAsync();
         }
         public async override void ViewAppearing()
         {
@@ -186,6 +180,36 @@
                 Console.WriteLine($"PaperProductViewModel: Error loading basket data: {ex.Message}");
             }
         }
-       
+
+        private async Task LoadImagesAsync()
+        {
+            if (string.IsNullOrWhiteSpace(_product?.Title))
+                return;
+
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                ImageArray.Clear();
+
+                if (_product.Title == AppResources.SelectProductViewModel_StandardPack48QRTitle)
+                {
+                    ImageArray.Add(new Images() { Image = "qr_standerd_pack_1.png", Rotate = 0 });
+                    ImageArray.Add(new Images() { Image = "qr_standerd_pack_2.png", Rotate = 0 });
+                    ImageArray.Add(new Images() { Image = "qr_standerd_pack_3.png", Rotate = 0 });
+                }
+                else if (_product.Title == AppResources.SelectProductViewModel_StandardPack48BrTitle)
+                {
+                    ImageArray.Add(new Images() { Image = "br_standerd_pack_1.png", Rotate = 0 });
+                    ImageArray.Add(new Images() { Image = "br_standerd_pack_2.png", Rotate = 0 });
+                    ImageArray.Add(new Images() { Image = "br_standerd_pack_3.png", Rotate = 0 });
+                }
+                else if (_product.Title == AppResources.SelectProductViewModel_LargePack100QRTitle)
+                {
+                    ImageArray.Add(new Images() { Image = "qr_large_pack_1.png", Rotate = 0 });
+                    ImageArray.Add(new Images() { Image = "qr_large_pack_2.png", Rotate = 0 });
+                    ImageArray.Add(new Images() { Image = "qr_large_pack_3.png", Rotate = 0 });
+                }
+            });
+        }
+
     }
 }

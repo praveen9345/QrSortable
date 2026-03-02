@@ -258,13 +258,13 @@
   <data name="PaperProductViewModel_ErrorSaveItem" xml:space="preserve">
     <value>Beim Speichern des Elements ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodeTitle" xml:space="preserve">
-    <value>Set mit 5 A4 QRcodes</value>
+  <data name="SelectProductViewModel_StandardPack48QRTitle" xml:space="preserve">
+    <value>Standardpaket (48 QR-Etiketten)</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodeDiscription" xml:space="preserve">
-    <value>* orange, gelb, grün, rot, pink</value>
+  <data name="SelectProductViewModel_StandardPack48QRDiscription" xml:space="preserve">
+    <value>* schwarz, blau, gelb, rosa</value>
   </data>
-  <data name="SelectProductViewModel_SetOfA4QRcodePrice" xml:space="preserve">
+  <data name="SelectProductViewModel_StandardPack48QRPrice" xml:space="preserve">
     <value>nur {0}</value>
   </data>
   <data name="SelectProductViewModel_NewText" xml:space="preserve">
@@ -761,5 +761,23 @@
   </data>
   <data name="MainPage_HomePageText" xml:space="preserve">
     <value>Startseite</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrTitle" xml:space="preserve">
+    <value>Standardpaket (48 Barcode-Etiketten)</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrDiscription" xml:space="preserve">
+    <value>schwarz farbcodiert</value>
+  </data>
+  <data name="SelectProductViewModel_StandardPack48BrPrice" xml:space="preserve">
+    <value>nur {0}</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRTitle" xml:space="preserve">
+    <value>Großpackung (100 QR-Etiketten)</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRDiscription" xml:space="preserve">
+    <value>Schwarz farbcodiert (auch in der Anfrage farbig dargestellt)</value>
+  </data>
+  <data name="SelectProductViewModel_LargePack100QRPrice" xml:space="preserve">
+    <value>nur {0}</value>
   </data>
 </root>

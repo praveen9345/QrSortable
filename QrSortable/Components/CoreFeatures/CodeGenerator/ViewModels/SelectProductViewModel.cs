@@ -99,24 +99,7 @@
         {
             Products = new ObservableCollection<Product>
             {
-                new Product
-                {
-                    
-                    Title = AppResources.SelectProductViewModel_SetOfA4QRcodeTitle,
-                    Description = AppResources.SelectProductViewModel_SetOfA4QRcodeDiscription,
-                    Price = string.Format(AppResources.SelectProductViewModel_SetOfA4QRcodePrice,
-                    await GetFormattedPrice(10)),
-                    IsNew = true,
-                    ImageUrl = "qr_barcode_icon"
-                },
-                new Product
-                 {
-                    Title = "Set of 5 A4 Barcode",
-                    Description = "* orange, yellow, green, red, pink",
-                    Price = "10€ only",
-                    ImageUrl = "bar_code"
-                },
-                new Product
+                 new Product
                 {
                     Title = AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle,
                     Description = AppResources.SelectProductViewModel_GenrateOfA4QRcodeColor,
@@ -124,7 +107,33 @@
                     await GetFormattedPrice(5)),
                     IsNew = true,
                     ImageUrl = "code_pdf_icon.png"
+                },
+                new Product
+                {      
+                    Title = AppResources.SelectProductViewModel_StandardPack48QRTitle,
+                    Description = AppResources.SelectProductViewModel_StandardPack48QRDiscription,
+                    Price = string.Format(AppResources.SelectProductViewModel_StandardPack48QRPrice,
+                    await GetFormattedPrice(10)),
+                    IsNew = true,
+                    ImageUrl = "qr_standerd_pack_1.png"
+                },
+                new Product
+                 {
+                    Title = AppResources.SelectProductViewModel_StandardPack48BrTitle,
+                    Description = AppResources.SelectProductViewModel_StandardPack48BrDiscription,
+                    Price = string.Format(AppResources.SelectProductViewModel_StandardPack48BrPrice,
+                    await GetFormattedPrice(10)),
+                    ImageUrl = "br_standerd_pack_1.png"
+                },
+                new Product
+                 {
+                    Title = AppResources.SelectProductViewModel_LargePack100QRTitle,
+                    Description = AppResources.SelectProductViewModel_LargePack100QRDiscription,
+                    Price = string.Format(AppResources.SelectProductViewModel_LargePack100QRPrice,
+                    await GetFormattedPrice(49)),
+                    ImageUrl = "qr_large_pack_1.png"
                 }
+
             };
         }
         private string GenereateOrderedId()
