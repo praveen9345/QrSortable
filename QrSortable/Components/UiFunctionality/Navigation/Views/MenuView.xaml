@@ -44,10 +44,15 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnMenuItemTapped" />
+                                </Grid.GestureRecognizers>
+
                                 <Grid
                                     Padding="10"
                                     BackgroundColor="#00000033"
                                     ColumnDefinitions="Auto,*,Auto">
+
                                     <!--  Icon  -->
                                     <Image HeightRequest="30" WidthRequest="30">
                                         <Image.Source>
