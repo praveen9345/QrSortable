@@ -254,35 +254,69 @@
                                                     HorizontalOptions="Center"
                                                     Source="{Binding ImageUrl}"
                                                     VerticalOptions="Center" />
+
+                                                <Label
+                                                    Grid.Column="1"
+                                                    BackgroundColor="Transparent"
+                                                    FontAttributes="Bold"
+                                                    FontFamily="ItimRegular"
+                                                    FontSize="Large"
+                                                    HorizontalTextAlignment="Center"
+                                                    Text="{Binding TotalPrice}"
+                                                    TextColor="{StaticResource Black}"
+                                                    VerticalTextAlignment="Center" />
                                             </VerticalStackLayout>
                                         </Grid>
 
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
+
                                             <Label
                                                 Grid.Column="0"
                                                 BackgroundColor="Transparent"
                                                 FontAttributes="Bold"
                                                 FontFamily="ItimRegular"
-                                                FontSize="Large"
+                                                FontSize="Medium"
                                                 HorizontalTextAlignment="Start"
                                                 Text="{Binding ShipmentTracking}"
                                                 TextColor="{StaticResource Black}"
                                                 VerticalTextAlignment="Center" />
-                                            <Label
+
+                                            <Border
                                                 Grid.Column="1"
-                                                Margin="10,0,20,0"
-                                                BackgroundColor="Transparent"
-                                                FontAttributes="Bold"
-                                                FontFamily="ItimRegular"
-                                                FontSize="Large"
-                                                HorizontalTextAlignment="Start"
-                                                Text="{Binding TotalPrice}"
-                                                TextColor="{StaticResource Black}"
-                                                VerticalTextAlignment="Center" />
+                                                Margin="10,0,0,10"
+                                                Padding="0"
+                                                BackgroundColor="#00b8d5"
+                                                HeightRequest="40"
+                                                HorizontalOptions="Center"
+                                                StrokeShape="RoundRectangle 18"
+                                                VerticalOptions="Center">
+
+                                                <Border.Shadow>
+                                                    <Shadow
+                                                        Brush="Black"
+                                                        Opacity="0.3"
+                                                        Radius="10"
+                                                        Offset="3,3" />
+                                                </Border.Shadow>
+
+                                                <Button
+                                                    Padding="10,0,10,0"
+                                                    BackgroundColor="Transparent"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type views:BaseView}}, Path=BindingContext.CopyDhlCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    FontAttributes="Bold"
+                                                    FontFamily="ItimRegular"
+                                                    FontSize="Medium"
+                                                    HorizontalOptions="Fill"
+                                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_CopyText]}"
+                                                    TextColor="Black"
+                                                    VerticalOptions="Fill" />
+                                            </Border>
+
                                         </Grid>
 
                                     </Grid>

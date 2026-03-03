@@ -84,6 +84,13 @@
             await _toastService.DisplayToast(AppResources.YoursOrdersViewModel_CopyToClipboard);
         });
 
+        public AsyncRelayCommand<OrderedData> CopyDhlCommand => new AsyncRelayCommand<OrderedData>(async (item) =>
+        {
+            if (item == null) return;
+            await Clipboard.Default.SetTextAsync(item.ShipmentTracking);
+            await _toastService.DisplayToast(AppResources.YoursOrdersViewModel_CopyToClipboard);
+        });
+
         public AsyncRelayCommand<OrderedData> DownloadPDFCommand => new AsyncRelayCommand<OrderedData>(async (item) =>
         {
             if (item == null) return;
@@ -121,8 +128,7 @@
             }
 
         });
-
-
+        
         private async Task LoadOrderedDataAsync()
         {
             try
