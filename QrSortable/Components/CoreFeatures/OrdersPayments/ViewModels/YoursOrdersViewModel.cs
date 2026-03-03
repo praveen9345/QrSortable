@@ -58,23 +58,16 @@
             {
                 await _toastService.DisplayToast(AppResources.YoursOrdersViewModel_SyncData);
                 return;
-            }   
+            }
+
+            await _generalDatabaseSynManager.SyncYourOrdersFromFirebaseAsync();
         }
 
         public async override void ViewAppearing()
         {
             base.ViewAppearing();
-
-            bool syncResult = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(
-                AppResources.Dialog_Processing,
-                async () =>
-                {
-                    await _generalDatabaseSynManager.SyncYourOrdersFromFirebaseAsync();
-                    await LoadOrderedDataAsync();
-                    return true;
-                }
-            );
-
+            await LoadBasketCountAsync();
+            await LoadOrderedDataAsync();
         }
 
         /// <summary>
