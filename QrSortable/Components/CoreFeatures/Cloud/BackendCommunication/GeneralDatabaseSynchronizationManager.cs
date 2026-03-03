@@ -504,5 +504,72 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
 
             return images;
         }
+
+        public async Task<bool> SyncYourOrdersFromFirebaseAsync()
+        {
+            // Check internet connection
+            var isInternetConnectionAvailable = await _connectivityService.CheckInternetConnectionAvailableAsync();
+            if (!isInternetConnectionAvailable)
+                return false;
+
+            // Get local order entries
+            var dbOrder = await _databaseManager.GetListAsync<YoursOrderData>() ?? new List<YoursOrderData>();
+
+            // Get backend Firestore entries
+            var db = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
+            var collection = db.Collection("Orders");
+
+            var multiuserId = (await _generalInfoManager.GetGeneralInformationAsync()).MultiUserId;
+
+            var querySnapshot = await collection
+                .WhereEqualTo("MultiuserId", multiuserId)
+                .GetSnapshotAsync();
+
+            // Early return if both local and backend are empty
+            if ((!dbOrder.Any()) && querySnapshot.Count == 0)
+                return false;
+
+            // Convert local list to dictionary for fast lookup
+            var localOrdersById = dbOrder
+                .Where(x => !string.IsNullOrEmpty(x.OrderId))
+                .ToDictionary(x => x.OrderId);
+
+            bool hasChanges = false;
+
+            foreach (var document in querySnapshot.Documents)
+            {
+                if (!document.ContainsField("OrderId"))
+                    continue;
+
+                string orderId = document.GetValue<string>("OrderId");
+
+                if (!localOrdersById.TryGetValue(orderId, out var localOrder))
+                    continue;
+
+                // Get backend values safely
+                string backendShipmentTracking = document.ContainsField("ShipmentTracking")
+                    ? document.GetValue<string>("ShipmentTracking")
+                    : localOrder.ShipmentTracking;
+
+                string backendStatusOfOrder = document.ContainsField("StatusOfOrder")
+                    ? document.GetValue<string>("StatusOfOrder")
+                    : localOrder.StatusOfOrder;
+
+                // Only update if different
+                bool shipmentChanged = localOrder.ShipmentTracking != backendShipmentTracking;
+                bool statusChanged = localOrder.StatusOfOrder != backendStatusOfOrder;
+
+                if (shipmentChanged || statusChanged)
+                {
+                    localOrder.ShipmentTracking = backendShipmentTracking;
+                    localOrder.StatusOfOrder = backendStatusOfOrder;
+
+                    await _databaseManager.UpdateAsync(localOrder);
+                    hasChanges = true;
+                }
+            }
+
+            return hasChanges;
+        }
     }
 }

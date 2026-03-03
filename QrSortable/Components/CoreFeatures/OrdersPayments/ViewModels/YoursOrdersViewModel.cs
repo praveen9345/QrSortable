@@ -2,6 +2,7 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Models;
@@ -17,6 +18,7 @@
     {
         private readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
+        private readonly IGeneralDatabaseSynchronizationManager _generalDatabaseSynManager;
 
         private string _urlImage = "image_icon";
         private bool _isEnabelStatusOfOrder = false;
@@ -29,11 +31,13 @@
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
-        public YoursOrdersViewModel(IDatabaseManager databaseManager, IToastService toastService)
+        public YoursOrdersViewModel(IDatabaseManager databaseManager, IToastService toastService,
+            IGeneralDatabaseSynchronizationManager generalDatabaseSynManager)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
             _toastService = toastService;
+            _generalDatabaseSynManager = generalDatabaseSynManager;
 
             OrderedDatas = new ObservableCollection<OrderedData>();
         }
@@ -47,13 +51,24 @@
         {
             await base.InitializeAsync();
             
+
+            
         }
 
         public async override void ViewAppearing()
         {
             base.ViewAppearing();
-            await LoadBasketCountAsync();
-            await LoadOrderedDataAsync();
+
+            bool syncResult = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(
+                AppResources.Dialog_Processing,
+                async () =>
+                {
+                    await _generalDatabaseSynManager.SyncYourOrdersFromFirebaseAsync();
+                    await LoadOrderedDataAsync();
+                    return true;
+                }
+            );
+
         }
 
         /// <summary>

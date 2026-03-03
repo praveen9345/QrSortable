@@ -18,5 +18,7 @@
         Task<bool> ClearBackendAndSyncLocalDataAsync();
 
         Task<bool> SyncSubscriptionFromFirebaseAsync(string multiuserId);
+
+        Task<bool> SyncYourOrdersFromFirebaseAsync();
     }
 }
