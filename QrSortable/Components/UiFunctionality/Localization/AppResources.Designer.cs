@@ -1185,6 +1185,18 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar syn data Text!!.
+        /// </summary>
+        public static string YoursOrdersViewModel_SyncData
+        {
+            get
+            {
+                return ResourceManager.GetString("YoursOrdersViewModel_SyncData", resourceCulture);
+            }
+        }
+
+
+        /// <summary>
         ///   Looks up a localized string similar copy clipboard Text!!.
         /// </summary>
         public static string YoursOrdersViewModel_CopyToClipboard

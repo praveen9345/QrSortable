@@ -780,4 +780,7 @@
   <data name="SelectProductViewModel_LargePack100QRPrice" xml:space="preserve">
     <value>nur {0}</value>
   </data>
+  <data name="YoursOrdersViewModel_SyncData" xml:space="preserve">
+    <value>Für die Synchronisierung der Daten ist eine Internetverbindung erforderlich.</value>
+  </data>
 </root>

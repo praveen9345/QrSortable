@@ -6,6 +6,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Models;
+    using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
@@ -18,6 +19,7 @@
     {
         private readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
+        private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
         private readonly IGeneralDatabaseSynchronizationManager _generalDatabaseSynManager;
 
         private string _urlImage = "image_icon";
@@ -32,12 +34,13 @@
         /// used for managing database operations.</param>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
         public YoursOrdersViewModel(IDatabaseManager databaseManager, IToastService toastService,
-            IGeneralDatabaseSynchronizationManager generalDatabaseSynManager)
+            IGeneralDatabaseSynchronizationManager generalDatabaseSynManager, IMauiEssentialsWrapper mauiEssentialsWrapper)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
             _toastService = toastService;
             _generalDatabaseSynManager = generalDatabaseSynManager;
+            _mauiEssentialsWrapper = mauiEssentialsWrapper;
 
             OrderedDatas = new ObservableCollection<OrderedData>();
         }
@@ -50,9 +53,12 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            
 
-            
+            if (!_mauiEssentialsWrapper.IsInternetConnectionAvailable())
+            {
+                await _toastService.DisplayToast(AppResources.YoursOrdersViewModel_SyncData);
+                return;
+            }   
         }
 
         public async override void ViewAppearing()
