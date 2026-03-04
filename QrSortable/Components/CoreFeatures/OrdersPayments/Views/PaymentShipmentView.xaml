@@ -304,6 +304,7 @@
                             <Picker
                                 Title="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_CountryPlaceText]}"
                                 Margin="10,0,10,0"
+                                BackgroundColor="Transparent"
                                 FontAttributes="Bold"
                                 FontFamily="ItimRegular"
                                 FontSize="18"
