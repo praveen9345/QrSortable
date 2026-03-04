@@ -16,9 +16,6 @@
     using QrSortable.Components.UiFunctionality.Notification;
     using System;
 
-    /// <summary>
-    ///     The view model of the  BankTransferViewModel screen.
-    /// </summary>
     public partial class BankTransferViewModel : BaseViewModel<Product>
     {
         public readonly IDatabaseManager _databaseManager;
@@ -30,16 +27,23 @@
         private readonly IBackendDatabaseHelper _backendDatabaseHelper;
 
         private Product _product;
+        private const decimal DiscountRate = 0.1m;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref=" BankTransferViewModel" />.
-        /// </summary>
-        /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
-        /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
-        /// used for managing database operations.</param>
-        public BankTransferViewModel(IToastService toastService, IDatabaseManager databaseManager, 
-            ISharedMethodService sharedMethodService, IBackendCommunicationService backendCommunicationService,
-            IConnectivityService connectivityService, IBackendDatabaseManager backendDatabaseManager, 
+        // ── Currency rates (relative to EUR) ─────────────────────────────────────
+        private static readonly Dictionary<string, (decimal Rate, string Symbol)> CurrencyRates = new()
+        {
+            { "Euro(€)", (1.00m, "€") },
+            { "USD($)",  (1.08m, "$") },
+            { "GBP(£)",  (0.83m, "£") }
+        };
+
+        public BankTransferViewModel(
+            IToastService toastService,
+            IDatabaseManager databaseManager,
+            ISharedMethodService sharedMethodService,
+            IBackendCommunicationService backendCommunicationService,
+            IConnectivityService connectivityService,
+            IBackendDatabaseManager backendDatabaseManager,
             IBackendDatabaseHelper backendDatabaseHelper)
         {
             IsBackNavigationEnabled = true;
@@ -54,115 +58,126 @@
             ReferenceCode = GenerateReferenceCode();
         }
 
-        /// <summary>
-        /// Initializes the component asynchronously, ensuring proper initialization of general information
-        /// and notification permissions.
-        /// </summary>
-        /// <returns>An awaitable task.</returns>
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            
         }
 
         public override void Prepare(Product parameter)
         {
             _product = parameter;
-            var price = _product.TotalPrice;
-            TotalAmount = price.ToString("F2") + "€";
-            var discounted = (decimal)0.1 * price;
-            DiscountAmount = "-" + discounted.ToString("F2") + "€";
+
+            if (!CurrencyRates.TryGetValue(_product.CurrencySymbol, out var currency))
+                currency = (1.00m, "€");
+
+            var symbol = currency.Symbol;
+            var rate = currency.Rate;
+
+            // Convert prices using the currency rate
+            var price = _product.TotalPrice * rate;
+            var shippingFee = _product.ShippingCost * rate;
+
+            // Subtotal = base price in target currency
+            SubtotalAmount = symbol + price.ToString("F0");
+
+            // Discount = 10% on subtotal only
+            var discounted = DiscountRate * price;
+            DiscountAmount = "-" + symbol + discounted.ToString("F0");
+
+            // Net = subtotal - discount
             var netPrice = price - discounted;
-            NetTotalAmount = netPrice.ToString("F2") + "€";
+            NetTotalAmount = symbol + netPrice.ToString("F0");
+
+            // Shipping (converted, no discount applied)
+            ShippingCost = symbol + shippingFee.ToString("F0");
+
+            // Total = net + shipping
+            var total = netPrice + shippingFee;
+            TotalAmount = symbol + total.ToString("F0");
         }
 
-        /// <summary>
-        /// Represents the currently total amount to pay in the application.
-        /// </summary>
+        /// <summary>Subtotal before discount.</summary>
         [ObservableProperty]
-        private string _totalAmount;
+        private string _subtotalAmount;
 
-        /// <summary>
-        /// Represents the currently discount amount in the application.
-        /// </summary>
+        /// <summary>Discount amount (10% of subtotal).</summary>
         [ObservableProperty]
         private string _discountAmount;
 
-        /// <summary>
-        /// Represents the currently net total amount in the application.
-        /// </summary>
+        /// <summary>Net total after discount, before shipping.</summary>
         [ObservableProperty]
         private string _netTotalAmount;
 
-        /// <summary>
-        /// Represents the currently iban code in the application.
-        /// </summary>
+        /// <summary>Shipping cost.</summary>
+        [ObservableProperty]
+        private string _shippingCost;
+
+        /// <summary>Final amount to pay (net + shipping).</summary>
+        [ObservableProperty]
+        private string _totalAmount;
+
+        /// <summary>IBAN code.</summary>
         [ObservableProperty]
         private string _ibanCode = "DE89370400440532013000";
 
-        /// <summary>
-        /// Represents the currently reference code in the application.
-        /// </summary>
+        /// <summary>Reference code.</summary>
         [ObservableProperty]
         private string _referenceCode;
-
 
         public AsyncRelayCommand CopyIbanCommand => new AsyncRelayCommand(async () =>
         {
             await Clipboard.Default.SetTextAsync(IbanCode);
             await _toastService.DisplayToast(AppResources.BankTransferViewModel_IBANCopiedText);
-
         });
 
         public AsyncRelayCommand CopyReferenceCodeCommand => new AsyncRelayCommand(async () =>
         {
-
             await Clipboard.Default.SetTextAsync(ReferenceCode);
             await _toastService.DisplayToast(AppResources.BankTransferViewModel_ReferenceCopiedText);
-
         });
 
         public AsyncRelayCommand PlaceAnOrderCommand => new AsyncRelayCommand(async () =>
         {
             if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
             {
-                await DialogService.ShowAlertDialog(AppResources.Dialog_InternetConnection_Title,
-                    AppResources.Dialog_InternetConnection_Message, AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(
+                    AppResources.Dialog_InternetConnection_Title,
+                    AppResources.Dialog_InternetConnection_Message,
+                    AppResources.Dialog_OK_Text);
                 return;
             }
 
-            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(AppResources.Dialog_Processing,
-            async () =>{return await DatabaseAndBackendStoringAsync(); });
+            var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(
+                AppResources.Dialog_Processing,
+                async () => { return await DatabaseAndBackendStoringAsync(); });
 
             if (result)
             {
                 var dbItems = await _databaseManager.GetListAsync<AddToBasketData>();
                 var match = dbItems.FirstOrDefault(x =>
                     x.Title == _product.Title &&
-                    x.OrderId == _product.OrderId
-                );
+                    x.OrderId == _product.OrderId);
 
                 if (match != null)
-                {
                     await _databaseManager.DeleteAsync(match);
-                }
 
                 await DialogService.ShowAlertDialog(
-                    AppResources.Dialog_Conformation,AppResources.BankTransferViewModel_EmailSendMssg,
+                    AppResources.Dialog_Conformation,
+                    AppResources.BankTransferViewModel_EmailSendMssg,
                     AppResources.Dialog_OK_Text);
+
                 await NavigationService.Navigate<RootView>();
             }
             else
             {
-                await DialogService.ShowAlertDialog(AppResources.BankTransferViewModel_SaveErrorMsg, AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(
+                    AppResources.BankTransferViewModel_SaveErrorMsg,
+                    AppResources.Dialog_OK_Text);
             }
         });
 
-        private async Task<bool> DatabaseAndBackendStoringAsync() 
+        private async Task<bool> DatabaseAndBackendStoringAsync()
         {
-            /*TODO: *send email to user and to me and 
-            *send saved to the backgend when user placed an order
-            */
             try
             {
                 var orderedItem = new YoursOrderData
@@ -194,8 +209,8 @@
                 if (addedItem != null)
                 {
                     _databaseManager.CommitTransaction();
-                   
-                    if(!await _connectivityService.CheckInternetConnectionAvailableAsync())
+
+                    if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
                     {
                         var dto = _backendDatabaseHelper.CreateDtoOrdersBackendData(orderedItem, "false");
                         _backendDatabaseHelper.SaveToTheBackendAsync(dto);
@@ -204,8 +219,8 @@
                     {
                         await _backendCommunicationService.InsertAsync(orderedItem);
                     }
-                       
-                    Console.WriteLine("Successfully placed an ordered.");
+
+                    Console.WriteLine("Successfully placed an order.");
                     return true;
                 }
                 else
@@ -214,11 +229,10 @@
                     Console.WriteLine("DatabaseAndBackendStoringAsync: AddAsync returned null - rollback performed.");
                     return false;
                 }
-
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                Console.WriteLine($"DatabaseAndBackendStoringAsync::Exception during add: {ex}");
+                Console.WriteLine($"DatabaseAndBackendStoringAsync::Exception: {ex}");
                 return false;
             }
         }
@@ -226,12 +240,11 @@
         private string GetCodeAndPageType(string data)
         {
             if (_product.Title == AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle)
-            {
                 return data;
-            }
-            return string.Empty;
 
+            return string.Empty;
         }
+
         private string GenerateReferenceCode()
         {
             string prefix = "#QS";
@@ -239,8 +252,7 @@
             var random = new Random();
             var randomPart = new string(Enumerable.Repeat(chars, 5)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
-            return prefix + randomPart; 
+            return prefix + randomPart;
         }
     }
-
 }

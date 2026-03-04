@@ -27,13 +27,12 @@
                 CornerRadius="5"
                 HorizontalOptions="Start"
                 VerticalOptions="Start">
-
                 <Button.Shadow>
-                    <Shadow Brush="Black"
-                            Opacity="0.5"
-                            Radius="10" />
+                    <Shadow
+                        Brush="Black"
+                        Opacity="0.5"
+                        Radius="10" />
                 </Button.Shadow>
-
                 <Button.ImageSource>
                     <FontImageSource
                         FontFamily="FluentIcons"
@@ -52,9 +51,8 @@
                 Source="bank_transfer"
                 VerticalOptions="Center" />
 
-            <!-- SCROLL VIEW STARTS HERE -->
+            <!-- SCROLL VIEW -->
             <ScrollView Grid.Row="1" Grid.RowSpan="2">
-
                 <VerticalStackLayout Spacing="0">
 
                     <!-- Order Summary Section -->
@@ -63,7 +61,7 @@
                         HorizontalOptions="Center"
                         Spacing="8">
 
-                        <!-- Amount -->
+                        <!-- Subtotal -->
                         <HorizontalStackLayout Spacing="10">
                             <Label
                                 BackgroundColor="Transparent"
@@ -71,17 +69,16 @@
                                 FontFamily="ItimRegular"
                                 FontSize="18"
                                 HorizontalTextAlignment="Start"
-                                Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_AmountToPay]}"
+                                Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_SubtotalText]}"
                                 TextColor="{StaticResource White}"
                                 VerticalTextAlignment="Center" />
-
                             <Label
                                 BackgroundColor="Transparent"
                                 FontAttributes="Bold"
                                 FontFamily="ItimRegular"
                                 FontSize="20"
                                 HorizontalTextAlignment="Start"
-                                Text="{Binding TotalAmount}"
+                                Text="{Binding SubtotalAmount}"
                                 TextColor="{StaticResource Primary}"
                                 VerticalTextAlignment="Center" />
                         </HorizontalStackLayout>
@@ -104,22 +101,17 @@
                                 FontSize="20"
                                 HorizontalTextAlignment="Start"
                                 Text="{Binding DiscountAmount}"
-                                TextColor="{StaticResource Primary}"
+                                TextColor="Red"
                                 VerticalTextAlignment="Center" />
                         </HorizontalStackLayout>
 
-                        <BoxView
-                            BackgroundColor="White"
-                            HeightRequest="2"
-                            WidthRequest="250" />
-
-                        <!-- Net Total -->
+                        <!-- Net Total (after discount, before shipping) -->
                         <HorizontalStackLayout Spacing="10">
                             <Label
                                 BackgroundColor="Transparent"
                                 FontAttributes="Bold"
                                 FontFamily="ItimRegular"
-                                FontSize="20"
+                                FontSize="18"
                                 HorizontalTextAlignment="Start"
                                 Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_Total]}"
                                 TextColor="{StaticResource White}"
@@ -134,6 +126,56 @@
                                 TextColor="{StaticResource Primary}"
                                 VerticalTextAlignment="Center" />
                         </HorizontalStackLayout>
+
+                        <!-- Shipping Cost -->
+                        <HorizontalStackLayout Spacing="10">
+                            <Label
+                                BackgroundColor="Transparent"
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="18"
+                                HorizontalTextAlignment="Start"
+                                Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_ShippingCostText]}"
+                                TextColor="{StaticResource White}"
+                                VerticalTextAlignment="Center" />
+                            <Label
+                                BackgroundColor="Transparent"
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="20"
+                                HorizontalTextAlignment="Start"
+                                Text="{Binding ShippingCost}"
+                                TextColor="{StaticResource Primary}"
+                                VerticalTextAlignment="Center" />
+                        </HorizontalStackLayout>
+
+                        <BoxView
+                            BackgroundColor="White"
+                            HeightRequest="2"
+                            WidthRequest="250" />
+
+                        <!-- Amount to Pay (net + shipping) -->
+                        <HorizontalStackLayout Spacing="10">
+                            <Label
+                                BackgroundColor="Transparent"
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="20"
+                                HorizontalTextAlignment="Start"
+                                Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_AmountToPay]}"
+                                TextColor="{StaticResource White}"
+                                VerticalTextAlignment="Center" />
+                            <Label
+                                BackgroundColor="Transparent"
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="22"
+                                HorizontalTextAlignment="Start"
+                                Text="{Binding TotalAmount}"
+                                TextColor="{StaticResource Primary}"
+                                VerticalTextAlignment="Center" />
+                        </HorizontalStackLayout>
+
                     </VerticalStackLayout>
 
                     <!-- IBAN + Reference Section -->
@@ -161,7 +203,6 @@
                                 Text="{Binding IbanCode}"
                                 TextColor="{StaticResource White}"
                                 VerticalTextAlignment="Center" />
-
                             <Button
                                 BackgroundColor="{StaticResource Primary}"
                                 Command="{Binding CopyIbanCommand}"
@@ -174,10 +215,11 @@
                                 TextColor="Black"
                                 VerticalOptions="Center">
                                 <Button.Shadow>
-                                    <Shadow Brush="Black"
-                                            Opacity="0.3"
-                                            Radius="10"
-                                            Offset="5,5" />
+                                    <Shadow
+                                        Brush="Black"
+                                        Opacity="0.3"
+                                        Offset="5,5"
+                                        Radius="10" />
                                 </Button.Shadow>
                             </Button>
                         </HorizontalStackLayout>
@@ -202,7 +244,6 @@
                                 Text="{Binding ReferenceCode}"
                                 TextColor="{StaticResource White}"
                                 VerticalTextAlignment="Center" />
-
                             <Button
                                 BackgroundColor="{StaticResource Primary}"
                                 Command="{Binding CopyReferenceCodeCommand}"
@@ -215,10 +256,11 @@
                                 TextColor="Black"
                                 VerticalOptions="Center">
                                 <Button.Shadow>
-                                    <Shadow Brush="Black"
-                                            Opacity="0.3"
-                                            Radius="10"
-                                            Offset="5,5" />
+                                    <Shadow
+                                        Brush="Black"
+                                        Opacity="0.3"
+                                        Offset="5,5"
+                                        Radius="10" />
                                 </Button.Shadow>
                             </Button>
                         </HorizontalStackLayout>
@@ -230,21 +272,24 @@
                             StrokeShape="RoundRectangle 20"
                             StrokeThickness="0">
                             <VerticalStackLayout Spacing="10">
-                                <Label FontAttributes="Bold"
-                                       FontFamily="ItimRegular"
-                                       FontSize="18"
-                                       Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_ProvideReferenceText]}"
-                                       TextColor="Black" />
-                                <Label FontAttributes="Bold"
-                                       FontFamily="ItimRegular"
-                                       FontSize="18"
-                                       Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_TransferCompletedText]}"
-                                       TextColor="Black" />
-                                <Label FontAttributes="Bold"
-                                       FontFamily="ItimRegular"
-                                       FontSize="18"
-                                       Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_PlacedOrderText]}"
-                                       TextColor="Black" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"
+                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_ProvideReferenceText]}"
+                                    TextColor="Black" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"
+                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_TransferCompletedText]}"
+                                    TextColor="Black" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"
+                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_PlacedOrderText]}"
+                                    TextColor="Black" />
                             </VerticalStackLayout>
                         </Border>
 
@@ -262,19 +307,18 @@
                             TextColor="Black"
                             VerticalOptions="Center">
                             <Button.Shadow>
-                                <Shadow Brush="Black"
-                                        Opacity="0.3"
-                                        Radius="10"
-                                        Offset="5,5" />
+                                <Shadow
+                                    Brush="Black"
+                                    Opacity="0.3"
+                                    Offset="5,5"
+                                    Radius="10" />
                             </Button.Shadow>
                         </Button>
 
                     </VerticalStackLayout>
 
                 </VerticalStackLayout>
-
             </ScrollView>
-            <!-- SCROLL VIEW ENDS HERE -->
 
         </Grid>
     </views:BaseView.Content>

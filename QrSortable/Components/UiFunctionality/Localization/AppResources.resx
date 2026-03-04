@@ -283,7 +283,7 @@
     <value>10% discount:</value>
   </data>
   <data name="BankTransferViewModel_Total" xml:space="preserve">
-    <value>Total:              </value>
+    <value>Total:</value>
   </data>
   <data name="BankTransferViewModel_IBAN" xml:space="preserve">
     <value>IBAN:</value>
@@ -787,9 +787,12 @@
     <value>Currency can be changed during payment process.</value>
   </data>
   <data name="PaymentShipmentViewModel_SubtotalText" xml:space="preserve">
-    <value>Subtotal</value>
+    <value>Subtotal:</value>
   </data>
   <data name="PaymentShipmentViewModel_ShippingCostText" xml:space="preserve">
-    <value>Shipping</value>
+    <value>Shipping:</value>
+  </data>
+  <data name="PaymentShipmentViewModel_FreeText" xml:space="preserve">
+    <value>Free</value>
   </data>
 </root>

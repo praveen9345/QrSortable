@@ -910,6 +910,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar free Text!!.
+        /// </summary>
+        public static string PaymentShipmentViewModel_FreeText
+        {
+            get
+            {
+                return ResourceManager.GetString("PaymentShipmentViewModel_FreeText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar togenerate Invalid Text!!.
         /// </summary>
         public static string PaymentShipmentViewModel_InvalidText

@@ -229,6 +229,8 @@
             AddInformationToProducts();
             IsPaymentMessageVisible = false;
 
+            _product.CurrencySymbol = SelectedCurrencyItem;
+            _product.ShippingCost = _sharedMethodService.GetShippingCost(SelectedCountry);
             await NavigationService.Navigate<BankTransferView>(_product);
         });
 
@@ -331,7 +333,7 @@
             decimal shippingEur = _sharedMethodService.GetShippingCost(SelectedCountry);
             decimal shippingConverted = shippingEur * rate;
             ShippingCostDisplay = shippingEur == 0
-                ? "Free"
+                ? AppResources.PaymentShipmentViewModel_FreeText
                 : $"{symbol}{shippingConverted:F0}";
 
             // 3. Grand total

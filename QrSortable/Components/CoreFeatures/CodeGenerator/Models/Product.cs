@@ -64,6 +64,16 @@
         public decimal TotalPrice { get; set; } = 0m;
 
         /// <summary>
+        /// Customer's currency.
+        /// </summary>
+        public string CurrencySymbol { get; set; } = "";
+
+        /// <summary>
+        /// Customer's currency.
+        /// </summary>
+        public decimal ShippingCost { get; set; } = 0m;
+
+        /// <summary>
         /// Customer's full name.
         /// </summary>
         public string Name { get; set; }
