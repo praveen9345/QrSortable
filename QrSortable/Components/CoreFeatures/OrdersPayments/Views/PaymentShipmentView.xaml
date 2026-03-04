@@ -510,7 +510,7 @@
                                     FontSize="18"
                                     HorizontalOptions="End"
                                     Text="{Binding ShippingCostDisplay}"
-                                    TextColor="{StaticResource Primary}"
+                                    TextColor="{StaticResource White}"
                                     VerticalTextAlignment="Center" />
                             </StackLayout>
 
