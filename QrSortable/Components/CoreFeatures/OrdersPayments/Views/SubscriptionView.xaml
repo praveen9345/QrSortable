@@ -94,19 +94,19 @@
                         </Border>
                     </VerticalStackLayout>
 
+                    <!--  total name  -->
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="20"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SubscriptionViewModel_CurrencyText]}"
+                        TextColor="{StaticResource Primary}"
+                        VerticalTextAlignment="Center" />
+
                     <!--  amount view  -->
                     <StackLayout HorizontalOptions="Start" Orientation="Horizontal">
-                        <!--  total name  -->
-                        <Label
-                            BackgroundColor="Transparent"
-                            FontAttributes="Bold"
-                            FontFamily="ItimRegular"
-                            FontSize="20"
-                            HorizontalTextAlignment="Center"
-                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SubscriptionViewModel_CurrencyText]}"
-                            TextColor="{StaticResource Primary}"
-                            VerticalTextAlignment="Center" />
-
                         <!--  for Android  -->
                         <CollectionView
                             IsVisible="{OnPlatform iOS='false',
@@ -158,6 +158,7 @@
 
                         <!--  for iOS  -->
                         <CollectionView
+                            x:Name="IOSCollectionView"
                             Margin="15,0,15,0"
                             HeightRequest="50"
                             IsVisible="{OnPlatform iOS='true',
@@ -165,8 +166,7 @@
                             ItemsSource="{Binding CurrencyItem}"
                             SelectedItem="{Binding SelectedCurrencyItem, Mode=TwoWay}"
                             SelectionChangedCommand="{Binding OnSelectionChangedCommand}"
-                            SelectionMode="Single"
-                            WidthRequest="200">
+                            SelectionMode="Single">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="8" Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
