@@ -780,4 +780,10 @@
   <data name="YoursOrdersViewModel_SyncData" xml:space="preserve">
     <value>Une connexion Internet est nécessaire pour synchroniser les données.</value>
   </data>
+  <data name="SubscriptionViewModel_MonthSelectedPoundCurrencyText" xml:space="preserve">
+    <value>£4.99 / mois</value>
+  </data>
+  <data name="Dialog_CurrencyCanBeSelectedText" xml:space="preserve">
+    <value>La devise peut être modifiée pendant le processus de paiement.</value>
+  </data>
 </root>

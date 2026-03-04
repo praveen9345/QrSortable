@@ -50,7 +50,8 @@
         new ObservableCollection<string>
         {
            "Euro(€)",
-           "USD($)"
+           "USD($)",
+           "GBP(£)"
         };
 
         /// <summary>
@@ -192,9 +193,15 @@
                 {
                     TotalAmount = _product.TotalPrice.ToString() + "€";
                 }
-                else 
+                
+                if (SelectedCurrencyItem == CurrencyItem[1])
                 {
                     TotalAmount = _product.TotalPrice.ToString() + "$";
+                }
+
+                if (SelectedCurrencyItem == CurrencyItem[2])
+                {
+                    TotalAmount = _product.TotalPrice.ToString() + "£";
                 }
             }
         });
@@ -265,59 +272,60 @@
             AddInformationToProducts();
 
             IsPaymentMessageVisible = true;
+
             try 
             { 
-            // ---------------- Create Payment ----------------
-            var result = await _mollieService.CreatePaymentAsync(
-                _product.TotalPrice,
-                SelectedCurrencyItem,
-                "Card",
-                "Payment",
-                Email
-            );
+                // ---------------- Create Payment ----------------
+                var result = await _mollieService.CreatePaymentAsync(
+                    _product.TotalPrice,
+                    SelectedCurrencyItem,
+                    "Card",
+                    "Payment",
+                    Email
+                );
 
-            // ---------------- Handle Result ----------------
-            if (result is PaymentResponse payment)
-            {
-                if (payment.Links?.Checkout != null)
+                // ---------------- Handle Result ----------------
+                if (result is PaymentResponse payment)
                 {
-                    _paymentId = payment.Id;
-
-                    // Start timer to poll payment status
-                    _timer = _timeService.StartPeriodicTimer(_ =>
+                    if (payment.Links?.Checkout != null)
                     {
-                        MainThread.BeginInvokeOnMainThread(async () =>
+                        _paymentId = payment.Id;
+
+                        // Start timer to poll payment status
+                        _timer = _timeService.StartPeriodicTimer(_ =>
                         {
-                            await CheckPaymentStatusAsync();
-                        });
-                    }, TimeSpan.FromSeconds(15));
+                            MainThread.BeginInvokeOnMainThread(async () =>
+                            {
+                                await CheckPaymentStatusAsync();
+                            });
+                        }, TimeSpan.FromSeconds(15));
 
-                    // Open checkout in browser
-                    var browserMode = (_mauiEssentialsWrapper.GetDevicePlatform() == _mauiEssentialsWrapper.AndroidDevicePlatform)
-                        ? BrowserLaunchMode.SystemPreferred
-                        : BrowserLaunchMode.External;
+                        // Open checkout in browser
+                        var browserMode = (_mauiEssentialsWrapper.GetDevicePlatform() == _mauiEssentialsWrapper.AndroidDevicePlatform)
+                            ? BrowserLaunchMode.SystemPreferred
+                            : BrowserLaunchMode.External;
 
-                    await Browser.Default.OpenAsync(payment.Links.Checkout.Href, browserMode);
+                        await Browser.Default.OpenAsync(payment.Links.Checkout.Href, browserMode);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: Failed to create payment.");
+                        await DialogService.ShowAlertDialog(AppResources.Dialog_Error,
+                            AppResources.PaymentShipmentViewModel_FailedPayment, AppResources.Dialog_OK_Text);
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Error: Failed to create payment.");
+                    Console.WriteLine("Error: Unexpected result type from MollieService.");
                     await DialogService.ShowAlertDialog(AppResources.Dialog_Error,
-                        AppResources.PaymentShipmentViewModel_FailedPayment, AppResources.Dialog_OK_Text);
+                        AppResources.PaymentShipmentViewModel_UnexpectedPayment, AppResources.Dialog_OK_Text);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Error: Unexpected result type from MollieService.");
-                await DialogService.ShowAlertDialog(AppResources.Dialog_Error,
-                    AppResources.PaymentShipmentViewModel_UnexpectedPayment, AppResources.Dialog_OK_Text);
+                Console.WriteLine($"Payment Error: {ex.Message}");
+                await DialogService.ShowAlertDialog(AppResources.Dialog_Error, ex.Message, AppResources.Dialog_OK_Text);
             }
-        }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Payment Error: {ex.Message}");
-        await DialogService.ShowAlertDialog(AppResources.Dialog_Error, ex.Message, AppResources.Dialog_OK_Text);
-    }
 
         });
 
@@ -414,7 +422,8 @@
             }
             else
             {
-                await DialogService.ShowAlertDialog(AppResources.PaymentShipmentViewModel_UnexpectedErrorText, AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(AppResources.PaymentShipmentViewModel_UnexpectedErrorText,
+                    AppResources.Dialog_OK_Text);
             }
         }
 
@@ -596,7 +605,5 @@
                 return false;
             }
         }
-
-
     }
 }

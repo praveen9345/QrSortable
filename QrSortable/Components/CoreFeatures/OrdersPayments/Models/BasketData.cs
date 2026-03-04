@@ -29,8 +29,16 @@
         [ObservableProperty]
         private string _image;
 
+        [ObservableProperty]
+        private string _currency;
+
+        // ✅ Computed property for UI
+        public string FormattedTotalPrice => $"{TotalPrice:0.##}{Currency}";
+
         partial void OnPriceChanged(string value) => RecalculateTotal();
         partial void OnProductQuantityChanged(int value) => RecalculateTotal();
+        partial void OnTotalPriceChanged(decimal value) => OnPropertyChanged(nameof(FormattedTotalPrice));
+        partial void OnCurrencyChanged(string value) => OnPropertyChanged(nameof(FormattedTotalPrice));
 
         private void RecalculateTotal()
         {

@@ -257,7 +257,7 @@
                                             FontAttributes="Bold"
                                             FontSize="28"
                                             HorizontalOptions="Center"
-                                            Text="{Binding TotalPrice, StringFormat='{}{0}€'}"
+                                            Text="{Binding FormattedTotalPrice}"
                                             TextColor="Black"
                                             VerticalOptions="Center" />
 

@@ -10,6 +10,6 @@
         /// </summary>
         string ConvertToString(object value);
 
-       
+        string GetCurrencySymbol(string languageCode);
     }
 }

@@ -4,7 +4,9 @@
     using CommunityToolkit.Mvvm.Input;
     using Google.Rpc;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
+    using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
+    using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using System.Collections.ObjectModel;
@@ -14,7 +16,13 @@
     /// </summary>
     public partial class CodeGeneratorViewModel : BaseViewModel<Product>
     {
+        private readonly IGeneralInformationManager _generalInformationManager;
+
+        private readonly ISharedMethodService _sharedMethodService;
+        
         private const int _priceEachPaper = 5;
+
+        private string _currencySymbol = "€";
 
         private Product _product;
 
@@ -28,9 +36,13 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="CodeGeneratorViewModel" />.
         /// </summary>
-        public CodeGeneratorViewModel()
+        public CodeGeneratorViewModel(IGeneralInformationManager generalInformationManager,
+            ISharedMethodService sharedMethodService)
         {
             IsBackNavigationEnabled = true;
+
+            _generalInformationManager = generalInformationManager;
+            _sharedMethodService = sharedMethodService;
 
             PageSelected = new ObservableCollection<string>
             {
@@ -54,7 +66,11 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
+            var language = (await _generalInformationManager.GetGeneralInformationAsync()).SelectedLanguageCode;
             
+            _currencySymbol = _sharedMethodService.GetCurrencySymbol(language);
+            
+            TotalAmount =_priceEachPaper.ToString() + _currencySymbol;
         }
 
         public override void Prepare(Product parameter)
@@ -106,7 +122,7 @@
         /// Represents the currently total amount to pay in the application.
         /// </summary>
         [ObservableProperty]
-        private string _totalAmount = _priceEachPaper.ToString() + "€";
+        private string _totalAmount;
 
 
         public AsyncRelayCommand OnSelectionCodeChangedCommand => new AsyncRelayCommand(async () =>
@@ -145,14 +161,14 @@
             if (PageCount > 1) 
             { 
                 PageCount--;
-                TotalAmount = (PageCount * _priceEachPaper).ToString() + "€";
+                TotalAmount = (PageCount * _priceEachPaper).ToString() + _currencySymbol;
             }
         });
 
         public AsyncRelayCommand IncreaseQuantityCommand => new AsyncRelayCommand(async () =>
         {
             PageCount++;
-            TotalAmount = (PageCount * _priceEachPaper).ToString() + "€";
+            TotalAmount = (PageCount * _priceEachPaper).ToString() + _currencySymbol;
         });
 
         public AsyncRelayCommand BuyNowCommand => new AsyncRelayCommand(async () =>

@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-
-namespace QrSortable.Components.PlatformUtils
+﻿namespace QrSortable.Components.PlatformUtils
 {
+    using System.Globalization;
+
     public class SharedMethodService : ISharedMethodService
     {
         public decimal ParsePrice(string priceText)
@@ -45,6 +45,11 @@ namespace QrSortable.Components.PlatformUtils
                 default:
                     return value.ToString(); // Fallback for any other type
             }
+        }
+
+        public string GetCurrencySymbol(string languageCode)
+        {
+            return (languageCode == "en")? "$" : "€";    
         }
     }
 }

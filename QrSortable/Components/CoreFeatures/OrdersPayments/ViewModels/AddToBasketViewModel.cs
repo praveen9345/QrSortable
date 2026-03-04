@@ -22,8 +22,12 @@
 
         public readonly ISharedMethodService _sharedMethodService;
 
+        private readonly IGeneralInformationManager _generalInformationManager;
+
         // Stores the last known hash of the database
         private string _lastBasketHash = string.Empty;
+
+        private string _currency = "€";
 
         public ObservableCollection<BasketData> AddToBasketData { get; set; }
 
@@ -34,11 +38,14 @@
         /// used for managing database operations.</param>
         ///  <param name="sharedMethodService">An instance of <see cref="ISharedMethodService" /> 
         /// used foracces the global methods.</param>
-        public AddToBasketViewModel(IDatabaseManager databaseManager, ISharedMethodService sharedMethodService)
+        public AddToBasketViewModel(IDatabaseManager databaseManager, ISharedMethodService sharedMethodService,
+            IGeneralInformationManager generalInformationManager)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
             _sharedMethodService = sharedMethodService;
+            _generalInformationManager = generalInformationManager;
+
             AddToBasketData = new ObservableCollection<BasketData>();
 
         }
@@ -46,6 +53,10 @@
         public async override void ViewAppearing()
         {
             base.ViewAppearing();
+
+            var language = (await _generalInformationManager.GetGeneralInformationAsync()).SelectedLanguageCode;
+            _currency = _sharedMethodService.GetCurrencySymbol(language);
+            
             await LoadBasketCountAsync();
         }
 
@@ -139,6 +150,7 @@
                             ProductQuantity = data.ProductQuantity,
                             DateTime = data.DateTime,
                             TotalPrice = data.TotalPrice,
+                            Currency = _currency,
                             Image = GetImage(data.Title)
                         });
                     }

@@ -6,6 +6,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
+    using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
@@ -18,10 +19,12 @@
     {
         private readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
+        private readonly IGeneralInformationManager _generalInformationManager;
+        private readonly ISharedMethodService _sharedMethodService;
 
         private Product _product;
-
         private int _amount;
+        private string _curruncy;
 
         /// <summary>
         /// A collection of images associated with the storage entry.
@@ -34,13 +37,16 @@
         /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
         /// used for managing database operations.</param>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
-        public PaperProductViewModel(IDatabaseManager databaseManager, IToastService toastService)
+        public PaperProductViewModel(IDatabaseManager databaseManager, IToastService toastService,
+            IGeneralInformationManager generalInformationManager, ISharedMethodService sharedMethodService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
-            _toastService = toastService;
+            _toastService = toastService;  
+            _generalInformationManager = generalInformationManager;
+            _sharedMethodService = sharedMethodService;
+
             ImageArray = new ObservableCollection<Images>();
-           
         }
 
         /// <summary>
@@ -59,7 +65,7 @@
             await LoadBasketCountAsync();
         }
 
-        public override void Prepare(Product parameter)
+        public override async void Prepare(Product parameter)
         {
             _product = parameter;
             Title = _product.Title;
@@ -67,7 +73,11 @@
             string numberString = new string(_product.Price.Where(char.IsDigit).ToArray());
             _amount = int.Parse(numberString);
 
-            TotalAmount = _amount.ToString() + "€";
+            var language = (await _generalInformationManager.GetGeneralInformationAsync()).SelectedLanguageCode;
+
+            _curruncy = _sharedMethodService.GetCurrencySymbol(language);
+
+            TotalAmount = _amount.ToString() + _curruncy;
         }
 
         /// <summary>
@@ -105,14 +115,14 @@
             if (ProductCount > 1)
             {
                 ProductCount--;
-                TotalAmount = (ProductCount * _amount).ToString() + "€";
+                TotalAmount = (ProductCount * _amount).ToString() + _curruncy;
             }
         });
 
         public AsyncRelayCommand IncreaseQuantityCommand => new AsyncRelayCommand(async () =>
         {
             ProductCount++;
-            TotalAmount = (ProductCount * _amount).ToString() + "€";
+            TotalAmount = (ProductCount * _amount).ToString() + _curruncy;
         });
 
 

@@ -384,28 +384,6 @@
                         Margin="15,20,15,0"
                         HorizontalOptions="Start"
                         Orientation="Horizontal">
-                        <!--  total name  -->
-                        <Label
-                            BackgroundColor="Transparent"
-                            FontAttributes="Bold"
-                            FontFamily="ItimRegular"
-                            FontSize="24"
-                            HorizontalTextAlignment="Center"
-                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_Total]}"
-                            TextColor="{StaticResource Primary}"
-                            VerticalTextAlignment="Center" />
-
-                        <!--  total name  -->
-                        <Label
-                            Margin="10,0,10,0"
-                            BackgroundColor="Transparent"
-                            FontAttributes="Bold"
-                            FontFamily="ItimRegular"
-                            FontSize="28"
-                            HorizontalTextAlignment="Center"
-                            Text="{Binding TotalAmount}"
-                            TextColor="{StaticResource Primary}"
-                            VerticalTextAlignment="Center" />
 
                         <!--  for Android  -->
                         <CollectionView
@@ -502,6 +480,33 @@
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
+                    </StackLayout>
+
+                    <StackLayout
+                        Orientation="Horizontal"
+                        Margin="20,10,0,0">
+                        <!--  total name  -->
+                        <Label
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="24"
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_Total]}"
+                            TextColor="{StaticResource Primary}"
+                            VerticalTextAlignment="Center" />
+
+                        <!--  total name  -->
+                        <Label
+                            Margin="10,0,10,0"
+                            BackgroundColor="Transparent"
+                            FontAttributes="Bold"
+                            FontFamily="ItimRegular"
+                            FontSize="28"
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding TotalAmount}"
+                            TextColor="{StaticResource Primary}"
+                            VerticalTextAlignment="Center" />
                     </StackLayout>
 
                     <Label

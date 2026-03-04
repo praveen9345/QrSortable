@@ -94,6 +94,18 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Dialog currency can be selected Text!!.
+        /// </summary>
+        public static string Dialog_CurrencyCanBeSelectedText
+        {
+            get
+            {
+                return ResourceManager.GetString("Dialog_CurrencyCanBeSelectedText", resourceCulture);
+            }
+        }
+
+
+        /// <summary>
         ///   Looks up a localized string similar to Dialog InternetConnection Title Text!!.
         /// </summary>
         public static string Dialog_InternetConnection_Title
@@ -982,6 +994,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
             get
             {
                 return ResourceManager.GetString("SubscriptionViewModel_SharingMsgText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar month price in pound Text!!.
+        /// </summary>
+        public static string SubscriptionViewModel_MonthSelectedPoundCurrencyText
+        {
+            get
+            {
+                return ResourceManager.GetString("SubscriptionViewModel_MonthSelectedPoundCurrencyText", resourceCulture);
             }
         }
 

@@ -19,6 +19,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!--  Back button  -->
@@ -265,9 +266,17 @@
 
                 </HorizontalStackLayout>
 
+                <Label
+                    Grid.Row="4"
+                    FontFamily="ItimRegular"
+                    FontSize="18"
+                    HorizontalTextAlignment="Center"
+                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[Dialog_CurrencyCanBeSelectedText]}"
+                    TextColor="Red" />
+
                 <!--  add to basket  -->
                 <Button
-                    Grid.Row="4"
+                    Grid.Row="5"
                     Margin="20,5,20,5"
                     BackgroundColor="{StaticResource Primary}"
                     Command="{Binding AddToBasketCommand}"
@@ -290,7 +299,7 @@
 
                 <!--  buy now  -->
                 <Button
-                    Grid.Row="5"
+                    Grid.Row="6"
                     Margin="20,5,20,10"
                     BackgroundColor="{StaticResource Primary}"
                     Command="{Binding BuyNowCommand}"

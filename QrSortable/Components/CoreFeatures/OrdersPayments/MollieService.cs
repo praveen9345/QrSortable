@@ -1,15 +1,15 @@
-﻿using Mollie.Api.Client;
-using Mollie.Api.Models;
-using Mollie.Api.Models.Customer.Request;
-using Mollie.Api.Models.Payment;
-using Mollie.Api.Models.Payment.Request;
-using Mollie.Api.Models.Payment.Response;
-using Mollie.Api.Models.Subscription.Request;
-using Mollie.Api.Models.Subscription.Response;
-using System.Globalization;
-
-namespace QrSortable.Components.CoreFeatures.OrdersPayments
+﻿namespace QrSortable.Components.CoreFeatures.OrdersPayments
 {
+    using Mollie.Api.Client;
+    using Mollie.Api.Models;
+    using Mollie.Api.Models.Customer.Request;
+    using Mollie.Api.Models.Payment;
+    using Mollie.Api.Models.Payment.Request;
+    using Mollie.Api.Models.Payment.Response;
+    using Mollie.Api.Models.Subscription.Request;
+    using Mollie.Api.Models.Subscription.Response;
+    using System.Globalization;
+
     public class MollieService : IMollieService
     {
         private readonly PaymentClient _paymentClient;
@@ -36,7 +36,7 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
 
             var paymentRequest = new PaymentRequest
             {
-                Amount = new Mollie.Api.Models.Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
+                Amount = new Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
                 Description = description,
                 RedirectUrl = $"myapp://payment-return?id={{paymentId}}",
                 Method = GetMolliePaymentMethodType(paymentMethod),
@@ -131,9 +131,9 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
         {
             return paymentMethod switch
             {
-                "Card" => Mollie.Api.Models.Payment.PaymentMethod.CreditCard,
-                "ApplePay" => Mollie.Api.Models.Payment.PaymentMethod.ApplePay,
-                "PayPal" => Mollie.Api.Models.Payment.PaymentMethod.PayPal,
+                "Card" => PaymentMethod.CreditCard,
+                "ApplePay" => PaymentMethod.ApplePay,
+                "PayPal" => PaymentMethod.PayPal,
                 _ => ""
             };
         }
@@ -147,7 +147,7 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
                 "Australian dollar" => "AUD",
                 "Canadian dollar" => "CAD",
                 "Swiss franc" => "CHF",
-                "British pound" => "GBP",
+                "GBP(£)" => "GBP", //british pound
                 _ => "EUR"
             };
         }

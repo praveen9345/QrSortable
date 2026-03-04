@@ -83,7 +83,8 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
         new ObservableCollection<string>
         {
             "Euro(€)",
-            "USD($)"
+            "USD($)",
+            "GBP(£)"
         };
 
 
@@ -134,20 +135,23 @@ public partial class SubscriptionViewModel : BaseViewModel<bool>
     {
         PriceText = SelectedPlan switch
         {
-            SubscriptionPlan.Monthly =>
-                SelectedCurrencyItem == "Euro(€)"
-                    ? AppResources.SubscriptionViewModel_MonthSelectedEuroCurrencyText
-                    : AppResources.SubscriptionViewModel_MonthSelectedDollerCurrencyText,
+            SubscriptionPlan.Monthly => SelectedCurrencyItem switch
+            {
+                "Euro(€)" => AppResources.SubscriptionViewModel_MonthSelectedEuroCurrencyText,
+                "USD($)" => AppResources.SubscriptionViewModel_MonthSelectedDollerCurrencyText,
+                "GBP(£)" => AppResources.SubscriptionViewModel_MonthSelectedPoundCurrencyText,
+                _ => AppResources.SubscriptionViewModel_MonthSelectedEuroCurrencyText
+            },
 
-            SubscriptionPlan.Yearly =>
-                SelectedCurrencyItem == "Euro(€)"
-                    ? "€49.99 / year (Save 20%)"
-                    : "$49.99 / year (Save 20%)",
+            SubscriptionPlan.Yearly => SelectedCurrencyItem switch
+            {
+                "Euro(€)" => "€49.99 / year (Save 20%)",
+                "USD($)" => "$49.99 / year (Save 20%)",
+                "GBP(£)" => "£49.99 / year (Save 20%)",
+                _ => "€49.99 / year (Save 20%)"
+            },
 
-            _ =>
-                SelectedCurrencyItem == "Euro(€)"
-                    ? AppResources.SubscriptionViewModel_MonthSelectedEuroCurrencyText
-                    : AppResources.SubscriptionViewModel_MonthSelectedDollerCurrencyText
+            _ => AppResources.SubscriptionViewModel_MonthSelectedEuroCurrencyText
         };
     }
 

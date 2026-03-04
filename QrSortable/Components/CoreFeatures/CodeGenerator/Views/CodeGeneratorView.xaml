@@ -451,6 +451,14 @@
                             TextColor="{StaticResource Primary}" />
                     </StackLayout>
 
+                    <Label
+                        Margin="0,-20,0,0"
+                        FontFamily="ItimRegular"
+                        FontSize="18"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[Dialog_CurrencyCanBeSelectedText]}"
+                        TextColor="Red" />
+
                     <Button
                         Margin="20,0,20,20"
                         BackgroundColor="{StaticResource Primary}"
