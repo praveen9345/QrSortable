@@ -175,6 +175,7 @@
                                             Grid.Column="0"
                                             Aspect="AspectFit"
                                             HeightRequest="45"
+                                            WidthRequest="40"
                                             HorizontalOptions="End"
                                             Source="cart_icon.svg"
                                             VerticalOptions="Center" />
@@ -225,7 +226,8 @@
                                                     HorizontalOptions="Center"
                                                     Text="{Binding ProductQuantity}"
                                                     TextColor="Black"
-                                                    VerticalOptions="Center" />
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="30" />
 
                                                 <!--  Plus Button  -->
                                                 <Button

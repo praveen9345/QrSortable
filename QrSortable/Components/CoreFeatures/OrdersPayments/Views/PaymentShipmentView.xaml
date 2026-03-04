@@ -436,14 +436,14 @@
 
                         <!--  for iOS  -->
                         <CollectionView
+                            x:Name="IOSCollectionView"
                             Margin="15,0,15,0"
                             HeightRequest="50"
                             IsVisible="{OnPlatform iOS='true',
                                                    Android='false'}"
                             ItemsSource="{Binding CurrencyItem}"
                             SelectedItem="{Binding SelectedCurrencyItem, Mode=TwoWay}"
-                            SelectionMode="Single"
-                            WidthRequest="200">
+                            SelectionMode="Single">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="8" Orientation="Horizontal" />
                             </CollectionView.ItemsLayout>
