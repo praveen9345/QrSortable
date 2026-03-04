@@ -723,9 +723,6 @@
   <data name="RootViewModel_NoStorageFoundText" xml:space="preserve">
     <value>No se han encontrado entradas de almacenamiento o no se han podido cargar las categorías.</value>
   </data>
-  <data name="RootViewModel_RefreshText" xml:space="preserve">
-    <value>No se pudieron actualizar las categorías.</value>
-  </data>
   <data name="RootViewModel_SyncText" xml:space="preserve">
     <value>Sincronizando...</value>
   </data>

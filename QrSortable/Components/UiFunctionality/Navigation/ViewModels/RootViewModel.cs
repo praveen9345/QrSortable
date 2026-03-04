@@ -139,11 +139,7 @@
             
             if (!_isInitializeVisible)
             {
-                var success = await LoadCategoryAsync();
-                if (!success)
-                {
-                    await _toastService.DisplayToast(AppResources.RootViewModel_RefreshText);
-                }
+               await LoadCategoryAsync();
             }
 
             try
@@ -246,8 +242,7 @@
             }
             catch (Exception ex)
             {
-                
-                await _toastService.DisplayToast($"{ex.Message}");
+                Console.WriteLine($"RootViewModel:Error loading categories: {ex.Message}");
                 return false;
             }
         }

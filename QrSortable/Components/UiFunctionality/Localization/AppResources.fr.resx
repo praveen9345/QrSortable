@@ -723,9 +723,6 @@
   <data name="RootViewModel_NoStorageFoundText" xml:space="preserve">
     <value>Aucune entrée de stockage trouvée ou échec du chargement des catégories.</value>
   </data>
-  <data name="RootViewModel_RefreshText" xml:space="preserve">
-    <value>Échec de l'actualisation des catégories.</value>
-  </data>
   <data name="RootViewModel_SyncText" xml:space="preserve">
     <value>Synchronisation...</value>
   </data>

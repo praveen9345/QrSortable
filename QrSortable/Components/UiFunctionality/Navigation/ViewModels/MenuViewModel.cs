@@ -52,14 +52,14 @@
                 new MenuItem
                 {
                     Icon=IconNames.Subscribe,
-                    Title= LocalizationService.Instance["MenuViewModel_SubscribeText"],
-                    HasBadge=true,
-                    Badge="Coming Soon"
+                    Title= LocalizationService.Instance["MenuViewModel_SubscribeText"]                   
                 },
                 new MenuItem
                 {
                     Icon=IconNames.Share,
-                    Title= LocalizationService.Instance["MenuViewModel_ShareText"]
+                    Title= LocalizationService.Instance["MenuViewModel_ShareText"],
+                    HasBadge=true,
+                    Badge="Coming Soon"
                 },
                 new MenuItem
                 {

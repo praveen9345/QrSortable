@@ -381,17 +381,6 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to refresh Text!!.
-        /// </summary>
-        public static string RootViewModel_RefreshText
-        {
-            get
-            {
-                return ResourceManager.GetString("RootViewModel_RefreshText", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to sync Text!!.
         /// </summary>
         public static string RootViewModel_SyncText
