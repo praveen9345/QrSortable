@@ -175,10 +175,10 @@
                                             Grid.Column="0"
                                             Aspect="AspectFit"
                                             HeightRequest="45"
-                                            WidthRequest="40"
                                             HorizontalOptions="End"
                                             Source="cart_icon.svg"
-                                            VerticalOptions="Center" />
+                                            VerticalOptions="Center"
+                                            WidthRequest="40" />
 
                                         <!--  Qr-scan button  -->
                                         <Border

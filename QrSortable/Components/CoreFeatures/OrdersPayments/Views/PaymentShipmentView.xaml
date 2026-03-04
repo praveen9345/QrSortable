@@ -53,6 +53,7 @@
 
             <ScrollView Grid.Row="1">
                 <StackLayout Margin="10,0,0,10">
+
                     <!--  Product Title  -->
                     <Label
                         Margin="0,0,0,5"
@@ -64,6 +65,7 @@
                         Text="{Binding ProductTitle}"
                         TextColor="{StaticResource White}"
                         VerticalTextAlignment="Center" />
+
                     <!--  Shipping and Billing Address view  -->
                     <Label
                         BackgroundColor="Transparent"
@@ -80,7 +82,6 @@
                         Grid.Row="0"
                         Margin="15,0,15,0"
                         Orientation="Horizontal">
-                        <!--  name  -->
                         <Label
                             BackgroundColor="Transparent"
                             FontAttributes="Bold"
@@ -90,8 +91,6 @@
                             Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_NameText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
-
-                        <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
                             Padding="5,5"
@@ -106,7 +105,6 @@
                                     Radius="10"
                                     Offset="0,0" />
                             </Border.Shadow>
-                            <!--  input field  -->
                             <Grid>
                                 <Entry
                                     Margin="10,0,0,0"
@@ -123,7 +121,6 @@
                         Grid.Row="0"
                         Margin="15,10,15,0"
                         Orientation="Horizontal">
-                        <!--  streer name  -->
                         <Label
                             BackgroundColor="Transparent"
                             FontAttributes="Bold"
@@ -133,8 +130,6 @@
                             Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_StreetText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
-
-                        <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
                             Padding="5,5"
@@ -149,7 +144,6 @@
                                     Radius="10"
                                     Offset="0,0" />
                             </Border.Shadow>
-                            <!--  input field  -->
                             <Grid>
                                 <Entry
                                     Margin="10,0,0,0"
@@ -166,7 +160,6 @@
                         Grid.Row="0"
                         Margin="15,10,15,0"
                         Orientation="Horizontal">
-                        <!--  house no.  -->
                         <Label
                             BackgroundColor="Transparent"
                             FontAttributes="Bold"
@@ -176,8 +169,6 @@
                             Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_HouseNoText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
-
-                        <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
                             Padding="5,5"
@@ -192,7 +183,6 @@
                                     Radius="10"
                                     Offset="0,0" />
                             </Border.Shadow>
-                            <!--  input field  -->
                             <Grid>
                                 <Entry
                                     Margin="10,0,0,0"
@@ -205,12 +195,11 @@
                         </Border>
                     </StackLayout>
 
-                    <!--  postal code view  -->
+                    <!--  Postal code view  -->
                     <StackLayout
                         Grid.Row="0"
                         Margin="15,10,15,0"
                         Orientation="Horizontal">
-                        <!--  postal code  -->
                         <Label
                             BackgroundColor="Transparent"
                             FontAttributes="Bold"
@@ -220,8 +209,6 @@
                             Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_ZIPText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
-
-                        <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
                             Padding="5,5"
@@ -236,7 +223,6 @@
                                     Radius="10"
                                     Offset="0,0" />
                             </Border.Shadow>
-                            <!--  input field  -->
                             <Grid>
                                 <Entry
                                     Margin="10,0,0,0"
@@ -248,12 +234,11 @@
                         </Border>
                     </StackLayout>
 
-                    <!--  city view  -->
+                    <!--  City view  -->
                     <StackLayout
                         Grid.Row="0"
                         Margin="15,10,15,0"
                         Orientation="Horizontal">
-                        <!--  city name  -->
                         <Label
                             BackgroundColor="Transparent"
                             FontAttributes="Bold"
@@ -263,8 +248,6 @@
                             Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_CityText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
-
-                        <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
                             Padding="5,5"
@@ -279,7 +262,6 @@
                                     Radius="10"
                                     Offset="0,0" />
                             </Border.Shadow>
-                            <!--  input field  -->
                             <Grid>
                                 <Entry
                                     Margin="10,0,0,0"
@@ -291,12 +273,11 @@
                         </Border>
                     </StackLayout>
 
-                    <!--  country view  -->
+                    <!--  Country picker view (replaces Entry)  -->
                     <StackLayout
                         Grid.Row="0"
                         Margin="15,10,15,0"
                         Orientation="Horizontal">
-                        <!--  country name  -->
                         <Label
                             BackgroundColor="Transparent"
                             FontAttributes="Bold"
@@ -306,8 +287,6 @@
                             Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_CountryText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
-
-                        <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
                             Padding="5,5"
@@ -322,24 +301,24 @@
                                     Radius="10"
                                     Offset="0,0" />
                             </Border.Shadow>
-                            <!--  input field  -->
-                            <Grid>
-                                <Entry
-                                    Margin="10,0,0,0"
-                                    Placeholder="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_CountryPlaceText]}"
-                                    PlaceholderColor="{StaticResource PlaceholderColor}"
-                                    Style="{StaticResource NormalText}"
-                                    Text="{Binding CountryName}" />
-                            </Grid>
+                            <Picker
+                                Title="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_CountryPlaceText]}"
+                                Margin="10,0,10,0"
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="18"
+                                ItemsSource="{Binding CountryList}"
+                                SelectedItem="{Binding SelectedCountry, Mode=TwoWay}"
+                                TextColor="{StaticResource White}"
+                                TitleColor="{StaticResource PlaceholderColor}" />
                         </Border>
                     </StackLayout>
 
-                    <!--  enail id view  -->
+                    <!--  Email view  -->
                     <StackLayout
                         Grid.Row="0"
                         Margin="15,10,15,0"
                         Orientation="Horizontal">
-                        <!--  enmail id  -->
                         <Label
                             BackgroundColor="Transparent"
                             FontAttributes="Bold"
@@ -349,8 +328,6 @@
                             Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_EmailText]}"
                             TextColor="{StaticResource White}"
                             VerticalTextAlignment="Center" />
-
-                        <!--  Placeholder for input field  -->
                         <Border
                             Margin="10,0,0,0"
                             Padding="5,5"
@@ -365,7 +342,6 @@
                                     Radius="10"
                                     Offset="0,0" />
                             </Border.Shadow>
-                            <!--  input field  -->
                             <Grid>
                                 <Entry
                                     Margin="10,0,0,0"
@@ -378,7 +354,7 @@
                         </Border>
                     </StackLayout>
 
-                    <!--  amount view  -->
+                    <!--  Currency selector  -->
                     <StackLayout
                         Grid.Row="0"
                         Margin="15,20,15,0"
@@ -391,7 +367,6 @@
                                                    Android='true'}"
                             ItemsSource="{Binding CurrencyItem}"
                             SelectedItem="{Binding SelectedCurrencyItem, Mode=TwoWay}"
-                            SelectionChangedCommand="{Binding OnSelectionChangedCommand}"
                             SelectionMode="Single">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
@@ -482,33 +457,93 @@
                         </CollectionView>
                     </StackLayout>
 
-                    <StackLayout
-                        Orientation="Horizontal"
-                        Margin="20,10,0,0">
-                        <!--  total name  -->
-                        <Label
-                            BackgroundColor="Transparent"
-                            FontAttributes="Bold"
-                            FontFamily="ItimRegular"
-                            FontSize="24"
-                            HorizontalTextAlignment="Center"
-                            Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_Total]}"
-                            TextColor="{StaticResource Primary}"
-                            VerticalTextAlignment="Center" />
+                    <!--  Pricing breakdown card  -->
+                    <Border
+                        Margin="15,20,15,0"
+                        Padding="15"
+                        Background="{StaticResource DarkGrey}"
+                        StrokeShape="RoundRectangle 15"
+                        StrokeThickness="0">
+                        <Border.Shadow>
+                            <Shadow
+                                Brush="Black"
+                                Opacity="0.4"
+                                Radius="10"
+                                Offset="0,0" />
+                        </Border.Shadow>
+                        <StackLayout Spacing="0">
 
-                        <!--  total name  -->
-                        <Label
-                            Margin="10,0,10,0"
-                            BackgroundColor="Transparent"
-                            FontAttributes="Bold"
-                            FontFamily="ItimRegular"
-                            FontSize="28"
-                            HorizontalTextAlignment="Center"
-                            Text="{Binding TotalAmount}"
-                            TextColor="{StaticResource Primary}"
-                            VerticalTextAlignment="Center" />
-                    </StackLayout>
+                            <!--  Subtotal row  -->
+                            <StackLayout Margin="5,5,5,10" Orientation="Horizontal">
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"
+                                    HorizontalOptions="StartAndExpand"
+                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_SubtotalText]}"
+                                    TextColor="{StaticResource White}"
+                                    VerticalTextAlignment="Center" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"
+                                    HorizontalOptions="End"
+                                    Text="{Binding SubtotalAmount}"
+                                    TextColor="{StaticResource White}"
+                                    VerticalTextAlignment="Center" />
+                            </StackLayout>
 
+                            <!--  Shipping cost row  -->
+                            <StackLayout Margin="5,0,5,10" Orientation="Horizontal">
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"
+                                    HorizontalOptions="StartAndExpand"
+                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_ShippingCostText]}"
+                                    TextColor="{StaticResource White}"
+                                    VerticalTextAlignment="Center" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    FontSize="18"
+                                    HorizontalOptions="End"
+                                    Text="{Binding ShippingCostDisplay}"
+                                    TextColor="{StaticResource Primary}"
+                                    VerticalTextAlignment="Center" />
+                            </StackLayout>
+
+                            <!--  Divider  -->
+                            <BoxView
+                                Margin="5,0,5,10"
+                                HeightRequest="1"
+                                Opacity="0.3"
+                                Color="{StaticResource White}" />
+
+                            <!--  Grand total row  -->
+                            <StackLayout Margin="5,0,5,5" Orientation="Horizontal">
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    FontSize="24"
+                                    HorizontalOptions="StartAndExpand"
+                                    Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[PaymentShipmentViewModel_Total]}"
+                                    TextColor="{StaticResource Primary}"
+                                    VerticalTextAlignment="Center" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="ItimRegular"
+                                    FontSize="28"
+                                    HorizontalOptions="End"
+                                    Text="{Binding TotalAmount}"
+                                    TextColor="{StaticResource Primary}"
+                                    VerticalTextAlignment="Center" />
+                            </StackLayout>
+
+                        </StackLayout>
+                    </Border>
+
+                    <!--  Payment status message  -->
                     <Label
                         Margin="10,10,10,0"
                         BackgroundColor="Transparent"
@@ -521,6 +556,7 @@
                         TextColor="{StaticResource Red}"
                         VerticalTextAlignment="Center" />
 
+                    <!--  Pay by Card button  -->
                     <Button
                         Margin="10,20,20,0"
                         BackgroundColor="{StaticResource Primary}"
@@ -542,6 +578,7 @@
                         </Button.Shadow>
                     </Button>
 
+                    <!--  Pay by Bank Transfer button  -->
                     <Button
                         Margin="10,20,20,0"
                         BackgroundColor="{StaticResource Primary}"
@@ -565,7 +602,6 @@
                     </Button>
 
                 </StackLayout>
-
             </ScrollView>
         </Grid>
     </views:BaseView.Content>

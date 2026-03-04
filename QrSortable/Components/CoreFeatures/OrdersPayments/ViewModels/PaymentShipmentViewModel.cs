@@ -22,7 +22,7 @@
     using System.Collections.ObjectModel;
 
     /// <summary>
-    ///     The view model of the Select Product view screen.
+    ///     The view model of the Payment Shipment view screen.
     /// </summary>
     public partial class PaymentShipmentViewModel : BaseViewModel<Product>
     {
@@ -46,25 +46,48 @@
         private static readonly string CODE_GENERATED_NAME =
             AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle.ToString();
 
+        // ── Currency rates (relative to EUR) ─────────────────────────────────────
+        private static readonly Dictionary<string, (decimal Rate, string Symbol)> CurrencyRates = new()
+        {
+            { "Euro(€)", (1.00m, "€") },
+            { "USD($)",  (1.08m, "$") },
+            { "GBP(£)",  (0.83m, "£") }
+        };
+
         public ObservableCollection<string> CurrencyItem { get; } =
         new ObservableCollection<string>
         {
-           "Euro(€)",
-           "USD($)",
-           "GBP(£)"
+            "Euro(€)",
+            "USD($)",
+            "GBP(£)"
+        };
+
+        public List<string> CountryList { get; } = new()
+        {
+            "Germany", "United Kingdom", "Austria", "Belgium", "Bulgaria",
+            "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia",
+            "Finland", "France", "Greece", "Hungary", "Ireland", "Italy",
+            "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
+            "Poland", "Portugal", "Romania", "Slovakia", "Slovenia",
+            "Spain", "Sweden", "Switzerland", "Norway",
+            "United States", "Canada", "Australia"
         };
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PaymentShipmentViewModel" />.
         /// </summary>
-        /// <param name="mollieService">The service handling Mollie payment-related operations.</param>
-        /// <param name="timerService">The service managing timing-related operations.</param>
-        /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
-        /// used for managing database operations.</param>
-        public PaymentShipmentViewModel(IMollieService mollieService, ITimerService timerService, IDatabaseManager databaseManager,
-            ISharedMethodService sharedMethodService, ICodeGeneratorService codeService, IPdfGeneratorService pdfGeneratorService,
-            IBackendCommunicationService backendCommunicationService, IConnectivityService connectivityService,
-            IBackendDatabaseManager backendDatabaseManager, IBackendDatabaseHelper backendDatabaseHelper, IMauiEssentialsWrapper mauiEssentialsWrapper)
+        public PaymentShipmentViewModel(
+            IMollieService mollieService,
+            ITimerService timerService,
+            IDatabaseManager databaseManager,
+            ISharedMethodService sharedMethodService,
+            ICodeGeneratorService codeService,
+            IPdfGeneratorService pdfGeneratorService,
+            IBackendCommunicationService backendCommunicationService,
+            IConnectivityService connectivityService,
+            IBackendDatabaseManager backendDatabaseManager,
+            IBackendDatabaseHelper backendDatabaseHelper,
+            IMauiEssentialsWrapper mauiEssentialsWrapper)
         {
             IsBackNavigationEnabled = true;
 
@@ -84,14 +107,11 @@
         }
 
         /// <summary>
-        /// Initializes the component asynchronously, ensuring proper initialization of general information
-        /// and notification permissions.
+        /// Initializes the component asynchronously.
         /// </summary>
-        /// <returns>An awaitable task.</returns>
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
-            
         }
 
         public override void Prepare(Product parameter)
@@ -99,199 +119,155 @@
             _product = parameter;
             ProductTitle = parameter.Title;
 
-            TotalAmount = _product.TotalPrice.ToString() + "€";
-            if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB")) 
-            { 
-                BankTransferVisible = false; 
-            }
-            else { BankTransferVisible = true; }
+            if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
+                BankTransferVisible = false;
+            else
+                BankTransferVisible = true;
+
+            // Set initial amounts with default currency (EUR, no country selected yet)
+            UpdateTotalAmount();
         }
 
-        /// <summary>
-        /// Represents the currently product tile in the application.
-        /// </summary>
+        // ── Observable properties ─────────────────────────────────────────────────
+
+        /// <summary>Represents the product title.</summary>
         [ObservableProperty]
         private string _productTitle;
 
-        /// <summary>
-        /// Represents the currently total amount to pay in the application.
-        /// </summary>
+        /// <summary>Represents the subtotal (product price only, before shipping).</summary>
+        [ObservableProperty]
+        private string _subtotalAmount;
+
+        /// <summary>Represents the shipping cost formatted for display e.g. "€15.00" or "Free".</summary>
+        [ObservableProperty]
+        private string _shippingCostDisplay;
+
+        /// <summary>Represents the grand total (subtotal + shipping).</summary>
         [ObservableProperty]
         private string _totalAmount;
 
-        /// <summary>
-        /// Represents the visisble of the bank transfer button in the application.
-        /// </summary>
+        /// <summary>Represents the visibility of the bank transfer button.</summary>
         [ObservableProperty]
         private bool _bankTransferVisible = true;
 
-        /// <summary>
-        /// Represents the currently name in the application.
-        /// </summary>
+        /// <summary>Represents the customer name.</summary>
         [ObservableProperty]
         private string _name;
 
-        /// <summary>
-        /// Represents the currently street name in the application.
-        /// </summary>
+        /// <summary>Represents the street name.</summary>
         [ObservableProperty]
         private string _streetName;
 
-        /// <summary>
-        /// Represents the currently house number in the application.
-        /// </summary>
+        /// <summary>Represents the house number.</summary>
         [ObservableProperty]
         private string _houseNumber;
 
-        /// <summary>
-        /// Represents the currently zip code in the application.
-        /// </summary>
+        /// <summary>Represents the ZIP code.</summary>
         [ObservableProperty]
         private string _zipCode;
 
-        /// <summary>
-        /// Represents the currently city name in the application.
-        /// </summary>
+        /// <summary>Represents the city name.</summary>
         [ObservableProperty]
         private string _cityName;
 
-        /// <summary>
-        /// Represents the currently Country Name in the application.
-        /// </summary>
+        /// <summary>Represents the country name (kept in sync with SelectedCountry).</summary>
         [ObservableProperty]
         private string _countryName;
 
-        /// <summary>
-        /// Represents the currently Email in the application.
-        /// </summary>
+        /// <summary>Represents the email address.</summary>
         [ObservableProperty]
         private string _email;
 
-        /// <summary>
-        /// Represents the currently payment message visible in the application.
-        /// </summary>
+        /// <summary>Represents the payment message visibility.</summary>
         [ObservableProperty]
         private bool _isPaymentMessageVisible = false;
 
-        /// <summary>
-        /// Represents the payment status message in the application.
-        /// </summary>
+        /// <summary>Represents the payment status message.</summary>
         [ObservableProperty]
         private string _paymentStatusMessage;
 
         /// <summary>
-        /// Represents the currently selected currenc item in the application.
+        /// Represents the selected currency item.
+        /// Auto-recalculates totals when changed via CommunityToolkit partial method hook.
         /// </summary>
         [ObservableProperty]
         private string _selectedCurrencyItem;
 
-        public AsyncRelayCommand OnSelectionChangedCommand => new AsyncRelayCommand(async () =>
+        /// <summary>
+        /// Auto-called by CommunityToolkit whenever SelectedCurrencyItem changes.
+        /// Recalculates subtotal, shipping and grand total in the new currency.
+        /// </summary>
+        partial void OnSelectedCurrencyItemChanged(string value)
         {
-            if (SelectedCurrencyItem != null)
-            {
-                if(SelectedCurrencyItem == CurrencyItem[0])
-                {
-                    TotalAmount = _product.TotalPrice.ToString() + "€";
-                }
-                
-                if (SelectedCurrencyItem == CurrencyItem[1])
-                {
-                    TotalAmount = _product.TotalPrice.ToString() + "$";
-                }
+            UpdateTotalAmount();
+        }
 
-                if (SelectedCurrencyItem == CurrencyItem[2])
-                {
-                    TotalAmount = _product.TotalPrice.ToString() + "£";
-                }
-            }
-        });
+        /// <summary>
+        /// Represents the selected country from the Picker.
+        /// Auto-recalculates shipping cost and totals when changed via CommunityToolkit partial method hook.
+        /// </summary>
+        [ObservableProperty]
+        private string _selectedCountry;
+
+        /// <summary>
+        /// Auto-called by CommunityToolkit whenever SelectedCountry changes.
+        /// Syncs CountryName and recalculates shipping cost + grand total.
+        /// </summary>
+        partial void OnSelectedCountryChanged(string value)
+        {
+            // Keep CountryName in sync for AddInformationToProducts()
+            CountryName = value;
+            UpdateTotalAmount();
+        }
+
+        // ── Commands ──────────────────────────────────────────────────────────────
 
         public AsyncRelayCommand PaymentByBankCommand => new AsyncRelayCommand(async () =>
         {
+            if (!ValidateFields()) return;
 
-            if (string.IsNullOrWhiteSpace(Name) ||
-                string.IsNullOrWhiteSpace(StreetName) ||
-                string.IsNullOrWhiteSpace(HouseNumber) ||
-                string.IsNullOrWhiteSpace(ZipCode) ||
-                string.IsNullOrWhiteSpace(CityName) ||
-                string.IsNullOrWhiteSpace(CountryName) ||
-                string.IsNullOrWhiteSpace(Email))
-            {
-                await DialogService.ShowAlertDialog(AppResources.CodeGeneratorViewModel_MissingTitle,
-                    AppResources.PaymentShipmentViewModel_FillFieldText, AppResources.Dialog_OK_Text);
-                return;
-            }
-
-            if (!IsValidEmail(Email))
-            {
-                await DialogService.ShowAlertDialog(AppResources.PaymentShipmentViewModel_InvalidText,
-                    AppResources.PaymentShipmentViewModel_EnterEmailText, AppResources.Dialog_OK_Text);
-                return;
-            }
-
-            // Add info to product
             AddInformationToProducts();
-
             IsPaymentMessageVisible = false;
 
-            // Navigate to BankTransferView
             await NavigationService.Navigate<BankTransferView>(_product);
         });
 
         public AsyncRelayCommand PaymentByCardCommand => new AsyncRelayCommand(async () =>
         {
-
-            if (string.IsNullOrWhiteSpace(Name) ||
-                string.IsNullOrWhiteSpace(StreetName) ||
-                string.IsNullOrWhiteSpace(HouseNumber) ||
-                string.IsNullOrWhiteSpace(ZipCode) ||
-                string.IsNullOrWhiteSpace(CityName) ||
-                string.IsNullOrWhiteSpace(CountryName) ||
-                string.IsNullOrWhiteSpace(Email))
-            {
-                await DialogService.ShowAlertDialog(AppResources.CodeGeneratorViewModel_MissingTitle,
-                    AppResources.PaymentShipmentViewModel_FillFieldText, AppResources.Dialog_OK_Text);
-                return;
-            }
-
-            if (!IsValidEmail(Email))
-            {
-                await DialogService.ShowAlertDialog(AppResources.PaymentShipmentViewModel_InvalidText,
-                    AppResources.PaymentShipmentViewModel_EnterEmailText, AppResources.Dialog_OK_Text);
-                return;
-            }
+            if (!ValidateFields()) return;
 
             if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
             {
-                await DialogService.ShowAlertDialog(AppResources.Dialog_InternetConnection_Title,
-                     AppResources.Dialog_InternetConnection_Message, AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(
+                    AppResources.Dialog_InternetConnection_Title,
+                    AppResources.Dialog_InternetConnection_Message,
+                    AppResources.Dialog_OK_Text);
                 return;
             }
 
-            // Add info to product
             AddInformationToProducts();
-
             IsPaymentMessageVisible = true;
 
-            try 
-            { 
-                // ---------------- Create Payment ----------------
+            try
+            {
+                // Grand total in EUR (product base + shipping) sent to Mollie
+                decimal grandTotalEur = _product.TotalPrice
+                    + _sharedMethodService.GetShippingCost(SelectedCountry);
+
                 var result = await _mollieService.CreatePaymentAsync(
-                    _product.TotalPrice,
+                    grandTotalEur,
                     SelectedCurrencyItem,
                     "Card",
                     "Payment",
                     Email
                 );
 
-                // ---------------- Handle Result ----------------
                 if (result is PaymentResponse payment)
                 {
                     if (payment.Links?.Checkout != null)
                     {
                         _paymentId = payment.Id;
 
-                        // Start timer to poll payment status
                         _timer = _timeService.StartPeriodicTimer(_ =>
                         {
                             MainThread.BeginInvokeOnMainThread(async () =>
@@ -300,7 +276,6 @@
                             });
                         }, TimeSpan.FromSeconds(15));
 
-                        // Open checkout in browser
                         var browserMode = (_mauiEssentialsWrapper.GetDevicePlatform() == _mauiEssentialsWrapper.AndroidDevicePlatform)
                             ? BrowserLaunchMode.SystemPreferred
                             : BrowserLaunchMode.External;
@@ -310,24 +285,108 @@
                     else
                     {
                         Console.WriteLine("Error: Failed to create payment.");
-                        await DialogService.ShowAlertDialog(AppResources.Dialog_Error,
-                            AppResources.PaymentShipmentViewModel_FailedPayment, AppResources.Dialog_OK_Text);
+                        await DialogService.ShowAlertDialog(
+                            AppResources.Dialog_Error,
+                            AppResources.PaymentShipmentViewModel_FailedPayment,
+                            AppResources.Dialog_OK_Text);
                     }
                 }
                 else
                 {
                     Console.WriteLine("Error: Unexpected result type from MollieService.");
-                    await DialogService.ShowAlertDialog(AppResources.Dialog_Error,
-                        AppResources.PaymentShipmentViewModel_UnexpectedPayment, AppResources.Dialog_OK_Text);
+                    await DialogService.ShowAlertDialog(
+                        AppResources.Dialog_Error,
+                        AppResources.PaymentShipmentViewModel_UnexpectedPayment,
+                        AppResources.Dialog_OK_Text);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Payment Error: {ex.Message}");
-                await DialogService.ShowAlertDialog(AppResources.Dialog_Error, ex.Message, AppResources.Dialog_OK_Text);
+                await DialogService.ShowAlertDialog(
+                    AppResources.Dialog_Error,
+                    ex.Message,
+                    AppResources.Dialog_OK_Text);
+            }
+        });
+
+        // ── Private helpers ───────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Recalculates SubtotalAmount, ShippingCostDisplay and TotalAmount.
+        /// Called automatically when SelectedCountry or SelectedCurrencyItem changes.
+        /// Shipping cost is fetched via _sharedMethodService.GetShippingCost().
+        /// </summary>
+        private void UpdateTotalAmount()
+        {
+            if (_product == null) return;
+
+            var (rate, symbol) = GetCurrentCurrency();
+
+            // 1. Subtotal
+            decimal subtotalConverted = _product.TotalPrice * rate;
+            SubtotalAmount = $"{symbol}{subtotalConverted:F0}";
+
+            // 2. Shipping
+            decimal shippingEur = _sharedMethodService.GetShippingCost(SelectedCountry);
+            decimal shippingConverted = shippingEur * rate;
+            ShippingCostDisplay = shippingEur == 0
+                ? "Free"
+                : $"{symbol}{shippingConverted:F0}";
+
+            // 3. Grand total
+            decimal grandTotal = subtotalConverted + shippingConverted;
+            TotalAmount = $"{symbol}{grandTotal:F0}";
+        }
+
+        /// <summary>
+        /// Returns the rate and symbol for the currently selected currency.
+        /// Falls back to EUR if nothing is selected.
+        /// </summary>
+        private (decimal Rate, string Symbol) GetCurrentCurrency()
+        {
+            if (SelectedCurrencyItem != null &&
+                CurrencyRates.TryGetValue(SelectedCurrencyItem, out var entry))
+            {
+                return entry;
+            }
+            return (1.00m, "€"); // Default EUR
+        }
+
+        /// <summary>
+        /// Validates all required shipping/billing fields.
+        /// Returns false and shows an alert if any field is missing or invalid.
+        /// </summary>
+        private bool ValidateFields()
+        {
+            if (string.IsNullOrWhiteSpace(Name) ||
+                string.IsNullOrWhiteSpace(StreetName) ||
+                string.IsNullOrWhiteSpace(HouseNumber) ||
+                string.IsNullOrWhiteSpace(ZipCode) ||
+                string.IsNullOrWhiteSpace(CityName) ||
+                string.IsNullOrWhiteSpace(CountryName) ||
+                string.IsNullOrWhiteSpace(Email))
+            {
+                _ = DialogService.ShowAlertDialog(
+                    AppResources.CodeGeneratorViewModel_MissingTitle,
+                    AppResources.PaymentShipmentViewModel_FillFieldText,
+                    AppResources.Dialog_OK_Text);
+                return false;
             }
 
-        });
+            if (!IsValidEmail(Email))
+            {
+                _ = DialogService.ShowAlertDialog(
+                    AppResources.PaymentShipmentViewModel_InvalidText,
+                    AppResources.PaymentShipmentViewModel_EnterEmailText,
+                    AppResources.Dialog_OK_Text);
+                return false;
+            }
+
+            return true;
+        }
+
+        // ── Unchanged methods ─────────────────────────────────────────────────────
 
         public async Task HandleMollieRedirect(string paymentId)
         {
@@ -341,7 +400,6 @@
                 await CheckPaymentStatusAsync();
             });
         }
-        
 
         private async Task CheckPaymentStatusAsync()
         {
@@ -367,10 +425,8 @@
 
             lock (_lock)
             {
-                if (_orderProcessed)
-                    return; // Already handled → exit immediately
-
-                _orderProcessed = true;  // Mark as processed
+                if (_orderProcessed) return;
+                _orderProcessed = true;
             }
 
             StopTimer();
@@ -380,26 +436,25 @@
             var pdfFiles = new List<byte[]>();
 
             var processingMsg = AppResources.Dialog_Processing;
-            if(_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
-            {
+            if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
                 processingMsg = AppResources.PaymentShipmentViewModel_GeneratedCodeMsg;
-            }
 
             var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(processingMsg,
             async () =>
             {
                 pdfFiles = await GeneratePdfFilesAsync();
-                return await DatabaseAndBackendStoringAsync(pdfFiles); 
+                return await DatabaseAndBackendStoringAsync(pdfFiles);
             });
 
             if (result)
             {
                 await RemoveProductFromBasket();
 
-                if(_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
+                if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
                 {
                     var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                    var fileName = (_product.CodeType == "QRcode") ? $"{timestamp}Your_QR_Codes.pdf"
+                    var fileName = (_product.CodeType == "QRcode")
+                        ? $"{timestamp}Your_QR_Codes.pdf"
                         : $"{timestamp}Your_Barcodes.pdf";
 
                     string filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
@@ -414,24 +469,22 @@
                         });
                     });
                 }
+
                 MainThread.BeginInvokeOnMainThread(async () =>
                 {
                     await NavigationService.Navigate<RootView>();
                 });
-               
             }
             else
             {
-                await DialogService.ShowAlertDialog(AppResources.PaymentShipmentViewModel_UnexpectedErrorText,
+                await DialogService.ShowAlertDialog(
+                    AppResources.PaymentShipmentViewModel_UnexpectedErrorText,
                     AppResources.Dialog_OK_Text);
             }
         }
 
         private async Task<bool> DatabaseAndBackendStoringAsync(List<byte[]> pdfFiles)
         {
-            /*TODO: *send email to user and to me and 
-            *send saved to the backgend when user placed an order
-            */
             try
             {
                 var dbItems = await _databaseManager.GetListAsync<YoursOrderData>();
@@ -443,7 +496,7 @@
                 if (existing != null)
                 {
                     Console.WriteLine("PaymentShipmentViewModel:Error:Order already exists — skipping insert.");
-                    return true; 
+                    return true;
                 }
 
                 var orderedItem = new YoursOrderData
@@ -476,8 +529,7 @@
                 {
                     _databaseManager.CommitTransaction();
 
-
-                    if(!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                    if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
                     {
                         var dto = _backendDatabaseHelper.CreateDtoOrdersBackendData(orderedItem, "false");
                         _backendDatabaseHelper.SaveToTheBackendAsync(dto);
@@ -487,7 +539,7 @@
                         await _backendCommunicationService.InsertAsync(orderedItem);
                     }
 
-                    Console.WriteLine("Successfully placed an ordered.");
+                    Console.WriteLine("Successfully placed an order.");
                     return true;
                 }
                 else
@@ -496,7 +548,6 @@
                     Console.WriteLine("DatabaseAndBackendStoringAsync: AddAsync returned null - rollback performed.");
                     return false;
                 }
-
             }
             catch (Exception ex)
             {
@@ -517,21 +568,16 @@
 
         private string GetCodeAndPageType(string data)
         {
-            if(_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
-            {
+            if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
                 return data;
-            }
             return string.Empty;
-
         }
 
         private string StatusOfOrder()
         {
             string status = AppResources.General_PendingStatusText;
             if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
-            {
                 status = AppResources.General_DownloadStatusText;
-            }
             return status;
         }
 
@@ -541,14 +587,13 @@
 
             if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
             {
-                if (_product.CodeType == AppResources.CodeGeneratorViewModel_QRcodeText) 
+                if (_product.CodeType == AppResources.CodeGeneratorViewModel_QRcodeText)
                 {
                     var qrCodesCustom = await _codeService.GenerateQrCodesAsync(
                         tag: _product.TagName,
                         noOfPage: _product.NumberOfPages,
                         hexColor: _product.ColorHex
                     );
-
                     var pdf = await _pdfService.GenerateQrPdfAsync(qrCodesCustom);
                     pdfBytes.Add(pdf);
                 }
@@ -558,7 +603,6 @@
                         tag: _product.TagName,
                         noOfPage: _product.NumberOfPages
                     );
-
                     var pdf = await _pdfService.GenerateBarcodePdfAsync(barCodesCustom);
                     pdfBytes.Add(pdf);
                 }
@@ -577,9 +621,7 @@
             );
 
             if (match != null)
-            {
                 await _databaseManager.DeleteAsync(match);
-            }
         }
 
         private void AddInformationToProducts()
