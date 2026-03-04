@@ -79,7 +79,7 @@
                                 FontSize="20"
                                 HorizontalTextAlignment="Start"
                                 Text="{Binding SubtotalAmount}"
-                                TextColor="{StaticResource Primary}"
+                                TextColor="White"
                                 VerticalTextAlignment="Center" />
                         </HorizontalStackLayout>
 
@@ -123,7 +123,7 @@
                                 FontSize="20"
                                 HorizontalTextAlignment="Start"
                                 Text="{Binding NetTotalAmount}"
-                                TextColor="{StaticResource Primary}"
+                                TextColor="White"
                                 VerticalTextAlignment="Center" />
                         </HorizontalStackLayout>
 
@@ -145,7 +145,7 @@
                                 FontSize="20"
                                 HorizontalTextAlignment="Start"
                                 Text="{Binding ShippingCost}"
-                                TextColor="{StaticResource Primary}"
+                                TextColor="White"
                                 VerticalTextAlignment="Center" />
                         </HorizontalStackLayout>
 
