@@ -283,7 +283,7 @@
     <value>10 % de réduction :</value>
   </data>
   <data name="BankTransferViewModel_Total" xml:space="preserve">
-    <value>Total :              </value>
+    <value>Total :</value>
   </data>
   <data name="BankTransferViewModel_IBAN" xml:space="preserve">
     <value>IBAN:</value>
