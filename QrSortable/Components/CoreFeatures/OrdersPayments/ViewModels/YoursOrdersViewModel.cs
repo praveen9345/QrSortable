@@ -6,6 +6,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Models;
+    using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
@@ -20,10 +21,13 @@
         private readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
         private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
+        private readonly ISharedMethodService _sharedMethodService;
+        private readonly IGeneralInformationManager _generalInformationManager;
         private readonly IGeneralDatabaseSynchronizationManager _generalDatabaseSynManager;
 
         private string _urlImage = "image_icon";
         private bool _isEnabelStatusOfOrder = false;
+        private string _currency;
 
         public ObservableCollection<OrderedData> OrderedDatas { get; set; }
 
@@ -34,13 +38,16 @@
         /// used for managing database operations.</param>
         /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
         public YoursOrdersViewModel(IDatabaseManager databaseManager, IToastService toastService,
-            IGeneralDatabaseSynchronizationManager generalDatabaseSynManager, IMauiEssentialsWrapper mauiEssentialsWrapper)
+            IGeneralDatabaseSynchronizationManager generalDatabaseSynManager, IMauiEssentialsWrapper mauiEssentialsWrapper,
+            ISharedMethodService sharedMethodService, IGeneralInformationManager generalInformationManager)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
             _toastService = toastService;
             _generalDatabaseSynManager = generalDatabaseSynManager;
             _mauiEssentialsWrapper = mauiEssentialsWrapper;
+            _sharedMethodService = sharedMethodService;
+            _generalInformationManager = generalInformationManager;
 
             OrderedDatas = new ObservableCollection<OrderedData>();
         }
@@ -53,6 +60,10 @@
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
+
+            var language = (await _generalInformationManager.GetGeneralInformationAsync()).SelectedLanguageCode;
+
+            _currency = _sharedMethodService.GetCurrencySymbol(language);
 
             if (!_mauiEssentialsWrapper.IsInternetConnectionAvailable())
             {
@@ -152,7 +163,7 @@
                         StatusOfOrder = item.StatusOfOrder,
                         IsEnabelStatusOfOrder = _isEnabelStatusOfOrder,
                         ShipmentTracking = item.ShipmentTracking,
-                        TotalPrice = item.TotalPrice
+                        TotalPrice = item.TotalPrice + _currency
                     };
                     OrderedDatas.Add(orderedData);
                 }
