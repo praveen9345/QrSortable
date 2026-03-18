@@ -230,7 +230,7 @@
             IsPaymentMessageVisible = false;
 
             _product.CurrencySymbol = SelectedCurrencyItem;
-            _product.ShippingCost = _sharedMethodService.GetShippingCost(SelectedCountry);
+            _product.ShippingCost = DetermineShippingCost();
             await NavigationService.Navigate<BankTransferView>(_product);
         });
 
@@ -253,8 +253,7 @@
             try
             {
                 // Grand total in EUR (product base + shipping) sent to Mollie
-                decimal grandTotalEur = _product.TotalPrice
-                    + _sharedMethodService.GetShippingCost(SelectedCountry);
+                decimal grandTotalEur = _product.TotalPrice + DetermineShippingCost();
 
                 var result = await _mollieService.CreatePaymentAsync(
                     grandTotalEur,
@@ -330,7 +329,7 @@
             SubtotalAmount = $"{symbol}{subtotalConverted:F0}";
 
             // 2. Shipping
-            decimal shippingEur = _sharedMethodService.GetShippingCost(SelectedCountry);
+            decimal shippingEur = DetermineShippingCost();
             decimal shippingConverted = shippingEur * rate;
             ShippingCostDisplay = shippingEur == 0
                 ? AppResources.PaymentShipmentViewModel_FreeText
@@ -648,6 +647,15 @@
             {
                 return false;
             }
+        } 
+
+        private decimal DetermineShippingCost()
+        {
+            if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
+            {
+                return _sharedMethodService.GetShippingCost("Germany");
+            }
+            return _sharedMethodService.GetShippingCost(SelectedCountry);
         }
     }
 }
