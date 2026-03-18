@@ -1,6 +1,5 @@
 ﻿namespace QrSortable.Components.CoreFeatures.CodeGenerator
 {
-    using PdfSharpCore.Drawing;
     using QRCoder;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Helper;
     using SkiaSharp;
@@ -114,22 +113,21 @@
                 int noOfBarcodesPerPage = noOfPage * 12;
                 var barcodeImages = new List<ImageSource>();
 
-                int barcodeWidth = 600;
+                int barcodeWidth = 1400;
                 int barcodeHeight = 300;
-                int textHeight = 80;
+                int textHeight = 100;
                 int totalHeight = barcodeHeight + (textHeight * 2);
 
                 var random = new Random();
 
-                var topFont = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold), 60);
-                var bottomFont = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold), 50);
+                var topFont = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold), 80);
+                var bottomFont = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold), 65);
 
                 for (int i = 0; i < noOfBarcodesPerPage; i++)
                 {
                     string input = GenerateRandomCode(random);
 
-                    string inputColor = input + "#000000"; // Append a default color for barcodes
-
+                    string inputColor = input + "#000000";
                     string encrypted;
                     try { encrypted = _aesHelper.Encrypt(inputColor); }
                     catch { encrypted = inputColor; }
@@ -141,53 +139,56 @@
                         {
                             Width = barcodeWidth,
                             Height = barcodeHeight,
-                            Margin = 10,
-                            PureBarcode = false
+                            Margin = 20,
+                            PureBarcode = true 
                         }
                     };
 
                     var pixelData = writer.Write(encrypted);
-                    var handle = GCHandle.Alloc(pixelData.Pixels, GCHandleType.Pinned);
 
-                    try
+                    // ✅ ZXing outputs BGRA — use Bgra8888 to match
+                    using var barcodeBitmap = new SKBitmap(
+                        pixelData.Width, pixelData.Height,
+                        SKColorType.Bgra8888, SKAlphaType.Opaque);
+
+                    // ✅ Marshal.Copy is safer than GCHandle + InstallPixels
+                    var bitmapPixels = barcodeBitmap.GetPixels();
+                    Marshal.Copy(pixelData.Pixels, 0, bitmapPixels, pixelData.Pixels.Length);
+
+                    using var bitmap = new SKBitmap(barcodeWidth, totalHeight);
+                    using var canvas = new SKCanvas(bitmap);
+                    canvas.Clear(SKColors.White);
+
+                    using var paint = new SKPaint { Color = SKColors.Black, IsAntialias = true };
+
+                    // Top text — plain human-readable code
+                    float topTextWidth = topFont.MeasureText(input);
+                    canvas.DrawText(
+                        input,
+                        (barcodeWidth - topTextWidth) / 2f,
+                        textHeight - 20,
+                        topFont, paint);
+
+                    // Barcode — contains the encrypted value
+                    canvas.DrawBitmap(barcodeBitmap, new SKPoint(0, textHeight));
+
+                    // Bottom tag
+                    if (!string.IsNullOrWhiteSpace(tag))
                     {
-                        using var bitmap = new SKBitmap(barcodeWidth, totalHeight, SKColorType.Rgba8888, SKAlphaType.Premul);
-                        using var canvas = new SKCanvas(bitmap);
-                        canvas.Clear(SKColors.White);
-
-                        using var paint = new SKPaint { Color = SKColors.Black, IsAntialias = true };
-
-                        // Top text
-                        float topTextWidth = topFont.MeasureText(input);
-                        float topX = (barcodeWidth - topTextWidth) / 2;
-                        float topY = textHeight - 20;
-                        canvas.DrawText(input, topX, topY, topFont, paint);
-
-                        // Barcode
-                        using var barcodeBitmap = new SKBitmap(pixelData.Width, pixelData.Height, SKColorType.Rgba8888, SKAlphaType.Premul);
-                        barcodeBitmap.InstallPixels(barcodeBitmap.Info, handle.AddrOfPinnedObject(), pixelData.Width * 4);
-                        canvas.DrawBitmap(barcodeBitmap, new SKPoint(0, textHeight));
-
-                        // Bottom tag
-                        if (!string.IsNullOrWhiteSpace(tag))
-                        {
-                            float bottomTextWidth = bottomFont.MeasureText(tag);
-                            float bottomX = (barcodeWidth - bottomTextWidth) / 2;
-                            float bottomY = barcodeHeight + textHeight + 60;
-                            canvas.DrawText(tag, bottomX, bottomY, bottomFont, paint);
-                        }
-
-                        using var image = SKImage.FromBitmap(bitmap);
-                        using var ms = new MemoryStream();
-                        image.Encode(SKEncodedImageFormat.Png, 100).SaveTo(ms);
-                        ms.Position = 0;
-
-                        barcodeImages.Add(ImageSource.FromStream(() => new MemoryStream(ms.ToArray())));
+                        float bottomTextWidth = bottomFont.MeasureText(tag);
+                        canvas.DrawText(
+                            tag,
+                            (barcodeWidth - bottomTextWidth) / 2f,
+                            barcodeHeight + textHeight + 70,
+                            bottomFont, paint);
                     }
-                    finally
-                    {
-                        handle.Free();
-                    }
+
+                    using var image = SKImage.FromBitmap(bitmap);
+                    using var ms = new MemoryStream();
+                    image.Encode(SKEncodedImageFormat.Png, 100).SaveTo(ms);
+                    ms.Position = 0;
+
+                    barcodeImages.Add(ImageSource.FromStream(() => new MemoryStream(ms.ToArray())));
                 }
 
                 return barcodeImages;
