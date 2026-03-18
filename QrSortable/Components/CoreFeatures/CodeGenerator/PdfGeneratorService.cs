@@ -5,46 +5,88 @@
 
     public class PdfGeneratorService : IPdfGeneratorService
     {
+        // ── Label sheet physical dimensions (mm) ─────────────────────────────
+        private const double PageWidthMm = 210.0;
+        private const double PageHeightMm = 297.0;
+        private const double CellWidthMm = 70.0;   // 3 × 70 = 210 → no side margin
+        private const double CellHeightMm = 67.7;
+        private const double TopMarginMm = 13.1;   // top white strip
 
+        // ── Inner layout (mm) ────────────────────────────────────────────────
+        private const double HorizPadMm = 2.0;    // left/right padding inside cell
+        private const double VertPadMm = 2.0;    // top/bottom padding inside cell
+        private const double LabelHeightMm = 5.5;    // space reserved for label text
+        private const double LabelGapMm = 1.5;    // gap between label and QR/barcode
+        private const double LabelFontPt = 9.0;
+
+        // ── Helpers ──────────────────────────────────────────────────────────
+        private static double Mm(double mm) => XUnit.FromMillimeter(mm).Point;
+
+        // ────────────────────────────────────────────────────────────────────
+        //  QR CODE PDF
+        // ────────────────────────────────────────────────────────────────────
         public async Task<byte[]> GenerateQrPdfAsync(List<ImageSource> qrcodes)
         {
-
             return await Task.Run(() =>
             {
                 using var document = new PdfDocument();
 
-                int qrPerPage = 12; // 3x4 grid
-                int columns = 3;
-                int rows = 4;
-                double qrWidth = 150;
-                double qrHeight = 150;
-                double margin = 20;
+                const int perPage = 12;
+                const int cols = 3;
 
-                for (int i = 0; i < qrcodes.Count; i += qrPerPage)
+                // Cell size in points
+                double cellW = Mm(CellWidthMm);
+                double cellH = Mm(CellHeightMm);
+                double topM = Mm(TopMarginMm);
+
+                // Padding & label in points
+                double hPad = Mm(HorizPadMm);
+                double vPad = Mm(VertPadMm);
+                double labelH = Mm(LabelHeightMm);
+                double labelGap = Mm(LabelGapMm);
+
+                // Maximum square QR that fits inside the cell
+                // Vertical space: vPad | labelH | labelGap | [QR] | vPad
+                double maxW = cellW - 2 * hPad;
+                double maxH = cellH - vPad - labelH - labelGap - vPad;
+                double qrSize = Math.Min(maxW, maxH);   // square
+
+                var labelFont = new XFont("OpenSans", LabelFontPt, XFontStyle.Bold);
+
+                for (int i = 0; i < qrcodes.Count; i += perPage)
                 {
                     var page = document.AddPage();
-                    page.Width = XUnit.FromMillimeter(210); // A4 width
-                    page.Height = XUnit.FromMillimeter(297); // A4 height
-                    var gfx = XGraphics.FromPdfPage(page);
+                    page.Width = Mm(PageWidthMm);
+                    page.Height = Mm(PageHeightMm);
+                    using var gfx = XGraphics.FromPdfPage(page);
 
-                    for (int j = 0; j < qrPerPage && i + j < qrcodes.Count; j++)
+                    for (int j = 0; j < perPage && i + j < qrcodes.Count; j++)
                     {
-                        int col = j % columns;
-                        int row = j / columns;
+                        int col = j % cols;
+                        int row = j / cols;
 
-                        double x = margin + col * (qrWidth + margin);
-                        double y = margin + row * (qrHeight + 40); // extra space for label
+                        // ── Cell origin (top-left corner) ─────────────────────
+                        double cellX = col * cellW;          // no left margin
+                        double cellY = topM + row * cellH;
 
-                        using var stream = ((StreamImageSource)qrcodes[i + j]).
-                        Stream(CancellationToken.None).Result;
+                        // ── Label baseline ────────────────────────────────────
+                        double labelX = cellX + hPad;
+                        double labelY = cellY + vPad + labelH; // DrawString uses baseline
 
+                        // ── QR: centered horizontally in cell ─────────────────
+                        double qrX = cellX + (cellW - qrSize) / 2.0;
+                        double qrY = cellY + vPad + labelH + labelGap;
+
+                        using var stream = ((StreamImageSource)qrcodes[i + j])
+                            .Stream(CancellationToken.None).Result;
                         using var img = XImage.FromStream(() => stream);
 
-                        gfx.DrawImage(img, x, y, qrWidth, qrHeight);
+                        gfx.DrawString(
+                            "",   // ← your label text
+                            labelFont, XBrushes.Black,
+                            new XPoint(labelX, labelY));
 
-                        // Draw label under QR
-                        gfx.DrawString("", new XFont("OpenSans", 12, XFontStyle.Bold),
-                            XBrushes.Black, new XPoint(x, y + qrHeight + 15));
+                        gfx.DrawImage(img, qrX, qrY, qrSize, qrSize);
                     }
                 }
 
@@ -54,45 +96,67 @@
             });
         }
 
+        // ────────────────────────────────────────────────────────────────────
+        //  BARCODE PDF
+        // ────────────────────────────────────────────────────────────────────
         public async Task<byte[]> GenerateBarcodePdfAsync(List<ImageSource> barcodes)
         {
             return await Task.Run(() =>
             {
                 using var document = new PdfDocument();
 
-                int barcodesPerPage = 12; // 3x4 grid
-                int columns = 3;
-                int rows = 4;
-                double barcodeWidth = 180;  // Slightly wider than QR
-                double barcodeHeight = 80;  // Barcodes are shorter
-                double margin = 20;
+                const int perPage = 12;
+                const int cols = 3;
 
-                for (int i = 0; i < barcodes.Count; i += barcodesPerPage)
+                double cellW = Mm(CellWidthMm);
+                double cellH = Mm(CellHeightMm);
+                double topM = Mm(TopMarginMm);
+                double hPad = Mm(HorizPadMm);
+                double vPad = Mm(VertPadMm);
+                double labelH = Mm(LabelHeightMm);
+                double labelGap = Mm(LabelGapMm);
+
+                // Barcode fills full available width; height = 60 % of available height
+                double availW = cellW - 2 * hPad;
+                double availH = cellH - vPad - labelH - labelGap - vPad;
+                double bcW = availW;
+                double bcH = availH * 0.60;
+
+                var labelFont = new XFont("OpenSans", LabelFontPt, XFontStyle.Bold);
+
+                for (int i = 0; i < barcodes.Count; i += perPage)
                 {
                     var page = document.AddPage();
-                    page.Width = XUnit.FromMillimeter(210); // A4 width
-                    page.Height = XUnit.FromMillimeter(297); // A4 height
-                    var gfx = XGraphics.FromPdfPage(page);
+                    page.Width = Mm(PageWidthMm);
+                    page.Height = Mm(PageHeightMm);
+                    using var gfx = XGraphics.FromPdfPage(page);
 
-                    for (int j = 0; j < barcodesPerPage && i + j < barcodes.Count; j++)
+                    for (int j = 0; j < perPage && i + j < barcodes.Count; j++)
                     {
-                        int col = j % columns;
-                        int row = j / columns;
+                        int col = j % cols;
+                        int row = j / cols;
 
-                        double x = margin + col * (barcodeWidth + margin);
-                        double y = margin + row * (barcodeHeight + 40); // Extra space for label
+                        double cellX = col * cellW;
+                        double cellY = topM + row * cellH;
 
-                        using var stream = ((StreamImageSource)barcodes[i + j]).
-                        Stream(CancellationToken.None).Result;
+                        double labelX = cellX + hPad;
+                        double labelY = cellY + vPad + labelH;
 
+                        // Barcode: centered horizontally; vertically centered in availH
+                        double bcX = cellX + (cellW - bcW) / 2.0;
+                        double bcY = cellY + vPad + labelH + labelGap
+                                          + (availH - bcH) / 2.0;
+
+                        using var stream = ((StreamImageSource)barcodes[i + j])
+                            .Stream(CancellationToken.None).Result;
                         using var img = XImage.FromStream(() => stream);
 
-                        // Draw barcode image
-                        gfx.DrawImage(img, x, y, barcodeWidth, barcodeHeight);
+                        gfx.DrawString(
+                            "",   // ← your label text
+                            labelFont, XBrushes.Black,
+                            new XPoint(labelX, labelY));
 
-                        // Optional: Draw label under barcode (if needed)
-                        gfx.DrawString("", new XFont("OpenSans", 12, XFontStyle.Bold),
-                            XBrushes.Black, new XPoint(x, y + barcodeHeight + 15));
+                        gfx.DrawImage(img, bcX, bcY, bcW, bcH);
                     }
                 }
 
@@ -101,6 +165,5 @@
                 return ms.ToArray();
             });
         }
-
     }
 }
