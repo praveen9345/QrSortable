@@ -593,18 +593,42 @@
                     var qrCodesCustom = await _codeService.GenerateQrCodesAsync(
                         tag: _product.TagName,
                         noOfPage: _product.NumberOfPages,
-                        hexColor: _product.ColorHex
+                        hexColor: _product.ColorHex,
+                        pageType: _product.PageType
                     );
-                    var pdf = await _pdfService.GenerateQrPdfAsync(qrCodesCustom);
+
+                    var pdf = new byte[0];
+
+                    if (_product.PageType.Contains("A5"))
+                    {
+                        pdf = await _pdfService.GenerateQrPdfA5Async(qrCodesCustom);
+                    }
+                    else
+                    {
+                        pdf = await _pdfService.GenerateQrPdfA4Async(qrCodesCustom);
+                    }
+                   
                     pdfBytes.Add(pdf);
                 }
                 else
                 {
                     var barCodesCustom = await _codeService.GenerateBarcodesAsync(
                         tag: _product.TagName,
-                        noOfPage: _product.NumberOfPages
+                        noOfPage: _product.NumberOfPages,
+                        pageType: _product.PageType
                     );
-                    var pdf = await _pdfService.GenerateBarcodePdfAsync(barCodesCustom);
+
+                    var pdf = new byte[0];
+
+                    if (_product.PageType.Contains("A5"))
+                    {
+                        pdf = await _pdfService.GenerateBarcodePdfA5Async(barCodesCustom);
+                    }
+                    else
+                    {
+                        pdf = await _pdfService.GenerateBarcodePdfA4Async(barCodesCustom);
+                    }
+
                     pdfBytes.Add(pdf);
                 }
             }

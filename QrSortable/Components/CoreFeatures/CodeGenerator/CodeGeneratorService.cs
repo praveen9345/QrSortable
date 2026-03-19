@@ -13,16 +13,21 @@
     {
         private readonly IAesHelper _aesHelper;
 
+        // Number of codes per page for A4 and A5
+        private const int noOfCodesA4 = 12;
+        private const int noOfCodesA5 = 6;
+
         public CodeGeneratorService(IAesHelper aesHelper)
         {
             _aesHelper = aesHelper;
         }
 
-        public async Task<List<ImageSource>> GenerateQrCodesAsync(string tag = "", int noOfPage = 1, string hexColor = "#000000")
+        public async Task<List<ImageSource>> GenerateQrCodesAsync(string tag = "", int noOfPage = 1, string hexColor = "#000000", string pageType = "A4")
         {
             return await Task.Run(() =>
             {
-                var noOfQRPerPage = noOfPage * 12;
+                var noOfCodes = pageType.Contains("A5") ? noOfCodesA5 : noOfCodesA4;
+                var noOfQRPerPage = noOfPage * noOfCodes;
                 var qrImages = new List<ImageSource>();
 
                 int qrSize = 620;
@@ -106,11 +111,12 @@
             });
         }
 
-        public async Task<List<ImageSource>> GenerateBarcodesAsync(string tag = "", int noOfPage = 1)
+        public async Task<List<ImageSource>> GenerateBarcodesAsync(string tag = "", int noOfPage = 1, string pageType = "A4")
         {
             return await Task.Run(() =>
             {
-                int noOfBarcodesPerPage = noOfPage * 12;
+                var noOfCodes = pageType.Contains("A5") ? noOfCodesA5 : noOfCodesA4;
+                int noOfBarcodesPerPage = noOfPage * noOfCodes;
                 var barcodeImages = new List<ImageSource>();
 
                 int barcodeWidth = 1400;
