@@ -9,6 +9,7 @@
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
+    using QrSortable.Components.UiFunctionality.Notification;
     using System.Collections.ObjectModel;
 
     /// <summary>
@@ -20,6 +21,8 @@
 
         private readonly ISharedMethodService _sharedMethodService;
         
+        private readonly IToastService _toastService;
+
         private const int _priceEachPaper = 5;
 
         private string _currencySymbol = "€";
@@ -37,12 +40,13 @@
         ///     Initializes a new instance of the <see cref="CodeGeneratorViewModel" />.
         /// </summary>
         public CodeGeneratorViewModel(IGeneralInformationManager generalInformationManager,
-            ISharedMethodService sharedMethodService)
+            ISharedMethodService sharedMethodService, IToastService toastService)
         {
             IsBackNavigationEnabled = true;
 
             _generalInformationManager = generalInformationManager;
             _sharedMethodService = sharedMethodService;
+            _toastService = toastService;
 
             PageSelected = new ObservableCollection<string>
             {
@@ -167,6 +171,12 @@
 
         public AsyncRelayCommand IncreaseQuantityCommand => new AsyncRelayCommand(async () =>
         {
+            if(PageCount >= 5)
+            {
+                await _toastService.DisplayToast(AppResources.CodeGeneratorViewModel_MaxPage);
+                return;
+            }
+
             PageCount++;
             TotalAmount = (PageCount * _priceEachPaper).ToString() + _currencySymbol;
         });

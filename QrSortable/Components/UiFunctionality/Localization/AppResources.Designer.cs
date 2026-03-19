@@ -667,6 +667,18 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to maximum page Text!!.
+        /// </summary>
+        public static string CodeGeneratorViewModel_MaxPage
+        {
+            get
+            {
+                return ResourceManager.GetString("CodeGeneratorViewModel_MaxPage", resourceCulture);
+            }
+        }
+
+
+        /// <summary>
         ///   Looks up a localized string similar to save Basket Successful Text!!.
         /// </summary>
         public static string PaperProductViewModel_BasketSuccess

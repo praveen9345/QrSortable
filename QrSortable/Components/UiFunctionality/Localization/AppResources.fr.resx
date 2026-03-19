@@ -795,4 +795,7 @@
   <data name="PaymentShipmentViewModel_FreeText" xml:space="preserve">
     <value>Gratuit</value>
   </data>
+  <data name="CodeGeneratorViewModel_MaxPage" xml:space="preserve">
+    <value>5 pages maximum.</value>
+  </data>
 </root>
