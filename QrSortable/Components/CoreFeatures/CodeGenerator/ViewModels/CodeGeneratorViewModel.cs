@@ -149,10 +149,10 @@
                     DemoImage = "bar_code_demo.png";
 
                     PageSelected.Clear();
-                    PageSelected.Add("A4(18 code)");
-                    PageSelected.Add("A5(10 code)");
+                    PageSelected.Add("A4(12 code)");
+                    PageSelected.Add("A5(6 code)");
 
-                    SelectedPage = "A4(18 code)";
+                    SelectedPage = "A4(12 code)";
                 }
 
             }
