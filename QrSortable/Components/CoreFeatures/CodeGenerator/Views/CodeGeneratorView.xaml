@@ -188,6 +188,7 @@
                                                    Android='false'}"
                             ItemsSource="{Binding PageSelected}"
                             SelectedItem="{Binding SelectedPage, Mode=TwoWay}"
+                            SelectionChangedCommand="{Binding OnSelectionPageTypeChangedCommand}"
                             SelectionMode="Single">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout ItemSpacing="15" Orientation="Horizontal" />
@@ -240,6 +241,7 @@
                                                    Android='true'}"
                             ItemsSource="{Binding PageSelected}"
                             SelectedItem="{Binding SelectedPage, Mode=TwoWay}"
+                            SelectionChangedCommand="{Binding OnSelectionPageTypeChangedCommand}"
                             SelectionMode="Single"
                             VerticalOptions="Center">
                             <CollectionView.ItemsLayout>

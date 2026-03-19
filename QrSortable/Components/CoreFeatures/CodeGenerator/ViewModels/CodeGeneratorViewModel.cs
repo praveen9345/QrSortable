@@ -2,7 +2,6 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
-    using Google.Rpc;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
@@ -20,10 +19,11 @@
         private readonly IGeneralInformationManager _generalInformationManager;
 
         private readonly ISharedMethodService _sharedMethodService;
-        
+
         private readonly IToastService _toastService;
 
-        private const int _priceEachPaper = 5;
+        private const int _priceEachA4Paper = 5;
+        private const int _priceEachA5Paper = 3;
 
         private string _currencySymbol = "€";
 
@@ -71,10 +71,9 @@
         {
             await base.InitializeAsync();
             var language = (await _generalInformationManager.GetGeneralInformationAsync()).SelectedLanguageCode;
-            
+
             _currencySymbol = _sharedMethodService.GetCurrencySymbol(language);
-            
-            TotalAmount =_priceEachPaper.ToString() + _currencySymbol;
+            TotalAmount = _priceEachA4Paper.ToString() + _currencySymbol;
         }
 
         public override void Prepare(Product parameter)
@@ -98,7 +97,7 @@
         /// Represents the currently selected tag name in the application.
         /// </summary>
         [ObservableProperty]
-        private string _tagName="";
+        private string _tagName = "";
 
         /// <summary>
         /// Represents the currently selected color hex code in the application.
@@ -158,27 +157,36 @@
 
             }
         });
-        
+
+        public AsyncRelayCommand OnSelectionPageTypeChangedCommand => new AsyncRelayCommand(async () =>
+        {
+            if (!string.IsNullOrWhiteSpace(SelectedPage))
+            {
+                TotalAmount = (PageCount * GetPriceEachPaper()).ToString() + _currencySymbol;
+            }
+        });
+
 
         public AsyncRelayCommand DecreaseQuantityCommand => new AsyncRelayCommand(async () =>
         {
-            if (PageCount > 1) 
-            { 
+            if (PageCount > 1)
+            {
                 PageCount--;
-                TotalAmount = (PageCount * _priceEachPaper).ToString() + _currencySymbol;
+
+                TotalAmount = (PageCount * GetPriceEachPaper()).ToString() + _currencySymbol;
             }
         });
 
         public AsyncRelayCommand IncreaseQuantityCommand => new AsyncRelayCommand(async () =>
         {
-            if(PageCount >= 5)
+            if (PageCount >= 5)
             {
                 await _toastService.DisplayToast(AppResources.CodeGeneratorViewModel_MaxPage);
                 return;
             }
 
             PageCount++;
-            TotalAmount = (PageCount * _priceEachPaper).ToString() + _currencySymbol;
+            TotalAmount = (PageCount * GetPriceEachPaper()).ToString() + _currencySymbol;
         });
 
         public AsyncRelayCommand BuyNowCommand => new AsyncRelayCommand(async () =>
@@ -186,14 +194,14 @@
 
             if (string.IsNullOrWhiteSpace(SelectedCode))
             {
-                await DialogService.ShowAlertDialog(AppResources.CodeGeneratorViewModel_MissingTitle, 
+                await DialogService.ShowAlertDialog(AppResources.CodeGeneratorViewModel_MissingTitle,
                     AppResources.CodeGeneratorViewModel_SelectCode, AppResources.Dialog_OK_Text);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(SelectedPage))
             {
-                await DialogService.ShowAlertDialog(AppResources.CodeGeneratorViewModel_MissingTitle, 
+                await DialogService.ShowAlertDialog(AppResources.CodeGeneratorViewModel_MissingTitle,
                     AppResources.CodeGeneratorViewModel_SelectPage, AppResources.Dialog_OK_Text);
                 return;
             }
@@ -203,10 +211,18 @@
             _product.TagName = TagName;
             _product.ColorHex = HexCode;
             _product.NumberOfPages = PageCount;
-            _product.TotalPrice = PageCount * _priceEachPaper;
+            _product.TotalPrice = PageCount * GetPriceEachPaper();
 
             await NavigationService.Navigate<PaymentShipmentView>(_product);
         });
 
+        private int GetPriceEachPaper()
+        {
+            if (SelectedPage.Contains("A5"))
+                return _priceEachA5Paper;
+            else
+                return _priceEachA4Paper;
+
+        }
     }
 }
