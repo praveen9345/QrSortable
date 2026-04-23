@@ -45,11 +45,12 @@
               AppResources.Dialog_InternetConnection_Message, AppResources.Dialog_OK_Text);
                 await NavigationService.Close();
             }
-            switch(viewName)
-            {
+
+            var langCode = (await _generalInformationManager.GetGeneralInformationAsync()).SelectedLanguageCode;
+            
+            switch (viewName)
+            {       
                 case "feedback":
-                    var langCode = (await _generalInformationManager.GetGeneralInformationAsync()).SelectedLanguageCode;
-                    
                     Url = langCode switch
                     {
                         "de" => "https://forms.gle/FSoQkoajwYNASEMq8",// german
@@ -59,13 +60,31 @@
                     };
                     break;
                 case "privacyPolicy":
-                    Url = "https://kidsytales.com/privacy-policy";
+                    Url = langCode switch
+                    {
+                        "de" => "https://sites.google.com/view/qrsortable-privacy-de?usp=sharing",// german
+                        "es" => "https://sites.google.com/view/qrsortable-privacy-es?usp=sharing",// spanish
+                        "fr" => "https://sites.google.com/view/qrsortable-privacy-fr?usp=sharing",// french
+                        _ => "https://sites.google.com/view/qrsortable-privacy-en?usp=sharing" // default: English
+                    };
                     break;
                 case "termsAndCondition":
-                    Url = "https://kidsytales.com/terms-conditions";
+                    Url = langCode switch
+                    {
+                        "de" => "https://sites.google.com/view/qrsortable-terms-de?usp=sharing",// german
+                        "es" => "https://sites.google.com/view/qrsortable-terms-es?usp=sharing",// spanish
+                        "fr" => "https://sites.google.com/view/qrsortable-terms-fr?usp=sharing",// french
+                        _ => "https://sites.google.com/view/qrsortable-terms-en?usp=sharing" // default: English
+                    };
                     break;
                 case "license":
-                    Url = "https://kidsytales.com/license-information";
+                    Url = langCode switch
+                    {
+                        "de" => "https://sites.google.com/view/qrsortable-license-de?usp=sharing",// german
+                        "es" => "https://sites.google.com/view/qrsortable-license-es?usp=sharing",// spanish
+                        "fr" => "https://sites.google.com/view/qrsortable-license-fr?usp=sharing",// french
+                        _ => "https://sites.google.com/view/qrsortable-license-en?usp=sharing" // default: English
+                    };
                     break;
             }
         }
