@@ -11,7 +11,7 @@ namespace QrSortable.Components.CoreFeatures.OrdersPayments
     public class MollieService : IMollieService
     {
         private readonly PaymentClient _paymentClient;
-        private static readonly string  MOLLIE_TEST_API_KEY = "test_a4BaGmytRmSv6J2xSxp8j6ypATxEdf";
+        private static readonly string  MOLLIE_TEST_API_KEY = "test_tz55vhktCjqqtdJcRW3afauehgqDbS";
       
         /// <summary>
         ///     Initializes a new instance of the <see cref="MollieService"/> clss.
