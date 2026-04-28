@@ -47,7 +47,7 @@
 				<string>com.Danfe.QrSortable</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-				<string>myapp</string>
+				<string>https</string>
 				</array>
 			</dict>
 		</array>

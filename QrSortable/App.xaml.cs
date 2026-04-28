@@ -51,7 +51,7 @@
         {
             base.OnAppLinkRequestReceived(uri);
 
-            if (uri.Host == "payment-return")
+            if (uri.Host == "sites.google.com/view/qrsortable-web-redirect/home")
             {
                 var paymentId = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("id");
                 if (!string.IsNullOrEmpty(paymentId))

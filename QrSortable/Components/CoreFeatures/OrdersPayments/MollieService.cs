@@ -17,7 +17,7 @@
         private readonly SubscriptionClient _subscriptionClient;
         private readonly MandateClient _mandateClient;
 
-        private static readonly string MOLLIE_TEST_API_KEY = "test_a4BaGmytRmSv6J2xSxp8j6ypATxEdf";
+        private static readonly string MOLLIE_TEST_API_KEY = "test_tz55vhktCjqqtdJcRW3afauehgqDbS";
 
         public MollieService()
         {
@@ -38,7 +38,7 @@
             {
                 Amount = new Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
                 Description = description,
-                RedirectUrl = $"myapp://payment-return?id={{paymentId}}",
+                RedirectUrl = $"https://sites.google.com/view/qrsortable-web-redirect/home?id={{paymentId}}",
                 Method = GetMolliePaymentMethodType(paymentMethod),
                 CustomerId = customerId,
                 SequenceType = SequenceType.First

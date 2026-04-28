@@ -17,8 +17,8 @@
             Intent.CategoryDefault,
             Intent.CategoryBrowsable
         },
-        DataScheme = "myapp",
-        DataHost = "payment-return")
+        DataScheme = "https",
+        DataHost = "sites.google.com/view/qrsortable-web-redirect/home")
     ]
     public class MainActivity : MauiAppCompatActivity
     {

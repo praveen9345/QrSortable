@@ -47,7 +47,7 @@ public class AppDelegate : MauiUIApplicationDelegate
         {
             var uri = new Uri(url.AbsoluteString);
 
-            // Parse the query: myapp://payment-return?id=xxx
+            // Parse the query: https://sites.google.com/view/qrsortable-web-redirect/home?id=xxx
             var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
             var paymentId = query.Get("id");
 
