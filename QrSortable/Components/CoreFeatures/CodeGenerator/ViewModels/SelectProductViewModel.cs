@@ -105,7 +105,7 @@
                     Description = AppResources.SelectProductViewModel_GenrateOfA4QRcodeColor,
                     Price = string.Format(AppResources.SelectProductViewModel_GenrateOfA4QRcodePrice,
                     await GetFormattedPrice(5)),
-                    IsNew = true,
+                    IsNew = false,
                     ImageUrl = "code_pdf_icon.png"
                 },
                 new Product
@@ -113,7 +113,7 @@
                     Title = AppResources.SelectProductViewModel_StandardPack48QRTitle,
                     Description = AppResources.SelectProductViewModel_StandardPack48QRDiscription,
                     Price = string.Format(AppResources.SelectProductViewModel_StandardPack48QRPrice,
-                    await GetFormattedPrice(10)),
+                    await GetFormattedPrice(15)),
                     IsNew = true,
                     ImageUrl = "qr_standerd_pack_1.png"
                 },
@@ -122,7 +122,8 @@
                     Title = AppResources.SelectProductViewModel_StandardPack48BrTitle,
                     Description = AppResources.SelectProductViewModel_StandardPack48BrDiscription,
                     Price = string.Format(AppResources.SelectProductViewModel_StandardPack48BrPrice,
-                    await GetFormattedPrice(10)),
+                    await GetFormattedPrice(15)),
+                     IsNew = true,
                     ImageUrl = "br_standerd_pack_1.png"
                 },
                 new Product
@@ -130,7 +131,8 @@
                     Title = AppResources.SelectProductViewModel_LargePack100QRTitle,
                     Description = AppResources.SelectProductViewModel_LargePack100QRDiscription,
                     Price = string.Format(AppResources.SelectProductViewModel_LargePack100QRPrice,
-                    await GetFormattedPrice(49)),
+                    await GetFormattedPrice(30)),
+                    IsNew = true,
                     ImageUrl = "qr_large_pack_1.png"
                 }
 

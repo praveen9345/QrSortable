@@ -145,7 +145,7 @@
                                                 VerticalTextAlignment="Center" />
 
                                             <Border
-                                                Padding="5"
+                                                Padding="3"
                                                 Background="#06af56"
                                                 HorizontalOptions="Start"
                                                 IsVisible="{Binding IsNew}"
@@ -156,7 +156,7 @@
                                                     BackgroundColor="Transparent"
                                                     FontAttributes="Bold"
                                                     FontFamily="ItimRegular"
-                                                    FontSize="Large"
+                                                    FontSize="Medium"
                                                     HorizontalTextAlignment="Center"
                                                     Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SelectProductViewModel_NewText]}"
                                                     TextColor="{StaticResource Black}"

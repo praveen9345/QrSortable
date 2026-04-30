@@ -268,7 +268,7 @@
     <value>nur {0}</value>
   </data>
   <data name="SelectProductViewModel_NewText" xml:space="preserve">
-    <value>Neu</value>
+    <value>10 % Rabatt</value>
   </data>
   <data name="AddToBasketViewModel_BuyText" xml:space="preserve">
     <value>Jetzt kaufen</value>
