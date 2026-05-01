@@ -17,6 +17,7 @@
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Notification;
     using QrSortable.Components.UiFunctionality.Notification.Models;
+    using SkiaSharp;
     using System.Collections.ObjectModel;
 
 
@@ -172,19 +173,8 @@
             IsCameraCapture = false;
             IsCameraCaptureVisable = false;
 
-            // Clean up zoom states when view is disappearing
-            // This prevents memory leaks from the gesture tracking
-            CleanupZoomStates();
         }
 
-        /// <summary>
-        /// Cleanup method to be called from the view
-        /// </summary>
-        private void CleanupZoomStates()
-        {
-            // This will be called from the view's ViewDisappearing
-            // The actual cleanup happens in the code-behind
-        }
 
         public AsyncRelayCommand CameraCommand => new AsyncRelayCommand(async () =>
         {
@@ -222,6 +212,7 @@
                 {
                     // 1. Compress the camera capture first
                     jpegCaptureImages = CompressAndResizeImage(jpegCaptureImages);
+                    jpegCaptureImages = RotateImage90(jpegCaptureImages);
 
                     // 2. Check total 1MB limit
                     if (await IsWithinSizeLimit(jpegCaptureImages))
@@ -232,7 +223,7 @@
                             ImageArray.Add(new Images()
                             {
                                 Image = ConvertToImageSource(jpegCaptureImages),
-                                Rotate = 90
+                                Rotate = 0
                             });
                         });
 
@@ -495,17 +486,48 @@
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
 
-            Stream stream = input switch
+            // Always resolve to a byte array first
+            byte[] bytes = input switch
             {
-                byte[] jpegBytes when jpegBytes.Length > 0 => new MemoryStream(jpegBytes),
-                Stream jpegStream => jpegStream,
+                byte[] jpegBytes when jpegBytes.Length > 0 => jpegBytes,
+                Stream stream => ReadStreamToBytes(stream),
                 _ => throw new ArgumentException("Unsupported input type", nameof(input))
             };
 
-            if (stream.CanSeek)
-                stream.Position = 0;
+            // Return a fresh MemoryStream every time MAUI requests it
+            return ImageSource.FromStream(() => new MemoryStream(bytes));
+        }
 
-            return ImageSource.FromStream(() => stream ?? throw new InvalidOperationException("Stream cannot be null"));
+        private static byte[] ReadStreamToBytes(Stream stream)
+        {
+            if (stream.CanSeek) stream.Position = 0;
+            using var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            return ms.ToArray();
+        }
+
+
+        public byte[] RotateImage90(byte[] imageBytes)
+        {
+            using var inputStream = new SKMemoryStream(imageBytes);
+            using var original = SKBitmap.Decode(inputStream);
+
+            var rotated = new SKBitmap(original.Height, original.Width);
+
+            using (var canvas = new SKCanvas(rotated))
+            {
+                canvas.Translate(rotated.Width, 0);
+                canvas.RotateDegrees(90);
+                canvas.DrawBitmap(original, 0, 0);
+            }
+
+            using var image = SKImage.FromBitmap(rotated);
+            using var data = image.Encode(SKEncodedImageFormat.Jpeg, 90);
+
+            using var ms = new MemoryStream();
+            data.SaveTo(ms);
+
+            return ms.ToArray();
         }
 
         public static byte[] CompressAndResizeImage(byte[] imageBytes)
