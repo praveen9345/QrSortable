@@ -34,7 +34,7 @@
         {
             { "Euro(€)", (1.00m, "€") },
             { "USD($)",  (1.08m, "$") },
-            { "GBP(£)",  (0.83m, "£") }
+            { "GBP(£)",  (0.86m, "£") }
         };
 
         public BankTransferViewModel(
