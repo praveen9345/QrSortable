@@ -845,6 +845,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to BicCopied Text!!.
+        /// </summary>
+        public static string BankTransferViewModel_BICCopiedText
+        {
+            get
+            {
+                return ResourceManager.GetString("BankTransferViewModel_BICCopiedText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to ReferenceCopied  Text!!.
         /// </summary>
         public static string BankTransferViewModel_ReferenceCopiedText

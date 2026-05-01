@@ -178,7 +178,7 @@
 
                     </VerticalStackLayout>
 
-                    <!-- IBAN + Reference Section -->
+                    <!-- IBAN + BIC + Reference Section -->
                     <VerticalStackLayout
                         Margin="10,0,10,0"
                         Spacing="5">
@@ -206,6 +206,47 @@
                             <Button
                                 BackgroundColor="{StaticResource Primary}"
                                 Command="{Binding CopyIbanCommand}"
+                                CornerRadius="15"
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="16"
+                                HorizontalOptions="Fill"
+                                Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_CopyText]}"
+                                TextColor="Black"
+                                VerticalOptions="Center">
+                                <Button.Shadow>
+                                    <Shadow
+                                        Brush="Black"
+                                        Opacity="0.3"
+                                        Offset="5,5"
+                                        Radius="10" />
+                                </Button.Shadow>
+                            </Button>
+                        </HorizontalStackLayout>
+
+                        <!-- BIC -->
+                        <HorizontalStackLayout Spacing="10">
+                            <Label
+                                BackgroundColor="Transparent"
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="18"
+                                HorizontalTextAlignment="Start"
+                                Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BankTransferViewModel_BIC]}"
+                                TextColor="{StaticResource White}"
+                                VerticalTextAlignment="Center" />
+                            <Label
+                                BackgroundColor="Transparent"
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="18"
+                                HorizontalTextAlignment="Start"
+                                Text="{Binding BicCode}"
+                                TextColor="{StaticResource White}"
+                                VerticalTextAlignment="Center" />
+                            <Button
+                                BackgroundColor="{StaticResource Primary}"
+                                Command="{Binding CopyBicCommand}"
                                 CornerRadius="15"
                                 FontAttributes="Bold"
                                 FontFamily="ItimRegular"

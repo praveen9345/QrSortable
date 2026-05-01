@@ -769,7 +769,7 @@
     <value> {0} únicamente</value>
   </data>
   <data name="SelectProductViewModel_LargePack100QRTitle" xml:space="preserve">
-    <value>Paquete grande (100 etiquetas QR) (LQR)</value>
+    <value>Paquete grande (108 etiquetas QR) (LQR)</value>
   </data>
   <data name="SelectProductViewModel_LargePack100QRDiscription" xml:space="preserve">
     <value>Codificado con el color negro (también coloreado en la solicitud)</value>
@@ -797,5 +797,11 @@
   </data>
   <data name="CodeGeneratorViewModel_MaxPage" xml:space="preserve">
     <value>Se permite un máximo de 5 páginas.</value>
+  </data>
+  <data name="BankTransferViewModel_BIC" xml:space="preserve">
+    <value>BIC:</value>
+  </data>
+  <data name="BankTransferViewModel_BICCopiedText" xml:space="preserve">
+    <value>¡BIC copiado al portapapeles!</value>
   </data>
 </root>

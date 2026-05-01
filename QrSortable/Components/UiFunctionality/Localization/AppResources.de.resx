@@ -769,7 +769,7 @@
     <value>nur {0}</value>
   </data>
   <data name="SelectProductViewModel_LargePack100QRTitle" xml:space="preserve">
-    <value>Großpackung (100 QR-Etiketten) (LQR)</value>
+    <value>Großpackung (108 QR-Etiketten) (LQR)</value>
   </data>
   <data name="SelectProductViewModel_LargePack100QRDiscription" xml:space="preserve">
     <value>Schwarz farbcodiert (auch in der Anfrage farbig dargestellt)</value>
@@ -797,5 +797,11 @@
   </data>
   <data name="CodeGeneratorViewModel_MaxPage" xml:space="preserve">
     <value>Maximal 5 Seiten sind zulässig.</value>
+  </data>
+  <data name="BankTransferViewModel_BIC" xml:space="preserve">
+    <value>BIC:</value>
+  </data>
+  <data name="BankTransferViewModel_BICCopiedText" xml:space="preserve">
+    <value>BIC in die Zwischenablage kopiert!</value>
   </data>
 </root>

@@ -118,7 +118,11 @@
 
         /// <summary>IBAN code.</summary>
         [ObservableProperty]
-        private string _ibanCode = "DE89370400440532013000";
+        private string _ibanCode = "DE70100123455220300911";
+
+        /// <summary>IBAN code.</summary>
+        [ObservableProperty]
+        private string _bicCode  = "TRBKDEBBXXX";
 
         /// <summary>Reference code.</summary>
         [ObservableProperty]
@@ -128,6 +132,12 @@
         {
             await Clipboard.Default.SetTextAsync(IbanCode);
             await _toastService.DisplayToast(AppResources.BankTransferViewModel_IBANCopiedText);
+        });
+
+        public AsyncRelayCommand CopyBicCommand => new AsyncRelayCommand(async () =>
+        {
+            await Clipboard.Default.SetTextAsync(BicCode);
+            await _toastService.DisplayToast(AppResources.BankTransferViewModel_BICCopiedText);
         });
 
         public AsyncRelayCommand CopyReferenceCodeCommand => new AsyncRelayCommand(async () =>
