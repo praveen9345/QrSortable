@@ -8,6 +8,7 @@
     using Mollie.Api.Models.Payment.Response;
     using Mollie.Api.Models.Subscription.Request;
     using Mollie.Api.Models.Subscription.Response;
+    using QrSortable.Components.CoreFeatures.OrdersPayments.Constants;
     using System.Globalization;
 
     public class MollieService : IMollieService
@@ -34,11 +35,24 @@
             if (!string.IsNullOrWhiteSpace(customerEmail))
                 customerId = await GetOrCreateCustomerIdAsync(customerEmail);
 
+
+            string? deeplinkId = null;
+
+            if (description == PaymentConstants.PaymentShipmentVmDeeplinkId) 
+            {
+                deeplinkId = PaymentConstants.PaymentShipmentVmDeeplinkId;
+            }
+            else if (description == PaymentConstants.SubscriptionVmDeeplinkId)
+            {
+                deeplinkId = PaymentConstants.SubscriptionVmDeeplinkId;
+            }
+            
+
             var paymentRequest = new PaymentRequest
             {
                 Amount = new Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
                 Description = description,
-                RedirectUrl = $"https://sites.google.com/view/qrsortable-web-redirect/home?id={{paymentId}}",
+                RedirectUrl = $"https://www.qrsortable.com/#/mollie-return?id={deeplinkId}",
                 Method = GetMolliePaymentMethodType(paymentMethod),
                 CustomerId = customerId,
                 SequenceType = SequenceType.First

@@ -4,8 +4,11 @@
     using Android.Content;
     using Android.Content.PM;
     using Android.OS;
+    using CommunityToolkit.Mvvm.Messaging;
     using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
+    using QrSortable.Components.CoreFeatures.OrdersPayments;
     using QrSortable.Components.PlatformUtils;
+    using QrSortable.Components.UiFunctionality.Notification.Models;
     using QrSortable.Platforms.Android.Components.PlatformUtils;
 
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, Exported = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
@@ -17,8 +20,8 @@
             Intent.CategoryDefault,
             Intent.CategoryBrowsable
         },
-        DataScheme = "https",
-        DataHost = "sites.google.com/view/qrsortable-web-redirect/home")
+        DataScheme = "myapp",
+        DataHost = "payment-return")
     ]
     public class MainActivity : MauiAppCompatActivity
     {
@@ -32,7 +35,28 @@
                     .On<Microsoft.Maui.Controls.PlatformConfiguration.Android>()
                     .UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Pan);
             }
+
         }
+
+        protected override void OnNewIntent(Intent? intent)
+        {
+            base.OnNewIntent(intent);
+
+            if (intent?.Data == null)
+                return;
+
+            var deepLinkService =
+                MauiApplication.Current.Services.GetRequiredService<IDeepLinkService>();
+
+            var uri = new Uri(intent.Data.ToString());
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                _ = deepLinkService.HandleAsync(uri);
+            });
+
+        }
+
 
         // ✅ REQUIRED for your custom permission service
         public override void OnRequestPermissionsResult(

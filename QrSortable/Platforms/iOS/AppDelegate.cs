@@ -6,6 +6,7 @@ using UIKit;
 using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
 using QrSortable.Components.CoreFeatures.OrdersPayments.ViewModels;
+using QrSortable.Components.CoreFeatures.OrdersPayments;
 
 namespace QrSortable;
 
@@ -47,21 +48,12 @@ public class AppDelegate : MauiUIApplicationDelegate
         {
             var uri = new Uri(url.AbsoluteString);
 
-            // Parse the query: https://sites.google.com/view/qrsortable-web-redirect/home?id=xxx
-            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-            var paymentId = query.Get("id");
+            var deepLinkService =
+            IPlatformApplication.Current.Services.GetRequiredService<IDeepLinkService>();
 
-            if (!string.IsNullOrEmpty(paymentId))
-            {
-                Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    if (Microsoft.Maui.Controls.Application.Current?.MainPage?.BindingContext
-                        is PaymentShipmentViewModel vm)
-                    {
-                        vm.HandleMollieRedirect(paymentId);
-                    }
-                });
-            }
+
+            _ = deepLinkService.HandleAsync(uri);
+
         }
 
         return true;

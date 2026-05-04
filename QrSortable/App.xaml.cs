@@ -1,8 +1,6 @@
 ﻿namespace QrSortable
 {
 	using QrSortable.Components.CoreFeatures.AppStart;
-    using Microsoft.AppCenter.Crashes;
-    using QrSortable.Components.CoreFeatures.OrdersPayments.ViewModels;
 
     /// <summary>
     ///     Class representing the cross-platform application.
@@ -46,28 +44,5 @@
             base.OnStart();
             await _appService.OnStartAsync();
         }
-
-        protected override void OnAppLinkRequestReceived(Uri uri)
-        {
-            base.OnAppLinkRequestReceived(uri);
-
-            if (uri.Host == "sites.google.com/view/qrsortable-web-redirect/home")
-            {
-                var paymentId = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("id");
-                if (!string.IsNullOrEmpty(paymentId))
-                {
-                    // Ensure we're on the main thread for UI operations
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        var page = Shell.Current?.CurrentPage;
-                        if (page?.BindingContext is PaymentShipmentViewModel vm)
-                        {
-                            vm.HandleMollieRedirect(paymentId);
-                        }
-                    });
-                }
-            }
-        }
-
     }
 }

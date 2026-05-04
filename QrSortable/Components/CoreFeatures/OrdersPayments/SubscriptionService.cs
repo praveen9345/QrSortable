@@ -7,6 +7,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.DataManagement.Models;
+    using QrSortable.Components.CoreFeatures.OrdersPayments.Constants;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Notification;
 
@@ -62,7 +63,7 @@
             string email, string currency, decimal amount)
         {
             return await _mollieService.CreatePaymentAsync(
-                amount, currency, "Card", "Initial Payment for Subscription", email);
+                amount, currency, "Card", PaymentConstants.SubscriptionVmDeeplinkId, email);
         }
 
         public async Task FinalizeSubscriptionAsync(string email, string currency, decimal amount)

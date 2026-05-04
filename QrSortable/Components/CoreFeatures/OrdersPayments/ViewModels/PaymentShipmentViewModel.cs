@@ -12,6 +12,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.Backend.Helper;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.CoreFeatures.OrdersPayments.Constants;
     using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.PlatformUtils.Wrappers;
@@ -20,6 +21,7 @@
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
     using System.Collections.ObjectModel;
+    using System.Text.Json;
 
     /// <summary>
     ///     The view model of the Payment Shipment view screen.
@@ -39,12 +41,15 @@
         private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
 
         private Product _product;
-        private string _paymentId;
         private Timer _timer;
         private bool _orderProcessed = false;
         private readonly object _lock = new object();
         private static readonly string CODE_GENERATED_NAME =
             AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle.ToString();
+
+        // ── Preference keys ───────────────────────────────────────────────────────
+        private const string PrefKeyPaymentId = "paymentId";
+        private const string PrefKeyPendingProduct = "pending_product";
 
         // ── Currency rates (relative to EUR) ─────────────────────────────────────
         private static readonly Dictionary<string, (decimal Rate, string Symbol)> CurrencyRates = new()
@@ -117,6 +122,10 @@
         public override void Prepare(Product parameter)
         {
             _product = parameter;
+
+            // Persist immediately so a restart mid-flow still has data
+            PersistProduct();
+
             ProductTitle = parameter.Title;
 
             if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
@@ -124,7 +133,6 @@
             else
                 BankTransferVisible = true;
 
-            // Set initial amounts with default currency (EUR, no country selected yet)
             UpdateTotalAmount();
         }
 
@@ -215,7 +223,6 @@
         /// </summary>
         partial void OnSelectedCountryChanged(string value)
         {
-            // Keep CountryName in sync for AddInformationToProducts()
             CountryName = value;
             UpdateTotalAmount();
         }
@@ -252,14 +259,13 @@
 
             try
             {
-                // Grand total in EUR (product base + shipping) sent to Mollie
                 decimal grandTotalEur = _product.TotalPrice + DetermineShippingCost();
 
                 var result = await _mollieService.CreatePaymentAsync(
                     grandTotalEur,
                     SelectedCurrencyItem,
                     "Card",
-                    "Payment",
+                    PaymentConstants.PaymentShipmentVmDeeplinkId,
                     Email
                 );
 
@@ -267,15 +273,8 @@
                 {
                     if (payment.Links?.Checkout != null)
                     {
-                        _paymentId = payment.Id;
-
-                        _timer = _timeService.StartPeriodicTimer(_ =>
-                        {
-                            MainThread.BeginInvokeOnMainThread(async () =>
-                            {
-                                await CheckPaymentStatusAsync();
-                            });
-                        }, TimeSpan.FromSeconds(15));
+                        Preferences.Set(PrefKeyPaymentId, payment.Id);
+                        PersistProduct();
 
                         var browserMode = (_mauiEssentialsWrapper.GetDevicePlatform() == _mauiEssentialsWrapper.AndroidDevicePlatform)
                             ? BrowserLaunchMode.SystemPreferred
@@ -314,9 +313,58 @@
         // ── Private helpers ───────────────────────────────────────────────────────
 
         /// <summary>
+        /// Serializes _product to Preferences so it survives an OS-level app restart.
+        /// </summary>
+        private void PersistProduct()
+        {
+            if (_product == null) return;
+            try
+            {
+                var json = JsonSerializer.Serialize(_product);
+                Preferences.Set(PrefKeyPendingProduct, json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"PersistProduct: Failed to serialize product. {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Attempts to restore _product from Preferences when the app was restarted
+        /// mid-payment and Prepare() was never called.
+        /// Returns true if _product is available (either already set or just restored).
+        /// </summary>
+        private bool TryRestoreProduct()
+        {
+            if (_product != null) return true;
+
+            var json = Preferences.Get(PrefKeyPendingProduct, null);
+            if (string.IsNullOrEmpty(json)) return false;
+
+            try
+            {
+                _product = JsonSerializer.Deserialize<Product>(json);
+                return _product != null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"TryRestoreProduct: Failed to deserialize product. {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Removes all persisted payment state from Preferences after a completed order.
+        /// </summary>
+        private void ClearPersistedPaymentState()
+        {
+            Preferences.Remove(PrefKeyPendingProduct);
+            Preferences.Remove(PrefKeyPaymentId);
+        }
+
+        /// <summary>
         /// Recalculates SubtotalAmount, ShippingCostDisplay and TotalAmount.
         /// Called automatically when SelectedCountry or SelectedCurrencyItem changes.
-        /// Shipping cost is fetched via _sharedMethodService.GetShippingCost().
         /// </summary>
         private void UpdateTotalAmount()
         {
@@ -324,18 +372,15 @@
 
             var (rate, symbol) = GetCurrentCurrency();
 
-            // 1. Subtotal
             decimal subtotalConverted = _product.TotalPrice * rate;
             SubtotalAmount = $"{symbol}{subtotalConverted:F0}";
 
-            // 2. Shipping
             decimal shippingEur = DetermineShippingCost();
             decimal shippingConverted = shippingEur * rate;
             ShippingCostDisplay = shippingEur == 0
                 ? AppResources.PaymentShipmentViewModel_FreeText
                 : $"{symbol}{shippingConverted:F0}";
 
-            // 3. Grand total
             decimal grandTotal = subtotalConverted + shippingConverted;
             TotalAmount = $"{symbol}{grandTotal:F0}";
         }
@@ -351,7 +396,7 @@
             {
                 return entry;
             }
-            return (1.00m, "€"); // Default EUR
+            return (1.00m, "€");
         }
 
         /// <summary>
@@ -387,14 +432,11 @@
             return true;
         }
 
-        // ── Unchanged methods ─────────────────────────────────────────────────────
+        // ── deep-link handler ───────────────
 
-        public async Task HandleMollieRedirect(string paymentId)
+        public async Task HandleMollieRedirect()
         {
-            if (string.IsNullOrEmpty(paymentId)) return;
-
-            _paymentId = paymentId;
-            StopTimer();
+            await CheckPaymentStatusAsync();
 
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
@@ -404,13 +446,28 @@
 
         private async Task CheckPaymentStatusAsync()
         {
-            if (string.IsNullOrEmpty(_paymentId))
+            var savedPaymentId = Preferences.Get(PrefKeyPaymentId, string.Empty);
+
+            if (string.IsNullOrEmpty(savedPaymentId))
             {
-                Console.WriteLine("PaymentShipmentViewModel:Error: No payment ID found.");
+                Console.WriteLine("PaymentShipmentViewModel: Error: No payment ID found in Preferences.");
                 return;
             }
 
-            var paymentResponse = await _mollieService.GetPaymentStatusAsync(_paymentId);
+            if (!TryRestoreProduct())
+            {
+                Console.WriteLine("PaymentShipmentViewModel: Error: _product could not be restored.");
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await DialogService.ShowAlertDialog(
+                        AppResources.Dialog_Error,
+                        "Your session expired. Please restart your order.",
+                        AppResources.Dialog_OK_Text);
+                });
+                return;
+            }
+
+            var paymentResponse = await _mollieService.GetPaymentStatusAsync(savedPaymentId);
 
             PaymentStatusMessage = paymentResponse.Status switch
             {
@@ -422,7 +479,7 @@
                 _ => AppResources.General_UnknownPaymentText
             };
 
-            if (paymentResponse.Status != "paid") { return; }
+            if (paymentResponse.Status != "paid") return;
 
             lock (_lock)
             {
@@ -430,15 +487,16 @@
                 _orderProcessed = true;
             }
 
-            StopTimer();
-
             PaymentStatusMessage = AppResources.PaymentShipmentViewModel_OrderReceived;
 
             var pdfFiles = new List<byte[]>();
 
             var processingMsg = AppResources.Dialog_Processing;
+
             if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
+            {
                 processingMsg = AppResources.PaymentShipmentViewModel_GeneratedCodeMsg;
+            }
 
             var result = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(processingMsg,
             async () =>
@@ -496,9 +554,11 @@
 
                 if (existing != null)
                 {
-                    Console.WriteLine("PaymentShipmentViewModel:Error:Order already exists — skipping insert.");
+                    Console.WriteLine("PaymentShipmentViewModel: Order already exists — skipping insert.");
                     return true;
                 }
+
+                decimal grandTotalEur = _product.TotalPrice + DetermineShippingCost();
 
                 var orderedItem = new YoursOrderData
                 {
@@ -509,7 +569,7 @@
                     PageType = GetCodeAndPageType(_product.PageType),
                     ProductQuantity = _product.NumberOfPages,
                     DateTime = DateTime.Now,
-                    TotalPrice = _sharedMethodService.ParsePrice(TotalAmount).ToString(),
+                    TotalPrice = grandTotalEur.ToString(),
                     Name = _product.Name,
                     Street = _product.Street,
                     HouseNo = _product.HouseNo,
@@ -546,13 +606,13 @@
                 else
                 {
                     _databaseManager.Rollback();
-                    Console.WriteLine("DatabaseAndBackendStoringAsync: AddAsync returned null - rollback performed.");
+                    Console.WriteLine("DatabaseAndBackendStoringAsync: AddAsync returned null — rollback performed.");
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"DatabaseAndBackendStoringAsync::Exception during add: {ex}");
+                Console.WriteLine($"DatabaseAndBackendStoringAsync: Exception: {ex}");
                 return false;
             }
         }
@@ -597,17 +657,13 @@
                         pageType: _product.PageType
                     );
 
-                    var pdf = new byte[0];
+                    byte[] pdf;
 
                     if (_product.PageType.Contains("A5"))
-                    {
                         pdf = await _pdfService.GenerateQrPdfA5Async(qrCodesCustom);
-                    }
                     else
-                    {
                         pdf = await _pdfService.GenerateQrPdfA4Async(qrCodesCustom);
-                    }
-                   
+
                     pdfBytes.Add(pdf);
                 }
                 else
@@ -618,16 +674,12 @@
                         pageType: _product.PageType
                     );
 
-                    var pdf = new byte[0];
+                    byte[] pdf;
 
                     if (_product.PageType.Contains("A5"))
-                    {
                         pdf = await _pdfService.GenerateBarcodePdfA5Async(barCodesCustom);
-                    }
                     else
-                    {
                         pdf = await _pdfService.GenerateBarcodePdfA4Async(barCodesCustom);
-                    }
 
                     pdfBytes.Add(pdf);
                 }
@@ -647,6 +699,9 @@
 
             if (match != null)
                 await _databaseManager.DeleteAsync(match);
+
+            // Clear persisted payment state after order is fully completed
+            ClearPersistedPaymentState();
         }
 
         private void AddInformationToProducts()
@@ -671,11 +726,13 @@
             {
                 return false;
             }
-        } 
+        }
 
         private decimal DetermineShippingCost()
         {
-            if (_product.Title.Contains("GQB") && CODE_GENERATED_NAME.Contains("GQB"))
+            if (_product != null &&
+                _product.Title.Contains("GQB") &&
+                CODE_GENERATED_NAME.Contains("GQB"))
             {
                 return _sharedMethodService.GetShippingCost("Germany");
             }
