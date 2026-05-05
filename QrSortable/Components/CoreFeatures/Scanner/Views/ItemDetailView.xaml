@@ -266,6 +266,17 @@
 
                 <!--  Action buttons  -->
                 <Grid Grid.Row="3" BackgroundColor="{OnPlatform iOS={StaticResource StatusBarColor}}">
+
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        FontFamily="ItimRegular"
+                        FontSize="18"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding SavingMessage}"
+                        TextColor="#27F576"
+                        VerticalTextAlignment="Center" />
+
                     <Button
                         Margin="0,15,80,15"
                         Padding="0"
@@ -291,6 +302,8 @@
                                 Color="{StaticResource Black}" />
                         </Button.ImageSource>
                     </Button>
+
+                    <!--  Save buttons  -->
                     <Button
                         Margin="0,15,15,15"
                         Padding="0"

@@ -131,7 +131,8 @@
                                     <!--  images  -->
                                     <Image
                                         Aspect="AspectFill"
-                                        HeightRequest="{OnIdiom Phone=320, Tablet=600}"
+                                        HeightRequest="{OnIdiom Phone=320,
+                                                                Tablet=600}"
                                         HorizontalOptions="Start"
                                         Rotation="{Binding Rotate}"
                                         Source="{Binding Image}"

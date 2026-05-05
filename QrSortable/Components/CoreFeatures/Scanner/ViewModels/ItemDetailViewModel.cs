@@ -121,6 +121,9 @@
         [ObservableProperty]
         private bool _isCameraCaptureVisable;
 
+        [ObservableProperty]
+        private string _savingMessage;
+
 
         /// <summary>
         ///     Prepares the viewmode with an storage raw data.
@@ -321,9 +324,12 @@
 
             try
             {
+                SavingMessage = "Saving… Please wait.";
+
                 var allItems = await _databaseManager.GetAllAsync<StorageEntry>();
                 if (allItems == null)
                 {
+                    SavingMessage = "";
                     await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_NotAbleToRetrieveData, 
                         AppResources.Dialog_OK_Text);
                     return;
@@ -337,6 +343,7 @@
                     var item = allItems.FirstOrDefault(i => i.StorageId == _storageUpdateItemId);
                     if (item == null)
                     {
+                        SavingMessage = "";
                         Console.WriteLine("Error: SaveCommand: Could not find the item to update.");
                         await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_ItemNotFound, 
                             AppResources.Dialog_OK_Text);
@@ -388,6 +395,7 @@
                     catch (Exception ex)
                     {
                         Console.WriteLine($"SaveCommand: Exception during update: {ex}");
+                        SavingMessage = "";
                         await DialogService.ShowAlertDialog(
                             AppResources.ItemDetailViewModel_UnexpectedErrorUpdate,
                             AppResources.Dialog_OK_Text
@@ -403,6 +411,7 @@
                 if (_storageData == null)
                 {
                     Console.WriteLine("Error: SaveCommand: _storageData is null");
+                    SavingMessage = "";
                     await DialogService.ShowAlertDialog(
                         AppResources.ItemDetailViewModel_UnexpectedStorage,
                         AppResources.Dialog_OK_Text
@@ -414,6 +423,7 @@
                 var isDuplicate = allItems.Any(i => i.ItemName == ItemName);
                 if (isDuplicate)
                 {
+                    SavingMessage = "";
                     await DialogService.ShowAlertDialog(
                         string.Format(AppResources.ItemDetailViewModel_ItemAlreadyExists, ItemName),
                         AppResources.Dialog_OK_Text
@@ -456,6 +466,7 @@
                     }
                     else
                     {
+                        SavingMessage = "";
                         _databaseManager.Rollback();
                         Console.WriteLine("SaveCommand: AddAsync returned null - rollback performed.");
                         await DialogService.ShowAlertDialog(AppResources.Dialog_DataCouldNoBeSaved,
@@ -464,7 +475,7 @@
                 }
                 catch (Exception ex)
                 {
-
+                    SavingMessage = "";
                     Console.WriteLine($"SaveCommand: Exception during add: {ex}");
                     await DialogService.ShowAlertDialog(
                         AppResources.BankTransferViewModel_SaveErrorMsg,AppResources.Dialog_OK_Text
@@ -473,6 +484,7 @@
             }
             catch (Exception ex)
             {
+                SavingMessage = "";
                 Console.WriteLine($"SaveCommand: Unexpected exception: {ex}");
                 await DialogService.ShowAlertDialog(
                     AppResources.ItemDetailViewModel_UnexpectedErrorProcessing,
