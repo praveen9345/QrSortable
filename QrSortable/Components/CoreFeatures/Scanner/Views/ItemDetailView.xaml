@@ -268,10 +268,11 @@
                 <Grid Grid.Row="3" BackgroundColor="{OnPlatform iOS={StaticResource StatusBarColor}}">
 
                     <Label
+                        Margin="10,0,0,0"
                         BackgroundColor="Transparent"
                         FontAttributes="Bold"
                         FontFamily="ItimRegular"
-                        FontSize="18"
+                        FontSize="20"
                         HorizontalTextAlignment="Start"
                         Text="{Binding SavingMessage}"
                         TextColor="#27F576"
