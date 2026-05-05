@@ -4,11 +4,9 @@
     using Android.Content;
     using Android.Content.PM;
     using Android.OS;
-    using CommunityToolkit.Mvvm.Messaging;
     using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
     using QrSortable.Components.CoreFeatures.OrdersPayments;
     using QrSortable.Components.PlatformUtils;
-    using QrSortable.Components.UiFunctionality.Notification.Models;
     using QrSortable.Platforms.Android.Components.PlatformUtils;
 
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, Exported = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]

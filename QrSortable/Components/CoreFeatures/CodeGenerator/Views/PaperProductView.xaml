@@ -15,7 +15,7 @@
                     <!--  back  -->
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="325" />
+                    <RowDefinition Height="{OnIdiom Phone=320, Tablet=600}" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -131,7 +131,7 @@
                                     <!--  images  -->
                                     <Image
                                         Aspect="AspectFill"
-                                        HeightRequest="320"
+                                        HeightRequest="{OnIdiom Phone=320, Tablet=600}"
                                         HorizontalOptions="Start"
                                         Rotation="{Binding Rotate}"
                                         Source="{Binding Image}"
