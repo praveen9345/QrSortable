@@ -1,6 +1,8 @@
 ﻿namespace QrSortable
 {
-	using QrSortable.Components.CoreFeatures.AppStart;
+    using CommunityToolkit.Mvvm.Messaging;
+    using QrSortable.Components.CoreFeatures.AppStart;
+    using QrSortable.Components.UiFunctionality.Navigation.Helper;
 
     /// <summary>
     ///     Class representing the cross-platform application.
@@ -27,9 +29,13 @@
 		/// <returns>A new Window object with the AppShell as its content.</returns>
 		protected override Window CreateWindow(IActivationState? activationState)
 		{
-            
-            return new Window(new AppShell());
-		}
+
+            var window = new Window(new AppShell());
+
+            window.Resumed += OnWindowResumed;
+
+            return window;
+        }
 
         /// <summary>
         /// Invoked when the application starts.
@@ -43,6 +49,15 @@
         {
             base.OnStart();
             await _appService.OnStartAsync();
+        }
+
+        /// <summary>
+        /// Invoked when the app window resumes from background.
+        /// Broadcasts a message so any subscriber (e.g. RootViewModel) can react.
+        /// </summary>
+        private void OnWindowResumed(object? sender, EventArgs e)
+        {
+            WeakReferenceMessenger.Default.Send(new AppResumedMessage());
         }
     }
 }

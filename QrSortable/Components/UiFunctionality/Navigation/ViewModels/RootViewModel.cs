@@ -2,6 +2,7 @@
 {
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
+    using CommunityToolkit.Mvvm.Messaging;
     using QrSortable.Components.CoreFeatures.Assistant;
     using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Views;
@@ -10,6 +11,7 @@
     using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Localization;
+    using QrSortable.Components.UiFunctionality.Navigation.Helper;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
     using QrSortable.Components.UiFunctionality.Notification;
     using System.Collections.ObjectModel;
@@ -17,7 +19,7 @@
     /// <summary>
     ///     The view model of the root view screen.
     /// </summary>
-    public partial class RootViewModel : BaseViewModel
+    public partial class RootViewModel : BaseViewModel, IRecipient<AppResumedMessage>
     {
         private readonly IDatabaseManager _databaseManager;
         private readonly IToastService _toastService;
@@ -28,8 +30,10 @@
         private readonly IStorageFinderService _storageFinderService;
         private readonly IVersionCheckService _versionCheckService;
 
-
         private bool _isInitializeVisible = false;
+
+        // Prevents duplicate sync calls if resume fires multiple times quickly
+        private bool _isSyncing = false;
 
         /// <summary>
         ///     Gets or sets the collection of categories available in the system.
@@ -44,13 +48,14 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="RootViewModel" />.
         /// </summary>
-        /// <param name="databaseManager">An instance of <see cref="IDatabaseManager" /> 
-        /// used for managing database operations.</param>
-        /// <param name="toastService">The IToastService instance used for displaying toast notifications.</param>
-        public RootViewModel(IDatabaseManager databaseManager, IToastService toastService, 
-            IBackendSynchronizationManager backendSynchronizationManager, IGeneralInformationManager generalInformationManager,
-            IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager, 
-            IStorageVoiceAssistantService voiceAssistantService, IStorageFinderService storageFinderService,
+        public RootViewModel(
+            IDatabaseManager databaseManager,
+            IToastService toastService,
+            IBackendSynchronizationManager backendSynchronizationManager,
+            IGeneralInformationManager generalInformationManager,
+            IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager,
+            IStorageVoiceAssistantService voiceAssistantService,
+            IStorageFinderService storageFinderService,
             IVersionCheckService versionCheckService)
         {
             IsBackNavigationEnabled = true;
@@ -61,54 +66,63 @@
             _voiceAssistantService = voiceAssistantService;
             _storageFinderService = storageFinderService;
             _versionCheckService = versionCheckService;
+            _generalInformationManager = generalInformationManager;
 
             Categories = new ObservableCollection<StorageGroup>();
             SearchCategories = new ObservableCollection<StorageGroup>();
-            _generalInformationManager = generalInformationManager;
+
+            // Register to receive app resume messages sent from App.xaml.cs
+            WeakReferenceMessenger.Default.Register(this);
         }
 
         /// <summary>
-        /// Initializes the component asynchronously, ensuring proper initialization of general information
-        /// and notification permissions.
+        /// Called automatically when the app resumes from background (sent by App.xaml.cs).
+        /// Re-runs backend sync so data is always fresh on app foregrounding.
         /// </summary>
-        /// <returns>An awaitable task.</returns>
+        public async void Receive(AppResumedMessage message)
+        {
+            await RunBackendSyncAsync();
+        }
+
+        /// <summary>
+        /// Initializes the component asynchronously on first cold start.
+        /// </summary>
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync();
 
-            if (!await _versionCheckService.IsUsingLatestVersion())
+            try
             {
-                var confirmMessage = await DialogService.ShowRequestDialog(
-                AppResources.RootViewModel_UpdateAvailableText,
-                AppResources.RootViewModel_LaterText, AppResources.RootViewModel_UpdateText);
-
-                if (confirmMessage)
+                if (!await _versionCheckService.IsUsingLatestVersion())
                 {
-                    await _versionCheckService.OpenAppInStore();
+                    var confirmMessage = await DialogService.ShowRequestDialog(
+                        AppResources.RootViewModel_UpdateAvailableText,
+                        AppResources.RootViewModel_LaterText,
+                        AppResources.RootViewModel_UpdateText);
+
+                    if (confirmMessage)
+                    {
+                        await _versionCheckService.OpenAppInStore();
+                    }
                 }
             }
-                         
-            //ensure backend sync
-            await _backendSynchronizationManager.SynchronizeStoredObjectsAsync();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"RootViewModel: Version check failed: {ex.Message}");
+            }
 
-            //ensure all data sync
-            await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
-            
-            var multiuserId = (await _generalInformationManager.GetGeneralInformationAsync()).MultiUserId;
-            await _generalDatabaseSynchronizationManager.SyncSubscriptionFromFirebaseAsync(multiuserId);
+            // Run full backend sync on cold start
+            await RunBackendSyncAsync();
 
             _isInitializeVisible = true;
 
             bool outcome = false;
 
-            // Ensure we run UI code on the main thread
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                outcome = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(AppResources.General_LoadingText,
-                   async () =>
-                   {
-                        return await LoadCategoryAsync();
-                   }
+                outcome = (bool)await DialogService.ShowActivityIndicatorAndReturnResult(
+                    AppResources.General_LoadingText,
+                    async () => await LoadCategoryAsync()
                 );
             });
 
@@ -119,7 +133,43 @@
         }
 
         /// <summary>
-        /// Represents the currently add to basket countin the application.
+        /// Centralized method that runs all backend and data sync operations.
+        /// Safe to call from both InitializeAsync (cold start) and Receive (resume).
+        /// </summary>
+        private async Task RunBackendSyncAsync()
+        {
+            // Guard against concurrent sync calls
+            if (_isSyncing) return;
+
+            _isSyncing = true;
+
+            try
+            {
+                await _backendSynchronizationManager.SynchronizeStoredObjectsAsync();
+                await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
+
+                var generalInfo = await _generalInformationManager.GetGeneralInformationAsync();
+                await _generalDatabaseSynchronizationManager
+                    .SyncSubscriptionFromFirebaseAsync(generalInfo.MultiUserId);
+
+                // Reload categories after sync so UI reflects latest data
+                if (_isInitializeVisible)
+                {
+                    await LoadCategoryAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"RootViewModel: Backend sync failed: {ex.Message}");
+            }
+            finally
+            {
+                _isSyncing = false;
+            }
+        }
+
+        /// <summary>
+        /// Represents the currently add to basket count in the application.
         /// </summary>
         [ObservableProperty]
         private string _basketCount;
@@ -135,11 +185,11 @@
             base.ViewAppearing();
 
             var backendUsed = (await _generalInformationManager.GetGeneralInformationAsync()).IsBackendUsed;
-            if (backendUsed) { RefreshBtnVisible = true; } else { RefreshBtnVisible = false; }
-            
+            RefreshBtnVisible = backendUsed;
+
             if (!_isInitializeVisible)
             {
-               await LoadCategoryAsync();
+                await LoadCategoryAsync();
             }
 
             try
@@ -155,7 +205,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"RootViewModel:Error loading categories: {ex.Message}");
+                Console.WriteLine($"RootViewModel: Error loading basket: {ex.Message}");
             }
         }
 
@@ -169,31 +219,23 @@
         {
             _isInitializeVisible = false;
             await NavigationService.Navigate<SelectProductView>();
-
         });
 
         public AsyncRelayCommand RefreshCommand => new AsyncRelayCommand(async () =>
         {
-            await DialogService.ShowActivityIndicatorAndReturnResult(AppResources.RootViewModel_SyncText, async () =>
-            {
-                var result = await _generalDatabaseSynchronizationManager.SynchronizeAppDataAsync();
-                await MainThread.InvokeOnMainThreadAsync(async () =>
+            await DialogService.ShowActivityIndicatorAndReturnResult(
+                AppResources.RootViewModel_SyncText,
+                async () =>
                 {
-                    if (result)
-                    {
-                        await _toastService.DisplayToast(AppResources.RootViewModel_DataSyncSuccessText);
-                    }   
+                    await RunBackendSyncAsync(); 
+                    return true;
                 });
-
-                return result;
-            });
         });
 
         public AsyncRelayCommand MenuCommand => new AsyncRelayCommand(async () =>
         {
             _isInitializeVisible = false;
             await NavigationService.Navigate<MenuView>();
-
         });
 
         private async Task<bool> LoadCategoryAsync()
@@ -208,7 +250,6 @@
                     return false;
                 }
 
-                // Group by category and remove duplicate BarcodeValues
                 var grouped = storageList
                     .GroupBy(x => string.IsNullOrEmpty(x.Category) ? "Uncategorized" : x.Category)
                     .Select(g =>
@@ -219,7 +260,6 @@
                             Category = g.Key,
                             Items = new ObservableCollection<StorageEntry>(uniqueItems)
                         };
-                        // Load first batch
                         const int pageSize = 20;
                         foreach (var item in uniqueItems.Take(pageSize))
                         {
@@ -237,41 +277,33 @@
                         Categories.Add(group);
                     }
                 });
-                return true;
 
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"RootViewModel:Error loading categories: {ex.Message}");
+                Console.WriteLine($"RootViewModel: Error loading categories: {ex.Message}");
                 return false;
             }
         }
 
-
         //--------------------------------------------------Search View---------------------------------------
 
-        /// <summary>
-        /// Represents the currently search text the application.
-        /// </summary>
         [ObservableProperty]
         private string _searchText;
 
-        /// <summary>
-        /// Represents the currently visible of the search button in the application.
-        /// </summary>
         [ObservableProperty]
         private bool _searchVisible;
 
         public AsyncRelayCommand SearchCommand => new AsyncRelayCommand(async () =>
         {
-
             if (string.IsNullOrWhiteSpace(SearchText))
             {
                 await DialogService.ShowAlertDialog(AppResources.Dialog_InformationText,
                     AppResources.General_FillAllField, AppResources.Dialog_OK_Text);
                 return;
             }
-            
+
             SearchVisible = true;
 
             try
@@ -280,7 +312,7 @@
 
                 if (results == null || !results.Any())
                 {
-                    await MainThread.InvokeOnMainThreadAsync(() => 
+                    await MainThread.InvokeOnMainThreadAsync(() =>
                     {
                         SearchCategories.Clear();
                         SearchText = string.Empty;
@@ -292,43 +324,40 @@
 
                 await DialogService.ShowActivityIndicatorAndReturnResult(AppResources.General_LoadingText, async () =>
                 {
-
-                   var grouped = results
-                    .GroupBy(x => string.IsNullOrEmpty(x.Category) ? "Uncategorized" : x.Category)
-                     .Select(g =>
-                     {
-                         var uniqueItems = g.GroupBy(x => x.BarcodeValue).Select(x => x.First()).ToList();
-                         var group = new StorageGroup
-                          {
-                                    Category = g.Key,
-                                    Items = new ObservableCollection<StorageEntry>(uniqueItems)
-                         };
-                         // Load first batch
-                         const int pageSize = 20;
-                         foreach (var item in uniqueItems.Take(pageSize))
-                         { 
-                             group.VisibleItems.Add(item); 
-                         }
-                         group.LoadedItemCount = group.VisibleItems.Count;
-                         return group;
-                     });
+                    var grouped = results
+                        .GroupBy(x => string.IsNullOrEmpty(x.Category) ? "Uncategorized" : x.Category)
+                        .Select(g =>
+                        {
+                            var uniqueItems = g.GroupBy(x => x.BarcodeValue).Select(x => x.First()).ToList();
+                            var group = new StorageGroup
+                            {
+                                Category = g.Key,
+                                Items = new ObservableCollection<StorageEntry>(uniqueItems)
+                            };
+                            const int pageSize = 20;
+                            foreach (var item in uniqueItems.Take(pageSize))
+                            {
+                                group.VisibleItems.Add(item);
+                            }
+                            group.LoadedItemCount = group.VisibleItems.Count;
+                            return group;
+                        });
 
                     await MainThread.InvokeOnMainThreadAsync(() =>
                     {
                         SearchCategories.Clear();
                         foreach (var group in grouped)
-                        { 
-                            SearchCategories.Add(group); 
+                        {
+                            SearchCategories.Add(group);
                         }
                     });
 
                     return true;
                 });
-               
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Rootview:SearchCommand: error message {ex.Message}");
+                Console.WriteLine($"RootViewModel: SearchCommand error: {ex.Message}");
             }
         });
 
@@ -337,5 +366,5 @@
             SearchText = string.Empty;
             SearchVisible = false;
         });
-    }  
+    }
 }
