@@ -6,7 +6,6 @@
     using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.UiFunctionality.Localization;
     using UiFunctionality.Navigation.ViewModels;
-    using static QRCoder.PayloadGenerator;
 
     /// <summary>
     ///     The view model of the feedback screen.
@@ -51,13 +50,7 @@
             switch (viewName)
             {       
                 case "feedback":
-                    Url = langCode switch
-                    {
-                        "de" => "https://forms.gle/FSoQkoajwYNASEMq8",// german
-                        "es" => "https://forms.gle/aiHxRbrnfugz2ddKA",// spanish
-                        "fr" => "https://forms.gle/GzjQw6CyMhExqkWg6",// french
-                        _ => "https://forms.gle/5Cx6NTnz7boGvLUK8" // default: English
-                    };
+                    Url = "https://www.qrsortable.com/#/app-feedback";
                     break;
                 case "privacyPolicy":
                     Url = langCode switch
