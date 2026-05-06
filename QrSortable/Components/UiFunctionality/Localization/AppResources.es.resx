@@ -804,4 +804,10 @@
   <data name="BankTransferViewModel_BICCopiedText" xml:space="preserve">
     <value>¡BIC copiado al portapapeles!</value>
   </data>
+  <data name="SettingViewModel_DeleteData" xml:space="preserve">
+    <value>Eliminar datos</value>
+  </data>
+  <data name="SettingViewModel_DeleteDataFromBackend" xml:space="preserve">
+    <value>Borra los datos del servidor:</value>
+  </data>
 </root>

@@ -4,6 +4,7 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
     using QrSortable.Components.CoreFeatures.Cloud.AccessManagement;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.CoreFeatures.OrdersPayments;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Notification;
     using System.Collections.Generic;
@@ -20,10 +21,11 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
         private readonly IToastService _toast;
         private readonly IConnectivityService _connectivityService;
         private readonly ISharedMethodService _sharedMethodService;
+        private readonly ISubscriptionService _subscriptionService;
 
         public GeneralDatabaseSynchronizationManager(IDatabaseManager databaseManager, IGeneralInformationManager generalInfoManager,
             IToastService toast, IConnectivityService connectivityService,
-            ISharedMethodService sharedMethodService)
+            ISharedMethodService sharedMethodService, ISubscriptionService subscriptionService)
         {
             _databaseManager = databaseManager;
             _generalInfoManager = generalInfoManager;
@@ -31,6 +33,7 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
             _connectivityService = connectivityService;
 
             _sharedMethodService = sharedMethodService;
+            _subscriptionService = subscriptionService;
         }
 
         /// <summary>
@@ -336,6 +339,36 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
             }
         }
 
+        public async Task<bool> DeleteDataFromBackendAsync()
+        {
+            if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                return false;
+
+            if (!(await _generalInfoManager.GetGeneralInformationAsync()).IsBackendUsed)
+                return false;
+
+            try
+            {
+                //cancel subscription
+                await _subscriptionService.CancelSubscriptionAsync();
+
+                var firestoreDb = await FirestoreDbFactory.CreateAsync(FirebaseConfig.PROJECT_ID);
+                var multiuserId = (await _generalInfoManager.GetGeneralInformationAsync()).MultiUserId;
+
+                var collections = new[] { "StorageEntries", "Orders" };
+
+                foreach (var collectionName in collections)
+                    await DeleteCollectionByMultiuserIdAsync(firestoreDb, collectionName, multiuserId);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to clear backend data for MultiUserId: {ex}");
+                return false;
+            }
+        }
+
         public async Task<bool> SyncSubscriptionFromFirebaseAsync(string multiuserId)
         {
             // Check internet connection
@@ -422,6 +455,33 @@ namespace QrSortable.Components.CoreFeatures.Cloud.BackendCommunication
             {
                 Console.WriteLine($"SyncSubscriptionFromFirebaseAsync failed: {ex}");
                 return false;
+            }
+        }
+
+
+        private static async Task DeleteCollectionByMultiuserIdAsync(
+            FirestoreDb firestoreDb, string collectionName, string multiuserId)
+        {
+            const int batchSize = 500;
+
+            var snapshot = await firestoreDb
+                .Collection(collectionName)
+                .WhereEqualTo("MultiuserId", multiuserId)
+                .GetSnapshotAsync();
+
+            if (snapshot.Count == 0)
+                return;
+
+            var documents = snapshot.Documents;
+
+            for (int offset = 0; offset < documents.Count; offset += batchSize)
+            {
+                var batch = firestoreDb.StartBatch();
+
+                foreach (var document in documents.Skip(offset).Take(batchSize))
+                    batch.Delete(document.Reference);
+
+                await batch.CommitAsync();
             }
         }
 

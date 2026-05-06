@@ -84,5 +84,21 @@
             });
         });
 
+        public AsyncRelayCommand DeleteDataCommand => new AsyncRelayCommand(async () =>
+        {
+            var confirm = await DialogService.ShowRequestDialog(AppResources.BoxDetailViewModel_DeletItemText,
+                  AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
+
+            if (!confirm) return;
+
+            await DialogService.ShowActivityIndicatorAndReturnResult(AppResources.Dialog_Processing, async () =>
+            {
+                var result = await _generalDatabaseSynchronizationManager.DeleteDataFromBackendAsync();
+                return result;
+            });
+
+
+        });
+
     }
 }

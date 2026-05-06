@@ -242,6 +242,31 @@
                                 </Button.Shadow>
                             </Button>
                         </StackLayout>
+
+
+                        <StackLayout Margin="20,30,20,0" Spacing="5">
+                            <Label Style="{StaticResource BoldText}" Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SettingViewModel_DeleteDataFromBackend]}" />
+                            <Button
+                                BackgroundColor="{StaticResource Primary}"
+                                Command="{Binding DeleteDataCommand}"
+                                CornerRadius="10"
+                                FontAttributes="Bold"
+                                FontFamily="ItimRegular"
+                                FontSize="20"
+                                HorizontalOptions="Fill"
+                                Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[SettingViewModel_DeleteData]}"
+                                TextColor="Black"
+                                VerticalOptions="Center">
+                                <Button.Shadow>
+                                    <Shadow
+                                        Brush="Black"
+                                        Opacity="0.3"
+                                        Radius="10"
+                                        Offset="5,5" />
+                                </Button.Shadow>
+                            </Button>
+                        </StackLayout>
+
                     </StackLayout>
                 </ScrollView>
             </Grid>

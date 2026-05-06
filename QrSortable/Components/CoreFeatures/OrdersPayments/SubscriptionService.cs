@@ -104,6 +104,9 @@
 
         public async Task CancelSubscriptionAsync()
         {
+            if (_subscription == null)
+                await LoadAsync();
+
             if (_subscription == null) { return; }
 
             if (!string.IsNullOrWhiteSpace(_subscription.CustomerId) &&
