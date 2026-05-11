@@ -18,10 +18,10 @@
 		<ApplicationTitle>QrSortable</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.Danfe.QrSortable</ApplicationId>
+		<ApplicationId>com.danfe.qrsortable</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>0.0.1</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
@@ -38,6 +38,25 @@
     <PropertyGroup Condition="'$(Configuration)' == 'DebugDevice'">
         <AndroidSupportedOSVersion>21.0</AndroidSupportedOSVersion>
     </PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
+		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+		<AndroidManagedSymbols>true</AndroidManagedSymbols>
+		<AndroidPackageFormats>aab;apk</AndroidPackageFormats>
+		<UseInterpreter>false</UseInterpreter>
+		<PublishTrimmed>true</PublishTrimmed>
+		<RunAOTCompilation>true</RunAOTCompilation>
+		<AndroidEnableProfiledAot>true</AndroidEnableProfiledAot>
+		<Optimize>true</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
+		<AndroidKeyStore>True</AndroidKeyStore>
+		<AndroidSigningKeyStore>..\key.keystore</AndroidSigningKeyStore>
+		<AndroidSigningStorePass>qrsortable</AndroidSigningStorePass>
+		<AndroidSigningKeyAlias>MauiAlias</AndroidSigningKeyAlias>
+		<AndroidSigningKeyPass>qrsortable</AndroidSigningKeyPass>
+	</PropertyGroup>
 
 	<!-- iOS Platform Configuration - CRITICAL FOR iOS 16 COMPATIBILITY -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
@@ -68,12 +87,6 @@
 		<MtouchLink>None</MtouchLink>
 	</PropertyGroup>
 	
-	<PropertyGroup>
-		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
-		<RunAOTCompilation>False</RunAOTCompilation>
-		<PublishTrimmed Condition="'$(TargetFramework)' == 'net9.0-android'">False</PublishTrimmed>
-	</PropertyGroup>
-
 	<!-- iOS platform files -->
 	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
 		<BundleResource Include="Platforms\iOS\Info.plist" Link="Info.plist" />

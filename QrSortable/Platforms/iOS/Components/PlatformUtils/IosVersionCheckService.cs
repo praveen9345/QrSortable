@@ -11,7 +11,7 @@
     public class IosVersionCheckService : IVersionCheckService
     {
         private StoreAppData _app;
-        private string BundleIdentifier => "com.Danfe.QrSortable";
+        private string BundleIdentifier => "com.danfe.qrsortable";
 
         private string BundleVersion => NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleShortVersionString").ToString();
 

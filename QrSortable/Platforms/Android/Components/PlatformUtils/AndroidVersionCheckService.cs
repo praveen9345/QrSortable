@@ -12,7 +12,7 @@
     public class AndroidVersionCheckService : IVersionCheckService
     {
 
-        private string PackageName => "com.Danfe.QrSortable";
+        private string PackageName => "com.danfe.qrsortable";
         private Version InstalledVersion => AppInfo.Version;
 
 
