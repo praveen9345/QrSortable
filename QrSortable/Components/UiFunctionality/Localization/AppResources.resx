@@ -490,7 +490,7 @@
     <value>Payment not completed</value>
   </data>
   <data name="General_SucessText" xml:space="preserve">
-    <value>Success</value>
+    <value>Successful</value>
   </data>
   <data name="SubscriptionViewModel_ActivePremiumText" xml:space="preserve">
     <value>Premium activated successfully 🎉</value>
@@ -809,5 +809,8 @@
   </data>
   <data name="SettingViewModel_DeleteDataFromBackend" xml:space="preserve">
     <value>Delete the data from the server:</value>
+  </data>
+  <data name="RootViewModel_MenuText" xml:space="preserve">
+    <value>Menu</value>
   </data>
 </root>

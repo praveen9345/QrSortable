@@ -176,6 +176,7 @@
                         FontFamily="ItimRegular"
                         FontSize="20"
                         HorizontalOptions="Fill"
+                        IsVisible="{Binding IsMultiuserFunctionalityEnabled}"
                         Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[OnboardingViewModel_DoneButtText]}"
                         TextColor="Black">
 

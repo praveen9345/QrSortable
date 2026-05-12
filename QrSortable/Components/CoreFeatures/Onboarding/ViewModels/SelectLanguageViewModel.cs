@@ -75,16 +75,13 @@
              // Clear selection in UI
              SelectedLanguageItem = null;
 
-             if (IsFromApp)
+             if (!IsFromApp)
              {
-                 await NavigationService.Navigate<RootView>();
+                 // Optionally update onboarding progress
+                 await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingStarted);
              }
-             else
-             {
-                // Optionally update onboarding progress
-                await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingStarted);
-                await NavigationService.Navigate<OnboardingView>(false); 
-             }
+
+             await NavigationService.Navigate<RootView>();
          });
     }
 }

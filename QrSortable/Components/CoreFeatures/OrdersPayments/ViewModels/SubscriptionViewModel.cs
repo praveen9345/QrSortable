@@ -361,12 +361,7 @@
                             AppResources.SubscriptionViewModel_ActivePremiumText,
                             AppResources.Dialog_OK_Text);
 
-                        if (_isFromOnboarding)
-                        {
-                            await _generalInformationManager.UpdateOnboardingProgressAsync(
-                                OnboardingProgress.OnboardingCompleted);
-                            await NavigationService.Navigate<RootView>();
-                        }
+                        await NavigationService.Close();
                         break;
                     }
 

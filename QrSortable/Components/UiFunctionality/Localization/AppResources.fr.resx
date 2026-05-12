@@ -810,4 +810,7 @@
   <data name="SettingViewModel_DeleteDataFromBackend" xml:space="preserve">
     <value>Supprimez les données du serveur :</value>
   </data>
+  <data name="RootViewModel_MenuText" xml:space="preserve">
+    <value>Menu</value>
+  </data>
 </root>
