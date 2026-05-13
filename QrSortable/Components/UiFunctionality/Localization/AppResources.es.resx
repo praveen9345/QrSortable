@@ -148,13 +148,13 @@
     <value>Copiar</value>
   </data>
   <data name="OnboardingViewModel_MultiInfoText" xml:space="preserve">
-    <value>* Si ya tienes el ID multiusuario de la otra aplicación QRSortable y deseas sincronizarla, introduce ese ID a continuación.</value>
+    <value>*  Si ya tienes el ID multiusuario de la otra aplicación QRSortable y quieres sincronizarla con ella, introduce ese ID a continuación. Si no lo tienes, simplemente haz clic en «Listo».</value>
   </data>
   <data name="OnboardingViewModel_EnterCodeText" xml:space="preserve">
-    <value>Ingrese el código...</value>
+    <value>(p. ej., QS-7256-53287)</value>
   </data>
   <data name="OnboardingViewModel_DoneButtText" xml:space="preserve">
-    <value>Hecho</value>
+    <value>Listo</value>
   </data>
   <data name="OnboardingViewModel_ClipboardText" xml:space="preserve">
     <value>¡MultiuserId copiado al portapapeles!</value>
@@ -162,17 +162,11 @@
   <data name="Dialog_InformationText" xml:space="preserve">
     <value>Información</value>
   </data>
-  <data name="OnboardingViewModel_MultiIdFromOtherText" xml:space="preserve">
-    <value>Utilice el ID multiusuario que se muestra en otro dispositivo con la aplicación QRSortable para conectarse.</value>
-  </data>
   <data name="OnboardingViewModel_DisablingMultiIduserText" xml:space="preserve">
     <value>Al desactivar la función multiusuario, se detendrá la sincronización con otros dispositivos.</value>
   </data>
   <data name="OnboardingViewModel_CheckValidMultiId" xml:space="preserve">
-    <value>Para utilizar las funciones multiusuario, introduzca un ID multiusuario válido. Si no tiene uno, le crearemos una nueva cuenta.</value>
-  </data>
-  <data name="OnboardingViewModel_CreateOne" xml:space="preserve">
-    <value>Crear uno</value>
+    <value>¿Estás seguro de que quieres crear una nueva identificación de usuario?</value>
   </data>
   <data name="Dialog_Error" xml:space="preserve">
     <value>Error</value>
@@ -812,5 +806,11 @@
   </data>
   <data name="RootViewModel_MenuText" xml:space="preserve">
     <value>Menú</value>
+  </data>
+  <data name="General_YesText" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="General_NoText" xml:space="preserve">
+    <value>No</value>
   </data>
 </root>

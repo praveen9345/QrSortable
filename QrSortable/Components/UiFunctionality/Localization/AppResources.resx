@@ -148,10 +148,10 @@
     <value>Copy</value>
   </data>
   <data name="OnboardingViewModel_MultiInfoText" xml:space="preserve">
-    <value>*  If you already have the Multi-User ID of the other QRSortable app and want to synchronize with it, enter that ID below.</value>
+    <value>*  If you already have the Multi-User ID of the other QRSortable app and want to synchronize with it, enter that ID below. If you do not have just click Done.</value>
   </data>
   <data name="OnboardingViewModel_EnterCodeText" xml:space="preserve">
-    <value>Enter code..</value>
+    <value>(e.g. QS-7256-53287)</value>
   </data>
   <data name="OnboardingViewModel_DoneButtText" xml:space="preserve">
     <value>Done</value>
@@ -162,17 +162,11 @@
   <data name="Dialog_InformationText" xml:space="preserve">
     <value>Information</value>
   </data>
-  <data name="OnboardingViewModel_MultiIdFromOtherText" xml:space="preserve">
-    <value>Use the displayed multi-user ID on another QRSortable App device to connect.</value>
-  </data>
   <data name="OnboardingViewModel_DisablingMultiIduserText" xml:space="preserve">
     <value>Disabling multi-user functionality will stop synchronization with other devices.</value>
   </data>
   <data name="OnboardingViewModel_CheckValidMultiId" xml:space="preserve">
-    <value>To use multi-user features, enter a valid multi-user ID. If you don’t have one, we’ll create a new account for you.</value>
-  </data>
-  <data name="OnboardingViewModel_CreateOne" xml:space="preserve">
-    <value>Create One</value>
+    <value>Are you sure want to create new multiuser ID?</value>
   </data>
   <data name="Dialog_Error" xml:space="preserve">
     <value>Error</value>
@@ -812,5 +806,11 @@
   </data>
   <data name="RootViewModel_MenuText" xml:space="preserve">
     <value>Menu</value>
+  </data>
+  <data name="General_YesText" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="General_NoText" xml:space="preserve">
+    <value>No</value>
   </data>
 </root>

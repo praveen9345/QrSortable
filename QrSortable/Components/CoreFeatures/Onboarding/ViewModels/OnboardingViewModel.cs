@@ -112,26 +112,23 @@
             if (IsMultiuserFunctionalityEnabled)
             {
                 await _generalInformationManager.UpdateIsBackendUsedAsync(true);
-
-                if (!_displayOnce)
-                {
-                    await DialogService.ShowAlertDialog(AppResources.Dialog_InformationText,
-                   AppResources.OnboardingViewModel_MultiIdFromOtherText, AppResources.Dialog_OK_Text);
-                }
-                _displayOnce = false;
             }
             else
             {
-                var confirm = await DialogService.ShowRequestDialog(AppResources.OnboardingViewModel_DisablingMultiIduserText,
+                if(_displayOnce)
+                {
+                    var confirm = await DialogService.ShowRequestDialog(AppResources.OnboardingViewModel_DisablingMultiIduserText,
                     AppResources.Dialog_Cancel_Text, AppResources.Dialog_OK_Text);
 
-                if (!confirm)
-                {
-                    IsMultiuserFunctionalityEnabled = true;
-                    return;
-                }
+                    if (!confirm)
+                    {
+                        IsMultiuserFunctionalityEnabled = true;
+                        return;
+                    }
 
-                await SetBackendDisable();
+                    await SetBackendDisable();
+                }
+               
             }
 
         });
@@ -140,34 +137,20 @@
         {
             var multiuserIdInput = MultiuserIdInput?.Trim().ToUpperInvariant();
 
-            var confirmMessage = await DialogService.ShowRequestDialog(AppResources.OnboardingViewModel_CheckValidMultiId,
-               AppResources.OnboardingViewModel_CreateOne, AppResources.OnboardingViewModel_DoneButtText);
-
-            if (!confirmMessage)
+            if (string.IsNullOrWhiteSpace(multiuserIdInput))
             {
-                if ((await _generalInformationManager.GetGeneralInformationAsync()).IsBackendUsed)
+                var confirmMessage = await DialogService.ShowRequestDialog(AppResources.OnboardingViewModel_CheckValidMultiId,
+                AppResources.General_YesText, AppResources.General_NoText);
+
+                if(!confirmMessage)
                 {
-                    var subscribed = await EnsureSubscriptionAsync();
-                    if (!subscribed) return;
-                }
-                else
-                {
-                    await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.OnboardingCompleted);
+                    if (!await EnsureSubscriptionAsync())
+                        return;
+
+                    await DialogService.ShowAlertDialog(AppResources.Dialog_Conformation, AppResources.General_SucessText,AppResources.Dialog_OK_Text);
                     await NavigationService.Navigate<RootView>();
-                    return;
                 }
-
-            }
-            else
-            {
-
-                if (string.IsNullOrWhiteSpace(multiuserIdInput))
-                {
-                    await DialogService.ShowAlertDialog(AppResources.Dialog_Error,
-                   AppResources.OnboardingViewModel_ValidMultiIdError, AppResources.Dialog_OK_Text);
-                    await SetBackendDisable();
-                    return;
-                }
+                return;
 
             }
 
@@ -193,7 +176,7 @@
             else
             {
                 //Sync data
-                 await _generalDatabaseSynchronizationManager.SyncSubscriptionFromFirebaseAsync(multiuserIdInput);
+                await _generalDatabaseSynchronizationManager.SyncSubscriptionFromFirebaseAsync(multiuserIdInput);
                 //Subscription
                 var subscriptionOk = await EnsureSubscriptionAsync();
                 if (!subscriptionOk) return;
@@ -244,16 +227,23 @@
                 }
             });
 
+        });
 
+        public AsyncRelayCommand BackCommand => new AsyncRelayCommand(async () =>
+        {
+            if (!IsFromApp)
+                Application.Current.Quit();
+
+            if (!await IsSubscriptionActiveAsync())
+                 await SetBackendDisable();
+
+            BackNavigationCommand.Execute(null);
         });
 
         private async Task<bool> EnsureSubscriptionAsync()
         {
         
-            var list = await _databaseManager.GetListAsync<SubscriptionEntity>();
-            var subscription = list?.FirstOrDefault();
-
-            if (subscription?.IsSubscribed == true)
+            if (await IsSubscriptionActiveAsync())
                 return true;
 
             var confirm = await DialogService.ShowRequestDialog(AppResources.OnboardingViewModel_SubscriptionError,
@@ -269,8 +259,16 @@
             return false;
         }
 
+        private async Task<bool> IsSubscriptionActiveAsync()
+        {
+            var list = await _databaseManager.GetListAsync<SubscriptionEntity>();
+            var subscription = list?.FirstOrDefault();
+            return subscription?.IsSubscribed == true;
+        }
+
         private async Task SetBackendDisable()
         {
+            _displayOnce = false;
             IsMultiuserFunctionalityEnabled = false;
             await _generalInformationManager.UpdateIsBackendUsedAsync(false);
         }

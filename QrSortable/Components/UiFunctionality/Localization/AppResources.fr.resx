@@ -148,10 +148,10 @@
     <value>Copier</value>
   </data>
   <data name="OnboardingViewModel_MultiInfoText" xml:space="preserve">
-    <value>* Si vous disposez déjà de l'identifiant multi-utilisateurs de l'autre application QRSortable et que vous souhaitez vous synchroniser avec celle-ci, saisissez cet identifiant ci-dessous.</value>
+    <value>*  Si vous disposez déjà de l'identifiant multi-utilisateurs de l'autre application QRSortable et que vous souhaitez la synchroniser, saisissez cet identifiant ci-dessous. Si vous ne l'avez pas, cliquez simplement sur « Terminé ».</value>
   </data>
   <data name="OnboardingViewModel_EnterCodeText" xml:space="preserve">
-    <value>Entrez le code...</value>
+    <value>(ex. : QS-7256-53287)</value>
   </data>
   <data name="OnboardingViewModel_DoneButtText" xml:space="preserve">
     <value>Terminé</value>
@@ -162,17 +162,11 @@
   <data name="Dialog_InformationText" xml:space="preserve">
     <value>Informations</value>
   </data>
-  <data name="OnboardingViewModel_MultiIdFromOtherText" xml:space="preserve">
-    <value>Utilisez l'identifiant multi-utilisateurs affiché sur un autre appareil équipé de l'application QRSortable pour vous connecter.</value>
-  </data>
   <data name="OnboardingViewModel_DisablingMultiIduserText" xml:space="preserve">
     <value>La désactivation de la fonctionnalité multi-utilisateurs interrompra la synchronisation avec les autres appareils.</value>
   </data>
   <data name="OnboardingViewModel_CheckValidMultiId" xml:space="preserve">
-    <value>Pour utiliser les fonctionnalités multi-utilisateurs, entrez un identifiant multi-utilisateurs valide. Si vous n'en avez pas, nous créerons un nouveau compte pour vous.</value>
-  </data>
-  <data name="OnboardingViewModel_CreateOne" xml:space="preserve">
-    <value>Créer un</value>
+    <value>Êtes-vous sûr de vouloir créer un nouvel identifiant multi-utilisateurs ?</value>
   </data>
   <data name="Dialog_Error" xml:space="preserve">
     <value>Erreur</value>
@@ -812,5 +806,11 @@
   </data>
   <data name="RootViewModel_MenuText" xml:space="preserve">
     <value>Menu</value>
+  </data>
+  <data name="General_YesText" xml:space="preserve">
+    <value>Oui</value>
+  </data>
+  <data name="General_NoText" xml:space="preserve">
+    <value>Non</value>
   </data>
 </root>

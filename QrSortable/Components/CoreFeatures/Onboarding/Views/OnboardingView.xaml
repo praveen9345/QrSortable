@@ -23,7 +23,7 @@
                 Margin="15,15,0,0"
                 Padding="2"
                 BackgroundColor="{StaticResource DarkGrey}"
-                Command="{Binding BackNavigationCommand}"
+                Command="{Binding BackCommand}"
                 CornerRadius="5"
                 HorizontalOptions="Start"
                 IsVisible="{Binding IsFromApp}"

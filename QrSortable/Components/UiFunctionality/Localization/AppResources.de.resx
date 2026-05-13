@@ -148,10 +148,10 @@
     <value>Kopie</value>
   </data>
   <data name="OnboardingViewModel_MultiInfoText" xml:space="preserve">
-    <value>*  Wenn Sie bereits über die Multi-User-ID der anderen QRSortable-App verfügen und diese synchronisieren möchten, geben Sie diese ID unten ein.</value>
+    <value>*  Wenn Sie bereits die Multi-User-ID der anderen QRSortable-App haben und diese synchronisieren möchten, geben Sie diese ID unten ein. Falls Sie diese nicht haben, klicken Sie einfach auf „Fertig“.</value>
   </data>
   <data name="OnboardingViewModel_EnterCodeText" xml:space="preserve">
-    <value>Code eingeben...</value>
+    <value>(z. B. QS-7256-53287)</value>
   </data>
   <data name="OnboardingViewModel_DoneButtText" xml:space="preserve">
     <value>Fertig</value>
@@ -162,17 +162,11 @@
   <data name="Dialog_InformationText" xml:space="preserve">
     <value>Informationen</value>
   </data>
-  <data name="OnboardingViewModel_MultiIdFromOtherText" xml:space="preserve">
-    <value>Verwenden Sie die angezeigte Multi-User-ID auf einem anderen QRSortable App-Gerät, um eine Verbindung herzustellen.</value>
-  </data>
   <data name="OnboardingViewModel_DisablingMultiIduserText" xml:space="preserve">
     <value>Durch Deaktivieren der Mehrbenutzerfunktion wird die Synchronisierung mit anderen Geräten beendet.</value>
   </data>
   <data name="OnboardingViewModel_CheckValidMultiId" xml:space="preserve">
-    <value>Um Multi-User-Funktionen nutzen zu können, geben Sie bitte eine gültige Multi-User-ID ein. Wenn Sie keine haben, erstellen wir ein neues Konto für Sie.</value>
-  </data>
-  <data name="OnboardingViewModel_CreateOne" xml:space="preserve">
-    <value>Erstellen</value>
+    <value>Möchten Sie wirklich eine neue Benutzer-ID erstellen?</value>
   </data>
   <data name="Dialog_Error" xml:space="preserve">
     <value>Fehler</value>
@@ -812,5 +806,11 @@
   </data>
   <data name="RootViewModel_MenuText" xml:space="preserve">
     <value>Menü</value>
+  </data>
+  <data name="General_YesText" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="General_NoText" xml:space="preserve">
+    <value>Nein</value>
   </data>
 </root>

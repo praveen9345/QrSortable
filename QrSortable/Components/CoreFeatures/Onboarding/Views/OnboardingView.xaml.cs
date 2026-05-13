@@ -1,6 +1,7 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Onboarding.Views
 {
     using QrSortable.Components.UiFunctionality.Navigation.Views;
+    using System.Threading.Tasks;
     using ViewModels;
 
     /// <summary>
@@ -21,11 +22,7 @@
         }
         protected override bool OnBackButtonPressed()
         {
-            if (!_viewModel.IsFromApp)
-            {
-                Application.Current.Quit();
-                
-            }
+           _viewModel.BackCommand.Execute(null);
             return base.OnBackButtonPressed();
         }
     }

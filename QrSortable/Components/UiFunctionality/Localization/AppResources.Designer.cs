@@ -229,6 +229,29 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to yes Text!!.
+        /// </summary>
+        public static string General_YesText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_YesText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to no Text!!.
+        /// </summary>
+        public static string General_NoText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_NoText", resourceCulture);
+            }
+        }
+
+
+        /// <summary>
         ///   Looks up a localized string similar to download Text!!.
         /// </summary>
         public static string General_DownloadStatusText
@@ -468,16 +491,6 @@ namespace QrSortable.Components.UiFunctionality.Localization
             }
         }
 
-        /// <summary>
-        ///   Looks up a localized string similar to MultiIdFromOther Text!!.
-        /// </summary>
-        public static string OnboardingViewModel_MultiIdFromOtherText
-        {
-            get
-            {
-                return ResourceManager.GetString("OnboardingViewModel_MultiIdFromOtherText", resourceCulture);
-            }
-        }
 
         /// <summary>
         ///   Looks up a localized string similar to DisablingMultiIduser Text!!.
@@ -512,16 +525,6 @@ namespace QrSortable.Components.UiFunctionality.Localization
             }
         }
 
-        /// <summary>
-        ///   Looks up a localized string similar to Create One Text!!.
-        /// </summary>
-        public static string OnboardingViewModel_CreateOne
-        {
-            get
-            {
-                return ResourceManager.GetString("OnboardingViewModel_CreateOne", resourceCulture);
-            }
-        }
 
         /// <summary>
         ///   Looks up a localized string similar to Valid MultiId Error Text!!.
