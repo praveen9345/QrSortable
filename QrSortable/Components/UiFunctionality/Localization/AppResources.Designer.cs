@@ -1742,6 +1742,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string help Text!!.
+        /// </summary>
+        public static string MenuViewModel_HelpText
+        {
+            get
+            {
+                return ResourceManager.GetString("MenuViewModel_HelpText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string share Text!!.
         /// </summary>
         public static string MenuViewModel_ShareText

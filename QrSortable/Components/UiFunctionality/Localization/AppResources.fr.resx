@@ -813,4 +813,7 @@
   <data name="General_NoText" xml:space="preserve">
     <value>Non</value>
   </data>
+  <data name="MenuViewModel_HelpText" xml:space="preserve">
+    <value>Aide</value>
+  </data>
 </root>

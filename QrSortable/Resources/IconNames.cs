@@ -204,5 +204,10 @@ namespace QrSortable.Resources
         ///     The name of the send.
         /// </summary>
         public const string Send = "\uF6a3";
+
+        /// <summary>
+        ///     The name of the help.
+        /// </summary>
+        public const string Help = "\uF478";
     }
 }

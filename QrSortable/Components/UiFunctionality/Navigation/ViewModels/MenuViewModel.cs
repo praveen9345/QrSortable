@@ -58,8 +58,8 @@
                 {
                     Icon=IconNames.Share,
                     Title= LocalizationService.Instance["MenuViewModel_ShareText"],
-                    HasBadge=true,
-                    Badge="Coming Soon"
+                    //HasBadge=true,
+                    //Badge="Coming Soon"
                 },
                 new MenuItem
                 {
@@ -70,6 +70,11 @@
                 {
                     Icon=IconNames.Feedback,
                     Title= LocalizationService.Instance["MenuViewModel_FeedbackText"]
+                },
+                new MenuItem
+                {
+                    Icon=IconNames.Help,
+                    Title= LocalizationService.Instance["MenuViewModel_HelpText"]
                 }
             };
 
@@ -105,6 +110,9 @@
 
                 else if (key == LocalizationService.Instance["MenuViewModel_FeedbackText"])
                     await NavigationService.Navigate<WebView>("feedback");
+
+                else if (key == LocalizationService.Instance["MenuViewModel_HelpText"])
+                    await NavigationService.Navigate<HelpView>();
 
                 SelectedMenuItem = null;
             });

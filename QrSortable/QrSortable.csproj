@@ -167,6 +167,9 @@
        <Compile Update="Components\CoreFeatures\Scanner\Views\QrBrScannerView.xaml.cs">
          <DependentUpon>QrBrScannerView.xaml</DependentUpon>
        </Compile>
+       <Compile Update="Components\CoreFeatures\Settings\Views\HelpView.xaml.cs">
+         <DependentUpon>HelpView.xaml</DependentUpon>
+       </Compile>
        <Compile Update="Components\CoreFeatures\Settings\Views\WebView.xaml.cs">
          <DependentUpon>WebView.xaml</DependentUpon>
        </Compile>
@@ -248,6 +251,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Components\CoreFeatures\Scanner\Views\QrBrScannerView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Components\CoreFeatures\Settings\Views\HelpView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Components\CoreFeatures\Settings\Views\WebView.xaml">
