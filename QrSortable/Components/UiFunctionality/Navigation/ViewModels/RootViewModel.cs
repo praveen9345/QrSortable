@@ -9,6 +9,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
+    using QrSortable.Components.CoreFeatures.Settings.Views;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.Helper;
@@ -73,6 +74,7 @@
 
             // Register to receive app resume messages sent from App.xaml.cs
             WeakReferenceMessenger.Default.Register(this);
+
         }
 
         /// <summary>
@@ -109,6 +111,22 @@
             catch (Exception ex)
             {
                 Console.WriteLine($"RootViewModel: Version check failed: {ex.Message}");
+            }
+
+
+            bool isFirstRun = !Preferences.ContainsKey("RootViewInitialized");
+
+            if (isFirstRun)
+            {
+                Preferences.Set("RootViewInitialized", true);
+
+                var confirm = await DialogService.ShowRequestDialog( AppResources.RootViewModel_InformationForUseText,
+                     AppResources.General_NoText, AppResources.General_YesText);
+
+                if (confirm)
+                {
+                    await NavigationService.Navigate<HelpView>();
+                }
             }
 
             // Run full backend sync on cold start

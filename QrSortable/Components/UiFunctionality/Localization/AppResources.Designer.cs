@@ -372,6 +372,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to RootViewModel IFU Text!!.
+        /// </summary>
+        public static string RootViewModel_InformationForUseText
+        {
+            get
+            {
+                return ResourceManager.GetString("RootViewModel_InformationForUseText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to later Text!!.
         /// </summary>
         public static string RootViewModel_LaterText

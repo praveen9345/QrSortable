@@ -816,4 +816,7 @@
   <data name="MenuViewModel_HelpText" xml:space="preserve">
     <value>Aide</value>
   </data>
+  <data name="RootViewModel_InformationForUseText" xml:space="preserve">
+    <value>Souhaitez-vous obtenir des informations sur l'utilisation de l'application ?</value>
+  </data>
 </root>
