@@ -837,4 +837,7 @@
   <data name="HelpViewModel_EmailSendOutErrorText" xml:space="preserve">
     <value>L'envoi de l'e-mail a échoué.</value>
   </data>
+  <data name="General_FileNotFoundErrorText" xml:space="preserve">
+    <value> Fichier introuvable.</value>
+  </data>
 </root>

@@ -9,7 +9,6 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
-    using QrSortable.Components.CoreFeatures.Settings.Views;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.Helper;
@@ -30,6 +29,7 @@
         private readonly IStorageVoiceAssistantService _voiceAssistantService;
         private readonly IStorageFinderService _storageFinderService;
         private readonly IVersionCheckService _versionCheckService;
+        private readonly ISharedMethodService _sharedMethodService;
 
         private bool _isInitializeVisible = false;
 
@@ -57,7 +57,8 @@
             IGeneralDatabaseSynchronizationManager generalDatabaseSynchronizationManager,
             IStorageVoiceAssistantService voiceAssistantService,
             IStorageFinderService storageFinderService,
-            IVersionCheckService versionCheckService)
+            IVersionCheckService versionCheckService,
+            ISharedMethodService sharedMethodService)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
@@ -68,13 +69,14 @@
             _storageFinderService = storageFinderService;
             _versionCheckService = versionCheckService;
             _generalInformationManager = generalInformationManager;
+            _sharedMethodService = sharedMethodService;
 
             Categories = new ObservableCollection<StorageGroup>();
             SearchCategories = new ObservableCollection<StorageGroup>();
 
             // Register to receive app resume messages sent from App.xaml.cs
             WeakReferenceMessenger.Default.Register(this);
-
+            
         }
 
         /// <summary>
@@ -125,7 +127,11 @@
 
                 if (confirm)
                 {
-                    await NavigationService.Navigate<HelpView>();
+                    if (!await _sharedMethodService.OpenUserManualAsync())
+                    {
+                        await DialogService.ShowAlertDialog(
+                       AppResources.Dialog_Error, AppResources.General_FileNotFoundErrorText, AppResources.Dialog_OK_Text);
+                    }
                 }
             }
 

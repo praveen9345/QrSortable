@@ -13,5 +13,7 @@
         string GetCurrencySymbol(string languageCode);
 
         decimal GetShippingCost(string? country);
+
+        Task<bool> OpenUserManualAsync();
     }
 }

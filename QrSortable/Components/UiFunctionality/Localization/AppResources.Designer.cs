@@ -351,6 +351,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to file not found Text!!.
+        /// </summary>
+        public static string General_FileNotFoundErrorText
+        {
+            get
+            {
+                return ResourceManager.GetString("General_FileNotFoundErrorText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to fille the field Text!!.
         /// </summary>
         public static string General_FillAllField

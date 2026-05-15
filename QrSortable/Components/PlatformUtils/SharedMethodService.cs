@@ -1,9 +1,20 @@
 ﻿namespace QrSortable.Components.PlatformUtils
 {
+    using QrSortable.Components.CoreFeatures.DataManagement.General;
+    using QrSortable.Components.UiFunctionality.Localization;
     using System.Globalization;
 
     public class SharedMethodService : ISharedMethodService
     {
+        private readonly IGeneralInformationManager _generalInformationManager;
+        private readonly IFileManager _fileManager;
+
+        public SharedMethodService(IGeneralInformationManager generalInformationManager, IFileManager fileManager) 
+        {
+            _generalInformationManager = generalInformationManager;
+            _fileManager = fileManager;
+        }
+
         public decimal ParsePrice(string priceText)
         {
             if (string.IsNullOrWhiteSpace(priceText)) return 0m;
@@ -46,6 +57,35 @@
                     return value.ToString(); // Fallback for any other type
             }
         }
+
+        public async Task<bool> OpenUserManualAsync()
+        {
+            try
+            {
+                var langCode = (await _generalInformationManager.GetGeneralInformationAsync()).SelectedLanguageCode;
+
+                var fileName = langCode switch
+                {
+                    "de" => "user_manual_de.pdf", // German
+                    "es" => "user_manual_es.pdf", // Spanish
+                    "fr" => "user_manual_fr.pdf", // French
+                    _ => "user_manual_en.pdf"     // Default: English
+                };
+
+                if (!await _fileManager.OpenEmbeddedFileAsync(fileName))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error opening file: {ex.Message}");
+                return false;
+            }
+        }
+
 
         public string GetCurrencySymbol(string languageCode)
         {
