@@ -27,5 +27,12 @@ namespace QrSortable.Components.PlatformUtils
         /// <returns> The stream of the passed file. </returns>
         ///e.g filepath= "Resources.Embedded.Product.xlsx"
         Stream GetStreamOfResourcesFile(string filePath);
+
+        /// <summary>
+        ///     Opens the file with the given filename from the private system folder.
+        /// </summary>
+        /// <param name="fileName">The name of the file which shall be opened.</param>
+        /// <returns>A bool indicating whether the opening of the file was successful.</returns>
+        Task<bool> OpenStoredFileFromSystemFolderAsync(string fileName);
     }
 }

@@ -831,4 +831,10 @@
   <data name="HelpViewModel_ContactText" xml:space="preserve">
     <value>Contact</value>
   </data>
+  <data name="HelpViewModel_EmailTitleText" xml:space="preserve">
+    <value>Problems with the QrSortable App</value>
+  </data>
+  <data name="HelpViewModel_EmailSendOutErrorText" xml:space="preserve">
+    <value>Email could not able to send.</value>
+  </data>
 </root>

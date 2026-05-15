@@ -85,21 +85,21 @@
         /// </returns>
         public async Task<bool> SendEmailAsync(string subject, string body, List<string> recipients)
         {
-            var message = new EmailMessage
-            {
-                Subject = subject,
-                Body = body,
-                To = recipients
-            };
-
             try
             {
+                var message = new EmailMessage
+                {
+                    Subject = subject,
+                    Body = body,
+                    To = recipients
+                };
+
                 await Email.ComposeAsync(message);
                 return true;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                Console.WriteLine("MauiEssentialsWrapper.cs: SendEmailAsync:" + exception.Message);
+                Console.WriteLine("SendEmailAsync Error: " + ex);
                 return false;
             }
         }
@@ -203,5 +203,19 @@
         {
             SecureStorage.RemoveAll();
         }
+
+        /// <summary>
+        ///     Opens a file.
+        /// </summary>
+        /// <param name="filePath"> The file path of the file to be opened. </param>
+        /// <returns>A task to await the opening of the file. </returns>
+        public async Task OpenFileAsync(string filePath)
+        {
+            await Launcher.OpenAsync(new OpenFileRequest
+            {
+                File = new ReadOnlyFile(filePath)
+            });
+        }
+
     }
 }

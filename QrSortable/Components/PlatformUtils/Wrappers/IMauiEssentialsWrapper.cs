@@ -111,5 +111,12 @@
         ///     Clears the secure storage.
         /// </summary>
         void ClearSecureStorage();
+
+        /// <summary>
+        ///     Opens a file.
+        /// </summary>
+        /// <param name="filePath"> The file path of the file to be opened. </param>
+        /// <returns>A task to await the opening of the file. </returns>
+        Task OpenFileAsync(string filePath);
     }
 }

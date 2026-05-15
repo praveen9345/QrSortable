@@ -48,12 +48,32 @@ namespace QrSortable.Components.PlatformUtils
         }
 
         /// <summary>
+        ///     Opens the file with the given filename from the private system folder.
+        /// </summary>
+        /// <param name="fileName">The name of the file which shall be opened.</param>
+        /// <returns>A bool indicating whether the opening of the file was successful.</returns>
+        public async Task<bool> OpenStoredFileFromSystemFolderAsync(string fileName)
+        {
+            var fullFilePath = GetFullPrivateSystemFilePath(fileName);
+
+            if (!_fileWrapper.DoesFileExist(fullFilePath))
+            {
+                return false;
+            }
+
+            await _mauiEssentialsWrapper.OpenFileAsync(fullFilePath);
+
+            return true;
+        }
+
+
+        /// <summary>
         ///     Gets the stram of the resources file.
         /// </summary>
         /// <param name="filePath"> The path of the resources file. </param>
         /// <returns> The stream of the passed file. </returns>
         ///e.g filepath= "Resources.Embedded.Product.xlsx"
-         public Stream GetStreamOfResourcesFile(string filePath)
+        public Stream GetStreamOfResourcesFile(string filePath)
          {
             var stream = _fileWrapper.GetResourceStream(filePath);
 

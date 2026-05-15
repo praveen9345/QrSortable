@@ -1852,6 +1852,28 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string email support title Text!!.
+        /// </summary>
+        public static string HelpViewModel_EmailTitleText
+        {
+            get
+            {
+                return ResourceManager.GetString("HelpViewModel_EmailTitleText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string email send out error Text!!.
+        /// </summary>
+        public static string HelpViewModel_EmailSendOutErrorText
+        {
+            get
+            {
+                return ResourceManager.GetString("HelpViewModel_EmailSendOutErrorText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string user manual Text!!.
         /// </summary>
         public static string HelpViewModel_UserManualText
