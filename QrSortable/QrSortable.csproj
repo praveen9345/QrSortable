@@ -110,6 +110,9 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 	
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\Embedded\**" />
+	</ItemGroup>
 	<!-- Register the MAUI images -->
 	<ItemGroup>
 		<MauiImage Include="Resources\Images\background_layout.webp" />

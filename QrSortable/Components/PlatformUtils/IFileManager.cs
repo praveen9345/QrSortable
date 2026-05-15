@@ -6,11 +6,14 @@ namespace QrSortable.Components.PlatformUtils
     public interface IFileManager
     {
         /// <summary>
-        ///     Gets the path string of the file.
+        ///     Opens an embedded File. First that file has to be copied and stored to the private system folder.
+        ///     Then the file can be opened from there. If the file already exists in the private system folder
+        ///     it will be deleted before copying the embedded resource. This is being done to make sure that
+        ///     always the most up to date version of the file being opened. 
         /// </summary>
-        /// <param name="fileName"> The name of the file to check. </param>
-        /// <returns> The path string of the passed file. </returns>
-        string GetFullPrivateSystemFilePath(string fileName);
+        /// <param name="fileName">The name of the file to open.</param>
+        /// <returns>A bool indicating whether the opening of the file was successful.</returns>
+        Task<bool> OpenEmbeddedFileAsync(string fileName);
 
         /// <summary>
         ///     Stores a resource in the private system folder. Replaces old files.
@@ -21,18 +24,19 @@ namespace QrSortable.Components.PlatformUtils
         Task<bool> WriteFileToFileSystemAsync(string fileName, byte[] file);
 
         /// <summary>
-        ///     Gets the stram of the resources file.
-        /// </summary>
-        /// <param name="filePath"> The path of the resources file. </param>
-        /// <returns> The stream of the passed file. </returns>
-        ///e.g filepath= "Resources.Embedded.Product.xlsx"
-        Stream GetStreamOfResourcesFile(string filePath);
-
-        /// <summary>
         ///     Opens the file with the given filename from the private system folder.
         /// </summary>
         /// <param name="fileName">The name of the file which shall be opened.</param>
         /// <returns>A bool indicating whether the opening of the file was successful.</returns>
         Task<bool> OpenStoredFileFromSystemFolderAsync(string fileName);
+
+        /// <summary>
+        ///     Stores a resource in the private system folder. Replaces old files.
+        /// </summary>
+        /// <param name="fileName">The name of the file to store.</param>
+        /// <returns>The full file path of the file.</returns>
+        Task<string> StoreResourceInPrivateSystemFolderAsync(string fileName);
+
+
     }
 }
