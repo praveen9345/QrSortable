@@ -324,7 +324,7 @@
 
             try
             {
-                SavingMessage = "Saving… Please wait.";
+                SavingMessage = AppResources.ItemDetailViewModel_SevingMessageText;
 
                 var allItems = await _databaseManager.GetAllAsync<StorageEntry>();
                 if (allItems == null)

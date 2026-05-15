@@ -1423,6 +1423,17 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string similar saving message Text!!.
+        /// </summary>
+        public static string ItemDetailViewModel_SevingMessageText
+        {
+            get
+            {
+                return ResourceManager.GetString("ItemDetailViewModel_SevingMessageText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar enter name Text!!.
         /// </summary>
         public static string ItemDetailViewModel_EnterNamePlace

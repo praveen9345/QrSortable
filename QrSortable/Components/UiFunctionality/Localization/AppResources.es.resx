@@ -819,4 +819,7 @@
   <data name="RootViewModel_InformationForUseText" xml:space="preserve">
     <value>¿Te gustaría recibir información sobre cómo usar la aplicación?</value>
   </data>
+  <data name="ItemDetailViewModel_SevingMessageText" xml:space="preserve">
+    <value>Guardando… Por favor, espere.</value>
+  </data>
 </root>
