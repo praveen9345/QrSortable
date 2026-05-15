@@ -822,4 +822,13 @@
   <data name="ItemDetailViewModel_SevingMessageText" xml:space="preserve">
     <value>Saving… Please wait.</value>
   </data>
+  <data name="HelpViewModel_IFUText" xml:space="preserve">
+    <value>Information of use</value>
+  </data>
+  <data name="HelpViewModel_UserManualText" xml:space="preserve">
+    <value>User Manual</value>
+  </data>
+  <data name="HelpViewModel_ContactText" xml:space="preserve">
+    <value>Contact</value>
+  </data>
 </root>

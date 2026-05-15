@@ -18,6 +18,25 @@
             BindingContext = viewModel;
 
         }
-       
+        private async void OnTappedEffect(object sender, EventArgs e)
+        {
+            Grid? grid = null;
+
+            if (sender is Grid g)
+            {
+                grid = g;
+            }
+            else if (sender is TapGestureRecognizer tap && tap.Parent is Grid parentGrid)
+            {
+                grid = parentGrid;
+            }
+
+            if (grid == null)
+                return;
+
+            grid.BackgroundColor = (Color)Application.Current.Resources["Gray85"];
+            await Task.Delay(100);
+            grid.BackgroundColor = Colors.Transparent;
+        }
     }
 }

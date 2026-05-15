@@ -1840,5 +1840,37 @@ namespace QrSortable.Components.UiFunctionality.Localization
             }
         }
 
+        /// <summary>
+        ///   Looks up a localized string ifu string Text!!.
+        /// </summary>
+        public static string HelpViewModel_IFUText
+        {
+            get
+            {
+                return ResourceManager.GetString("HelpViewModel_IFUText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string user manual Text!!.
+        /// </summary>
+        public static string HelpViewModel_UserManualText
+        {
+            get
+            {
+                return ResourceManager.GetString("HelpViewModel_UserManualText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string contact Text!!.
+        /// </summary>
+        public static string HelpViewModel_ContactText
+        {
+            get
+            {
+                return ResourceManager.GetString("HelpViewModel_ContactText", resourceCulture);
+            }
+        }
     }
 }

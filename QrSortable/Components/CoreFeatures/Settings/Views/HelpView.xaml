@@ -4,13 +4,22 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QrSortable.Resources"
+    xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.webp">
     <views:BaseView.Content>
-        <Grid RowDefinitions="*">
-            <!--  Back button overlay  -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <!--  back  -->
+                <RowDefinition Height="Auto" />
+                <!--  help  -->
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Back button  -->
             <Button
-                Margin="25,55,0,0"
+                Grid.Row="0"
+                Margin="15,15,0,0"
                 Padding="2"
                 BackgroundColor="{StaticResource DarkGrey}"
                 Command="{Binding BackNavigationCommand}"
@@ -32,6 +41,108 @@
                 </Button.ImageSource>
             </Button>
 
+            <!--  page icon  -->
+            <Image
+                Grid.Column="1"
+                HeightRequest="100"
+                WidthRequest="100">
+                <Image.Source>
+                    <FontImageSource
+                        FontFamily="FluentIcons"
+                        Glyph="{x:Static local:IconNames.Help}"
+                        Color="{StaticResource Primary}" />
+                </Image.Source>
+            </Image>
+            <Grid Grid.Row="1">
+                <StackLayout>
+
+                    <!--  IFU lable  -->
+                    <Label
+                        Margin="20,30,0,0"
+                        Style="{StaticResource BoldText}"
+                        Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[HelpViewModel_IFUText]}" />
+
+                    <!--  divider  -->
+                    <BoxView Style="{StaticResource LineStyle}" />
+
+                    <!--  IFU selection  -->
+                    <StackLayout>
+                        <Grid Padding="20,10,10,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width=".9*" />
+                                <ColumnDefinition Width=".1*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding UserMaualCommand}" Tapped="OnTappedEffect"/>
+                            </Grid.GestureRecognizers>
+
+                            <!--  User Manual text  -->
+                            <Label
+                                Grid.Column="0"
+                                FontFamily="ItimRegular"
+                                FontSize="18"
+                                Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[HelpViewModel_UserManualText]}"
+                                TextColor="White" />
+
+                            <!--  Forward navigation  -->
+                            <Image
+                                Grid.Column="1"
+                                HeightRequest="30"
+                                WidthRequest="30">
+                                <Image.Source>
+                                    <FontImageSource
+                                        FontFamily="FluentIcons"
+                                        Glyph="{x:Static local:IconNames.Forward}"
+                                        Color="{StaticResource Primary}" />
+                                </Image.Source>
+                            </Image>
+                        </Grid>
+                    </StackLayout>
+
+                    <!--  Contact lable  -->
+                    <Label
+                        Margin="20,30,0,0"
+                        Style="{StaticResource BoldText}"
+                         Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[HelpViewModel_ContactText]}" />
+
+                    <!--  divider  -->
+                    <BoxView Style="{StaticResource LineStyle}" />
+
+                    <!--  Email id  -->
+                    <StackLayout>
+                        <Grid Padding="20,10,10,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width=".9*" />
+                                <ColumnDefinition Width=".1*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EmailIdCommand}" Tapped="OnTappedEffect"/>
+                            </Grid.GestureRecognizers>
+
+                            <!--  Email id text  -->
+                            <Label
+                                Grid.Column="0"
+                                FontFamily="ItimRegular"
+                                FontSize="18"
+                                Text="qrsortable@gmail.com"
+                                TextColor="White" />
+
+                            <!--  Forward navigation  -->
+                            <Image
+                                Grid.Column="1"
+                                HeightRequest="30"
+                                WidthRequest="30">
+                                <Image.Source>
+                                    <FontImageSource
+                                        FontFamily="FluentIcons"
+                                        Glyph="{x:Static local:IconNames.Forward}"
+                                        Color="{StaticResource Primary}" />
+                                </Image.Source>
+                            </Image>
+                        </Grid>
+                    </StackLayout>
+                </StackLayout>
+            </Grid>
         </Grid>
     </views:BaseView.Content>
 </views:BaseView>
