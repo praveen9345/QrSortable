@@ -1,6 +1,5 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner
 {
-    using Microsoft.Maui.Storage;
     using QrSortable.Components.UiFunctionality.Localization;
 
     public class FilePickerService :IFilePickerService
@@ -9,26 +8,11 @@
         {
             try
             {
-                FileResult result = null;
 
-                // Use MediaPicker for iOS, FilePicker for others
-                if (DeviceInfo.Platform == DevicePlatform.iOS)
+                var result = await MediaPicker.Default.PickPhotoAsync(new MediaPickerOptions
                 {
-                    // MediaPicker works better on iOS
-                    result = await MediaPicker.Default.PickPhotoAsync(new MediaPickerOptions
-                    {
-                        Title = AppResources.FilePickerService_PickImage
-                    });
-                }
-                else
-                {
-                    // FilePicker for Android and other platforms
-                    result = await FilePicker.Default.PickAsync(new PickOptions
-                    {
-                        PickerTitle = AppResources.FilePickerService_PickImage,
-                        FileTypes = FilePickerFileType.Images
-                    });
-                }
+                    Title = AppResources.FilePickerService_PickImage
+                });
 
                 if (result == null)
                 {

@@ -22,8 +22,8 @@
 
         private readonly IToastService _toastService;
 
-        private const int _priceEachA4Paper = 5;
-        private const int _priceEachA5Paper = 3;
+        private const int _priceEachA4Paper = 3;
+        private const int _priceEachA5Paper = 2;
 
         private string _currencySymbol = "€";
 
