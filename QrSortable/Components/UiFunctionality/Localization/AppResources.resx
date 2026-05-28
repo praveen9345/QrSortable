@@ -840,4 +840,10 @@
   <data name="General_FileNotFoundErrorText" xml:space="preserve">
     <value>File not found error.</value>
   </data>
+  <data name="MenuViewModel_AppLink" xml:space="preserve">
+    <value>Check out this amazing app!</value>
+  </data>
+  <data name="MenuViewModel_ShareTitle" xml:space="preserve">
+    <value>Share Our App</value>
+  </data>
 </root>

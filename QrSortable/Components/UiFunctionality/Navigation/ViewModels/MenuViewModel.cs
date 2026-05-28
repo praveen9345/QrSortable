@@ -105,6 +105,9 @@
                 else if (key == LocalizationService.Instance["MenuViewModel_SubscribeText"])
                     await NavigationService.Navigate<SubscriptionView>(false);
 
+                else if (key == LocalizationService.Instance["MenuViewModel_ShareText"])
+                    await ShareAppLinkAsync();
+
                 else if (key == LocalizationService.Instance["MenuViewModel_SettingText"])
                     await NavigationService.Navigate<SettingView>();
 
@@ -119,6 +122,32 @@
 
         public AsyncRelayCommand CloseButtonCommand =>
             new AsyncRelayCommand(() => NavigationService.Close());
+
+        private async Task ShareAppLinkAsync()
+        {
+            try
+            {                
+                // default to Google Play Store link
+                var appLink = "https://play.google.com/store/apps/details?id=com.danfe.qrsortable";
+
+                if (DeviceInfo.Platform == DevicePlatform.iOS)
+                {
+                    appLink = "https://apps.apple.com/de/iphone/apps";
+                }
+
+                await Share.Default.RequestAsync(new ShareTextRequest
+                {
+                    Title = AppResources.MenuViewModel_ShareTitle,
+                    Text = AppResources.MenuViewModel_AppLink,
+                    Uri = appLink
+                });
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"MenuView.cs: ShareAppLinkAsync :Error sharing app link: {ex.Message}");
+            }
+        }
 
         private async Task<bool> DisplayInternetConcectivityAsync()
         {

@@ -9,7 +9,6 @@
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.ViewModels;
     using System.Collections.ObjectModel;
-    using System.Globalization;
 
     /// <summary>
     ///     The view model of the Select Product view screen.
@@ -104,7 +103,7 @@
                     Title = AppResources.SelectProductViewModel_GenrateOfA4QRcodeTitle,
                     Description = AppResources.SelectProductViewModel_GenrateOfA4QRcodeColor,
                     Price = string.Format(AppResources.SelectProductViewModel_GenrateOfA4QRcodePrice,
-                    await GetFormattedPrice(5)),
+                    await GetFormattedPrice(3)),
                     IsNew = false,
                     ImageUrl = "code_pdf_icon.png"
                 },

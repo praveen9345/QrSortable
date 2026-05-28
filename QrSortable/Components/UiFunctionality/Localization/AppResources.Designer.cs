@@ -1764,6 +1764,28 @@ namespace QrSortable.Components.UiFunctionality.Localization
         }
 
         /// <summary>
+        ///   Looks up a localized string applink Text!!.
+        /// </summary>
+        public static string MenuViewModel_AppLink
+        {
+            get
+            {
+                return ResourceManager.GetString("MenuViewModel_AppLink", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string share title Text!!.
+        /// </summary>
+        public static string MenuViewModel_ShareTitle
+        {
+            get
+            {
+                return ResourceManager.GetString("MenuViewModel_ShareTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string subscribe Text!!.
         /// </summary>
         public static string MenuViewModel_SubscribeText

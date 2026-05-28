@@ -840,4 +840,10 @@
   <data name="General_FileNotFoundErrorText" xml:space="preserve">
     <value> Fichier introuvable.</value>
   </data>
+  <data name="MenuViewModel_AppLink" xml:space="preserve">
+    <value>Jetez un œil à cette super appli !</value>
+  </data>
+  <data name="MenuViewModel_ShareTitle" xml:space="preserve">
+    <value>Partager notre application</value>
+  </data>
 </root>
