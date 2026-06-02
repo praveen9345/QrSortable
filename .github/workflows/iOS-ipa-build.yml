@@ -1,4 +1,4 @@
-name: MAUI iOS Unsigned IPA Build
+name: MAUI iOS Signed IPA Build
 on:
   workflow_dispatch:
 
@@ -10,20 +10,30 @@ env:
 
 jobs:
   build-ios:
-    name: 🎉 MAUI iOS Build (Unsigned)
+    name: 🎉 MAUI iOS Build (Signed)
     runs-on: macos-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: List available Xcode versions
         run: ls /Applications | grep Xcode
-      
+
       - name: Set Xcode version
         run: |
-          # Check available Xcode versions and select the most appropriate one
-          if [ -d "/Applications/Xcode_15.2.app" ]; then
+          # Prefer Xcode 16+ for App Store-ready iOS builds
+          if [ -d "/Applications/Xcode_16.4.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.4.app
+          elif [ -d "/Applications/Xcode_16.3.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.3.app
+          elif [ -d "/Applications/Xcode_16.2.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.2.app
+          elif [ -d "/Applications/Xcode_16.1.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.1.app
+          elif [ -d "/Applications/Xcode_16.0.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.0.app
+          elif [ -d "/Applications/Xcode_15.2.app" ]; then
             sudo xcode-select -s /Applications/Xcode_15.2.app
           elif [ -d "/Applications/Xcode_15.1.app" ]; then
             sudo xcode-select -s /Applications/Xcode_15.1.app
@@ -36,15 +46,16 @@ jobs:
           else
             echo "Using default Xcode"
           fi
+
           echo "Selected Xcode path:"
           xcode-select -p
           xcodebuild -version
-      
+
       - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      
+
       - name: Cache NuGet packages
         uses: actions/cache@v4
         with:
@@ -54,7 +65,7 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-      
+
       - name: Install MAUI workloads
         run: |
           # Create global.json in the project folder to fix the SDK version
@@ -64,20 +75,50 @@ jobs:
           dotnet workload restore
           dotnet workload install maui-ios
           dotnet workload list
-      
+
       - name: Restore NuGet packages
         run: dotnet restore QrSortable.csproj
         working-directory: ${{ env.PROJECT_PATH }}
-      
-      - name: Build iOS app (unsigned)
+
+      - name: Install Apple certificate and provisioning profile
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode > $CERTIFICATE_PATH
+          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode > $PP_PATH
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          security import $CERTIFICATE_PATH \
+            -P "$P12_PASSWORD" \
+            -A -t cert -f pkcs12 \
+            -k $KEYCHAIN_PATH
+
+          security list-keychains -d user -s $KEYCHAIN_PATH login.keychain-db
+          security default-keychain -s $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      - name: Build iOS app (signed)
         run: |
           dotnet publish QrSortable.csproj \
           -f ${{ env.TARGET_FRAMEWORK }} \
           -c ${{ env.CONFIGURATION }} \
           /p:BuildIpa=true \
-          /p:EnableCodeSigning=false \
-          /p:CodesignKey="-" \
-          /p:CodesignProvision="-" \
+          /p:EnableCodeSigning=true \
+          /p:CodesignKey="${{ secrets.IOS_CODESIGN_KEY }}" \
+          /p:CodesignProvision="${{ secrets.IOS_PROVISIONING_PROFILE_NAME }}" \
           /p:ArchiveOnBuild=true \
           /p:PublishTrimmed=true \
           /p:TrimMode=partial \
@@ -90,7 +131,7 @@ jobs:
           /p:OptimizePNGs=false \
           /p:UseInterpreter=true
         working-directory: ${{ env.PROJECT_PATH }}
-      
+
       - name: List build output
         run: |
           echo "=== Build output structure ==="
@@ -102,7 +143,7 @@ jobs:
           echo ""
           echo "Full directory structure:"
           ls -R ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }}/${{ env.TARGET_FRAMEWORK }}/
-      
+
       - name: Check for auto-generated IPA
         id: check_ipa
         run: |
@@ -115,59 +156,59 @@ jobs:
             echo "found=false" >> $GITHUB_OUTPUT
             echo "No auto-generated IPA found, will create manually"
           fi
-      
-      - name: Package unsigned IPA (if needed)
+
+      - name: Package signed IPA (if needed)
         if: steps.check_ipa.outputs.found == 'false'
         run: |
           # Search for the .app bundle
           APP_PATH=$(find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }}/${{ env.TARGET_FRAMEWORK }} -name "QrSortable.app" -type d | head -n 1)
-          
+
           if [ -z "$APP_PATH" ]; then
             echo "Error: Could not find QrSortable.app"
             echo "Directory contents:"
             find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }}/${{ env.TARGET_FRAMEWORK }} -type d
             exit 1
           fi
-          
+
           echo "Found app at: $APP_PATH"
-          
+
           # Create Payload directory in a temp location
           WORK_DIR=$(mktemp -d)
           echo "Working in temporary directory: $WORK_DIR"
-          
+
           mkdir -p "$WORK_DIR/Payload"
           cp -R "$APP_PATH" "$WORK_DIR/Payload/"
-          
+
           # Create IPA
           cd "$WORK_DIR"
-          zip -qr QrSortable-Unsigned.ipa Payload
-          
+          zip -qr QrSortable-Signed.ipa Payload
+
           # Move to workspace
-          mv QrSortable-Unsigned.ipa ${{ github.workspace }}/
-          echo "IPA created successfully at: ${{ github.workspace }}/QrSortable-Unsigned.ipa"
-      
+          mv QrSortable-Signed.ipa ${{ github.workspace }}/
+          echo "IPA created successfully at: ${{ github.workspace }}/QrSortable-Signed.ipa"
+
       - name: Copy auto-generated IPA (if exists)
         if: steps.check_ipa.outputs.found == 'true'
         run: |
-          cp "${{ steps.check_ipa.outputs.ipa_path }}" ${{ github.workspace }}/QrSortable-Unsigned.ipa
+          cp "${{ steps.check_ipa.outputs.ipa_path }}" ${{ github.workspace }}/QrSortable-Signed.ipa
           echo "Copied auto-generated IPA to workspace"
-      
+
       - name: Verify IPA file
         run: |
-          if [ -f "${{ github.workspace }}/QrSortable-Unsigned.ipa" ]; then
+          if [ -f "${{ github.workspace }}/QrSortable-Signed.ipa" ]; then
             echo "IPA file verified:"
-            ls -lh ${{ github.workspace }}/QrSortable-Unsigned.ipa
+            ls -lh ${{ github.workspace }}/QrSortable-Signed.ipa
             echo ""
             echo "IPA contents:"
-            unzip -l ${{ github.workspace }}/QrSortable-Unsigned.ipa | head -20
+            unzip -l ${{ github.workspace }}/QrSortable-Signed.ipa | head -20
           else
             echo "Error: IPA file not found!"
             exit 1
           fi
-      
+
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: QrSortable-Unsigned-IPA
-          path: QrSortable-Unsigned.ipa
+          name: QrSortable-Signed-IPA
+          path: QrSortable-Signed.ipa
           if-no-files-found: error
