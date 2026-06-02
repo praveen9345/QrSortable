@@ -1,0 +1,71 @@
+name: Upload iOS IPA to App Store from Existing Artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "Workflow 1 run ID that contains the IPA artifact"
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  upload-to-appstore:
+    name: Download IPA artifact and Upload to App Store
+    runs-on: macos-latest
+
+    steps:
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: 'latest-stable'
+
+      - name: Show Xcode version
+        run: |
+          xcode-select -p
+          xcodebuild -version
+
+      - name: Download IPA artifact from selected Workflow 1 run
+        uses: actions/download-artifact@v4
+        with:
+          name: QrSortable-Signed-IPA
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+          path: downloaded-ipa
+
+      - name: List downloaded files
+        run: |
+          echo "Downloaded files:"
+          find downloaded-ipa -type f
+
+      - name: Find IPA
+        id: find_ipa
+        run: |
+          IPA_FILE=$(find downloaded-ipa -type f -name "*.ipa" | head -n 1)
+          if [ -z "$IPA_FILE" ]; then
+            echo "No IPA file found in downloaded artifact"
+            find downloaded-ipa -type f
+            exit 1
+          fi
+          echo "ipa_path=$IPA_FILE" >> $GITHUB_OUTPUT
+          echo "Found IPA: $IPA_FILE"
+
+      - name: Verify IPA
+        run: |
+          ls -lh "${{ steps.find_ipa.outputs.ipa_path }}"
+          unzip -l "${{ steps.find_ipa.outputs.ipa_path }}" | head -20
+
+      - name: Upload to App Store Connect
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APP_SPECIFIC_PASSWORD: ${{ secrets.APP_SPECIFIC_PASSWORD }}
+        run: |
+          xcrun altool --upload-app \
+            -f "${{ steps.find_ipa.outputs.ipa_path }}" \
+            -t ios \
+            -u "$APPLE_ID" \
+            -p "$APP_SPECIFIC_PASSWORD" \
+            --output-format xml
