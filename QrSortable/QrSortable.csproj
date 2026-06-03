@@ -3,7 +3,7 @@
 		<TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
 		<RootNamespace>QrSortable</RootNamespace>
 		<UseMaui>true</UseMaui>
-	    <MauiVersion>9.0.40</MauiVersion>
+		<MauiVersion>9.0.40</MauiVersion>
 		<OutputType Condition="'$(TargetFramework)' == 'net9.0-ios'">Exe</OutputType>
 		<OutputType Condition="'$(TargetFramework)' == 'net9.0-android'">Exe</OutputType>
 		<OutputType Condition="'$(TargetFramework)' == 'net9.0'">Library</OutputType>
@@ -29,15 +29,15 @@
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">$(AndroidSupportedOSVersion)</SupportedOSPlatformVersion>
-</PropertyGroup>
+	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'DebugEmulator'">
-        <AndroidSupportedOSVersion>21</AndroidSupportedOSVersion>
-    </PropertyGroup>
+		<AndroidSupportedOSVersion>21</AndroidSupportedOSVersion>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' == 'DebugDevice'">
-        <AndroidSupportedOSVersion>21.0</AndroidSupportedOSVersion>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'DebugDevice'">
+		<AndroidSupportedOSVersion>21.0</AndroidSupportedOSVersion>
+	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
 		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
@@ -62,9 +62,10 @@
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
 		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
 		<BuildIpa>true</BuildIpa>
+		<ArchiveOnBuild>true</ArchiveOnBuild>
 		<MtouchLink>None</MtouchLink>
 		<UseInterpreter>false</UseInterpreter>
-		<EnableCodeSigning>false</EnableCodeSigning>
+		<EnableCodeSigning Condition="'$(Configuration)' != 'Release'">false</EnableCodeSigning>
 		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
 		<MtouchUseRegistrar>Static</MtouchUseRegistrar>
 		<ValidateXcodeVersion>false</ValidateXcodeVersion>
@@ -72,13 +73,14 @@
 
 	<!-- iOS Release Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Release'">
-		 <PublishTrimmed>true</PublishTrimmed>
-		  <TrimMode>partial</TrimMode>
-		  <PublishAot>false</PublishAot>
-		  <RunAOTCompilation>false</RunAOTCompilation>
-		  <MtouchLink>None</MtouchLink>
-		  <MtouchExtraArgs>--interpreter</MtouchExtraArgs>
-		  <UseInterpreter>true</UseInterpreter>
+		<PublishTrimmed>true</PublishTrimmed>
+		<TrimMode>partial</TrimMode>
+		<PublishAot>false</PublishAot>
+		<EnableCodeSigning>true</EnableCodeSigning>
+		<RunAOTCompilation>false</RunAOTCompilation>
+		<MtouchLink>None</MtouchLink>
+		<MtouchExtraArgs>--interpreter</MtouchExtraArgs>
+		<UseInterpreter>true</UseInterpreter>
 	</PropertyGroup>
 
 	<!-- iOS Debug Configuration -->
@@ -86,7 +88,7 @@
 		<OptimizePNGs>false</OptimizePNGs>
 		<MtouchLink>None</MtouchLink>
 	</PropertyGroup>
-	
+
 	<!-- iOS platform files -->
 	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
 		<BundleResource Include="Platforms\iOS\Info.plist" Link="Info.plist" />
@@ -102,14 +104,14 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*.svg" BaseSize="300,300" />
-		
+
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\Embedded\**" />
 	</ItemGroup>
@@ -121,10 +123,10 @@
 		<MauiImage Include="Resources\Images\bar_code_demo.png" />
 		<MauiImage Include="Resources\Images\qr_standerd_pack_1.png" />
 		<MauiImage Include="Resources\Images\qr_standerd_pack_2.png" />
-	    <MauiImage Include="Resources\Images\qr_standerd_pack_3.png" />
+		<MauiImage Include="Resources\Images\qr_standerd_pack_3.png" />
 		<MauiImage Include="Resources\Images\br_standerd_pack_1.png" />
-	    <MauiImage Include="Resources\Images\br_standerd_pack_2.png" />
-	    <MauiImage Include="Resources\Images\br_standerd_pack_3.png" />
+		<MauiImage Include="Resources\Images\br_standerd_pack_2.png" />
+		<MauiImage Include="Resources\Images\br_standerd_pack_3.png" />
 		<MauiImage Include="Resources\Images\qr_large_pack_1.png" />
 		<MauiImage Include="Resources\Images\qr_large_pack_2.png" />
 		<MauiImage Include="Resources\Images\qr_large_pack_3.png" />
@@ -134,59 +136,59 @@
 		<EmbeddedResource Include="Resources\Fonts\OpenSans-Regular.ttf" />
 		<EmbeddedResource Include="Resources\Fonts\OpenSans-Semibold.ttf" />
 	</ItemGroup>
- 
-    <!-- Register the AppResources files -->
+
+	<!-- Register the AppResources files -->
 	<ItemGroup>
-       <Compile Update="Components\CoreFeatures\CodeGenerator\Views\PaperProductView.xaml.cs">
-         <DependentUpon>PaperProductView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml.cs">
-         <DependentUpon>SelectProductView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\OrdersPayments\Views\SubscriptionView.xaml.cs">
-         <DependentUpon>SubscriptionView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\OrdersPayments\Views\YoursOrdersView.xaml.cs">
-         <DependentUpon>YoursOrdersView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\OrdersPayments\Views\BankTransferView.xaml.cs">
-         <DependentUpon>BankTransferView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\OrdersPayments\Views\PaymentShipmentView.xaml.cs">
-         <DependentUpon>PaymentShipmentView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\OrdersPayments\Views\AddToBasketView.xaml.cs">
-         <DependentUpon>AddToBasketView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\Scanner\Views\ItemDetailView.xaml.cs">
-         <DependentUpon>ItemDetailView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\Scanner\Views\BoxDetailView.xaml.cs">
-         <DependentUpon>BoxDetailView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\CodeGenerator\Views\CodeGeneratorView.xaml.cs">
-         <DependentUpon>CodeGeneratorView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\Scanner\Views\QrBrScannerView.xaml.cs">
-         <DependentUpon>QrBrScannerView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\Settings\Views\HelpView.xaml.cs">
-         <DependentUpon>HelpView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\CoreFeatures\Settings\Views\WebView.xaml.cs">
-         <DependentUpon>WebView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\UiFunctionality\Localization\AppResources.Designer.cs">
+		<Compile Update="Components\CoreFeatures\CodeGenerator\Views\PaperProductView.xaml.cs">
+			<DependentUpon>PaperProductView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml.cs">
+			<DependentUpon>SelectProductView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\OrdersPayments\Views\SubscriptionView.xaml.cs">
+			<DependentUpon>SubscriptionView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\OrdersPayments\Views\YoursOrdersView.xaml.cs">
+			<DependentUpon>YoursOrdersView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\OrdersPayments\Views\BankTransferView.xaml.cs">
+			<DependentUpon>BankTransferView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\OrdersPayments\Views\PaymentShipmentView.xaml.cs">
+			<DependentUpon>PaymentShipmentView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\OrdersPayments\Views\AddToBasketView.xaml.cs">
+			<DependentUpon>AddToBasketView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\Scanner\Views\ItemDetailView.xaml.cs">
+			<DependentUpon>ItemDetailView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\Scanner\Views\BoxDetailView.xaml.cs">
+			<DependentUpon>BoxDetailView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\CodeGenerator\Views\CodeGeneratorView.xaml.cs">
+			<DependentUpon>CodeGeneratorView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\Scanner\Views\QrBrScannerView.xaml.cs">
+			<DependentUpon>QrBrScannerView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\Settings\Views\HelpView.xaml.cs">
+			<DependentUpon>HelpView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\CoreFeatures\Settings\Views\WebView.xaml.cs">
+			<DependentUpon>WebView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\UiFunctionality\Localization\AppResources.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>AppResources.resx</DependentUpon>
 		</Compile>
-       <Compile Update="Components\UiFunctionality\Navigation\Views\MenuView.xaml.cs">
-         <DependentUpon>MenuView.xaml</DependentUpon>
-       </Compile>
-       <Compile Update="Components\UiFunctionality\Notification\Views\DialogPhotoSelectionView.xaml.cs">
-         <DependentUpon>DialogPhotoSelectionView.xaml</DependentUpon>
-       </Compile>
+		<Compile Update="Components\UiFunctionality\Navigation\Views\MenuView.xaml.cs">
+			<DependentUpon>MenuView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Components\UiFunctionality\Notification\Views\DialogPhotoSelectionView.xaml.cs">
+			<DependentUpon>DialogPhotoSelectionView.xaml</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -217,71 +219,71 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Components\CoreFeatures\Cloud\AccessManagement\" />
-	  <Folder Include="Components\CoreFeatures\Cloud\Wrappers\" />
-	  <Folder Include="Components\CoreFeatures\Onboarding\" />
+		<Folder Include="Components\CoreFeatures\Cloud\AccessManagement\" />
+		<Folder Include="Components\CoreFeatures\Cloud\Wrappers\" />
+		<Folder Include="Components\CoreFeatures\Onboarding\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Components\CoreFeatures\CodeGenerator\Views\PaperProductView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\SubscriptionView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\YoursOrdersView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\BankTransferView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\PaymentShipmentView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\AddToBasketView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\Scanner\Views\ItemDetailView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\Scanner\Views\BoxDetailView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\CodeGenerator\Views\CodeGeneratorView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\Scanner\Views\QrBrScannerView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\Settings\Views\HelpView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\CoreFeatures\Settings\Views\WebView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\UiFunctionality\Navigation\Views\MenuView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogMoveToView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogActivityIndicatorView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogAlertView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogPhotoSelectionView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogGenericActivityIndicatorView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogRequestView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\CodeGenerator\Views\PaperProductView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\CodeGenerator\Views\SelectProductView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\SubscriptionView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\YoursOrdersView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\BankTransferView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\PaymentShipmentView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\OrdersPayments\Views\AddToBasketView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\Scanner\Views\ItemDetailView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\Scanner\Views\BoxDetailView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\CodeGenerator\Views\CodeGeneratorView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\Scanner\Views\QrBrScannerView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\Settings\Views\HelpView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\CoreFeatures\Settings\Views\WebView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\UiFunctionality\Navigation\Views\MenuView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogMoveToView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogActivityIndicatorView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogAlertView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogPhotoSelectionView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogGenericActivityIndicatorView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\UiFunctionality\Notification\Views\DialogRequestView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 	</ItemGroup>
 </Project>
