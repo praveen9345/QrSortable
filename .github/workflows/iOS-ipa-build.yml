@@ -1,5 +1,4 @@
 name: MAUI iOS Signed IPA Build
-
 on:
   workflow_dispatch:
 
@@ -18,20 +17,39 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ✅ FIX: Always use latest Xcode (iOS 26 SDK)
-      - name: Setup Xcode (required for App Store)
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: 'latest-stable'
+      - name: List available Xcode versions
+        run: ls /Applications | grep Xcode
 
-      - name: Verify Xcode
+      - name: Set Xcode version
         run: |
+          # Prefer Xcode 16+ for App Store-ready iOS builds
+          if [ -d "/Applications/Xcode_16.4.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.4.app
+          elif [ -d "/Applications/Xcode_16.3.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.3.app
+          elif [ -d "/Applications/Xcode_16.2.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.2.app
+          elif [ -d "/Applications/Xcode_16.1.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.1.app
+          elif [ -d "/Applications/Xcode_16.0.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.0.app
+          elif [ -d "/Applications/Xcode_15.2.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_15.2.app
+          elif [ -d "/Applications/Xcode_15.1.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_15.1.app
+          elif [ -d "/Applications/Xcode_15.0.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_15.0.app
+          elif [ -d "/Applications/Xcode_14.3.1.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_14.3.1.app
+          elif [ -d "/Applications/Xcode_14.3.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_14.3.app
+          else
+            echo "Using default Xcode"
+          fi
+
+          echo "Selected Xcode path:"
           xcode-select -p
           xcodebuild -version
-
-      # ✅ Clean cache to avoid old SDK artifacts
-      - name: Clean Xcode cache
-        run: rm -rf ~/Library/Developer/Xcode/DerivedData
 
       - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
@@ -48,16 +66,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      # ✅ Improved MAUI workload setup
       - name: Install MAUI workloads
         run: |
-          echo '{
-            "sdk": {
-              "version": "9.0.100",
-              "rollForward": "latestFeature"
-            }
-          }' > ${{ env.PROJECT_PATH }}/global.json
-
+          # Create global.json in the project folder to fix the SDK version
+          echo '{ "sdk": { "version": "9.0.100", "workloadVersion": "9.0.100", "allowPrerelease": false, "rollForward": "latestFeature" } }' > ${{ env.PROJECT_PATH }}/global.json
           cd ${{ env.PROJECT_PATH }}
           dotnet workload config --update-mode workload-set
           dotnet workload restore
@@ -98,42 +110,101 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
 
-      - name: Build iOS app (signed IPA)
+      - name: Build iOS app (signed)
         run: |
           dotnet publish QrSortable.csproj \
-            -f ${{ env.TARGET_FRAMEWORK }} \
-            -c ${{ env.CONFIGURATION }} \
-            /p:BuildIpa=true \
-            /p:ArchiveOnBuild=true \
-            /p:EnableCodeSigning=true \
-            /p:CodesignKey="${{ secrets.IOS_CODESIGN_KEY }}" \
-            /p:CodesignProvision="${{ secrets.IOS_PROVISIONING_PROFILE_NAME }}" \
-            /p:RuntimeIdentifier=ios-arm64 \
-            /p:SupportedOSPlatformVersion=16.0
+          -f ${{ env.TARGET_FRAMEWORK }} \
+          -c ${{ env.CONFIGURATION }} \
+          /p:BuildIpa=true \
+          /p:EnableCodeSigning=true \
+          /p:CodesignKey="${{ secrets.IOS_CODESIGN_KEY }}" \
+          /p:CodesignProvision="${{ secrets.IOS_PROVISIONING_PROFILE_NAME }}" \
+          /p:ArchiveOnBuild=true \
+          /p:PublishTrimmed=true \
+          /p:TrimMode=partial \
+          /p:PublishAot=false \
+          /p:RunAOTCompilation=false \
+          /p:RuntimeIdentifier=ios-arm64 \
+          /p:MtouchLink=None \
+          /p:MtouchExtraArgs="--interpreter" \
+          /p:SupportedOSPlatformVersion=16.0 \
+          /p:OptimizePNGs=false \
+          /p:UseInterpreter=true
         working-directory: ${{ env.PROJECT_PATH }}
 
-      - name: Locate IPA
-        id: find_ipa
+      - name: List build output
         run: |
-          IPA_FILE=$(find ${{ env.PROJECT_PATH }}/bin -name "*.ipa" | head -n 1)
+          echo "=== Build output structure ==="
+          echo "Searching for .app bundles:"
+          find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }} -type d -name "*.app" || echo "No .app bundles found"
+          echo ""
+          echo "Searching for existing .ipa files:"
+          find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }} -type f -name "*.ipa" || echo "No .ipa files found"
+          echo ""
+          echo "Full directory structure:"
+          ls -R ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }}/${{ env.TARGET_FRAMEWORK }}/
 
-          if [ -z "$IPA_FILE" ]; then
-            echo "❌ No IPA found"
-            find ${{ env.PROJECT_PATH }}/bin
+      - name: Check for auto-generated IPA
+        id: check_ipa
+        run: |
+          IPA_FILE=$(find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }} -type f -name "*.ipa" | head -n 1)
+          if [ -n "$IPA_FILE" ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+            echo "ipa_path=$IPA_FILE" >> $GITHUB_OUTPUT
+            echo "Found auto-generated IPA at: $IPA_FILE"
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+            echo "No auto-generated IPA found, will create manually"
+          fi
+
+      - name: Package signed IPA (if needed)
+        if: steps.check_ipa.outputs.found == 'false'
+        run: |
+          # Search for the .app bundle
+          APP_PATH=$(find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }}/${{ env.TARGET_FRAMEWORK }} -name "QrSortable.app" -type d | head -n 1)
+
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: Could not find QrSortable.app"
+            echo "Directory contents:"
+            find ${{ env.PROJECT_PATH }}/bin/${{ env.CONFIGURATION }}/${{ env.TARGET_FRAMEWORK }} -type d
             exit 1
           fi
 
-          echo "✅ Found IPA at: $IPA_FILE"
-          echo "ipa_path=$IPA_FILE" >> $GITHUB_OUTPUT
+          echo "Found app at: $APP_PATH"
 
-      - name: Copy IPA to workspace
-        run: |
-          cp "${{ steps.find_ipa.outputs.ipa_path }}" ./QrSortable-Signed.ipa
+          # Create Payload directory in a temp location
+          WORK_DIR=$(mktemp -d)
+          echo "Working in temporary directory: $WORK_DIR"
 
-      - name: Verify IPA
+          mkdir -p "$WORK_DIR/Payload"
+          cp -R "$APP_PATH" "$WORK_DIR/Payload/"
+
+          # Create IPA
+          cd "$WORK_DIR"
+          zip -qr QrSortable-Signed.ipa Payload
+
+          # Move to workspace
+          mv QrSortable-Signed.ipa ${{ github.workspace }}/
+          echo "IPA created successfully at: ${{ github.workspace }}/QrSortable-Signed.ipa"
+
+      - name: Copy auto-generated IPA (if exists)
+        if: steps.check_ipa.outputs.found == 'true'
         run: |
-          ls -lh QrSortable-Signed.ipa
-          unzip -l QrSortable-Signed.ipa | head -20
+          cp "${{ steps.check_ipa.outputs.ipa_path }}" ${{ github.workspace }}/QrSortable-Signed.ipa
+          echo "Copied auto-generated IPA to workspace"
+
+      - name: Verify IPA file
+        run: |
+          if [ -f "${{ github.workspace }}/QrSortable-Signed.ipa" ]; then
+            echo "IPA file verified:"
+            ls -lh ${{ github.workspace }}/QrSortable-Signed.ipa
+            echo ""
+            echo "IPA contents:"
+            unzip -l ${{ github.workspace }}/QrSortable-Signed.ipa | head -20
+          else
+            echo "Error: IPA file not found!"
+            exit 1
+          fi
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
