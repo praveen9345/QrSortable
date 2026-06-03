@@ -22,7 +22,7 @@
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
-		<ApplicationVersion>4</ApplicationVersion>
+		<ApplicationVersion>5</ApplicationVersion>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
@@ -66,7 +66,8 @@
 		<MtouchLink>None</MtouchLink>
 		<UseInterpreter>false</UseInterpreter>
 		<EnableCodeSigning Condition="'$(Configuration)' != 'Release'">false</EnableCodeSigning>
-		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
+		<!--<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>-->
+		<CodesignEntitlements></CodesignEntitlements>
 		<MtouchUseRegistrar>Static</MtouchUseRegistrar>
 		<ValidateXcodeVersion>false</ValidateXcodeVersion>
 	</PropertyGroup>
