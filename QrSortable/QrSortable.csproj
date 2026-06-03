@@ -63,7 +63,7 @@
 		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
 		<BuildIpa>true</BuildIpa>
 		<ArchiveOnBuild>true</ArchiveOnBuild>
-		<MtouchLink>None</MtouchLink>
+		<MtouchLink>SdkOnly</MtouchLink>
 		<UseInterpreter>false</UseInterpreter>
 		<EnableCodeSigning Condition="'$(Configuration)' != 'Release'">false</EnableCodeSigning>
 		<!--<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>-->
