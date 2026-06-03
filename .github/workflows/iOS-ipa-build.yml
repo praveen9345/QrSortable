@@ -125,7 +125,7 @@ jobs:
           /p:PublishAot=false \
           /p:RunAOTCompilation=false \
           /p:RuntimeIdentifier=ios-arm64 \
-          /p:MtouchLink=None \
+          /p:MtouchLink=SdkOnly \
           /p:MtouchExtraArgs="--interpreter" \
           /p:SupportedOSPlatformVersion=16.0 \
           /p:OptimizePNGs=false \
