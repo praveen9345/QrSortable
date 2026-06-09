@@ -64,7 +64,6 @@
 		<BuildIpa>true</BuildIpa>
 		<ArchiveOnBuild>true</ArchiveOnBuild>
 		<MtouchLink>SdkOnly</MtouchLink>
-		<UseInterpreter>false</UseInterpreter>
 		<EnableCodeSigning Condition="'$(Configuration)' != 'Release'">false</EnableCodeSigning>
 		<!--<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>-->
 		<CodesignEntitlements></CodesignEntitlements>
@@ -80,7 +79,8 @@
 		<EnableCodeSigning>true</EnableCodeSigning>
 		<RunAOTCompilation>false</RunAOTCompilation>
 		<MtouchLink>SdkOnly</MtouchLink>
-		<UseInterpreter>false</UseInterpreter>
+		<MtouchInterpreter>all</MtouchInterpreter>
+		<UseInterpreter>true</UseInterpreter>
 	</PropertyGroup>
 
 	<!-- iOS Debug Configuration -->
