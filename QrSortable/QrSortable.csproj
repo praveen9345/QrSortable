@@ -75,19 +75,18 @@
 	<!-- iOS Release Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Release'">
 		<PublishTrimmed>true</PublishTrimmed>
-		<TrimMode>partial</TrimMode>
+		<TrimMode>link</TrimMode>
 		<PublishAot>false</PublishAot>
 		<EnableCodeSigning>true</EnableCodeSigning>
 		<RunAOTCompilation>false</RunAOTCompilation>
-		<MtouchLink>None</MtouchLink>
-		<MtouchExtraArgs>--interpreter</MtouchExtraArgs>
-		<UseInterpreter>true</UseInterpreter>
+		<MtouchLink>SdkOnly</MtouchLink>
+		<UseInterpreter>false</UseInterpreter>
 	</PropertyGroup>
 
 	<!-- iOS Debug Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Debug'">
 		<OptimizePNGs>false</OptimizePNGs>
-		<MtouchLink>None</MtouchLink>
+		<MtouchLink>SdkOnly</MtouchLink>
 	</PropertyGroup>
 
 	<!-- iOS platform files -->
