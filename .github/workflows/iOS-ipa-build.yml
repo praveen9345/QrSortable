@@ -109,9 +109,10 @@ jobs:
             /p:RuntimeIdentifier=ios-arm64 \
             /p:MtouchLink=SdkOnly \
             /p:EnableAssemblyILStripping=false \
+            /p:MtouchExtraArgs="--interpreter" \
             /p:SupportedOSPlatformVersion=16.0 \
             /p:OptimizePNGs=false \
-            /p:UseInterpreter=false
+            /p:UseInterpreter=true
         working-directory: ${{ env.PROJECT_PATH }}
 
       # ✅ Find IPA
