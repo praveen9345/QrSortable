@@ -109,7 +109,7 @@ jobs:
             /p:RuntimeIdentifier=ios-arm64 \
             /p:MtouchLink=SdkOnly \
             /p:EnableAssemblyILStripping=false \
-            /p:MtouchExtraArgs="--interpreter" \
+            /p:MtouchInterpreter=all \
             /p:SupportedOSPlatformVersion=16.0 \
             /p:OptimizePNGs=false \
             /p:UseInterpreter=true
