@@ -50,11 +50,11 @@
                 {
                     try
                     {
-                        if (view.Name == "RootView")
-                        {
-                            Routing.RegisterRoute("//" + nameof(MainPage) + "/" + nameof(RootView), view);
-                            continue;
-                        }
+                        //if (view.Name == "RootView")
+                        //{
+                        //    Routing.RegisterRoute("//" + nameof(MainPage) + "/" + nameof(RootView), view);
+                        //    continue;
+                        //}
                         Routing.RegisterRoute(view.Name, view);
                     }
                     catch (Exception ex)
