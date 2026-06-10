@@ -13,7 +13,7 @@
         private StoreAppData _app;
         private string BundleIdentifier => "com.danfe.qrsortable";
 
-        private string BundleVersion => NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleShortVersionString").ToString();
+        private string BundleVersion => NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleShortVersionString").ToString()?.ToString() ?? "0.0.0";
 
         private class AppDataRoot
         {
@@ -57,41 +57,103 @@
             {
                 _app = await LookupApp();
 
-                return Version.Parse(_app.Version) <= Version.Parse(BundleVersion);
+                if (_app == null)
+                {
+                    return true;
+                }
+
+                if (string.IsNullOrWhiteSpace(_app.Version))
+                {
+                    return true;
+                }
+
+                if (!Version.TryParse(_app.Version, out var storeVersion))
+                {
+                    return true;
+                }
+
+                if (!Version.TryParse(BundleVersion, out var currentVersion))
+                {
+                    return true;
+                }
+
+                return currentVersion >= storeVersion;
             }
             catch (Exception ex)
             {
-                await Task.Delay(0);
-                Console.WriteLine("IosVersionCheckService .cs: " + ex);
+                Console.WriteLine(
+                   $"IosVersionCheckService.IsUsingLatestVersion failed: {ex}");
                 return true;
             }
         }
-
         /// <summary>
-        ///     Opens the app store to the app.
+        /// Opens the App Store page.
         /// </summary>
         public async Task OpenAppInStore()
         {
             try
             {
                 _app ??= await LookupApp();
-                var options = new UIApplicationOpenUrlOptions();
-                UIKit.UIApplication.SharedApplication.OpenUrl(new NSUrl($"{_app.Url}"), options, null);
+
+                if (string.IsNullOrWhiteSpace(_app?.Url))
+                {
+                    return;
+                }
+
+                var url = new NSUrl(_app.Url);
+
+                if (url == null)
+                {
+                    return;
+                }
+
+                UIApplication.SharedApplication.OpenUrl( url, new UIApplicationOpenUrlOptions(),null);
             }
             catch (Exception ex)
             {
-                await Task.Delay(0);
-                Console.WriteLine("IosVersionCheckService.cs: OpenAppInStore :" + ex);
+                Console.WriteLine(
+                    $"IosVersionCheckService.OpenAppInStore failed: {ex}");
             }
         }
 
-        private async Task<StoreAppData> LookupApp()
+        private async Task<StoreAppData?> LookupApp()
         {
-            using var http = new HttpClient();
-            var response = await http.GetAsync($"http://itunes.apple.com/{GetCountryCode()}/lookup?bundleId={BundleIdentifier}");
-            var content = await response.Content.ReadAsStringAsync();
+            try
+            {
+                using var http = new HttpClient();
 
-            return JsonConvert.DeserializeObject<AppDataRoot>(content).Results.FirstOrDefault();
+                var requestUrl =
+                    $"https://itunes.apple.com/lookup?bundleId={BundleIdentifier}";
+
+                var response = await http.GetAsync(requestUrl);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrWhiteSpace(content))
+                {
+                    return null;
+                }
+
+                var root = JsonConvert.DeserializeObject<AppDataRoot>(content);
+
+                if (root?.Results == null || root.Results.Count == 0)
+                {
+                    return null;
+                }
+
+                return root.Results.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(
+                    $"IosVersionCheckService.LookupApp failed: {ex}");
+                return null;
+            }
         }
     }
 }
