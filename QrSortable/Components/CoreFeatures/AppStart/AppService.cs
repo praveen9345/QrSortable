@@ -25,13 +25,9 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
         private readonly IGeneralInformationManager _generalInformationManager;
         private readonly ILanguageProvider _languageProvider;
-        private readonly IBackendDatabaseManager _backendDatabaseManager;
 
         private const string DatabaseName = "QrSortable.sqlite3";
         private const string BackendDatabaseName = "QrSortableBackend.sqlite3";
-
-        private bool _initialized;
-        private readonly SemaphoreSlim _startupSemaphore = new(1, 1);
 
         /// <summary>
         ///     Initializes the application.
@@ -44,8 +40,23 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             _fileManager = ServiceHelper.GetService<IFileManager>();
             _generalInformationManager = ServiceHelper.GetService<IGeneralInformationManager>();
             _languageProvider = ServiceHelper.GetService<ILanguageProvider>();
-            _backendDatabaseManager = ServiceHelper.GetService<IBackendDatabaseManager>();
 
+            var backendDatabaseManager = ServiceHelper.GetService<IBackendDatabaseManager>();
+            backendDatabaseManager.Initialize(CreateNewBackendDbContext);
+
+            _ = InitializeAsync();
+
+        }
+
+        /// <summary>
+        ///     Ensures DB initialization and reset completes before setting the language,
+        ///     avoiding race conditions between the two operations.
+        /// </summary>
+        private async Task InitializeAsync()
+        {
+            await ResetStorageAndDatabaseAfterReinstallAsync();
+            _generalInformationManager.ResetGeneralInformation();
+            await SetLanguageAsync();
         }
 
         /// <summary>
@@ -56,36 +67,8 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// </summary>
         public async Task OnStartAsync()
         {
-            await EnsureInitializedAsync();
+
             await NavigateToFirstViewModelAsync();
-        }
-
-        /// <summary>
-        /// Ensures initialization runs only once and completes before navigation.
-        /// </summary>
-        private async Task EnsureInitializedAsync()
-        {
-            if (_initialized)
-                return;
-
-            await _startupSemaphore.WaitAsync();
-
-            try
-            {
-                if (_initialized)
-                    return;
-
-                _backendDatabaseManager.Initialize(CreateNewBackendDbContext);
-                await ResetStorageAndDatabaseAfterReinstallAsync();
-                _generalInformationManager.ResetGeneralInformation();
-                await SetLanguageAsync();
-
-                _initialized = true;
-            }
-            finally
-            {
-                _startupSemaphore.Release();
-            }
         }
 
         /// <summary>
@@ -132,13 +115,8 @@ namespace QrSortable.Components.CoreFeatures.AppStart
 
             if (currentPlatform == _mauiEssentialsWrapper.IosDevicePlatform)
             {
-                var folder = Path.Combine(
-                     Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"..","Library","Database");
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library", "Database", name);
 
-                // IMPORTANT: ensure folder exists on iOS
-                Directory.CreateDirectory(folder);
-
-                return Path.Combine(folder, name);
             }
             throw new NotImplementedException("The current platform is not supported");
         }
@@ -147,32 +125,32 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         {
             // Initialize the database first
             _databaseManager.Initialize(CreateNewDbContext);
-            
+
             // Check if this is the first run using Preferences
             bool isFirstRun = !Preferences.ContainsKey("AppInitialized");
-            
+
             // Also check if multiuser ID exists in the database
             var generalInfo = await _generalInformationManager.GetGeneralInformationAsync();
             bool needsMultiuserId = string.IsNullOrWhiteSpace(generalInfo?.MultiUserId);
-            
+
             if (isFirstRun || needsMultiuserId)
             {
                 // Mark as initialized
                 Preferences.Set("AppInitialized", true);
-                
+
                 if (isFirstRun)
                 {
                     // Only clear on true first run
                     _mauiEssentialsWrapper.ClearSecureStorage();
                     await _databaseManager.ClearDatabaseAsync();
                 }
-                
+
                 // Set initial onboarding state (only if not already set)
                 if (generalInfo == null || generalInfo.OnboardingProgress == OnboardingProgress.NotStarted || isFirstRun)
                 {
                     await _generalInformationManager.UpdateOnboardingProgressAsync(OnboardingProgress.NotStarted);
                 }
-                
+
                 // Generate multiuser ID if missing
                 if (needsMultiuserId)
                 {
@@ -181,7 +159,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             }
         }
 
-        
+
         private string GenerateMultiuserId()
         {
             string seg1 = GenerateNumber(4);

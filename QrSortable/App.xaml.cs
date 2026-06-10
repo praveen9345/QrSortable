@@ -5,81 +5,57 @@
     using QrSortable.Components.UiFunctionality.Navigation.Helper;
 
     /// <summary>
-    /// Cross-platform application entry.
-    /// 
-    /// Key startup fix:
-    /// - Do NOT run startup work too early in OnStart()
-    /// - Wait until the main Window is created
-    /// - Then register routes and run startup initialization
-    /// 
-    /// This reduces startup pressure during iOS UIKit window/safe-area setup.
+    ///     Class representing the cross-platform application.
     /// </summary>
     public partial class App : Application
     {
         private readonly IAppService _appService;
 
-        private bool _startupCompleted;
-        private readonly object _startupLock = new();
-
+        /// <summary>
+        ///     Initializes the application.
+        /// </summary>
+        /// <param name="appService">The service used by the application.</param>
         public App(IAppService appService)
         {
+
             InitializeComponent();
             _appService = appService;
         }
 
         /// <summary>
-        /// Creates the main application window with AppShell.
+		/// Creates and returns a new window with an instance of AppShell as the content.
         /// </summary>
+		/// <param name="activationState">The activation state for the window (optional).</param>
+		/// <returns>A new Window object with the AppShell as its content.</returns>
         protected override Window CreateWindow(IActivationState? activationState)
         {
+
             var window = new Window(new AppShell());
 
-            // Window lifecycle hooks
-            window.Created += OnWindowCreated;
             window.Resumed += OnWindowResumed;
-            window.Destroying += OnWindowDestroying;
+
 
             return window;
         }
 
         /// <summary>
-        /// Runs once after the main window is created.
-        /// This is a safer place than OnStart() for startup work on iOS.
+        /// Invoked when the application starts.
+
         /// </summary>
-        private async void OnWindowCreated(object? sender, EventArgs e)
+        /// <remarks>
+        /// This method is called when the application is launched. It overrides the base class's <see cref="OnStart"/> method
+        /// to perform necessary initialization tasks for the application. It calls the <c>OnStartAsync</c> method of the
+        /// associated <see cref="AppService"/> instance asynchronously.
+        /// </remarks>
+        protected override async void OnStart()
         {
-            lock (_startupLock)
-            {
-                if (_startupCompleted)
-                {
-                    return;
-                }
+            base.OnStart();
 
-                _startupCompleted = true;
-            }
-
-            try
-            {
-
-                // Important for iOS: dispatch startup to UI thread after Shell settles
-                await MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    await Task.Delay(1000); // small delay helps iOS Shell become ready
-                    await _appService.OnStartAsync();
-                });
-
-
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[App] Startup failed: {ex}");
-
-                throw;
-            }
+            await _appService.OnStartAsync();
         }
 
         /// <summary>
-        /// Invoked when the app resumes from background.
+        /// Invoked when the app window resumes from background.
         /// Broadcasts a message so any subscriber (e.g. RootViewModel) can react.
         /// </summary>
         private void OnWindowResumed(object? sender, EventArgs e)
@@ -87,17 +63,17 @@
             WeakReferenceMessenger.Default.Send(new AppResumedMessage());
         }
 
-        /// <summary>
-        /// Cleanup window event subscriptions.
-        /// </summary>
-        private void OnWindowDestroying(object? sender, EventArgs e)
-        {
-            if (sender is Window window)
-            {
-                window.Created -= OnWindowCreated;
-                window.Resumed -= OnWindowResumed;
-                window.Destroying -= OnWindowDestroying;
-            }
-        }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

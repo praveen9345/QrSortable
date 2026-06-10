@@ -6,26 +6,6 @@
     using QrSortable.Components.PlatformUtils;
     using BarcodeScanning;
     using QrSortable.Components.CoreFeatures.CodeGenerator.Models;
-    using QrSortable.Components.CoreFeatures.AppStart;
-    using QrSortable.Components.UiFunctionality.Navigation;
-    using QrSortable.Components.CoreFeatures.Assistant.Helpers;
-    using QrSortable.Components.CoreFeatures.Assistant;
-    using QrSortable.Components.CoreFeatures.Cloud;
-    using QrSortable.Components.CoreFeatures.Cloud.BackendCommunication;
-    using QrSortable.Components.CoreFeatures.CodeGenerator.Helper;
-    using QrSortable.Components.CoreFeatures.CodeGenerator;
-    using QrSortable.Components.CoreFeatures.DataManagement.Backend;
-    using QrSortable.Components.CoreFeatures.DataManagement.Backend.Helper;
-    using QrSortable.Components.CoreFeatures.DataManagement.General;
-    using QrSortable.Components.CoreFeatures.OrdersPayments;
-    using QrSortable.Components.CoreFeatures.Scanner;
-    using QrSortable.Components.CoreFeatures.Settings.Wrappers;
-    using QrSortable.Components.CoreFeatures.Settings;
-    using QrSortable.Components.PlatformUtils.Wrappers;
-    using QrSortable.Components.TimeHandling;
-    using QrSortable.Components.UiFunctionality.Localization;
-    using QrSortable.Components.UiFunctionality.Notification;
-    using Microsoft.Extensions.DependencyInjection;
     using PdfSharpCore.Fonts;
 
 #if ANDROID
@@ -44,39 +24,39 @@
 #endif
 
     public static class MauiProgram
-	{
-		public static MauiApp CreateMauiApp()
-		{
-			var builder = MauiApp.CreateBuilder();
-			builder
-				.UseMauiApp<App>()
-				.UseMauiCommunityToolkit()
-				.UseMauiCompatibility()
+    {
+        public static MauiApp CreateMauiApp()
+        {
+            var builder = MauiApp.CreateBuilder();
+            builder
+                .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
+                .UseMauiCompatibility()
                 .UseBarcodeScanning()
-				.ConfigureFonts(fonts =>
-				{
-					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-					fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-					fonts.AddFont("Itim-Regular.ttf", "ItimRegular");
+                .ConfigureFonts(fonts =>
+                {
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("Itim-Regular.ttf", "ItimRegular");
                     fonts.AddFont("FluentSystemIcons-Filled.ttf", "FluentIcons");
-				})
-                .RegisterCoreServices()
-                .RegisterFeatureServices()
+                })
+                .RegisterServices()
+
                 .RegisterViewsAndViewModels()
                 .ConfigureMauiHandlers(handlers =>
                 {
-                    #if ANDROID
-                        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("Entry", (handler, _) =>
-                        {  
-                            handler.PlatformView.Background = null;
-                        });
-                    #elif IOS
+#if ANDROID
+                    Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("Entry", (handler, _) =>
+                    {
+                        handler.PlatformView.Background = null;
+                    });
+#elif IOS
                         Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("Entry", (handler, _) =>
                         {  
                             handler.PlatformView.BorderStyle = UITextBorderStyle.None;
                         });
 
-                    #endif
+#endif
 
                 });
 
@@ -89,23 +69,48 @@
 #endif
 
             PdfSharpCore.Fonts.GlobalFontSettings.FontResolver = new PdfFontResolver();
-            
+
             var app = builder.Build();
             // Needs to be initialized after building the app to link the services to the created singletons.
             ServiceHelper.Initialize(app.Services);
-			return app;
-		}
+            return app;
+        }
 
 
         /// <summary>
-        /// Register app-wide / platform / startup-critical services here.
-        /// Use Singleton for true app-wide services.
+        ///     Registers all classes of which the name ends with "Service" 
+        ///     and that have an interface whose name ends with the name of the service.
         /// </summary>
-        public static MauiAppBuilder RegisterCoreServices(this MauiAppBuilder builder)
+        /// <param name="builder">The app in which the services are registered.</param>
+        public static MauiAppBuilder RegisterServices(this MauiAppBuilder builder)
         {
-            // =========================================================
-            // PLATFORM SERVICES
-            // =========================================================
+
+            string[] singletonTypeEndings =
+            {
+                "Service", "Manager", "Wrapper", "Logger", "Provider", "Scheduler", "Handler", "Client", "Builder",
+                "Validator", "Helper"
+            };
+
+            var exportedTypes = Assembly.GetExecutingAssembly().GetExportedTypes();
+
+            foreach (var singletonType in singletonTypeEndings)
+            {
+                foreach (var service in exportedTypes)
+                {
+                    if (!service.IsInterface && service.Name.EndsWith(singletonType)
+                                             && !service.Name.EndsWith("HttpClientWrapper") && !service.IsAbstract)
+                    {
+                        var interfaceType = service.GetInterfaces().FirstOrDefault(type =>
+                            type.Name.EndsWith(service.Name));
+
+                        if (interfaceType != null)
+                        {
+                            builder.Services.AddSingleton(interfaceType, service);
+                        }
+                    }
+                }
+            }
+
 #if ANDROID
             builder.Services.AddSingleton<IImageService, AndroidImageService>();
             builder.Services.AddSingleton<IPermissionService, AndroidPermissionService>();
@@ -116,58 +121,10 @@
             builder.Services.AddSingleton<IVersionCheckService, IosVersionCheckService>();
 #endif
 
-            builder.Services.AddSingleton<IAppService, AppService>();
-            builder.Services.AddSingleton<INavigationService, NavigationService>();
-            builder.Services.AddSingleton<IConnectivityService, ConnectivityService>();
-            builder.Services.AddSingleton<IBackendCommunicationService, BackendCommunicationService>();
-            builder.Services.AddSingleton<IBackendSynchronizationManager, BackendSynchronizationManager>();
-            builder.Services.AddSingleton<IGeneralDatabaseSynchronizationManager, GeneralDatabaseSynchronizationManager>();
-            builder.Services.AddSingleton<IBackendDatabaseManager, BackendDatabaseManager>();
-            builder.Services.AddSingleton<IGeneralInformationManager, GeneralInformationManager>();
-            builder.Services.AddSingleton<IDatabaseManager, DatabaseManager>();
-            builder.Services.AddSingleton<IDatabaseQueueProvider, DatabaseQueueProvider>(); 
-            builder.Services.AddSingleton<IMauiEssentialsWrapper, MauiEssentialsWrapper>();
-            builder.Services.AddSingleton<INavigationShellWrapper, NavigationShellWrapper>(); 
-            builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
-            builder.Services.AddSingleton<ILanguageProvider, LanguageProvider>();
-
-            builder.Services.AddSingleton<IDeepLinkService, DeepLinkService>();
-            builder.Services.AddSingleton<ITimerService, TimerService>();
-            builder.Services.AddSingleton<ISubscriptionService, SubscriptionService>();
-
+            //External Services
             return builder;
         }
 
-        /// <summary>
-        /// Register helpers / generators / validators / builders / wrappers here.
-        /// These should usually be Transient unless they truly need shared global state.
-        /// </summary>
-        public static MauiAppBuilder RegisterFeatureServices(this MauiAppBuilder builder)
-        {
-            
-            //helper
-            builder.Services.AddTransient<IStorageFinderHelper, StorageFinderHelper>();
-            builder.Services.AddTransient<IAesHelper, AesHelper>();
-
-            //Services
-            builder.Services.AddTransient<IStorageVoiceAssistantService, StorageVoiceAssistantService>();
-            builder.Services.AddTransient<ICodeGeneratorService, CodeGeneratorService>();
-            builder.Services.AddTransient<IPdfGeneratorService, PdfGeneratorService>();
-            builder.Services.AddTransient<IMollieService, MollieService>();
-            builder.Services.AddTransient<IFilePickerService, FilePickerService>();
-            builder.Services.AddTransient<ICultureInfoWrapper, CultureInfoWrapper>();
-            builder.Services.AddTransient<IFileWrapper, FileWrapper>();
-            builder.Services.AddTransient<IFileManager, FileManager>();
-            builder.Services.AddTransient<ISharedMethodService, SharedMethodService>();
-            builder.Services.AddTransient<ITaskHelperService, TaskHelperService>();
-            builder.Services.AddTransient<IDialogService, DialogService>();
-            builder.Services.AddTransient<IToastService, ToastService>();
-            builder.Services.AddTransient<IBackendDatabaseHelper, BackendDatabaseHelper>();
-            builder.Services.AddTransient<IStorageFinderService, StorageFinderService>();
-            return builder;
-        }
-
-   
         /// <summary>
         ///     Registers all classes of which the name ends with "ViewModel" 
         ///     and tries to register a matching view for each view model.
@@ -191,6 +148,6 @@
             }
             return builder;
         }
-	}
+    }
 }
 
