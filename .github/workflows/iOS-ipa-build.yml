@@ -108,7 +108,8 @@ jobs:
             /p:CodesignKey="${{ secrets.IOS_CODESIGN_KEY }}" \
             /p:CodesignProvision="${{ secrets.IOS_PROVISIONING_PROFILE_NAME }}" \
             /p:ArchiveOnBuild=true \
-            /p:PublishTrimmed=false \
+            /p:PublishTrimmed=true \
+            /p:TrimMode=partial \
             /p:RuntimeIdentifier=ios-arm64 \
             /p:MtouchLink=SdkOnly \
             /p:EnableAssemblyILStripping=false \
