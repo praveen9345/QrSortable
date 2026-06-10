@@ -102,7 +102,7 @@ jobs:
         run: |
           dotnet publish QrSortable.csproj \
             -f ${{ env.TARGET_FRAMEWORK }} \
-            -c ${{ env.CONFIGURATION }} \    
+            -c ${{ env.CONFIGURATION }} \
             /p:BuildIpa=true \
             /p:EnableCodeSigning=true \
             /p:CodesignKey="${{ secrets.IOS_CODESIGN_KEY }}" \
