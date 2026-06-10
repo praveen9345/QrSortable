@@ -73,7 +73,7 @@
 
 	<!-- iOS Release Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Release'">
-        <PublishTrimmed>false</PublishTrimmed>
+        <PublishTrimmed>true</PublishTrimmed>
         <EnableCodeSigning>true</EnableCodeSigning>
         <MtouchLink>SdkOnly</MtouchLink>
         <EnableAssemblyILStripping>false</EnableAssemblyILStripping>
