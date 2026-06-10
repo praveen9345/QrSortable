@@ -78,7 +78,7 @@
 		<PublishAot>false</PublishAot>
 		<EnableCodeSigning>true</EnableCodeSigning>
 		<RunAOTCompilation>false</RunAOTCompilation>
-		<MtouchLink>None</MtouchLink>
+		<MtouchLink>SdkOnly</MtouchLink>
 		<MtouchExtraArgs>--interpreter</MtouchExtraArgs>
 		<UseInterpreter>true</UseInterpreter>
 	</PropertyGroup>
