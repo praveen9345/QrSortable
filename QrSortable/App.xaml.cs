@@ -66,16 +66,21 @@
                 // Register routes after window creation.
                 AppShell.RegisterRoutes();
 
-                // Now run your application startup logic.
-                await _appService.OnStartAsync();
+
+                // Important for iOS: dispatch startup to UI thread after Shell settles
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Task.Delay(200); // small delay helps iOS Shell become ready
+                    await _appService.OnStartAsync();
+                });
+
+
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[App] Startup failed: {ex}");
 
-#if DEBUG
                 throw;
-#endif
             }
         }
 

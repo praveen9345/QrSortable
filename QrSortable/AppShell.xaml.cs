@@ -37,8 +37,14 @@
                     return;
                 }
 
+
                 var views = Assembly.GetExecutingAssembly().GetExportedTypes()
-                .Where(t => t.Name.EndsWith("View"));
+                                  .Where(t =>
+                                      t.IsClass &&
+                                      !t.IsAbstract &&
+                                      t.Name.EndsWith("View", StringComparison.Ordinal))
+                                  .ToList();
+
 
                 foreach (var view in views)
                 {
