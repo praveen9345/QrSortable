@@ -55,6 +55,12 @@ jobs:
         run: dotnet restore QrSortable.csproj
         working-directory: ${{ env.PROJECT_PATH }}
 
+      # ✅ HARD CLEAN (critical)
+      - name: Delete bin and obj folders
+        run: |
+          find . -type d \( -name bin -o -name obj \) -exec rm -rf {} +
+        working-directory: ${{ env.PROJECT_PATH }}
+
       # ✅ CLEAN BUILD (VERY IMPORTANT)
       - name: Clean build
         run: dotnet clean
@@ -96,23 +102,20 @@ jobs:
         run: |
           dotnet publish QrSortable.csproj \
             -f ${{ env.TARGET_FRAMEWORK }} \
-            -c ${{ env.CONFIGURATION }} \
+            -c ${{ env.CONFIGURATION }} \    
             /p:BuildIpa=true \
             /p:EnableCodeSigning=true \
             /p:CodesignKey="${{ secrets.IOS_CODESIGN_KEY }}" \
             /p:CodesignProvision="${{ secrets.IOS_PROVISIONING_PROFILE_NAME }}" \
             /p:ArchiveOnBuild=true \
-            /p:PublishTrimmed=true \
-            /p:TrimMode=partial \
-            /p:PublishAot=false \
-            /p:RunAOTCompilation=false \
+            /p:PublishTrimmed=false \
             /p:RuntimeIdentifier=ios-arm64 \
             /p:MtouchLink=SdkOnly \
             /p:EnableAssemblyILStripping=false \
-            /p:MtouchExtraArgs="--interpreter" \
             /p:SupportedOSPlatformVersion=16.0 \
             /p:OptimizePNGs=false \
-            /p:UseInterpreter=true
+            /p:UseInterpreter=true \
+            /p:NoSymbolStrip=true
         working-directory: ${{ env.PROJECT_PATH }}
 
       # ✅ Find IPA
