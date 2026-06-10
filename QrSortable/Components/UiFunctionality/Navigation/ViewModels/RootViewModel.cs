@@ -9,6 +9,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
+    using QrSortable.Components.CoreFeatures.Settings.Views;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Navigation.Helper;
@@ -124,14 +125,18 @@
 
                 var confirm = await DialogService.ShowRequestDialog( AppResources.RootViewModel_InformationForUseText,
                      AppResources.General_NoText, AppResources.General_YesText);
-
                 if (confirm)
                 {
+#if IOS
+                    await NavigationService.Navigate<HelpView>();
+#else
                     if (!await _sharedMethodService.OpenUserManualAsync())
                     {
                         await DialogService.ShowAlertDialog(
                        AppResources.Dialog_Error, AppResources.General_FileNotFoundErrorText, AppResources.Dialog_OK_Text);
                     }
+#endif
+
                 }
             }
 
