@@ -60,17 +60,11 @@
 
             try
             {
-                // Let the first UI cycle settle before extra startup work.
-                await Task.Yield();
-
-                // Register routes after window creation.
-                AppShell.RegisterRoutes();
-
 
                 // Important for iOS: dispatch startup to UI thread after Shell settles
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
-                    await Task.Delay(200); // small delay helps iOS Shell become ready
+                    await Task.Delay(1000); // small delay helps iOS Shell become ready
                     await _appService.OnStartAsync();
                 });
 
