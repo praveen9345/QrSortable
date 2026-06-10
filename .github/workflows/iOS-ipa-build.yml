@@ -110,13 +110,15 @@ jobs:
             /p:ArchiveOnBuild=true \
             /p:PublishTrimmed=true \
             /p:TrimMode=partial \
+            /p:PublishAot=false \
+            /p:RunAOTCompilation=false \
             /p:RuntimeIdentifier=ios-arm64 \
             /p:MtouchLink=SdkOnly \
             /p:EnableAssemblyILStripping=false \
+            /p:MtouchExtraArgs="--interpreter" \
             /p:SupportedOSPlatformVersion=16.0 \
             /p:OptimizePNGs=false \
-            /p:UseInterpreter=true \
-            /p:NoSymbolStrip=true
+            /p:UseInterpreter=true
         working-directory: ${{ env.PROJECT_PATH }}
 
       # ✅ Find IPA
