@@ -118,8 +118,9 @@ jobs:
             /p:MtouchExtraArgs="--interpreter" \
             /p:SupportedOSPlatformVersion=16.0 \
             /p:OptimizePNGs=false \
+            /p:UseInterpreter=true \
             /p:MtouchIdioms=iphone \
-            /p:UseInterpreter=true
+            /p:PlatformTarget=arm64 
         working-directory: ${{ env.PROJECT_PATH }}
 
       # ✅ Find IPA
