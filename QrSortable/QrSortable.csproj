@@ -60,7 +60,9 @@
 
 	<!-- iOS Platform Configuration - CRITICAL FOR iOS 16 COMPATIBILITY -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
+		 
 		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+		 <PlatformTarget>arm64</PlatformTarget>
 			
 		 <!-- ✅ FORCE iPhone only (CRITICAL FIX) -->
 		 <MtouchIdioms>iphone</MtouchIdioms>
@@ -84,10 +86,6 @@
         <EnableAssemblyILStripping>false</EnableAssemblyILStripping>
         <UseInterpreter>true</UseInterpreter>
         <NoSymbolStrip>true</NoSymbolStrip>
-		
-		<!-- ✅ IMPORTANT -->
-		<MtouchIdioms>iphone</MtouchIdioms>
-		<SupportedDevices>iPhone</SupportedDevices>
 	</PropertyGroup>
 
 	<!-- iOS Debug Configuration -->
