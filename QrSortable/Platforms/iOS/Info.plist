@@ -9,31 +9,32 @@
 	    <key>CFBundleName</key>
 	    <string>QrSortable</string>
 	    <key>CFBundleShortVersionString</key>
-	    <string>1.0.3</string>
+	    <string>1.0.4</string>
 	    <key>CFBundleVersion</key>
-	    <string>6</string>
+	    <string>7</string>
 		<key>MinimumOSVersion</key>
 		<string>16.0</string>
 
 		<key>LSRequiresIPhoneOS</key>
 		<true />
+		!-- ✅ iPhone ONLY -->
 		<key>UIDeviceFamily</key>
 		<array>
 			<integer>1</integer>
-			<integer>2</integer>
+			<!--<integer>2</integer>-->
 		</array>
 		<key>UIRequiredDeviceCapabilities</key>
 		<array>
 			<string>arm64</string>
 		</array>
 
-		<key>UISupportedInterfaceOrientations~ipad</key>
+		<!--<key>UISupportedInterfaceOrientations~ipad</key>
 		<array>
 			<string>UIInterfaceOrientationPortrait</string>
 			<string>UIInterfaceOrientationPortraitUpsideDown</string>
 			<string>UIInterfaceOrientationLandscapeLeft</string>
 			<string>UIInterfaceOrientationLandscapeRight</string>
-		</array>
+		</array>-->
 
 		<!-- Background Fetch -->
 		<key>UIBackgroundModes</key>
@@ -91,35 +92,5 @@
 		<key>XSAppIconAssets</key>
 		<string>Assets.xcassets/appicon.appiconset</string>
 		
-		<!-- App Center Privacy Declaration (for iOS 17+) -->
-		<key>NSPrivacyTracking</key>
-		<false/>
-		<key>NSPrivacyCollectedDataTypes</key>
-		<array>
-			<dict>
-				<key>NSPrivacyCollectedDataType</key>
-				<string>NSPrivacyCollectedDataTypeCrashData</string>
-				<key>NSPrivacyCollectedDataTypeLinked</key>
-				<false/>
-				<key>NSPrivacyCollectedDataTypeTracking</key>
-				<false/>
-				<key>NSPrivacyCollectedDataTypePurposes</key>
-				<array>
-					<string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string>
-				</array>
-			</dict>
-			<dict>
-				<key>NSPrivacyCollectedDataType</key>
-				<string>NSPrivacyCollectedDataTypeProductInteraction</string>
-				<key>NSPrivacyCollectedDataTypeLinked</key>
-				<false/>
-				<key>NSPrivacyCollectedDataTypeTracking</key>
-				<false/>
-				<key>NSPrivacyCollectedDataTypePurposes</key>
-				<array>
-					<string>NSPrivacyCollectedDataTypePurposeAnalytics</string>
-				</array>
-			</dict>
-		</array>
 	</dict>
 </plist>

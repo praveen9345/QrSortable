@@ -38,9 +38,6 @@
 #elif IOS
     using UIKit;
     using QrSortable.Platforms.iOS.Components.PlatformUtils;
-    using Microsoft.AppCenter;
-    using Microsoft.AppCenter.Crashes;
-    using Microsoft.AppCenter.Analytics;
 #endif
 
     public static class MauiProgram
@@ -79,14 +76,6 @@
 #endif
 
                 });
-
-            // Initialize App Center (outside of handlers configuration)
-#if IOS
-		            AppCenter.Start("ios=744f43a3-1c43-4dc2-bb92-d55acdb20fe6",typeof(Analytics),typeof(Crashes));
-                    
-                    // Enable verbose logging for debugging
-                    AppCenter.LogLevel = LogLevel.Verbose;
-#endif
 
             PdfSharpCore.Fonts.GlobalFontSettings.FontResolver = new PdfFontResolver();
 

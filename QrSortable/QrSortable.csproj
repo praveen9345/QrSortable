@@ -21,8 +21,8 @@
 		<ApplicationId>com.danfe.qrsortable</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
-		<ApplicationVersion>6</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
+		<ApplicationVersion>7</ApplicationVersion>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
@@ -61,6 +61,11 @@
 	<!-- iOS Platform Configuration - CRITICAL FOR iOS 16 COMPATIBILITY -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
 		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+			
+		 <!-- ✅ FORCE iPhone only (CRITICAL FIX) -->
+		 <MtouchIdioms>iphone</MtouchIdioms>
+		 <SupportedDevices>iPhone</SupportedDevices>
+
 		<BuildIpa>true</BuildIpa>
 		<ArchiveOnBuild>true</ArchiveOnBuild>
 		<MtouchLink>SdkOnly</MtouchLink>
@@ -79,7 +84,10 @@
         <EnableAssemblyILStripping>false</EnableAssemblyILStripping>
         <UseInterpreter>true</UseInterpreter>
         <NoSymbolStrip>true</NoSymbolStrip>
-
+		
+		<!-- ✅ IMPORTANT -->
+		<MtouchIdioms>iphone</MtouchIdioms>
+		<SupportedDevices>iPhone</SupportedDevices>
 	</PropertyGroup>
 
 	<!-- iOS Debug Configuration -->
@@ -193,8 +201,6 @@
 	<ItemGroup>
 		<PackageReference Include="BarcodeScanning.Native.Maui" Version="2.1.1" />
 		<PackageReference Include="Google.Cloud.Firestore" Version="3.9.0" />
-		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.7" />
-		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.7" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
