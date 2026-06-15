@@ -70,10 +70,10 @@
 	</PropertyGroup>
 
 	<!-- iOS platform files -->
-	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
-		<BundleResource Include="Platforms\iOS\Info.plist" Link="Info.plist" />
-		<None Include="Platforms\iOS\Entitlements.plist" />
-	</ItemGroup>
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
+		<CodesignEntitlements>Platforms/iOS/Entitlements.plist</CodesignEntitlements>
+	</PropertyGroup>
+
 
 	<ItemGroup>
 		<!-- App Icon -->
