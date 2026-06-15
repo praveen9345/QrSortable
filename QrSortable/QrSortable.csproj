@@ -62,11 +62,7 @@
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
 		 
 		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
-		 <PlatformTarget>arm64</PlatformTarget>
-			
-		 <!-- ✅ FORCE iPhone only (CRITICAL FIX) -->
-		 <MtouchIdioms>iphone</MtouchIdioms>
-		 <SupportedDevices>iPhone</SupportedDevices>
+		 <PlatformTarget>iPhone</PlatformTarget>
 
 		<BuildIpa>true</BuildIpa>
 		<ArchiveOnBuild>true</ArchiveOnBuild>
@@ -84,7 +80,7 @@
         <EnableCodeSigning>true</EnableCodeSigning>
         <MtouchLink>SdkOnly</MtouchLink>
         <EnableAssemblyILStripping>false</EnableAssemblyILStripping>
-        <UseInterpreter>true</UseInterpreter>
+        <UseInterpreter>false</UseInterpreter>
         <NoSymbolStrip>true</NoSymbolStrip>
 	</PropertyGroup>
 
