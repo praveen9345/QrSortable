@@ -58,30 +58,9 @@
 		<AndroidSigningKeyPass>qrsortable</AndroidSigningKeyPass>
 	</PropertyGroup>
 
-	<!-- iOS Platform Configuration - CRITICAL FOR iOS 16 COMPATIBILITY -->
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
-		 
-		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
-		 <PlatformTarget>iPhone</PlatformTarget>
-
-		<BuildIpa>true</BuildIpa>
-		<ArchiveOnBuild>true</ArchiveOnBuild>
-		<MtouchLink>SdkOnly</MtouchLink>
-		<EnableCodeSigning Condition="'$(Configuration)' != 'Release'">false</EnableCodeSigning>
-		<!--<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>-->
-		<CodesignEntitlements></CodesignEntitlements>
-		<MtouchUseRegistrar>Static</MtouchUseRegistrar>
-		<ValidateXcodeVersion>false</ValidateXcodeVersion>
-	</PropertyGroup>
-
 	<!-- iOS Release Configuration -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Release'">
-        <PublishTrimmed>true</PublishTrimmed>
-        <EnableCodeSigning>true</EnableCodeSigning>
-        <MtouchLink>SdkOnly</MtouchLink>
-        <EnableAssemblyILStripping>false</EnableAssemblyILStripping>
-        <UseInterpreter>false</UseInterpreter>
-        <NoSymbolStrip>true</NoSymbolStrip>
+        <UseInterpreter>true</UseInterpreter>
 	</PropertyGroup>
 
 	<!-- iOS Debug Configuration -->
