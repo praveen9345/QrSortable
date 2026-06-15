@@ -111,7 +111,7 @@ jobs:
             /p:RuntimeIdentifier=ios-arm64 \
             /p:OptimizePNGs=false \
             /p:UseInterpreter=true \
-            /p:Platform="iPhone"
+            /p:PlatformTarget=arm64
         working-directory: ${{ env.PROJECT_PATH }}
 
       # ✅ Find IPA
