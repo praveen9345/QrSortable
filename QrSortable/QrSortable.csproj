@@ -72,7 +72,7 @@
 	<!-- iOS platform files -->
 	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
 		<BundleResource Include="Platforms\iOS\Info.plist" Link="Info.plist" />
-		<None Include="Platforms\iOS\Entitlements.plist" CopyToOutputDirectory="PreserveNewest" />
+		<None Include="Platforms\iOS\Entitlements.plist" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -173,7 +173,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="BarcodeScanning.Native.Maui" Version="2.1.1" />
-		<PackageReference Include="Google.Cloud.Firestore" Version="3.9.0" />
+		<PackageReference Include="Plugin.Firebase.Firestore" Version="3.0.0" />
+		<PackageReference Include="Plugin.Firebase.Core" Version="3.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
