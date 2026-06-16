@@ -22,6 +22,7 @@ public class AppDelegate : MauiUIApplicationDelegate
     public override bool WillFinishLaunching(UIApplication uiApplication, NSDictionary launchOptions)
     {
         CreateDirectoriesAndSetSkipBackupAttribute();
+        Console.WriteLine("QrSortable: WillFinishLaunching");
         return base.WillFinishLaunching(uiApplication, launchOptions);
     }
 
@@ -30,6 +31,8 @@ public class AppDelegate : MauiUIApplicationDelegate
         var logger =IPlatformApplication.Current?.Services.GetRequiredService<ILogger>();
 
         logger?.Log("FinishedLaunching");
+
+        Console.WriteLine("QrSortable: FinishedLaunching");
 
         AppDomain.CurrentDomain.UnhandledException += (s, e) =>
         {
