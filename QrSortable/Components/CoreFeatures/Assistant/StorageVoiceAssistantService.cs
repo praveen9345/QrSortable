@@ -40,24 +40,40 @@
         // --- Speech Recognition ---
         private async Task<string?> RecognizeSpeechAsync()
         {
-            // Request microphone permission
-            var permissionGranted = await SpeechToText.Default.RequestPermissions(CancellationToken.None);
-            if (!permissionGranted) return null;
+            var speechToText = SpeechToText.Default;
+
+            var permissionGranted = await speechToText.RequestPermissions(CancellationToken.None);
+            if (!permissionGranted)
+                return null;
 
             string recognizedText = string.Empty;
 
-            // Listen and capture result
-            var result = await SpeechToText.Default.ListenAsync(
-                CultureInfo.CurrentCulture,
-                new Progress<string>(_ => { }), // optional partial updates
-                CancellationToken.None
-            );
+            var options = new SpeechToTextOptions
+            {
+                Culture = CultureInfo.CurrentCulture
+            };
 
-            if (result.IsSuccessful)
-                recognizedText = result.Text;
+            var tcs = new TaskCompletionSource<string?>();
 
-            return recognizedText;
+            speechToText.RecognitionResultCompleted += OnCompleted;
+
+            async void OnCompleted(object? sender, SpeechToTextRecognitionResultCompletedEventArgs e)
+            {
+
+                recognizedText = e.RecognitionResult?.Text ?? string.Empty;
+
+                tcs.TrySetResult(recognizedText);
+
+                speechToText.RecognitionResultCompleted -= OnCompleted;
+
+                await speechToText.StopListenAsync();
+            }
+
+            await speechToText.StartListenAsync(options, CancellationToken.None);
+
+            return await tcs.Task;
         }
+
 
     }
 }
