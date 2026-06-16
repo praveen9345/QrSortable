@@ -26,6 +26,7 @@
     using QrSortable.Components.UiFunctionality.Localization;
     using QrSortable.Components.UiFunctionality.Notification;
     using Microsoft.Extensions.DependencyInjection;
+    using QrSortable.Components.Logging;
     using PdfSharpCore.Fonts;
 
 #if ANDROID
@@ -34,6 +35,7 @@
     using Microsoft.Maui.Controls.Handlers;
     using Android.Widget;
     using Platforms.Android.Components.PlatformUtils;
+
 
 #elif IOS
     using UIKit;
@@ -44,6 +46,9 @@
     {
         public static MauiApp CreateMauiApp()
         {
+            Console.WriteLine("QrSortable: CreateMauiApp START");
+
+            Console.WriteLine("QrSortable: Before Build");
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -80,8 +85,14 @@
             PdfSharpCore.Fonts.GlobalFontSettings.FontResolver = new PdfFontResolver();
 
             var app = builder.Build();
+
+            Console.WriteLine("QrSortable: After Build");
+
             // Needs to be initialized after building the app to link the services to the created singletons.
             ServiceHelper.Initialize(app.Services);
+
+            Console.WriteLine("QrSortable: ServiceHelper Initialized");
+
             return app;
         }
 
@@ -123,6 +134,7 @@
             builder.Services.AddSingleton<IDeepLinkService, DeepLinkService>();
             builder.Services.AddSingleton<ITimerService, TimerService>();
             builder.Services.AddSingleton<ISubscriptionService, SubscriptionService>();
+            builder.Services.AddSingleton<ILogger, Logger>();
 
             return builder;
         }

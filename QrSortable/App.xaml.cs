@@ -2,6 +2,7 @@
 {
     using CommunityToolkit.Mvvm.Messaging;
     using QrSortable.Components.CoreFeatures.AppStart;
+    using QrSortable.Components.Logging;
     using QrSortable.Components.UiFunctionality.Navigation.Helper;
 
     /// <summary>
@@ -17,14 +18,24 @@
     public partial class App : Application
     {
         private readonly IAppService _appService;
+        private readonly ILogger _logger;
 
         private bool _startupCompleted;
         private readonly object _startupLock = new();
 
-        public App(IAppService appService)
+        public App(IAppService appService, ILogger logger)
         {
+           
+            _logger = logger;
+
+            _logger.Log("App Constructor START");
+
             InitializeComponent();
+
             _appService = appService;
+
+            _logger.Log("App Constructor END");
+
         }
 
         /// <summary>
@@ -48,10 +59,13 @@
         /// </summary>
         private async void OnWindowCreated(object? sender, EventArgs e)
         {
+            _logger.Log("Window Created");
+
             lock (_startupLock)
             {
                 if (_startupCompleted)
                 {
+                    _logger.Log("Startup Already Completed");
                     return;
                 }
 
@@ -60,21 +74,27 @@
 
             try
             {
+                _logger.Log("Before Delay");
 
                 // Important for iOS: dispatch startup to UI thread after Shell settles
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
-                    await Task.Delay(500); // small delay helps iOS Shell become ready
+                    await Task.Delay(50); // small delay helps iOS Shell become ready
+
+                    _logger.Log("After Delay");
+
+                    _logger.Log("Before OnStartAsync");
+
                     await _appService.OnStartAsync();
+
+                    _logger.Log("After OnStartAsync");
                 });
 
 
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[App] Startup failed: {ex}");
-
-                throw;
+                _logger.LogException(ex);
             }
         }
 

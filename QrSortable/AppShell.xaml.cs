@@ -1,5 +1,7 @@
 ﻿namespace QrSortable
 {
+    using QrSortable.Components.Logging;
+    using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
     using System.Reflection;
     /// <summary>
@@ -13,21 +15,45 @@
         /// </summary>
         public AppShell()
         {
-            InitializeComponent();
+            var logger = ServiceHelper.GetService<ILogger>();
 
-            var views = Assembly.GetExecutingAssembly().GetExportedTypes()
-            .Where(t => t.Name.EndsWith("View"));
-
-            foreach (var view in views)
+            try
             {
-                if (view.Name == "RootView")
-                {
-                    Routing.RegisterRoute("//" + nameof(MainPage) + "/" + nameof(RootView), view);
-                    continue;
-                }
-                Routing.RegisterRoute(view.Name, view);
-            }
+                logger?.Log("AppShell Constructor START");
 
+                InitializeComponent();
+
+                logger?.Log("InitializeComponent Completed");
+
+                var views = Assembly.GetExecutingAssembly()
+                    .GetExportedTypes()
+                    .Where(t => t.Name.EndsWith("View"))
+                    .ToList();
+
+                logger?.Log($"Found {views.Count} Views");
+
+                foreach (var view in views)
+                {
+                    logger?.Log($"Registering {view.Name}");
+
+                    if (view.Name == "RootView")
+                    {
+                        Routing.RegisterRoute(
+                            "//" + nameof(MainPage) + "/" + nameof(RootView),
+                            view);
+                    }
+                    else
+                    {
+                        Routing.RegisterRoute(view.Name, view);
+                    }
+                }
+
+                logger?.Log("AppShell Constructor END");
+            }
+            catch (Exception ex)
+            {
+                logger?.LogException(ex);
+            }
         }
     }
 }

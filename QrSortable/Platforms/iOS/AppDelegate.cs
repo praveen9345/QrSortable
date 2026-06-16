@@ -7,6 +7,7 @@ using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
 using QrSortable.Components.CoreFeatures.OrdersPayments.ViewModels;
 using QrSortable.Components.CoreFeatures.OrdersPayments;
+using QrSortable.Components.Logging;
 
 namespace QrSortable;
 
@@ -26,16 +27,24 @@ public class AppDelegate : MauiUIApplicationDelegate
 
     public override bool FinishedLaunching(UIApplication app, NSDictionary options)
     {
+        var logger =IPlatformApplication.Current?.Services.GetRequiredService<ILogger>();
+
+        logger?.Log("FinishedLaunching");
+
         AppDomain.CurrentDomain.UnhandledException += (s, e) =>
         {
-            Console.WriteLine("🔥 iOS UnhandledException:");
-            Console.WriteLine(e.ExceptionObject?.ToString());
+            logger?.Log("UnhandledException");
+
+            if (e.ExceptionObject is Exception ex)
+            {
+                logger?.LogException(ex);
+            }
         };
 
         TaskScheduler.UnobservedTaskException += (s, e) =>
         {
-            Console.WriteLine("🔥 iOS UnobservedTaskException:");
-            Console.WriteLine(e.Exception?.ToString());
+            logger?.Log("🔥 iOS UnobservedTaskException:");
+            logger?.LogException(e.Exception);
             e.SetObserved();
         };
 

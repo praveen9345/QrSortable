@@ -7,6 +7,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
     using QrSortable.Components.CoreFeatures.Onboarding.Views;
     using QrSortable.Components.CoreFeatures.Settings;
     using QrSortable.Components.CoreFeatures.Settings.Models;
+    using QrSortable.Components.Logging;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.PlatformUtils.Wrappers;
     using QrSortable.Components.UiFunctionality.Navigation;
@@ -26,6 +27,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         private readonly IGeneralInformationManager _generalInformationManager;
         private readonly ILanguageProvider _languageProvider;
         private readonly IBackendDatabaseManager _backendDatabaseManager;
+        private readonly ILogger _logger;
 
         private const string DatabaseName = "QrSortable.sqlite3";
         private const string BackendDatabaseName = "QrSortableBackend.sqlite3";
@@ -38,13 +40,22 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// </summary>
         public AppService()
         {
+            _logger = ServiceHelper.GetService<ILogger>();
+
+            _logger.Log("AppService Constructor START");
+
             _navigationService = ServiceHelper.GetService<INavigationService>();
+            _logger.Log("INavigationService resolved");
             _mauiEssentialsWrapper = ServiceHelper.GetService<IMauiEssentialsWrapper>();
             _databaseManager = ServiceHelper.GetService<IDatabaseManager>();
+            _logger.Log("IDatabaseManager resolved");
             _fileManager = ServiceHelper.GetService<IFileManager>();
             _generalInformationManager = ServiceHelper.GetService<IGeneralInformationManager>();
+            _logger.Log("IGeneralInformationManager resolved");
             _languageProvider = ServiceHelper.GetService<ILanguageProvider>();
             _backendDatabaseManager = ServiceHelper.GetService<IBackendDatabaseManager>();
+
+            _logger.Log("AppService Constructor END");
 
         }
 
@@ -56,8 +67,17 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// </summary>
         public async Task OnStartAsync()
         {
+            _logger.Log("OnStartAsync START");
+
             await EnsureInitializedAsync();
+
+            _logger.Log("EnsureInitializedAsync completed");
+
             await NavigateToFirstViewModelAsync();
+
+            _logger.Log("NavigateToFirstViewModelAsync completed");
+
+            _logger.Log("OnStartAsync END");
         }
 
         /// <summary>
@@ -74,11 +94,22 @@ namespace QrSortable.Components.CoreFeatures.AppStart
             {
                 if (_initialized)
                     return;
+                _logger.Log("EnsureInitializedAsync START");
 
+                _logger.Log("Backend DB Initialize START");
                 _backendDatabaseManager.Initialize(CreateNewBackendDbContext);
+                _logger.Log("Backend DB Initialize END");
+
+                _logger.Log("ResetStorage START");
                 await ResetStorageAndDatabaseAfterReinstallAsync();
+                _logger.Log("ResetStorage END");
+
                 _generalInformationManager.ResetGeneralInformation();
+
+                _logger.Log("SetLanguage START");
                 await SetLanguageAsync();
+
+                _logger.Log("SetLanguage END");
 
                 _initialized = true;
             }
@@ -94,7 +125,11 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         /// </summary>
         private async Task NavigateToFirstViewModelAsync()
         {
+            _logger.Log("NavigateToFirstViewModelAsync START");
+
             var generalInformation = await _generalInformationManager.GetGeneralInformationAsync();
+
+            _logger.Log($"Onboarding State = {generalInformation.OnboardingProgress}");
 
             switch (generalInformation.OnboardingProgress)
             {
@@ -103,6 +138,7 @@ namespace QrSortable.Components.CoreFeatures.AppStart
                     break;
                 case OnboardingProgress.OnboardingStarted:
                 case OnboardingProgress.OnboardingCompleted:
+                    _logger.Log("Navigate RootView");
                     await _navigationService.Navigate<RootView>();
                     break;
             }
@@ -146,13 +182,20 @@ namespace QrSortable.Components.CoreFeatures.AppStart
         private async Task ResetStorageAndDatabaseAfterReinstallAsync()
         {
             // Initialize the database first
+
+            _logger.Log("Database Initialize START");
             _databaseManager.Initialize(CreateNewDbContext);
+
+            _logger.Log("Database Initialize END");
 
             // Check if this is the first run using Preferences
             bool isFirstRun = !Preferences.ContainsKey("AppInitialized");
 
+            _logger.Log("Before GetGeneralInformationAsync");
             // Also check if multiuser ID exists in the database
             var generalInfo = await _generalInformationManager.GetGeneralInformationAsync();
+            _logger.Log("After GetGeneralInformationAsync");
+
             bool needsMultiuserId = string.IsNullOrWhiteSpace(generalInfo?.MultiUserId);
 
             if (isFirstRun || needsMultiuserId)
