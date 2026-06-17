@@ -7,7 +7,7 @@
     xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization" 
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
-    BackgroundImageSource="background_layout.webp">
+    BackgroundImageSource="{OnPlatform iOS='#525252', Android='background_layout.webp'}">
     <views:BaseView.Resources>
         <ResourceDictionary>
             <toolkit:InvertedBoolConverter x:Key="BoolInverter" />
