@@ -6,7 +6,6 @@ namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
     using Localization;
     using System.Threading.Tasks;
     using QrSortable.Components.UiFunctionality.Notification;
-    using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
 
     /// <summary>
     ///     The implementation of a base view model that provides general logic and information needed on all screens.
@@ -95,11 +94,6 @@ namespace QrSortable.Components.UiFunctionality.Navigation.ViewModels
         ///     Command for the back button.
         /// </summary>
         public AsyncRelayCommand BackNavigationCommand { get; }
-
-        public AsyncRelayCommand CartTappedCommand => new AsyncRelayCommand(async () =>
-        {
-            await NavigationService.Navigate<AddToBasketView>();
-        });
 
     }
 }

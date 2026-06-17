@@ -1,6 +1,7 @@
 ﻿namespace QrSortable.Components.UiFunctionality.Navigation.Views
 {
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.UiFunctionality.Localization;
     using ViewModels;
@@ -104,6 +105,20 @@
             }
         }
 
+
+        private async void OnCartTapped(object sender, EventArgs e)
+        {
+            var view = sender as View;
+
+            if (view != null)
+            {
+                await view.ScaleTo(0.9, 100);
+                await view.ScaleTo(1, 100);
+            }
+
+            await _viewModel.NavigationService.Navigate<AddToBasketView>();
+
+        }
 
     }
 }

@@ -8,6 +8,7 @@
     using QrSortable.Components.CoreFeatures.CodeGenerator.Views;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.CoreFeatures.OrdersPayments.Views;
     using QrSortable.Components.CoreFeatures.Scanner.Views;
     using QrSortable.Components.CoreFeatures.Settings.Views;
     using QrSortable.Components.PlatformUtils;
@@ -395,5 +396,6 @@
             SearchText = string.Empty;
             SearchVisible = false;
         });
+
     }
 }

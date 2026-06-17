@@ -8,6 +8,7 @@
     /// </summary>
     public partial class YoursOrdersView : BaseView
     {
+        private readonly YoursOrdersViewModel _viewModel;
 
         /// <summary>
         ///  Initializes a new instance of the YoursOrdersViewModel class with the specified view model.
@@ -16,7 +17,21 @@
         public YoursOrdersView(YoursOrdersViewModel viewModel) : base(viewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel;
+            BindingContext = _viewModel = viewModel;
+        }
+
+        private async void OnCartTapped(object sender, EventArgs e)
+        {
+            var view = sender as View;
+
+            if (view != null)
+            {
+                await view.ScaleTo(0.9, 100);
+                await view.ScaleTo(1, 100);
+            }
+
+            await _viewModel.NavigationService.Navigate<AddToBasketView>();
+
         }
     }
 }

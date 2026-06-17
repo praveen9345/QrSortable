@@ -55,12 +55,9 @@
                     HeightRequest="80"
                     HorizontalOptions="End"
                     WidthRequest="80">
-                    <Grid.Behaviors>
-                        <toolkit:TouchBehavior
-                            Command="{Binding CartTappedCommand}"
-                            PressedOpacity="0.8"
-                            PressedScale="0.9" />
-                    </Grid.Behaviors>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCartTapped" />
+                    </Grid.GestureRecognizers>
 
                     <!--  Cart Icon  -->
                     <Image
