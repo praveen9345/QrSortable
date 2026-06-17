@@ -7,7 +7,7 @@
     xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
-    BackgroundImageSource="{OnPlatform iOS='#525252', Android='background_layout.webp'}">
+    BackgroundImageSource="background_layout.png">
     <views:BaseView.Content>
         <Grid>
             <!--  Camera view  -->

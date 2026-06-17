@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
-    BackgroundImageSource="{OnPlatform iOS='#525252', Android='background_layout.webp'}">
+    BackgroundImageSource="background_layout.png">
     <views:BaseView.Content>
         <Grid>
             <Grid.RowDefinitions>

@@ -97,7 +97,7 @@
 	</ItemGroup>
 	<!-- Register the MAUI images -->
 	<ItemGroup>
-		<MauiImage Include="Resources\Images\background_layout.webp" />
+		<MauiImage Include="Resources\Images\background_layout.png" />
 		<MauiImage Include="Resources\Images\code_pdf_icon.png" />
 		<MauiImage Include="Resources\Images\qr_code_demo.png" />
 		<MauiImage Include="Resources\Images\bar_code_demo.png" />
