@@ -1,5 +1,6 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.Views
 {
+    using BarcodeScanning;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
     using ViewModels;
 
@@ -18,7 +19,22 @@
         {
             InitializeComponent();
             BindingContext = _viewModel =viewModel;
-            
+
+            var camera = new CameraView
+            {
+                TapToFocusEnabled = true,
+                ViewfinderMode = true
+            };
+
+            camera.SetValue(CameraView.BarcodeSymbologiesProperty, "QRCode,Code128");
+            camera.SetBinding(CameraView.CameraEnabledProperty, nameof(viewModel.IsCameraEnabled));
+            camera.SetBinding(CameraView.TorchOnProperty, nameof(viewModel.IsFlashOn));
+            camera.SetBinding(CameraView.OnDetectionFinishedCommandProperty, nameof(viewModel.DetectionFinishedCommand));
+
+            CameraContainer.Children.Add(camera);
+
+            cameraView = camera;
+
         }
 
         protected override void OnSizeAllocated(double width, double height)
