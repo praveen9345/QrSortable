@@ -9,7 +9,17 @@
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.png">
     <views:BaseView.Content>
-        <Grid x:Name="CameraContainer">
+        <Grid>
+            <!--  Camera view  -->
+            <scanner:CameraView
+                x:Name="cameraView"
+                Grid.Row="0"
+                BarcodeSymbologies="QRCode,Code128"
+                CameraEnabled="{Binding IsCameraEnabled}"
+                OnDetectionFinishedCommand="{Binding DetectionFinishedCommand}"
+                TapToFocusEnabled="True"
+                TorchOn="{Binding IsFlashOn}"
+                ViewfinderMode="True" />
             <!--  Back button  -->
             <Button
                 Grid.Row="0"
