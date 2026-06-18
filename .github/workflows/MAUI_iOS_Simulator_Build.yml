@@ -1,0 +1,96 @@
+name: MAUI iOS Simulation Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  PROJECT_PATH: 'QrSortable'
+  TARGET_FRAMEWORK: 'net9.0-ios'
+  CONFIGURATION: 'Debug'
+
+jobs:
+  build-ios:
+    name: 🧪 MAUI iOS Simulator Build
+    runs-on: macos-latest
+
+    steps:
+      # ✅ Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ✅ Force correct Xcode version
+      - name: Set Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.3.app
+          xcodebuild -version
+
+      # ✅ Setup .NET
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # ✅ Cache NuGet packages
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.nuget/packages
+            ~/Library/Caches/NuGet
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      # ✅ Install MAUI workloads
+      - name: Install MAUI workloads
+        run: |
+          echo '{ "sdk": { "version": "9.0.100", "workloadVersion": "9.0.100" } }' > ${{ env.PROJECT_PATH }}/global.json
+          cd ${{ env.PROJECT_PATH }}
+          dotnet workload restore
+          dotnet workload install maui-ios
+
+      # ✅ Restore dependencies
+      - name: Restore NuGet packages
+        run: dotnet restore QrSortable.csproj
+        working-directory: ${{ env.PROJECT_PATH }}
+
+      # ✅ Hard clean (avoid cache corruption issues)
+      - name: Delete bin and obj folders
+        run: |
+          find . -type d \( -name bin -o -name obj \) -exec rm -rf {} +
+        working-directory: ${{ env.PROJECT_PATH }}
+
+      - name: Clean build
+        run: dotnet clean
+        working-directory: ${{ env.PROJECT_PATH }}
+
+      # ✅ Build for iOS Simulator (no signing)
+      - name: Build iOS app (simulator)
+        run: |
+          dotnet build QrSortable.csproj \
+            -f ${{ env.TARGET_FRAMEWORK }} \
+            -c ${{ env.CONFIGURATION }} \
+            /p:EnableCodeSigning=false \
+            /p:RuntimeIdentifier=iossimulator-x64 \
+            /p:UseInterpreter=true \
+            /p:PlatformTarget=x64
+        working-directory: ${{ env.PROJECT_PATH }}
+
+      # ✅ Verify app bundle output
+      - name: Verify build output
+        run: |
+          echo "Listing .app bundles:"
+          find ${{ env.PROJECT_PATH }}/bin -name "*.app" | head -n 10
+
+      # ✅ Upload build output (optional but useful)
+      - name: Upload app bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-Simulator-App
+          path: ${{ env.PROJECT_PATH }}/bin
+          if-no-files-found: warn
