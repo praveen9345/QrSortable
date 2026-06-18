@@ -67,6 +67,16 @@
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' AND '$(Configuration)' == 'Debug'">
 		<OptimizePNGs>false</OptimizePNGs>
 		<MtouchLink>SdkOnly</MtouchLink>
+
+
+		<!-- ✅ Critical: disable signing completely -->
+		<EnableCodeSigning>false</EnableCodeSigning>
+
+		<!-- ✅ Prevent any signing resolution -->
+		<CodesignKey></CodesignKey>
+		<CodesignProvision></CodesignProvision>
+		<CodesignEntitlements></CodesignEntitlements>
+
 	</PropertyGroup>
 
 	<!-- iOS platform files -->
