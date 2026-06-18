@@ -107,6 +107,14 @@
 
         });
 
+
+        partial void OnIsMultiuserFunctionalityEnabledChanged(bool value)
+        {
+            // Trigger your existing command
+            MultiuserFunctionalityToggledCommand.Execute(null);
+        }
+
+
         public AsyncRelayCommand MultiuserFunctionalityToggledCommand => new AsyncRelayCommand(async () =>
         {
             if (IsMultiuserFunctionalityEnabled)

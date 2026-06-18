@@ -6,7 +6,6 @@
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
-    xmlns:xct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     BackgroundImageSource="background_layout.png">
 
     <views:BaseView.Content>
@@ -105,12 +104,7 @@
                             Text="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[OnboardingViewModel_Multiuser_DiscriptionText]}"
                             TextColor="White" />
 
-                        <Switch Grid.Column="1" IsToggled="{Binding IsMultiuserFunctionalityEnabled}">
-
-                            <Switch.Behaviors>
-                                <xct:EventToCommandBehavior Command="{Binding MultiuserFunctionalityToggledCommand}" EventName="Toggled" />
-                            </Switch.Behaviors>
-                        </Switch>
+                        <Switch Grid.Column="1" IsToggled="{Binding IsMultiuserFunctionalityEnabled}" />
                     </Grid>
 
                     <!--  Info  -->
