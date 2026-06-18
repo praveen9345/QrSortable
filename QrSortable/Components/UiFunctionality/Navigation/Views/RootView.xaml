@@ -3,15 +3,15 @@
     x:Class="QrSortable.Components.UiFunctionality.Navigation.Views.RootView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:conv=" clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Converter"
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:localhex="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Converter"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.png">
     <views:BaseView.Resources>
         <ResourceDictionary>
             <localhex:HexToColorConverter x:Key="HexToColorConverter" />
-            <toolkit:InvertedBoolConverter x:Key="BoolInverter" />
+            <conv:BoolInverterConverter x:Key="BoolInverter" />
         </ResourceDictionary>
     </views:BaseView.Resources>
     <views:BaseView.Content>
