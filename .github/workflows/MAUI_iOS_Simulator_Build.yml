@@ -19,11 +19,11 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # ✅ Checkout repository
+      # ✅ Checkout
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ✅ Force correct Xcode version
+      # ✅ Set Xcode
       - name: Set Xcode
         run: |
           sudo xcode-select -s /Applications/Xcode_26.3.app
@@ -35,7 +35,7 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # ✅ Cache NuGet packages
+      # ✅ Cache NuGet
       - name: Cache NuGet packages
         uses: actions/cache@v4
         with:
@@ -54,12 +54,12 @@ jobs:
           dotnet workload restore
           dotnet workload install maui-ios
 
-      # ✅ Restore dependencies
+      # ✅ Restore
       - name: Restore NuGet packages
         run: dotnet restore QrSortable.csproj
         working-directory: ${{ env.PROJECT_PATH }}
 
-      # ✅ Hard clean (avoid cache corruption issues)
+      # ✅ Clean
       - name: Delete bin and obj folders
         run: |
           find . -type d \( -name bin -o -name obj \) -exec rm -rf {} +
@@ -69,26 +69,30 @@ jobs:
         run: dotnet clean
         working-directory: ${{ env.PROJECT_PATH }}
 
-      # ✅ Build for iOS Simulator (no signing)
+      # ✅ ✅ FIXED BUILD (NO SIGNING, NO PROVISIONING)
       - name: Build iOS app (simulator)
         run: |
           dotnet build QrSortable.csproj \
             -f ${{ env.TARGET_FRAMEWORK }} \
             -c ${{ env.CONFIGURATION }} \
-            /p:EnableCodeSigning=false \
-            /p:RuntimeIdentifier=iossimulator-x64 \
-            /p:UseInterpreter=true \
-            /p:PlatformTarget=x64
+            -p:RuntimeIdentifier=iossimulator-x64 \
+            -p:EnableCodeSigning=false \
+            -p:CodesignKey="" \
+            -p:CodesignProvision="" \
+            -p:CodesignEntitlements="" \
+            -p:BuildIpa=false \
+            -p:UseInterpreter=true \
+            -p:PlatformTarget=x64
         working-directory: ${{ env.PROJECT_PATH }}
 
-      # ✅ Verify app bundle output
+      # ✅ Verify output
       - name: Verify build output
         run: |
           echo "Listing .app bundles:"
           find ${{ env.PROJECT_PATH }}/bin -name "*.app" | head -n 10
 
-      # ✅ Upload build output (optional but useful)
-      - name: Upload app bundle artifact
+      # ✅ Upload artifact
+      - name: Upload app bundle
         uses: actions/upload-artifact@v4
         with:
           name: iOS-Simulator-App
