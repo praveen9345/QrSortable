@@ -298,15 +298,15 @@
                         {
                             _imageArrayDb.Add(byteImage);
 
-                            MainThread.BeginInvokeOnMainThread(() =>
-                            {
-                                ImageArray.Add(new Images()
-                                {
-                                    Image = ConvertToImageSource(byteImage),
-                                    Rotate = 0
-                                });
-                            });
+                            var conToImage = ConvertToImageSource(byteImage);
 
+                            await Task.Delay(50);
+
+                            ImageArray.Add(new Images()
+                            {
+                                Image = conToImage,
+                                Rotate = 0
+                            });
                         }
                     }
                 }
@@ -321,8 +321,6 @@
         public AsyncRelayCommand SaveCommand => new AsyncRelayCommand(async () =>
         {
             if (_isSaving) return;
-
-
 
             try
             {
@@ -412,7 +410,12 @@
                                 }
 
                                 await _toastService.DisplayToast(AppResources.ItemDetailViewModel_SuccessfullyUpdate);
-                                await NavigationService.Close();
+
+                                await MainThread.InvokeOnMainThreadAsync(async () =>
+                                {
+                                    await NavigationService.Close();
+                                });
+
                             }
                             else
                             {
@@ -489,7 +492,12 @@
                                 await _backendCommunicationService.InsertAsync(_storageData);
                             }
                             await _toastService.DisplayToast(AppResources.ItemDetailViewModel_SuccessSaved);
-                            await NavigationService.Close();
+
+                            await MainThread.InvokeOnMainThreadAsync(async () =>
+                            {
+                                await NavigationService.Close();
+                            });
+
 
                         }
                         else
@@ -526,9 +534,6 @@
                 _isSaving = false;
                 IsBusy = false;
             }
-
-
-
           
         });
 
