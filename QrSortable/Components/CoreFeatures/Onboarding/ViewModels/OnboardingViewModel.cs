@@ -241,20 +241,30 @@
         {
 
             if (!IsFromApp)
+            {
                 Application.Current.Quit();
+                return;
+            }
 
             try
             {
                 Console.WriteLine("BackCommand executing...");
 
-                if (!await IsSubscriptionActiveAsync())
-                    await SetBackendDisable();
+                bool disableNeeded = !await IsSubscriptionActiveAsync();
 
                 Console.WriteLine("BackCommand: About to navigate back");
+
                 BackNavigationCommand.Execute(null);
+
                 Console.WriteLine("BackCommand: Navigation initiated");
 
-                
+                // ✅ CRITICAL FIX
+                if (disableNeeded)
+                {
+                    await Task.Delay(50); // give MAUI time to finish layout
+
+                    await SetBackendDisable();
+                }
             }
             catch (Exception ex)
             {
@@ -301,6 +311,9 @@
         private async Task SetBackendDisable()
         {
             _displayOnce = false;
+
+            if (Application.Current?.MainPage == null)
+                return; // safety during navigation
 
             // ✅ UI thread safe
             await MainThread.InvokeOnMainThreadAsync(() =>
