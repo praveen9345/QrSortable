@@ -27,6 +27,7 @@
         private readonly IBackendDatabaseManager _backendDatabaseManager;
 
         private bool _displayOnce;
+        private bool _isNavigating;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="OnboardingViewModel" />.
@@ -239,6 +240,10 @@
 
         public AsyncRelayCommand BackCommand => new AsyncRelayCommand(async () =>
         {
+
+            if (_isNavigating) return;
+            _isNavigating = true;
+
             if (!IsFromApp)
                 Application.Current.Quit();
 
@@ -246,8 +251,8 @@
             {
                 Console.WriteLine("BackCommand executing...");
 
-                //if (!await IsSubscriptionActiveAsync())
-                //    await SetBackendDisable();
+                if (!await IsSubscriptionActiveAsync())
+                    await SetBackendDisable();
 
                 Console.WriteLine("BackCommand: About to navigate back");
                 BackNavigationCommand.Execute(null);
@@ -282,16 +287,38 @@
 
         private async Task<bool> IsSubscriptionActiveAsync()
         {
+
             var list = await _databaseManager.GetListAsync<SubscriptionEntity>();
-            var subscription = list?.FirstOrDefault();
-            return subscription?.IsSubscribed == true;
+
+            if (list == null || list.Count == 0)
+                return false;
+
+            var subscription = list.FirstOrDefault();
+
+            if (subscription == null)
+                return false;
+
+            return subscription.IsSubscribed;
+
         }
 
         private async Task SetBackendDisable()
         {
+
+            // ✅ PREVENT UI update if navigating away
+            if (_isNavigating)
+                return;
+
             _displayOnce = false;
-            IsMultiuserFunctionalityEnabled = false;
+
+            // ✅ UI thread safe
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                IsMultiuserFunctionalityEnabled = false;
+            });
+
             await _generalInformationManager.UpdateIsBackendUsedAsync(false);
+
         }
 
     }
