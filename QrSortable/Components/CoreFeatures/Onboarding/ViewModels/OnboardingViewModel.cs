@@ -239,8 +239,8 @@
 
         public AsyncRelayCommand BackCommand => new AsyncRelayCommand(async () =>
         {
-            if (!IsFromApp)
-                Application.Current.Quit();
+            //if (!IsFromApp)
+            //    Application.Current.Quit();
 
             if (!await IsSubscriptionActiveAsync())
                  await SetBackendDisable();

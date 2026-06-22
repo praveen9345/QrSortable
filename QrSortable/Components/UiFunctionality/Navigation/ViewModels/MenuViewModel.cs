@@ -132,7 +132,7 @@
 
                 if (DeviceInfo.Platform == DevicePlatform.iOS)
                 {
-                    appLink = "https://apps.apple.com/de/iphone/apps";
+                    appLink = "https://apps.apple.com/de/app/qrsortable/id6775796519";
                 }
 
                 await Share.Default.RequestAsync(new ShareTextRequest

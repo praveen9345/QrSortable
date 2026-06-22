@@ -9,9 +9,9 @@
 	    <key>CFBundleName</key>
 	    <string>QrSortable</string>
 	    <key>CFBundleShortVersionString</key>
-	    <string>1.0.7</string>
+	    <string>1.1.1</string>
 	    <key>CFBundleVersion</key>
-	    <string>10</string>
+	    <string>11</string>
 		<key>MinimumOSVersion</key>
 		<string>15.0</string>
 
