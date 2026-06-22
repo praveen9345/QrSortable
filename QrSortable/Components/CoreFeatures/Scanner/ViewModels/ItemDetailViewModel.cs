@@ -134,7 +134,7 @@
         ///     Prepares the viewmode with an storage raw data.
         /// </summary>
         /// <param name="storageData">The string storage data.</param>
-        public override void Prepare(StorageEntry storageData)
+        public async override void Prepare(StorageEntry storageData)
         {
             _storageData = storageData;
 
@@ -156,9 +156,10 @@
                     foreach (var imageBytes in _storageData.ImageList)
                     {
                         _imageArrayDb.Add(imageBytes);
+                        var imageSource = await ConvertToFileImageSource(imageBytes);
                         ImageArray.Add(new Images()
                         {
-                            Image = ConvertToImageSource(imageBytes),
+                            Image = imageSource,
                             Rotate = 0
                         });
                     }
@@ -226,11 +227,14 @@
                     if (await IsWithinSizeLimit(jpegCaptureImages))
                     {
                         _imageArrayDb.Add(jpegCaptureImages);
+
+                        var imageSource = await ConvertToFileImageSource(jpegCaptureImages);
+
                         MainThread.BeginInvokeOnMainThread(() =>
                         {
                             ImageArray.Add(new Images()
                             {
-                                Image = ConvertToImageSource(jpegCaptureImages),
+                                Image = imageSource,
                                 Rotate = 0
                             });
                         });
@@ -299,7 +303,7 @@
                         {
                             _imageArrayDb.Add(byteImage);
 
-                            var imageSource = await ConvertToFileImageSource1(byteImage);
+                            var imageSource = await ConvertToFileImageSource(byteImage);
                             var newImage = new Images()
                             {
                                 Image = imageSource,
@@ -307,10 +311,6 @@
                             };
 
                             ImageArray.Add(newImage);
-
-                            //var temp = ImageArray;
-                            //ImageArray = new ObservableCollection<Images>(temp);
-                            //OnPropertyChanged(nameof(ImageArray));
                         }
                     }
                 }
@@ -542,24 +542,7 @@
           
         });
 
-        private ImageSource ConvertToImageSource(object input)
-        {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
-
-            // Always resolve to a byte array first
-            byte[] bytes = input switch
-            {
-                byte[] jpegBytes when jpegBytes.Length > 0 => jpegBytes,
-                Stream stream => ReadStreamToBytes(stream),
-                _ => throw new ArgumentException("Unsupported input type", nameof(input))
-            };
-
-            // Return a fresh MemoryStream every time MAUI requests it
-            return ImageSource.FromStream(() => new MemoryStream(bytes));
-
-        }
-        private async Task<ImageSource> ConvertToFileImageSource1(byte[] bytes)
+        private async Task<ImageSource> ConvertToFileImageSource(byte[] bytes)
         {
             var fileName = $"{Guid.NewGuid()}.jpg";
             var path = Path.Combine(FileSystem.CacheDirectory, fileName);

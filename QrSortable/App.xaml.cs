@@ -79,7 +79,7 @@
                 // Important for iOS: dispatch startup to UI thread after Shell settles
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
-                    await Task.Delay(50); // small delay helps iOS Shell become ready
+                    await Task.Delay(10); // small delay helps iOS Shell become ready
 
                     _logger.Log("After Delay");
 
