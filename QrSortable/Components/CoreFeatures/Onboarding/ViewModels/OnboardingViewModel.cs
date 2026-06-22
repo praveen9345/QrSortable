@@ -245,12 +245,15 @@
             try
             {
                 Console.WriteLine("BackCommand executing...");
+
+                //if (!await IsSubscriptionActiveAsync())
+                //    await SetBackendDisable();
+
                 Console.WriteLine("BackCommand: About to navigate back");
                 BackNavigationCommand.Execute(null);
                 Console.WriteLine("BackCommand: Navigation initiated");
 
-                if (!await IsSubscriptionActiveAsync())
-                    await SetBackendDisable();
+                
             }
             catch (Exception ex)
             {
