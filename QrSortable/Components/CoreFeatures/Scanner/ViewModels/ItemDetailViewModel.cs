@@ -42,7 +42,6 @@
         private StorageEntry _storageData;
         private bool _isUpdateItem;
         private Guid _storageUpdateItemId;
-        private bool _isSaving;
         private bool _isClosing;
         private readonly SemaphoreSlim _saveSemaphore = new(1, 1);
 
@@ -300,16 +299,18 @@
                         {
                             _imageArrayDb.Add(byteImage);
 
-                            await MainThread.InvokeOnMainThreadAsync(() =>
+                            var imageSource = await ConvertToFileImageSource1(byteImage);
+                            var newImage = new Images()
                             {
-                                ImageArray.Add(new Images()
-                                {
-                                    Image = ConvertToImageSource(byteImage),
-                                    Rotate = 0
-                                });
+                                Image = imageSource,
+                                Rotate = 0
+                            };
 
-                                OnPropertyChanged(nameof(ImageArray));
-                            });
+                            ImageArray.Add(newImage);
+
+                            //var temp = ImageArray;
+                            //ImageArray = new ObservableCollection<Images>(temp);
+                            //OnPropertyChanged(nameof(ImageArray));
                         }
                     }
                 }
@@ -328,11 +329,8 @@
 
             try
             {
-                if (_isSaving) return;
-
-                _isSaving = true;
                 IsBusy = true;
-
+                await Task.Yield(); // optional, helps UI disable button immediately
 
                 // ===========================
                 // VALIDATION
@@ -518,6 +516,7 @@
                     catch (Exception ex)
                     {
                         SavingMessage = "";
+                        _databaseManager.Rollback();
                         Console.WriteLine($"SaveCommand: Exception during add: {ex}");
                         await DialogService.ShowAlertDialog(
                             AppResources.BankTransferViewModel_SaveErrorMsg, AppResources.Dialog_OK_Text
@@ -537,7 +536,6 @@
             }
             finally
             {
-                _isSaving = false;
                 IsBusy = false;
                 _saveSemaphore.Release();
             }
@@ -560,6 +558,15 @@
             // Return a fresh MemoryStream every time MAUI requests it
             return ImageSource.FromStream(() => new MemoryStream(bytes));
 
+        }
+        private async Task<ImageSource> ConvertToFileImageSource1(byte[] bytes)
+        {
+            var fileName = $"{Guid.NewGuid()}.jpg";
+            var path = Path.Combine(FileSystem.CacheDirectory, fileName);
+
+            await File.WriteAllBytesAsync(path, bytes);
+
+            return ImageSource.FromFile(path);
         }
 
         private static byte[] ReadStreamToBytes(Stream stream)
