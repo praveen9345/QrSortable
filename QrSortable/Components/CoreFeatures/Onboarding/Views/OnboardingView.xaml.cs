@@ -36,20 +36,14 @@
 
             _isNavigatingAway = true;
 
-            // Clear bindings before navigation to prevent layout crashes
-            this.BindingContext = null;
-
-            MainThread.BeginInvokeOnMainThread(async () =>
+            try
             {
-                try
-                {
-                    await _viewModel.BackCommand.ExecuteAsync(null);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Back navigation error: {ex.Message}");
-                }
-            });
+                _ = _viewModel.BackCommand.ExecuteAsync(null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Back navigation error: {ex.Message}");
+            }
             return true;
         }
     }
