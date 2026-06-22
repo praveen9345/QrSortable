@@ -10,6 +10,8 @@
     public partial class OnboardingView : BaseView
     {
         private readonly OnboardingViewModel _viewModel;
+        private bool _isNavigatingAway = false;
+
         /// <summary>
         ///  Initializes a new instance of the OnboardingViewModel class with the specified view model.
         /// </summary>
@@ -20,8 +22,23 @@
             BindingContext = _viewModel = viewModel;
 
         }
+
+        protected override void OnDisappearing()
+        {
+            _isNavigatingAway = true;
+            base.OnDisappearing();
+        }
+
         protected override bool OnBackButtonPressed()
         {
+            if (_isNavigatingAway)
+                return true; // Already navigating, ignore duplicate back presses
+
+            _isNavigatingAway = true;
+
+            // Clear bindings before navigation to prevent layout crashes
+            this.BindingContext = null;
+
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 try
