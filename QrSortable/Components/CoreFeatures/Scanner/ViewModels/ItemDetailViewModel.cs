@@ -43,6 +43,8 @@
         private bool _isUpdateItem;
         private Guid _storageUpdateItemId;
         private bool _isSaving;
+        private bool _isClosing;
+        private readonly SemaphoreSlim _saveSemaphore = new(1, 1);
 
         /// <summary>
         /// A collection of images associated with the storage entry.
@@ -298,14 +300,15 @@
                         {
                             _imageArrayDb.Add(byteImage);
 
-                            var conToImage = ConvertToImageSource(byteImage);
-
-                            await Task.Delay(50);
-
-                            ImageArray.Add(new Images()
+                            await MainThread.InvokeOnMainThreadAsync(() =>
                             {
-                                Image = conToImage,
-                                Rotate = 0
+                                ImageArray.Add(new Images()
+                                {
+                                    Image = ConvertToImageSource(byteImage),
+                                    Rotate = 0
+                                });
+
+                                OnPropertyChanged(nameof(ImageArray));
                             });
                         }
                     }
@@ -320,10 +323,13 @@
 
         public AsyncRelayCommand SaveCommand => new AsyncRelayCommand(async () =>
         {
-            if (_isSaving) return;
+            if (!await _saveSemaphore.WaitAsync(0))
+                return;
 
             try
             {
+                if (_isSaving) return;
+
                 _isSaving = true;
                 IsBusy = true;
 
@@ -411,10 +417,11 @@
 
                                 await _toastService.DisplayToast(AppResources.ItemDetailViewModel_SuccessfullyUpdate);
 
-                                await MainThread.InvokeOnMainThreadAsync(async () =>
+                                if (!_isClosing)
                                 {
+                                    _isClosing = true;
                                     await NavigationService.Close();
-                                });
+                                }
 
                             }
                             else
@@ -493,12 +500,11 @@
                             }
                             await _toastService.DisplayToast(AppResources.ItemDetailViewModel_SuccessSaved);
 
-                            await MainThread.InvokeOnMainThreadAsync(async () =>
+                            if (!_isClosing)
                             {
+                                _isClosing = true;
                                 await NavigationService.Close();
-                            });
-
-
+                            }
                         }
                         else
                         {
@@ -533,6 +539,7 @@
             {
                 _isSaving = false;
                 IsBusy = false;
+                _saveSemaphore.Release();
             }
           
         });
@@ -551,11 +558,7 @@
             };
 
             // Return a fresh MemoryStream every time MAUI requests it
-
-            return ImageSource.FromStream(() =>
-            {
-                return new MemoryStream(bytes.ToArray()); // force deep copy
-            });
+            return ImageSource.FromStream(() => new MemoryStream(bytes));
 
         }
 
