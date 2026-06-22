@@ -239,13 +239,24 @@
 
         public AsyncRelayCommand BackCommand => new AsyncRelayCommand(async () =>
         {
-            //if (!IsFromApp)
-            //    Application.Current.Quit();
+            if (!IsFromApp)
+                Application.Current.Quit();
 
-            if (!await IsSubscriptionActiveAsync())
-                 await SetBackendDisable();
+            try
+            {
+                Console.WriteLine("BackCommand executing...");
 
-            BackNavigationCommand.Execute(null);
+                if (!await IsSubscriptionActiveAsync())
+                    await SetBackendDisable();
+
+                Console.WriteLine("BackCommand: About to navigate back");
+                BackNavigationCommand.Execute(null);
+                Console.WriteLine("BackCommand: Navigation initiated");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"BackCommand error: {ex}");
+            }
         });
 
         private async Task<bool> EnsureSubscriptionAsync()

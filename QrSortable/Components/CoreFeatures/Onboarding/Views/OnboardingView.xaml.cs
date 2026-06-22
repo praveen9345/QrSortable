@@ -22,8 +22,18 @@
         }
         protected override bool OnBackButtonPressed()
         {
-           _viewModel.BackCommand.Execute(null);
-            return base.OnBackButtonPressed();
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    await _viewModel.BackCommand.ExecuteAsync(null);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Back navigation error: {ex.Message}");
+                }
+            });
+            return true;
         }
     }
 }
