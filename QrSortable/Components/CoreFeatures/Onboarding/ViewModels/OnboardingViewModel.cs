@@ -27,7 +27,6 @@
         private readonly IBackendDatabaseManager _backendDatabaseManager;
 
         private bool _displayOnce;
-        private bool _isNavigating;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="OnboardingViewModel" />.
@@ -241,9 +240,6 @@
         public AsyncRelayCommand BackCommand => new AsyncRelayCommand(async () =>
         {
 
-            if (_isNavigating) return;
-            _isNavigating = true;
-
             if (!IsFromApp)
                 Application.Current.Quit();
 
@@ -304,11 +300,6 @@
 
         private async Task SetBackendDisable()
         {
-
-            // ✅ PREVENT UI update if navigating away
-            if (_isNavigating)
-                return;
-
             _displayOnce = false;
 
             // ✅ UI thread safe

@@ -1,7 +1,6 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Onboarding.Views
 {
     using QrSortable.Components.UiFunctionality.Navigation.Views;
-    using System.Threading.Tasks;
     using ViewModels;
 
     /// <summary>
@@ -10,7 +9,6 @@
     public partial class OnboardingView : BaseView
     {
         private readonly OnboardingViewModel _viewModel;
-        private bool _isNavigatingAway = false;
 
         /// <summary>
         ///  Initializes a new instance of the OnboardingViewModel class with the specified view model.
@@ -23,19 +21,9 @@
 
         }
 
-        protected override void OnDisappearing()
-        {
-            _isNavigatingAway = true;
-            base.OnDisappearing();
-        }
 
         protected override bool OnBackButtonPressed()
         {
-            if (_isNavigatingAway)
-                return true; // Already navigating, ignore duplicate back presses
-
-            _isNavigatingAway = true;
-
             try
             {
                 _ = _viewModel.BackCommand.ExecuteAsync(null);
