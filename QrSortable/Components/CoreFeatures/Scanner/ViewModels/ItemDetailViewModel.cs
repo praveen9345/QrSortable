@@ -42,6 +42,7 @@
         private StorageEntry _storageData;
         private bool _isUpdateItem;
         private Guid _storageUpdateItemId;
+        private bool _isSaving;
 
         /// <summary>
         /// A collection of images associated with the storage entry.
@@ -123,6 +124,9 @@
 
         [ObservableProperty]
         private string _savingMessage;
+
+        [ObservableProperty]
+        private bool _isBusy;
 
 
         /// <summary>
@@ -275,7 +279,16 @@
 
                 if (photo != null)
                 {
-                    var byteImage = await _imageService.ConvertToJpegBytes(photo);
+
+                    byte[] photoBytes;
+
+                    using (var ms = new MemoryStream())
+                    {
+                        await photo.CopyToAsync(ms);
+                        photoBytes = ms.ToArray();
+                    }
+
+                    var byteImage = await _imageService.ConvertToJpegBytes(new MemoryStream(photoBytes));
 
                     if (byteImage != null && byteImage.Length > 0)
                     {
@@ -284,11 +297,16 @@
                         if (await IsWithinSizeLimit(byteImage))
                         {
                             _imageArrayDb.Add(byteImage);
-                            ImageArray.Add(new Images()
+
+                            MainThread.BeginInvokeOnMainThread(() =>
                             {
-                                Image = ConvertToImageSource(byteImage),
-                                Rotate = 0
+                                ImageArray.Add(new Images()
+                                {
+                                    Image = ConvertToImageSource(byteImage),
+                                    Rotate = 0
+                                });
                             });
+
                         }
                     }
                 }
@@ -302,195 +320,216 @@
 
         public AsyncRelayCommand SaveCommand => new AsyncRelayCommand(async () =>
         {
-            // ===========================
-            // VALIDATION
-            // ===========================
-            if (string.IsNullOrWhiteSpace(ItemName) || string.IsNullOrWhiteSpace(ItemDescription))
-            {
-                await DialogService.ShowAlertDialog(
-                    AppResources.ItemDetailViewModel_EmptyFieldError,AppResources.Dialog_OK_Text
-                );
-                return;
-            }
+            if (_isSaving) return;
 
-            // Require at least 1 image
-            if (_imageArrayDb == null || _imageArrayDb.Count < 1)
-            {
-                await DialogService.ShowAlertDialog(
-                    AppResources.ItemDetailViewModel_AddOneImage,AppResources.Dialog_OK_Text
-                );
-                return;
-            }
+
 
             try
             {
-                SavingMessage = AppResources.ItemDetailViewModel_SevingMessageText;
+                _isSaving = true;
+                IsBusy = true;
 
-                var allItems = await _databaseManager.GetAllAsync<StorageEntry>();
-                if (allItems == null)
+
+                // ===========================
+                // VALIDATION
+                // ===========================
+                if (string.IsNullOrWhiteSpace(ItemName) || string.IsNullOrWhiteSpace(ItemDescription))
                 {
-                    SavingMessage = "";
-                    await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_NotAbleToRetrieveData, 
-                        AppResources.Dialog_OK_Text);
-                    return;
-                }
-
-                // ===========================
-                // UPDATE EXISTING ITEM
-                // ===========================
-                if (_isUpdateItem)
-                {
-                    var item = allItems.FirstOrDefault(i => i.StorageId == _storageUpdateItemId);
-                    if (item == null)
-                    {
-                        SavingMessage = "";
-                        Console.WriteLine("Error: SaveCommand: Could not find the item to update.");
-                        await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_ItemNotFound, 
-                            AppResources.Dialog_OK_Text);
-                        return;
-                    }
-
-                    // Prevent changing the item name
-                    if (item.ItemName != ItemName)
-                    {
-                        await DialogService.ShowAlertDialog(
-                            string.Format(AppResources.ItemDetailViewModel_CanNotBeModified, ItemName),
-                            AppResources.Dialog_OK_Text
-                        );
-                        ItemName = item.ItemName;
-                        return;
-                    }
-
-                    try
-                    {
-                        // Prepare updated fields
-                        item.Description = ItemDescription;
-                        item.ImageList = _imageArrayDb.ToList();
-                        item.SearchInfo =
-                            $"{item.Category}|{item.CreatedDate}|{item.BarcodeValue}|{item.BarcodeType}|{item.Location}|{ItemName}|{ItemDescription}";
-
-                        // Perform update (no explicit transaction needed)
-                        var updatedItem = await _databaseManager.UpdateAsync(item);
-                        if (updatedItem != null)
-                        {
-                            if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
-                            {
-                                var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(item, "true");
-                                await _backendDatabaseManager.UpdateAsync(dto);
-                            }
-                            else
-                            {
-                                await _backendCommunicationService.UpdateAsync(item);
-                            }
-
-                            await _toastService.DisplayToast(AppResources.ItemDetailViewModel_SuccessfullyUpdate);
-                            await NavigationService.Close();
-                        }
-                        else
-                        {
-                            await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_DataCouldNotUpdate, 
-                                AppResources.Dialog_OK_Text);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"SaveCommand: Exception during update: {ex}");
-                        SavingMessage = "";
-                        await DialogService.ShowAlertDialog(
-                            AppResources.ItemDetailViewModel_UnexpectedErrorUpdate,
-                            AppResources.Dialog_OK_Text
-                        );
-                    }
-
-                    return;
-                }
-
-                // ===========================
-                // ADD NEW ITEM
-                // ===========================
-                if (_storageData == null)
-                {
-                    Console.WriteLine("Error: SaveCommand: _storageData is null");
-                    SavingMessage = "";
                     await DialogService.ShowAlertDialog(
-                        AppResources.ItemDetailViewModel_UnexpectedStorage,
-                        AppResources.Dialog_OK_Text
+                        AppResources.ItemDetailViewModel_EmptyFieldError, AppResources.Dialog_OK_Text
                     );
                     return;
                 }
 
-                // Check for duplicate item name
-                var isDuplicate = allItems.Any(i => i.ItemName == ItemName);
-                if (isDuplicate)
+                // Require at least 1 image
+                if (_imageArrayDb == null || _imageArrayDb.Count < 1)
                 {
-                    SavingMessage = "";
                     await DialogService.ShowAlertDialog(
-                        string.Format(AppResources.ItemDetailViewModel_ItemAlreadyExists, ItemName),
-                        AppResources.Dialog_OK_Text
+                        AppResources.ItemDetailViewModel_AddOneImage, AppResources.Dialog_OK_Text
                     );
-                    ItemName = string.Empty;
                     return;
                 }
 
                 try
                 {
-                    _databaseManager.BeginTransaction();
+                    SavingMessage = AppResources.ItemDetailViewModel_SevingMessageText;
 
-                    _storageData.CreatedDate = DateTime.UtcNow;
-                    _storageData.Category = _storageData.Category.Trim().ToUpperInvariant();
-                    _storageData.ItemName = ItemName;
-                    _storageData.Description = ItemDescription;
-                    _storageData.ImageList = _imageArrayDb.ToList();
-                    _storageData.SearchInfo =
-                        $"{_storageData.Category}|{_storageData.CreatedDate}|{_storageData.BarcodeValue}|{_storageData.BarcodeType}|{_storageData.Location}|{ItemName}|{ItemDescription}";
-
-                    var addedItem = await _databaseManager.AddAsync(_storageData);
-
-                    if (addedItem != null)
+                    var allItems = await _databaseManager.GetAllAsync<StorageEntry>();
+                    if (allItems == null)
                     {
-                        _databaseManager.CommitTransaction();
+                        SavingMessage = "";
+                        await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_NotAbleToRetrieveData,
+                            AppResources.Dialog_OK_Text);
+                        return;
+                    }
 
-                        if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                    // ===========================
+                    // UPDATE EXISTING ITEM
+                    // ===========================
+                    if (_isUpdateItem)
+                    {
+                        var item = allItems.FirstOrDefault(i => i.StorageId == _storageUpdateItemId);
+                        if (item == null)
                         {
-                            var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(addedItem, "false");
-                            _backendDatabaseHelper.SaveToTheBackendAsync(dto);
+                            SavingMessage = "";
+                            Console.WriteLine("Error: SaveCommand: Could not find the item to update.");
+                            await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_ItemNotFound,
+                                AppResources.Dialog_OK_Text);
+                            return;
+                        }
+
+                        // Prevent changing the item name
+                        if (item.ItemName != ItemName)
+                        {
+                            await DialogService.ShowAlertDialog(
+                                string.Format(AppResources.ItemDetailViewModel_CanNotBeModified, ItemName),
+                                AppResources.Dialog_OK_Text
+                            );
+                            ItemName = item.ItemName;
+                            return;
+                        }
+
+                        try
+                        {
+                            // Prepare updated fields
+                            item.Description = ItemDescription;
+                            item.ImageList = _imageArrayDb.ToList();
+                            item.SearchInfo =
+                                $"{item.Category}|{item.CreatedDate}|{item.BarcodeValue}|{item.BarcodeType}|{item.Location}|{ItemName}|{ItemDescription}";
+
+                            // Perform update (no explicit transaction needed)
+                            var updatedItem = await _databaseManager.UpdateAsync(item);
+                            if (updatedItem != null)
+                            {
+                                if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                                {
+                                    var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(item, "true");
+                                    await _backendDatabaseManager.UpdateAsync(dto);
+                                }
+                                else
+                                {
+                                    await _backendCommunicationService.UpdateAsync(item);
+                                }
+
+                                await _toastService.DisplayToast(AppResources.ItemDetailViewModel_SuccessfullyUpdate);
+                                await NavigationService.Close();
+                            }
+                            else
+                            {
+                                await DialogService.ShowAlertDialog(AppResources.ItemDetailViewModel_DataCouldNotUpdate,
+                                    AppResources.Dialog_OK_Text);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"SaveCommand: Exception during update: {ex}");
+                            SavingMessage = "";
+                            await DialogService.ShowAlertDialog(
+                                AppResources.ItemDetailViewModel_UnexpectedErrorUpdate,
+                                AppResources.Dialog_OK_Text
+                            );
+                        }
+
+                        return;
+                    }
+
+                    // ===========================
+                    // ADD NEW ITEM
+                    // ===========================
+                    if (_storageData == null)
+                    {
+                        Console.WriteLine("Error: SaveCommand: _storageData is null");
+                        SavingMessage = "";
+                        await DialogService.ShowAlertDialog(
+                            AppResources.ItemDetailViewModel_UnexpectedStorage,
+                            AppResources.Dialog_OK_Text
+                        );
+                        return;
+                    }
+
+                    // Check for duplicate item name
+                    var isDuplicate = allItems.Any(i => i.ItemName == ItemName);
+                    if (isDuplicate)
+                    {
+                        SavingMessage = "";
+                        await DialogService.ShowAlertDialog(
+                            string.Format(AppResources.ItemDetailViewModel_ItemAlreadyExists, ItemName),
+                            AppResources.Dialog_OK_Text
+                        );
+                        ItemName = string.Empty;
+                        return;
+                    }
+
+                    try
+                    {
+                        _databaseManager.BeginTransaction();
+
+                        _storageData.CreatedDate = DateTime.UtcNow;
+                        _storageData.Category = _storageData.Category.Trim().ToUpperInvariant();
+                        _storageData.ItemName = ItemName;
+                        _storageData.Description = ItemDescription;
+                        _storageData.ImageList = _imageArrayDb.ToList();
+                        _storageData.SearchInfo =
+                            $"{_storageData.Category}|{_storageData.CreatedDate}|{_storageData.BarcodeValue}|{_storageData.BarcodeType}|{_storageData.Location}|{ItemName}|{ItemDescription}";
+
+                        var addedItem = await _databaseManager.AddAsync(_storageData);
+
+                        if (addedItem != null)
+                        {
+                            _databaseManager.CommitTransaction();
+
+                            if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
+                            {
+                                var dto = _backendDatabaseHelper.CreateDtoStorageEntryBackendData(addedItem, "false");
+                                _backendDatabaseHelper.SaveToTheBackendAsync(dto);
+                            }
+                            else
+                            {
+                                // send to backend (DtoStorageEntryModel)
+                                await _backendCommunicationService.InsertAsync(_storageData);
+                            }
+                            await _toastService.DisplayToast(AppResources.ItemDetailViewModel_SuccessSaved);
+                            await NavigationService.Close();
+
                         }
                         else
                         {
-                            // send to backend (DtoStorageEntryModel)
-                            await _backendCommunicationService.InsertAsync(_storageData);
+                            SavingMessage = "";
+                            _databaseManager.Rollback();
+                            Console.WriteLine("SaveCommand: AddAsync returned null - rollback performed.");
+                            await DialogService.ShowAlertDialog(AppResources.Dialog_DataCouldNoBeSaved,
+                                AppResources.Dialog_OK_Text);
                         }
-                        await _toastService.DisplayToast(AppResources.ItemDetailViewModel_SuccessSaved);
-                        await NavigationService.Close();
-
                     }
-                    else
+                    catch (Exception ex)
                     {
                         SavingMessage = "";
-                        _databaseManager.Rollback();
-                        Console.WriteLine("SaveCommand: AddAsync returned null - rollback performed.");
-                        await DialogService.ShowAlertDialog(AppResources.Dialog_DataCouldNoBeSaved,
-                            AppResources.Dialog_OK_Text);
+                        Console.WriteLine($"SaveCommand: Exception during add: {ex}");
+                        await DialogService.ShowAlertDialog(
+                            AppResources.BankTransferViewModel_SaveErrorMsg, AppResources.Dialog_OK_Text
+                        );
                     }
                 }
                 catch (Exception ex)
                 {
                     SavingMessage = "";
-                    Console.WriteLine($"SaveCommand: Exception during add: {ex}");
+                    Console.WriteLine($"SaveCommand: Unexpected exception: {ex}");
                     await DialogService.ShowAlertDialog(
-                        AppResources.BankTransferViewModel_SaveErrorMsg,AppResources.Dialog_OK_Text
+                        AppResources.ItemDetailViewModel_UnexpectedErrorProcessing,
+                        AppResources.Dialog_OK_Text
                     );
                 }
+
             }
-            catch (Exception ex)
+            finally
             {
-                SavingMessage = "";
-                Console.WriteLine($"SaveCommand: Unexpected exception: {ex}");
-                await DialogService.ShowAlertDialog(
-                    AppResources.ItemDetailViewModel_UnexpectedErrorProcessing,
-                    AppResources.Dialog_OK_Text
-                );
+                _isSaving = false;
+                IsBusy = false;
             }
+
+
+
+          
         });
 
         private ImageSource ConvertToImageSource(object input)
@@ -507,7 +546,12 @@
             };
 
             // Return a fresh MemoryStream every time MAUI requests it
-            return ImageSource.FromStream(() => new MemoryStream(bytes));
+
+            return ImageSource.FromStream(() =>
+            {
+                return new MemoryStream(bytes.ToArray()); // force deep copy
+            });
+
         }
 
         private static byte[] ReadStreamToBytes(Stream stream)

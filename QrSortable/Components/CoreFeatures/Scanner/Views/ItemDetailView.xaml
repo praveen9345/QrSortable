@@ -313,6 +313,7 @@
                         CornerRadius="28"
                         HeightRequest="56"
                         HorizontalOptions="End"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource BoolInverter}}"
                         VerticalOptions="End"
                         WidthRequest="56">
                         <Button.Shadow>
