@@ -11,6 +11,8 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AndroidSupportedOSVersion>21.0</AndroidSupportedOSVersion>
+		<!-- Target Android 16 / API 36 -->
+		<TargetSdkVersion>36</TargetSdkVersion>
 		<Configurations>Debug;Release;DebugEmulator;DebugDevice</Configurations>
 		<UsingMauiEssentials>true</UsingMauiEssentials>
 
@@ -21,8 +23,8 @@
 		<ApplicationId>com.danfe.qrsortable</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>11</ApplicationVersion>
+		<ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
+		<ApplicationVersion>12</ApplicationVersion>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
