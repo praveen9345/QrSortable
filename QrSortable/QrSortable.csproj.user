@@ -17,6 +17,9 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Components\UiFunctionality\Localization\AppResources.de.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Update="Components\UiFunctionality\Localization\AppResources.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

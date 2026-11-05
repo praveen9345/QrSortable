@@ -50,7 +50,7 @@
             switch (viewName)
             {       
                 case "feedback":
-                    Url = "https://www.qrsortable.com/#/app-feedback";
+                    Url = "https://www.qrsortable.com/app-feedback";
                     break;
                 case "privacyPolicy":
                     Url = langCode switch
