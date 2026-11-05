@@ -53,7 +53,7 @@
             {
                 Amount = new Amount(GetMollieCurrencyType(currency), ToMollieAmount(amount)),
                 Description = description,
-                RedirectUrl = $"https://www.qrsortable.com/#/mollie-return?id={deeplinkId}",
+                RedirectUrl = $"https://www.qrsortable.com/mollie-return?id={deeplinkId}",
                 Method = GetMolliePaymentMethodType(paymentMethod),
                 CustomerId = customerId,
                 SequenceType = SequenceType.First
