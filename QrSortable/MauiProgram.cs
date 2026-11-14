@@ -130,6 +130,7 @@
             builder.Services.AddSingleton<INavigationShellWrapper, NavigationShellWrapper>();
             builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
             builder.Services.AddSingleton<ILanguageProvider, LanguageProvider>();
+            builder.Services.AddSingleton<ISuggestionService, SuggestionService>();
 
             builder.Services.AddSingleton<IDeepLinkService, DeepLinkService>();
             builder.Services.AddSingleton<ITimerService, TimerService>();

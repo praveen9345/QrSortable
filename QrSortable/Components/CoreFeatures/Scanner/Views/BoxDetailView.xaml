@@ -6,6 +6,7 @@
     xmlns:conv=" clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Converter"
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
+    xmlns:sug="clr-namespace:QrSortable.Components.CoreFeatures.Scanner.Models"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.png">
     <views:BaseView.Resources>
@@ -71,6 +72,8 @@
                     <RowDefinition Height="Auto" />
                     <!--  category  -->
                     <RowDefinition Height="Auto" />
+                    <!--  chips  -->
+                    <RowDefinition Height="Auto" />
                     <!--  items  -->
                     <RowDefinition Height="*" />
                     <!--  add button  -->
@@ -119,7 +122,9 @@
                         <Grid>
                             <!--  input field  -->
                             <Entry
+                                x:Name="locationEntry"
                                 Margin="10,0,0,0"
+                                Focused="OnLocationFocused"
                                 Placeholder="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BoxDetailViewModel_LocationPlaceText]}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
@@ -163,7 +168,9 @@
                         <!--  input field  -->
                         <Grid>
                             <Entry
+                                x:Name="categoryEntry"
                                 Margin="10,0,0,0"
+                                Focused="OnCategoryFocused"
                                 Placeholder="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[BoxDetailViewModel_CategoryPlaceText]}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
@@ -172,7 +179,13 @@
                     </Border>
                 </StackLayout>
 
-                <StackLayout Grid.Row="2" Background="{StaticResource DarkGrey}">
+                <sug:SuggestionChipBar
+                    Grid.Row="2"
+                    Command="{Binding ApplySuggestionCommand}"
+                    IsVisible="{Binding IsNewBarcode, Converter={StaticResource BoolInverter}}"
+                    Suggestions="{Binding ActiveSuggestions}" />
+
+                <StackLayout Grid.Row="3" Background="{StaticResource DarkGrey}">
                     <!--  seprator  -->
                     <BoxView HeightRequest="2" Color="{StaticResource Yellow}" />
                     <!--  collection view  -->
@@ -262,7 +275,7 @@
 
                 <!--  add button  -->
                 <Border
-                    Grid.Row="3"
+                    Grid.Row="4"
                     Margin="0,15,15,15"
                     Padding="0"
                     BackgroundColor="{StaticResource Primary}"

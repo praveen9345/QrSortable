@@ -10,6 +10,7 @@
     using QrSortable.Components.CoreFeatures.DataManagement.Backend.Helper;
     using QrSortable.Components.CoreFeatures.DataManagement.General;
     using QrSortable.Components.CoreFeatures.DataManagement.General.Models;
+    using QrSortable.Components.CoreFeatures.Scanner.Models;
     using QrSortable.Components.PlatformUtils;
     using QrSortable.Components.PlatformUtils.Models;
     using QrSortable.Components.PlatformUtils.Wrappers;
@@ -37,6 +38,7 @@
         private readonly IBackendDatabaseHelper _backendDatabaseHelper;
         private readonly IPermissionService _permissionService;
         private readonly IMauiEssentialsWrapper _mauiEssentialsWrapper;
+        private readonly ISuggestionService _suggestions;
 
         private List<byte[]> _imageArrayDb = new List<byte[]>();
         private StorageEntry _storageData;
@@ -59,7 +61,8 @@
         public ItemDetailViewModel(IDatabaseManager databaseManager, IImageService imageService,
             IFilePickerService filePickerService, IToastService toastService, IBackendCommunicationService backendCommunicationService,
             IBackendDatabaseManager backendDatabaseManager, IConnectivityService connectivityService, ISharedMethodService sharedMethodService,
-            IBackendDatabaseHelper backendDatabaseHelper, IPermissionService permissionService, IMauiEssentialsWrapper mauiEssentialsWrapper)
+            IBackendDatabaseHelper backendDatabaseHelper, IPermissionService permissionService, IMauiEssentialsWrapper mauiEssentialsWrapper, 
+            ISuggestionService suggestion)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
@@ -75,6 +78,7 @@
             _mauiEssentialsWrapper = mauiEssentialsWrapper;
 
             ImageArray = new ObservableCollection<Images>();
+            _suggestions = suggestion;
         }
 
         /// <summary>
@@ -143,6 +147,7 @@
                 Console.WriteLine("Error: ItemDetailViewModel.Prepare: storageData is null");
                 return;
             }
+            _ = _suggestions.EnsureBuiltAsync();
 
             if (!string.IsNullOrWhiteSpace(_storageData.ItemName) && !string.IsNullOrWhiteSpace(_storageData.Description))
             {
@@ -165,6 +170,88 @@
                     }
                 }
             }
+        }
+
+        [ObservableProperty]
+        private IReadOnlyList<string> _activeSuggestions = Array.Empty<string>();
+
+        private SuggestionField? _activeField;
+        public event Action<SuggestionField>? FocusRequested;
+
+        public void SetActiveField(SuggestionField field)
+        {
+            _activeField = field;
+            RefreshSuggestions();
+        }
+
+        partial void OnItemNameChanged(string value) => RefreshSuggestions();
+        partial void OnItemDescriptionChanged(string value) => RefreshSuggestions();
+
+        private void RefreshSuggestions()
+        {
+            var category = _storageData?.Category;
+            var location = _storageData?.Location;
+
+            switch (_activeField)
+            {
+                // The name cannot be changed when editing, so no name chips there
+                case SuggestionField.ItemName when !_isUpdateItem:
+                    ActiveSuggestions = _suggestions.Suggest(
+                        SuggestionField.ItemName, ItemName,
+                        (SuggestionField.Category, category),
+                        (SuggestionField.Location, location));
+                    break;
+
+                case SuggestionField.Description:
+                    var used = ItemDescription ?? string.Empty;
+                    ActiveSuggestions = _suggestions.Suggest(
+                            SuggestionField.Description, LastSegment(used),
+                            (SuggestionField.ItemName, ItemName),
+                            (SuggestionField.Category, category))
+                        .Where(s => !used.Contains(s, StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+                    break;
+
+                default:
+                    ActiveSuggestions = Array.Empty<string>();
+                    break;
+            }
+        }
+
+        [RelayCommand]
+        private void ApplySuggestion(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return;
+
+            switch (_activeField)
+            {
+                case SuggestionField.ItemName:
+                    ItemName = text;
+                    _activeField = SuggestionField.Description;
+                    FocusRequested?.Invoke(SuggestionField.Description);
+                    break;
+
+                case SuggestionField.Description:
+                    // chips can be combined: "New, Fragile, "
+                    ItemDescription = ReplaceLastSegment(ItemDescription, text);
+                    break;
+            }
+            RefreshSuggestions();
+        }
+
+        private static string LastSegment(string? s)
+        {
+            if (string.IsNullOrEmpty(s)) return string.Empty;
+            var i = s.LastIndexOf(',');
+            return (i >= 0 ? s[(i + 1)..] : s).Trim();
+        }
+
+        private static string ReplaceLastSegment(string? s, string text)
+        {
+            s ??= string.Empty;
+            var i = s.LastIndexOf(',');
+            var prefix = i >= 0 ? s[..(i + 1)] + " " : string.Empty;
+            return prefix + text + ", ";
         }
 
         public override void ViewAppearing()
@@ -332,6 +419,8 @@
                 IsBusy = true;
                 await Task.Yield(); // optional, helps UI disable button immediately
 
+                ItemDescription = (ItemDescription ?? string.Empty).Trim().TrimEnd(',', ' ');
+
                 // ===========================
                 // VALIDATION
                 // ===========================
@@ -485,6 +574,8 @@
                         if (addedItem != null)
                         {
                             _databaseManager.CommitTransaction();
+
+                            _suggestions.RecordSaved(_storageData);
 
                             if (!await _connectivityService.CheckInternetConnectionAvailableAsync())
                             {

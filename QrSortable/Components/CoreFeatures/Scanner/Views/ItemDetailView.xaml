@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
     xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
+    xmlns:sug="clr-namespace:QrSortable.Components.CoreFeatures.Scanner.Models"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.png">
     <views:BaseView.Resources>
@@ -119,6 +120,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -153,7 +155,9 @@
                         </Border.Shadow>
                         <Grid>
                             <Entry
+                                x:Name="nameEntry"
                                 Margin="10,0,0,0"
+                                Focused="OnNameFocused"
                                 Placeholder="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[ItemDetailViewModel_EnterNamePlace]}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
@@ -192,7 +196,9 @@
                         </Border.Shadow>
                         <Grid>
                             <Entry
+                                x:Name="remarksEntry"
                                 Margin="10,0,0,0"
+                                Focused="OnRemarksFocused"
                                 Placeholder="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[ItemDetailViewModel_MoreInfo]}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
@@ -201,8 +207,13 @@
                     </Border>
                 </StackLayout>
 
+                <sug:SuggestionChipBar
+                    Grid.Row="2"
+                    Command="{Binding ApplySuggestionCommand}"
+                    Suggestions="{Binding ActiveSuggestions}" />
+
                 <!--  Image carousel with zoom  -->
-                <Grid Grid.Row="2" Background="{StaticResource DarkGrey}">
+                <Grid Grid.Row="3" Background="{StaticResource DarkGrey}">
                     <Image
                         Aspect="AspectFill"
                         HorizontalOptions="FillAndExpand"
@@ -265,7 +276,7 @@
                 </Grid>
 
                 <!--  Action buttons  -->
-                <Grid Grid.Row="3" BackgroundColor="{OnPlatform iOS={StaticResource StatusBarColor}}">
+                <Grid Grid.Row="4" BackgroundColor="{OnPlatform iOS={StaticResource StatusBarColor}}">
 
                     <Label
                         Margin="10,0,0,0"

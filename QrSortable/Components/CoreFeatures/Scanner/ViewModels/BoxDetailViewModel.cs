@@ -31,6 +31,8 @@
 
         private string _colorCodeHex;
 
+        private readonly ISuggestionService _suggestions;
+
         /// <summary>
         /// Gets or sets the collection of items. This collection supports dynamic data binding and 
         /// notifies listeners of changes such as when items are added, removed, or the entire list is refreshed.
@@ -46,7 +48,7 @@
         public BoxDetailViewModel(IDatabaseManager databaseManager, IToastService toastService,
             IBackendCommunicationService backendCommunicationService, IConnectivityService connectivityService, 
             ISharedMethodService sharedMethodService, IBackendDatabaseManager backendDatabaseManager,
-            IBackendDatabaseHelper backendDatabaseHelper)
+            IBackendDatabaseHelper backendDatabaseHelper, ISuggestionService suggestions)
         {
             IsBackNavigationEnabled = true;
             _databaseManager = databaseManager;
@@ -58,6 +60,7 @@
             _sharedMethodService = sharedMethodService;
             _backendDatabaseManager = backendDatabaseManager;
             _backendDatabaseHelper = backendDatabaseHelper;
+            _suggestions = suggestions;
         }
 
         /// <summary>
@@ -161,6 +164,65 @@
             }
 
             BarcodeType = result[1].Trim();
+
+            _ = _suggestions.EnsureBuiltAsync();
+        }
+
+        [ObservableProperty]
+        private IReadOnlyList<string> _activeSuggestions = Array.Empty<string>();
+
+        private SuggestionField? _activeField;
+
+        /// <summary>The view subscribes and focuses the matching Entry.</summary>
+        public event Action<SuggestionField>? FocusRequested;
+
+        public void SetActiveField(SuggestionField field)
+        {
+            _activeField = field;
+            RefreshSuggestions();
+        }
+
+        partial void OnLocationChanged(string value) => RefreshSuggestions();
+        partial void OnCategoryChanged(string value) => RefreshSuggestions();
+
+        private void RefreshSuggestions()
+        {
+            ActiveSuggestions = _activeField switch
+            {
+                SuggestionField.Location => _suggestions.Suggest(
+                    SuggestionField.Location, Location, (SuggestionField.Category, Category)),
+                SuggestionField.Category => _suggestions.Suggest(
+                    SuggestionField.Category, Category, (SuggestionField.Location, Location)),
+                _ => Array.Empty<string>()
+            };
+        }
+
+        [RelayCommand]
+        private void ApplySuggestion(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return;
+
+            switch (_activeField)
+            {
+                case SuggestionField.Location:
+                    Location = text;
+                    if (string.IsNullOrWhiteSpace(Category)) SwitchTo(SuggestionField.Category);
+                    else _activeField = null;
+                    break;
+
+                case SuggestionField.Category:
+                    Category = text;
+                    if (string.IsNullOrWhiteSpace(Location)) SwitchTo(SuggestionField.Location);
+                    else _activeField = null;
+                    break;
+            }
+            RefreshSuggestions();
+        }
+
+        private void SwitchTo(SuggestionField field)
+        {
+            _activeField = field;
+            FocusRequested?.Invoke(field);
         }
 
         /// <summary>
@@ -352,6 +414,8 @@
                                 if (added != null)
                                 {
                                     _databaseManager.CommitTransaction();
+
+                                    _suggestions.RecordSaved(newEntry);
 
                                     // send to backend (DtoStorageEntryModel)
                                     if (!await _connectivityService.CheckInternetConnectionAvailableAsync())

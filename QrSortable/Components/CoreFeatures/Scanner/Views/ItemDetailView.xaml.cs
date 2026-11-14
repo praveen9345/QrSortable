@@ -4,6 +4,7 @@
     using ViewModels;
     using Microsoft.Maui.Controls;
     using System.Collections.Generic;
+    using QrSortable.Components.CoreFeatures.Scanner.Models;
 
     /// <summary>
     /// ItemDetailView with smooth zoom functionality for iOS and Android
@@ -316,17 +317,32 @@
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            // States will be initialized as needed
+            if (BindingContext is ItemDetailViewModel vm) vm.FocusRequested += OnFocusRequested;
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
+            if (BindingContext is ItemDetailViewModel vm) vm.FocusRequested -= OnFocusRequested;
             // Clean up to prevent memory leaks
             CleanupImageStates();
         }
 
         #endregion
+
+        private void OnFocusRequested(SuggestionField field) =>
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            if (field == SuggestionField.ItemName) nameEntry.Focus();
+            else remarksEntry.Focus();
+        });
+
+        private void OnNameFocused(object sender, FocusEventArgs e) =>
+            (BindingContext as ItemDetailViewModel)?.SetActiveField(SuggestionField.ItemName);
+
+        private void OnRemarksFocused(object sender, FocusEventArgs e) =>
+            (BindingContext as ItemDetailViewModel)?.SetActiveField(SuggestionField.Description);
+
     }
 
     /// <summary>

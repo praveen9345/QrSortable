@@ -1,5 +1,6 @@
 ﻿namespace QrSortable.Components.CoreFeatures.Scanner.Views
 {
+    using QrSortable.Components.CoreFeatures.Scanner.Models;
     using QrSortable.Components.UiFunctionality.Navigation.Views;
     using ViewModels;
 
@@ -24,5 +25,30 @@
             base.OnSizeAllocated(width, height);
             
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            if (BindingContext is BoxDetailViewModel vm) vm.FocusRequested += OnFocusRequested;
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            if (BindingContext is BoxDetailViewModel vm) vm.FocusRequested -= OnFocusRequested;
+        }
+
+        private void OnFocusRequested(SuggestionField field) =>
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                if (field == SuggestionField.Location) locationEntry.Focus();
+                else categoryEntry.Focus();
+            });
+
+        private void OnLocationFocused(object sender, FocusEventArgs e) =>
+            (BindingContext as BoxDetailViewModel)?.SetActiveField(SuggestionField.Location);
+
+        private void OnCategoryFocused(object sender, FocusEventArgs e) =>
+            (BindingContext as BoxDetailViewModel)?.SetActiveField(SuggestionField.Category);
     }
 }
