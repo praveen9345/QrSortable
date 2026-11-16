@@ -29,6 +29,7 @@
         private static readonly string[] Summer = { "Summer", "Sommer", "Été", "Verano" };
         private static readonly string[] Washed = { "Washed", "Gewaschen", "Lavé", "Lavado" };
         private static readonly string[] Complete = { "Complete", "Vollständig", "Complet", "Completo" };
+        private static readonly string[] Checked = { "Checked", "Geprüft", "Vérifié", "Revisado" };
         private static readonly string[] Working = { "Working", "Funktioniert", "Fonctionne", "Funciona" };
         private static readonly string[] BatteriesIncl = { "Batteries included", "Mit Batterien", "Piles incluses", "Con pilas" };
         private static readonly string[] Spare = { "Spare", "Ersatz", "De rechange", "De repuesto" };
@@ -42,6 +43,12 @@
         private static readonly string[] WithManual = { "With manual", "Mit Anleitung", "Avec notice", "Con manual" };
         private static readonly string[] Heavy = { "Heavy", "Schwer", "Lourd", "Pesado" };
         private static readonly string[] TooSmall = { "Too small", "Zu klein", "Trop petit", "Pequeño" };
+        private static readonly string[] InStock = { "In stock", "Auf Lager", "En stock", "En existencia" };
+        private static readonly string[] LowStock = { "Low stock", "Niedriger Bestand", "Stock faible", "Pocas existencias" };
+        private static readonly string[] OutOfStock = { "Out of stock", "Nicht auf Lager", "En rupture de stock", "Agotado" };
+        private static readonly string[] ReadyForDispatch = { "Ready for dispatch", "Versandbereit", "Prêt à expédier", "Listo para enviar" };
+        private static readonly string[] Paid = { "Paid", "Bezahlt", "Payé", "Pagado" };
+        private static readonly string[] PaymentPending = { "Payment pending", "Zahlung ausstehend", "Paiement en attente", "Pago pendiente" };
 
         // ------------------------------------------------------------------
         // Flat lists
@@ -86,6 +93,11 @@
             new[] { "Drawer", "Schublade", "Tiroir", "Cajón" },
             new[] { "Toolbox", "Werkzeugkasten", "Boîte à outils", "Caja de herramientas" },
             new[] { "Suitcase", "Koffer", "Valise", "Maleta" },
+            new[] { "Warehouse", "Lagerhalle", "Entrepôt", "Almacén" },
+            new[] { "Stockroom", "Lagerraum", "Réserve", "Depósito" },
+            new[] { "Retail shop", "Ladengeschäft", "Magasin de détail", "Tienda minorista" },
+            new[] { "Packing station", "Packstation", "Poste d'emballage", "Estación de embalaje" },
+            new[] { "Back office", "Verwaltungsbüro", "Bureau administratif", "Oficina administrativa" },
         };
 
         public static readonly string[][] Categories =
@@ -126,6 +138,17 @@
             new[] { "School", "Schule", "École", "Escuela" },
             new[] { "Hardware", "Eisenwaren", "Quincaillerie", "Ferretería" },
             new[] { "Media", "Medien", "Médias", "Multimedia" },
+            new[] { "Inventory", "Inventar", "Inventaire", "Inventario" },
+            new[] { "Products", "Produkte", "Produits", "Productos" },
+            new[] { "Packaging", "Verpackung", "Emballage", "Embalaje" },
+            new[] { "Shipping", "Versand", "Expédition", "Envíos" },
+            new[] { "Orders", "Bestellungen", "Commandes", "Pedidos" },
+            new[] { "Returns", "Rücksendungen", "Retours", "Devoluciones" },
+            new[] { "Sales", "Verkäufe", "Ventes", "Ventas" },
+            new[] { "Supplies", "Betriebsbedarf", "Fournitures", "Suministros" },
+            new[] { "Accounting", "Buchhaltung", "Comptabilité", "Contabilidad" },
+            new[] { "Marketing", "Marketing", "Marketing", "Marketing" },
+            new[] { "Business equipment", "Betriebsausstattung", "Équipement professionnel", "Equipamiento comercial" },
         };
 
         /// <summary>Generic remark chips (condition, status, plan) for the Remarks field.</summary>
@@ -2392,6 +2415,127 @@
                 new[] { "Instruction booklet for DVDs", "Bedienungsanleitung für DVDs", "Notice d'utilisation pour DVD", "Manual de instrucciones para DVD" },
 
             },
+                ["Inventory"] = new[]
+                {
+                    new[] { "Stock count", "Bestandszählung", "Inventaire des stocks", "Recuento de existencias" },
+                    new[] { "Stock list", "Bestandsliste", "Liste des stocks", "Lista de existencias" },
+                    new[] { "SKU labels", "SKU-Etiketten", "Étiquettes SKU", "Etiquetas SKU" },
+                    new[] { "Barcode labels", "Barcode-Etiketten", "Étiquettes à code-barres", "Etiquetas de código de barras" },
+                    new[] { "Stock cards", "Lagerkarten", "Fiches de stock", "Fichas de existencias" },
+                    new[] { "Reorder list", "Nachbestellliste", "Liste de réapprovisionnement", "Lista de reposición" },
+                    new[] { "Minimum stock report", "Mindestbestandsbericht", "Rapport de stock minimum", "Informe de stock mínimo" },
+                    new[] { "Warehouse labels", "Lageretiketten", "Étiquettes d'entrepôt", "Etiquetas de almacén" },
+                },
+                ["Products"] = new[]
+                {
+                    new[] { "Product samples", "Produktmuster", "Échantillons de produits", "Muestras de productos" },
+                    new[] { "Product catalog", "Produktkatalog", "Catalogue de produits", "Catálogo de productos" },
+                    new[] { "Product specifications", "Produktspezifikationen", "Spécifications des produits", "Especificaciones de productos" },
+                    new[] { "Product photos", "Produktfotos", "Photos des produits", "Fotos de productos" },
+                    new[] { "Product variants", "Produktvarianten", "Variantes de produits", "Variantes de productos" },
+                    new[] { "Product labels", "Produktetiketten", "Étiquettes de produits", "Etiquetas de productos" },
+                    new[] { "Price tags", "Preisschilder", "Étiquettes de prix", "Etiquetas de precio" },
+                    new[] { "Product bundles", "Produktsets", "Lots de produits", "Lotes de productos" },
+                },
+                ["Packaging"] = new[]
+                {
+                    new[] { "Shipping boxes", "Versandkartons", "Cartons d'expédition", "Cajas de envío" },
+                    new[] { "Bubble wrap", "Luftpolsterfolie", "Film à bulles", "Plástico de burbujas" },
+                    new[] { "Packing paper", "Packpapier", "Papier d'emballage", "Papel de embalaje" },
+                    new[] { "Packing tape", "Packband", "Ruban d'emballage", "Cinta de embalaje" },
+                    new[] { "Mailing bags", "Versandtaschen", "Pochettes d'expédition", "Bolsas de envío" },
+                    new[] { "Protective inserts", "Schutzeinlagen", "Inserts de protection", "Insertos protectores" },
+                    new[] { "Labels and stickers", "Etiketten und Aufkleber", "Étiquettes et autocollants", "Etiquetas y pegatinas" },
+                    new[] { "Pallet wrap", "Palettenfolie", "Film pour palettes", "Film para palés" },
+                },
+                ["Shipping"] = new[]
+                {
+                    new[] { "Shipping labels", "Versandetiketten", "Étiquettes d'expédition", "Etiquetas de envío" },
+                    new[] { "Parcel receipts", "Paketbelege", "Reçus de colis", "Recibos de paquetes" },
+                    new[] { "Delivery notes", "Lieferscheine", "Bons de livraison", "Albaranes" },
+                    new[] { "Customs forms", "Zollformulare", "Formulaires douaniers", "Formularios aduaneros" },
+                    new[] { "Tracking documents", "Sendungsverfolgungsbelege", "Documents de suivi", "Documentos de seguimiento" },
+                    new[] { "Courier supplies", "Kurierbedarf", "Fournitures de messagerie", "Material de mensajería" },
+                    new[] { "Dispatch log", "Versandprotokoll", "Registre des expéditions", "Registro de envíos" },
+                    new[] { "Pallet documents", "Palettendokumente", "Documents de palettes", "Documentos de palés" },
+                },
+                ["Orders"] = new[]
+                {
+                    new[] { "Purchase orders", "Bestellaufträge", "Bons de commande", "Órdenes de compra" },
+                    new[] { "Customer orders", "Kundenbestellungen", "Commandes clients", "Pedidos de clientes" },
+                    new[] { "Order forms", "Bestellformulare", "Formulaires de commande", "Formularios de pedido" },
+                    new[] { "Order invoices", "Bestellrechnungen", "Factures de commande", "Facturas de pedido" },
+                    new[] { "Picking lists", "Kommissionierlisten", "Listes de préparation", "Listas de preparación" },
+                    new[] { "Packing slips", "Packlisten", "Bordereaux d'emballage", "Albaranes de embalaje" },
+                    new[] { "Supplier orders", "Lieferantenbestellungen", "Commandes fournisseurs", "Pedidos a proveedores" },
+                    new[] { "Order archive", "Bestellarchiv", "Archives des commandes", "Archivo de pedidos" },
+                },
+                ["Returns"] = new[]
+                {
+                    new[] { "Return forms", "Retourenformulare", "Formulaires de retour", "Formularios de devolución" },
+                    new[] { "Returned products", "Retourenware", "Produits retournés", "Productos devueltos" },
+                    new[] { "Refund records", "Erstattungsbelege", "Justificatifs de remboursement", "Comprobantes de reembolso" },
+                    new[] { "Return labels", "Retourenetiketten", "Étiquettes de retour", "Etiquetas de devolución" },
+                    new[] { "Defective returns", "Defekte Retouren", "Retours défectueux", "Devoluciones defectuosas" },
+                    new[] { "Exchange records", "Umtauschbelege", "Documents d'échange", "Registros de cambio" },
+                    new[] { "Warranty claims", "Garantieansprüche", "Demandes de garantie", "Reclamaciones de garantía" },
+                    new[] { "Return inspection notes", "Retourenprüfberichte", "Notes d'inspection des retours", "Notas de inspección de devoluciones" },
+                },
+                ["Sales"] = new[]
+                {
+                    new[] { "Sales receipts", "Verkaufsbelege", "Reçus de vente", "Recibos de venta" },
+                    new[] { "Sales invoices", "Verkaufsrechnungen", "Factures de vente", "Facturas de venta" },
+                    new[] { "Price lists", "Preislisten", "Listes de prix", "Listas de precios" },
+                    new[] { "Sales reports", "Verkaufsberichte", "Rapports de vente", "Informes de ventas" },
+                    new[] { "Daily takings", "Tagesumsätze", "Recettes journalières", "Ingresos diarios" },
+                    new[] { "Point of sale supplies", "Kassenzubehör", "Fournitures de caisse", "Suministros de punto de venta" },
+                    new[] { "Customer orders ledger", "Kundenauftragsbuch", "Registre des commandes clients", "Libro de pedidos de clientes" },
+                    new[] { "Sales promotion materials", "Verkaufsförderungsmaterial", "Supports de promotion des ventes", "Materiales de promoción de ventas" },
+                },
+                ["Supplies"] = new[]
+                {
+                    new[] { "Office supplies", "Bürobedarf", "Fournitures de bureau", "Material de oficina" },
+                    new[] { "Printer paper", "Druckerpapier", "Papier d'imprimante", "Papel de impresora" },
+                    new[] { "Ink cartridges", "Druckerpatronen", "Cartouches d'encre", "Cartuchos de tinta" },
+                    new[] { "Cleaning supplies", "Reinigungsmittel", "Produits de nettoyage", "Productos de limpieza" },
+                    new[] { "Work gloves", "Arbeitshandschuhe", "Gants de travail", "Guantes de trabajo" },
+                    new[] { "Shipping consumables", "Versandverbrauchsmaterial", "Consommables d'expédition", "Consumibles de envío" },
+                    new[] { "Labels and rolls", "Etikettenrollen", "Rouleaux d'étiquettes", "Rollos de etiquetas" },
+                    new[] { "Spare stationery", "Schreibwarenreserve", "Réserve de papeterie", "Reserva de papelería" },
+                },
+                ["Accounting"] = new[]
+                {
+                    new[] { "Purchase invoices", "Eingangsrechnungen", "Factures fournisseurs", "Facturas recibidas" },
+                    new[] { "Expense receipts", "Ausgabenbelege", "Justificatifs de dépenses", "Comprobantes de gastos" },
+                    new[] { "Tax documents", "Steuerunterlagen", "Documents fiscaux", "Documentos fiscales" },
+                    new[] { "Bank statements", "Kontoauszüge", "Relevés bancaires", "Extractos bancarios" },
+                    new[] { "Cash book", "Kassenbuch", "Livre de caisse", "Libro de caja" },
+                    new[] { "Payroll records", "Lohnunterlagen", "Documents de paie", "Registros de nómina" },
+                    new[] { "VAT records", "Umsatzsteuerunterlagen", "Documents de TVA", "Registros de IVA" },
+                    new[] { "Annual accounts", "Jahresabschlussunterlagen", "Documents de clôture annuelle", "Documentos de cierre anual" },
+                },
+                ["Marketing"] = new[]
+                {
+                    new[] { "Business cards", "Visitenkarten", "Cartes de visite", "Tarjetas de visita" },
+                    new[] { "Brochures", "Broschüren", "Brochures", "Folletos" },
+                    new[] { "Flyers", "Flyer", "Prospectus", "Volantes" },
+                    new[] { "Product photography props", "Requisiten für Produktfotografie", "Accessoires photo produit", "Accesorios para fotografía de producto" },
+                    new[] { "Promotional merchandise", "Werbeartikel", "Objets promotionnels", "Artículos promocionales" },
+                    new[] { "Banner materials", "Banner-Material", "Matériel de banderole", "Material para pancartas" },
+                    new[] { "Packaging inserts", "Verpackungsbeilagen", "Encarts d'emballage", "Insertos de embalaje" },
+                    new[] { "Trade fair materials", "Messestandmaterial", "Matériel de salon professionnel", "Material para ferias comerciales" },
+                },
+                ["Business equipment"] = new[]
+                {
+                    new[] { "Label printer", "Etikettendrucker", "Imprimante d'étiquettes", "Impresora de etiquetas" },
+                    new[] { "Barcode scanner", "Barcode-Scanner", "Lecteur de codes-barres", "Lector de códigos de barras" },
+                    new[] { "Receipt printer", "Bondrucker", "Imprimante de reçus", "Impresora de recibos" },
+                    new[] { "Shipping scale", "Versandwaage", "Balance d'expédition", "Báscula de envío" },
+                    new[] { "Storage shelving", "Lagerregale", "Rayonnages de stockage", "Estanterías de almacenaje" },
+                    new[] { "Cash register", "Registrierkasse", "Caisse enregistreuse", "Caja registradora" },
+                    new[] { "Packing table", "Packtisch", "Table d'emballage", "Mesa de embalaje" },
+                    new[] { "Hand truck", "Transportkarre", "Diable de manutention", "Carretilla de mano" },
+                },
             };
 
         // ------------------------------------------------------------------
@@ -2632,6 +2776,51 @@
                 new[] { "Unopened", "Ungeöffnet", "Non ouvert", "Sin abrir" },
                 new[] { "Refill", "Nachfüllpackung", "Recharge", "Recambio" },
             },
+                ["Inventory"] = new[]
+                {
+                    InStock,
+                    LowStock,
+                    OutOfStock,
+                    new[] { "Reserved stock", "Reservierter Bestand", "Stock réservé", "Existencias reservadas" },
+                    new[] { "To reorder", "Nachbestellen", "À réapprovisionner", "Pendiente de reponer" },
+                    new[] { "Stock checked", "Bestand geprüft", "Stock vérifié", "Existencias verificadas" },
+                },
+                ["Products"] = new[] { Sealed, Complete, WithWarranty, new[] { "Discontinued", "Ausgelistet", "Retiré de la vente", "Descatalogado" } },
+                ["Packaging"] = new[]
+                {
+                    new[] { "Packed", "Verpackt", "Emballé", "Empaquetado" },
+                    ReadyForDispatch,
+                    new[] { "Damaged packaging", "Beschädigte Verpackung", "Emballage endommagé", "Embalaje dañado" },
+                    new[] { "Reusable packaging", "Mehrwegverpackung", "Emballage réutilisable", "Embalaje reutilizable" },
+                },
+                ["Shipping"] = new[]
+                {
+                    new[] { "Dispatched", "Versendet", "Expédié", "Enviado" },
+                    new[] { "Awaiting collection", "Abholung ausstehend", "En attente d'enlèvement", "Pendiente de recogida" },
+                    new[] { "Delivered", "Zugestellt", "Livré", "Entregado" },
+                    new[] { "Delivery delayed", "Lieferverzögerung", "Livraison retardée", "Entrega retrasada" },
+                },
+                ["Orders"] = new[]
+                {
+                    new[] { "Pending", "Ausstehend", "En attente", "Pendiente" },
+                    new[] { "Confirmed", "Bestätigt", "Confirmé", "Confirmado" },
+                    new[] { "Processing", "In Bearbeitung", "En traitement", "En proceso" },
+                    ReadyForDispatch,
+                    new[] { "Completed", "Abgeschlossen", "Terminé", "Completado" },
+                },
+                ["Returns"] = new[]
+                {
+                    new[] { "Return requested", "Retoure angefragt", "Retour demandé", "Devolución solicitada" },
+                    new[] { "Return received", "Retoure eingegangen", "Retour reçu", "Devolución recibida" },
+                    new[] { "Inspected", "Geprüft", "Inspecté", "Inspeccionado" },
+                    new[] { "Refund pending", "Erstattung ausstehend", "Remboursement en attente", "Reembolso pendiente" },
+                    new[] { "Refunded", "Erstattet", "Remboursé", "Reembolsado" },
+                },
+                ["Sales"] = new[] { Complete, Checked, Paid, PaymentPending },
+                ["Supplies"] = new[] { Sealed, Spare, Opened, new[] { "Running low", "Geht zur Neige", "Bientôt épuisé", "Queda poco" } },
+                ["Accounting"] = new[] { Important, Complete, Checked, Paid, new[] { "Due", "Fällig", "Échu", "Vencido" }, new[] { "Filed", "Abgelegt", "Classé", "Archivado" } },
+                ["Marketing"] = new[] { Complete, Checked, Sealed, new[] { "Current campaign", "Aktuelle Kampagne", "Campagne actuelle", "Campaña actual" } },
+                ["Business equipment"] = new[] { Working, WithWarranty, WithManual, Spare, Complete },
             };
 
         // ------------------------------------------------------------------
@@ -2649,12 +2838,12 @@
                 ["Bedroom"] = new[] { "Clothing", "Bedding", "Books", "Accessories", "Lighting", "Furniture", "Baby", "Medicine", "Toiletries", "Memories", "Seasonal" },
                 ["Children's room"] = new[] { "Toys", "Books", "Clothing", "School", "Baby", "Accessories", "Sports", "Media", "Stationery" },
                 ["Bathroom"] = new[] { "Toiletries", "Medicine", "Bedding", "Cleaning", "Appliances", "Baby", "Accessories" },
-                ["Office"] = new[] { "Documents", "Stationery", "Electronics", "Cables", "Books", "Media", "School", "Furniture", "Lighting", "Accessories" },
+                ["Office"] = new[] { "Documents", "Stationery", "Electronics", "Cables", "Books", "Media", "School", "Furniture", "Lighting", "Accessories", "Accounting", "Marketing", "Supplies", "Business equipment", "Orders" },
                 ["Hallway"] = new[] { "Clothing", "Accessories", "Sports", "Bicycle", "Pets", "Cleaning", "Travel", "Seasonal", "Automotive" },
                 ["Garden"] = new[] { "Gardening", "Tools", "Sports", "Camping", "Seasonal", "Pets", "Furniture", "Lighting", "Party", "Hardware", "Automotive" },
                 ["Shed"] = new[] { "Gardening", "Tools", "Bicycle", "Paint", "Hardware", "Seasonal", "Camping", "Sports", "Automotive", "Cleaning", "Furniture" },
                 ["Workshop"] = new[] { "Tools", "Paint", "Hardware", "Hobby", "Electronics", "Cables", "Automotive", "Bicycle", "Cleaning", "Lighting", "Furniture" },
-                ["Storage room"] = new[] { "Christmas", "Camping", "Sports", "Decorations", "Tools", "Seasonal", "Travel", "Party", "Bedding", "Clothing", "Baby", "Appliances", "Furniture", "Memories", "Media" },
+                ["Storage room"] = new[] { "Christmas", "Camping", "Sports", "Decorations", "Tools", "Seasonal", "Travel", "Party", "Bedding", "Clothing", "Baby", "Appliances", "Furniture", "Memories", "Media", "Inventory", "Products", "Packaging", "Supplies" },
                 ["Laundry room"] = new[] { "Cleaning", "Bedding", "Clothing", "Appliances", "Toiletries", "Baby", "Pets", "Accessories" },
                 ["Pantry"] = new[] { "Food", "Kitchenware", "Cleaning", "Appliances", "Toiletries", "Stationery", "Party", "Accessories" },
                 ["Balcony"] = new[] { "Gardening", "Bicycle", "Camping", "Seasonal", "Furniture", "Lighting", "Party", "Pets" },
@@ -2679,6 +2868,11 @@
                 ["Drawer"] = new[] { "Stationery", "Cables", "Documents", "Hardware", "Accessories", "Kitchenware", "Medicine", "Toiletries" },
                 ["Toolbox"] = new[] { "Tools", "Hardware", "Automotive", "Bicycle", "Paint", "Electronics", "Cleaning" },
                 ["Suitcase"] = new[] { "Travel", "Clothing", "Toiletries", "Documents", "Accessories", "Sports", "Baby", "Medicine", "Memories" },
+                ["Warehouse"] = new[] { "Inventory", "Products", "Packaging", "Shipping", "Orders", "Returns", "Business equipment", "Supplies", "Hardware" },
+                ["Stockroom"] = new[] { "Inventory", "Products", "Packaging", "Supplies", "Business equipment", "Hardware", "Cleaning" },
+                ["Retail shop"] = new[] { "Products", "Inventory", "Sales", "Returns", "Packaging", "Marketing", "Business equipment", "Supplies" },
+                ["Packing station"] = new[] { "Packaging", "Shipping", "Orders", "Returns", "Supplies", "Business equipment" },
+                ["Back office"] = new[] { "Accounting", "Orders", "Sales", "Returns", "Documents", "Marketing", "Supplies", "Business equipment" },
             };
     }
 }
