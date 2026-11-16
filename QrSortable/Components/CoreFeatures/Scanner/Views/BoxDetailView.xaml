@@ -6,7 +6,7 @@
     xmlns:conv=" clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Converter"
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
-    xmlns:sug="clr-namespace:QrSortable.Components.CoreFeatures.Scanner.Models"
+    xmlns:sug="clr-namespace:QrSortable.Components.CoreFeatures.Scanner.Views"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.png">
     <views:BaseView.Resources>

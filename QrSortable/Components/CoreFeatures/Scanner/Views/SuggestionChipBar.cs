@@ -1,6 +1,4 @@
-﻿
-
-namespace QrSortable.Components.CoreFeatures.Scanner.Models
+﻿namespace QrSortable.Components.CoreFeatures.Scanner.Views
 {
     using System.Windows.Input;
 
