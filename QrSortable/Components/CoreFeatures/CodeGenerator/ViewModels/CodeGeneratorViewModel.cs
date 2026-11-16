@@ -27,6 +27,8 @@
 
         private string _currencySymbol = "€";
 
+        private string? _languageCode;
+
         private Product _product;
 
         /// <summary>
@@ -71,6 +73,7 @@
         {
             await base.InitializeAsync();
             var language = (await _generalInformationManager.GetGeneralInformationAsync()).SelectedLanguageCode;
+            _languageCode = language;
 
             _currencySymbol = _sharedMethodService.GetCurrencySymbol(language);
             TotalAmount = _priceEachA4Paper.ToString() + _currencySymbol;
@@ -127,6 +130,52 @@
         [ObservableProperty]
         private string _totalAmount;
 
+
+        // ------------------------------------------------------------------
+        // Tag name suggestions (household / moving / small business) + color presets
+        // ------------------------------------------------------------------
+        [ObservableProperty]
+        private IReadOnlyList<string> _tagSuggestions = Array.Empty<string>();
+
+        private bool _tagNameActive;
+        private bool _applyingTagSuggestion;
+
+        /// <summary>Called by the view when the Tag Name entry gets focus.</summary>
+        public void SetTagNameActive()
+        {
+            _tagNameActive = true;
+            RefreshTagSuggestions();
+        }
+
+        partial void OnTagNameChanged(string value)
+        {
+            if (!_applyingTagSuggestion) _tagNameActive = true;   // the user is typing
+            RefreshTagSuggestions();
+        }
+
+        private void RefreshTagSuggestions() =>
+            TagSuggestions = _tagNameActive
+                ? TagNameSeed.Suggest(TagName, _languageCode)
+                : Array.Empty<string>();
+
+        [RelayCommand]
+        private void ApplyTagSuggestion(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return;
+
+            _applyingTagSuggestion = true;
+            _tagNameActive = false;
+            TagName = text;
+            _applyingTagSuggestion = false;
+
+            RefreshTagSuggestions();
+        }
+
+        [RelayCommand]
+        private void ApplyColor(string hex)
+        {
+            if (!string.IsNullOrWhiteSpace(hex)) HexCode = hex;
+        }
 
         public AsyncRelayCommand OnSelectionCodeChangedCommand => new AsyncRelayCommand(async () =>
         {

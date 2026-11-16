@@ -3,8 +3,10 @@
     x:Class="QrSortable.Components.CoreFeatures.CodeGenerator.Views.CodeGeneratorView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:chips="clr-namespace:QrSortable.Components.CoreFeatures.Scanner.Models"
     xmlns:local="clr-namespace:QrSortable.Resources"
     xmlns:localization="clr-namespace:QrSortable.Components.UiFunctionality.Localization"
+    xmlns:sug="clr-namespace:QrSortable.Components.CoreFeatures.CodeGenerator.Views"
     xmlns:views="clr-namespace:QrSortable.Components.UiFunctionality.Navigation.Views;assembly=QrSortable"
     BackgroundImageSource="background_layout.png">
     <views:BaseView.Content>
@@ -312,12 +314,19 @@
                             </Border.Shadow>
                             <Entry
                                 Margin="10,0,0,0"
+                                Focused="OnTagNameFocused"
                                 Placeholder="{Binding Source={x:Static localization:LocalizationService.Instance}, Path=[CodeGeneratorViewModel_ExampleText]}"
                                 PlaceholderColor="{StaticResource PlaceholderColor}"
                                 Style="{StaticResource NormalText}"
                                 Text="{Binding TagName}" />
                         </Border>
                     </StackLayout>
+
+                    <!--  tag name suggestions  -->
+                    <chips:SuggestionChipBar
+                        Margin="0,-8,0,0"
+                        Command="{Binding ApplyTagSuggestionCommand}"
+                        Suggestions="{Binding TagSuggestions}" />
 
                     <StackLayout
                         Margin="15,0,15,0"
@@ -352,6 +361,13 @@
                                 Text="{Binding HexCode}" />
                         </Border>
                     </StackLayout>
+
+                    <!--  color presets (hidden together with the hex field for barcodes)  -->
+                    <sug:ColorSwatchBar
+                        Margin="0,-8,0,0"
+                        Command="{Binding ApplyColorCommand}"
+                        IsVisible="{Binding ColorVisible}"
+                        SelectedHex="{Binding HexCode}" />
 
                     <HorizontalStackLayout>
                         <!--  nof of pages  -->

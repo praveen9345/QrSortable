@@ -20,5 +20,8 @@
             InitializeComponent();
             BindingContext = viewModel;
         }
+
+        private void OnTagNameFocused(object sender, FocusEventArgs e) =>
+            (BindingContext as CodeGeneratorViewModel)?.SetTagNameActive();
     }
 }
