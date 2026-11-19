@@ -18,8 +18,8 @@
         private readonly SubscriptionClient _subscriptionClient;
         private readonly MandateClient _mandateClient;
 
-        //private static readonly string MOLLIE_TEST_API_KEY = "live_uJFHu2bBnBtMcdSW6Aa8TxjvJpGnHJ";
-        private static readonly string MOLLIE_TEST_API_KEY = "test_tz55vhktCjqqtdJcRW3afauehgqDbS";
+        private static readonly string MOLLIE_TEST_API_KEY = "live_uJFHu2bBnBtMcdSW6Aa8TxjvJpGnHJ";
+        //private static readonly string MOLLIE_TEST_API_KEY = "test_tz55vhktCjqqtdJcRW3afauehgqDbS";
 
         public MollieService()
         {
